@@ -1,0 +1,236 @@
+name: CEPmobile
+description: CEP Application
+
+# The following defines the version and build number for your application.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+# Both the version and the builder number may be overridden in flutter
+# build by specifying --build-name and --build-number, respectively.
+# Read more about versioning at semver.org.
+version: 1.0.2+40
+
+environment:
+  sdk: ">=2.2.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  flutter_picker:
+    git: git://github.com/yangyxd/flutter_picker.git
+  google_maps_flutter: ^0.5.15
+  flutter_html: ^0.11.1
+  flutter_duration_picker: ^1.0.4
+  cupertino_icons: ^0.1.2
+  intl: ^0.16.0
+  shared_preferences: "^0.5.1+1"
+  rxdart: "^0.21.0"
+  sprintf: "^4.0.2"
+  http: '0.12.0'
+  progress_hud: ^1.1.0
+  fluttertoast: ^3.0.3
+  flutter_launcher_icons: "^0.7.0"
+  modal_progress_hud: ^0.1.3
+  date_format: ^1.0.6
+  url_launcher: ^5.0.2
+  location: ^2.3.4
+  android_intent: ^0.3.0+2
+  barcode_scan: ^1.0.0
+  permission_handler: ^3.0.0
+  pull_to_refresh: ^1.5.2
+  flutter_local_notifications: ^0.7.0
+  path_provider: ^0.5.0+1
+  camera:
+  path:
+  image_picker:
+  webview_flutter: ^0.3.9
+  flutter_webview_plugin: ^0.3.0+2
+  local_auth: ^0.6.1+3
+  flutter_masked_text: ^0.7.0
+  # adhara_socket_io: ^0.2.0
+  sqflite :
+  autocomplete_textfield: ^1.7.3
+  #firebase_core: ^0.4.0
+  firebase_messaging: ^4.0.0+3
+  cloud_firestore: ^0.10.1
+  date_utils: ^0.1.0+2
+  simple_gesture_detector: ^0.1.3
+  signalr_client: ^0.1.6
+  launch_review: ^2.0.0
+  photo_view: ^0.9.2
+  flutter_image_compress: ^0.6.5+1
+  percent_indicator: ^2.1.9+1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+    
+flutter_icons:
+  ios: true
+  android: true
+  image_path_ios: "assets/logo/cep-large-icon-logo-intro.png"
+  image_path_android: "assets/logo/cep-large-icon-logo-intro.png"
+  # adaptive_icon_background: "assets/launcher/background.png"
+  # adaptive_icon_foreground: "assets/launcher/foreground.png"
+
+
+# For information on the generic Dart part of this file, see the
+# following page: https://www.dartlang.org/tools/pub/pubspec
+
+# The following section is specific to Flutter.
+flutter:
+  # plugin:
+  #   androidPackage: com.socketio
+  #   pluginClass: SocketIoPlugin
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+  assets:
+   
+  - locale/i18n_en.json
+  - locale/i18n_vi.json
+  - locale/i18n_kr.json
+  - assets/logo/icon_logo.png
+  - assets/logo/cep-large-icon-logo-intro.png
+  - assets/logo/icon_main_logo.png
+  - assets/logo/logo.png
+  - assets/logo/bg3.png
+  - assets/logo/haulage.png
+  - assets/logo/customs.jpg
+  - assets/logo/loading.png
+  - assets/logo/circle-logo.png
+  - assets/logo/enterprise-logo.png
+  - assets/logo/bg.png
+  - assets/logo/login_box_bg.jpg
+  - assets/logo/background.png
+    #menu Icon
+     #warehousing menu
+  - assets/menus/icon_inventory.png
+  - assets/menus/icon_put_away.png
+  - assets/menus/icon_gr.png
+  - assets/menus/icon_relocation.png
+  - assets/menus/icon_pick.png
+
+  #package menu
+  - assets/menus/icon_receipt_package.png
+  - assets/menus/icon_release_package.png
+  - assets/menus/icon_transfer_package.png
+
+  #Local Distribution Menu
+  - assets/menus/todolist.png
+  - assets/menus/icon_update_status.png
+  - assets/menus/icon_haulage.png
+  - assets/menus/icon_loading_status.png
+  - assets/menus/userprofile.png
+  - assets/menus/triprecords.png
+  - assets/menus/icon_history_todo.png
+  - assets/menus/icon_logout.png
+  - assets/menus/checklist.png
+  - assets/menus/announcement.png
+  #General Menu 
+
+  - assets/menus/icon_setting.png
+  - assets/images/icon_dc.png
+  - assets/images/icon_contact.png
+  - assets/images/icon_username.png
+  - assets/images/icon_company.png
+  - assets/images/icon_phonenumber.png
+  - assets/images/icon_equipmentNo.png
+  - assets/images/icon_driver.png
+  - assets/images/icon_time.png
+  - assets/images/icon_address.png
+  - assets/images/icon_contact_name.png
+  - assets/images/icon_confirm_status.png
+  - assets/images/icon_start_delivery_status.png
+  - assets/images/icon_completed_status.png
+  - assets/images/icon_call.png
+  - assets/images/icon_drive_profile.png
+  - assets/images/iconsearchmap.jpg
+  - assets/images/iconsearchmap1.jpg
+  - assets/images/search.png
+  - assets/images/icon_date.png
+  - assets/images/picupplace.png
+  - assets/images/returnplace.png
+  - assets/images/returnplaceicon.png
+  - assets/images/icontimereturn.png
+  - assets/images/fightpic.png
+  - assets/images/store_locator.png
+  - assets/images/carpick.jpg
+  - assets/images/truckpickup.png
+  
+  - assets/images/icon_maps.png
+  - assets/images/contrainer_truck.png
+  - assets/images/barcode.png
+  - assets/images/initialization.png
+  - assets/images/clock.png
+  - assets/images/stopwatch.png
+  - assets/images/icon_todo.png
+  - assets/images/vietnam.png
+  - assets/images/united-kingdom.png
+  - assets/images/enterprise-Rental.jpg
+  - assets/images/new-logo-large.png
+  - assets/images/img-logo.jpg
+  - assets/images/checklist.jpg
+  - assets/images/checklist-icon.jpg
+  - assets/images/profile.png
+  - assets/images/triprecord.png
+  - assets/images/new-icon.png
+  - assets/images/list-icon.png
+  - assets/images/checklist-icon1.png
+  - assets/images/touch-id.jpg
+  - assets/images/touch-id1.png
+  - assets/images/person.png
+  - assets/images/face_id.png
+  - assets/images/icon-start.png
+  - assets/images/icon-start1.png
+  - assets/images/icon-end.jpg
+  - assets/images/icon-end1.jpg
+  - assets/images/icon-end2.jpg
+  - assets/images/route.png
+  - assets/images/new_button.gif
+
+  #ShipmentStatus
+  - assets/images/container_shipmentstatus.png
+  - assets/images/logoshipmentstatus2.png
+  - assets/images/logoshipmentstatus3.png
+
+  #avatars
+  
+
+
+  # To add assets to your application, add an assets section, like this:
+  # assets:
+  #  - images/a_dot_burr.jpeg
+  #  - images/a_dot_ham.jpeg
+
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.io/assets-and-images/#resolution-aware.
+
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.io/assets-and-images/#from-packages
+
+  # To add custom fonts to your application, add a fonts section here,
+  # in this "flutter" section. Each entry in this list should have a
+  # "family" key with the font family name, and a "fonts" key with a
+  # list giving the asset and other descriptors for the font. For
+  # example:
+  fonts:
+    # - family: Raleway
+    #   fonts:
+    #     - asset: fonts/Raleway-Regular.ttf
+    #     - asset: fonts/Raleway-Italic.ttf
+    #       style: italic
+    - family: Lato
+      fonts:
+        - asset: assets/fonts/Lato2OFL/Lato-Regular.ttf
+        - asset: assets/fonts/Lato2OFL/Lato-Bold.ttf
+          weight: 700
+  #
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.io/custom-fonts/#from-packages

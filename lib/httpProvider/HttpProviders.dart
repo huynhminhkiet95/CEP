@@ -1,0 +1,322 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:flutter/material.dart';
+
+import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+import 'package:CEPmobile/globalServer.dart';
+import 'package:async/async.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+
+import '../GlobalUser.dart';
+
+class HttpBase {
+  Future<http.Response> httpGet(String url) async {
+    try {
+      var address = globalServer.getServerAddress;
+      var result = await http.get(address + url, headers: {
+        "Content-Type": 'application/json'
+      }).timeout(const Duration(seconds: 10));
+      return result;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<http.Response> httpGetToken(String url) async {
+    try {
+      String token = globalUser.gettoken;
+      var address = globalServer.getServerAddress;
+      var result = await http.get(address + url, headers: {
+        "Content-Type": 'application/json',
+        "Authorization": 'Bearer $token'
+      }).timeout(const Duration(seconds: 10));
+
+      return result;
+    } catch (e) {
+      return httpGetToken(url);
+    }
+  }
+
+  Future<http.Response> httpGetHub(String url) async {
+    try {
+      var result = await http.get(globalServer.getServerHub + url, headers: {
+        "Content-Type": 'application/json',
+      }).timeout(const Duration(seconds: 10));
+
+      return result;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<http.Response> httpPutHub(String url) async {
+    try {
+      var result = await http.put(globalServer.getServerHub + url, headers: {
+        "Content-Type": 'application/json',
+      }).timeout(const Duration(seconds: 10));
+
+      return result;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<http.Response> httpPostHubNoBody(String url, dynamic body) async {
+    try {
+      var result = await http.post(globalServer.getServerHub + url,
+          //body: json.encode(body),
+          headers: {
+            "Content-Type": 'application/json'
+          }).timeout(const Duration(seconds: 10));
+
+      return result;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<http.Response> httpPostHub(String url, dynamic body) async {
+    try {
+      var result = await http.post(globalServer.getServerHub + url,
+          body: json.encode(body),
+          headers: {
+            "Content-Type": 'application/json'
+          }).timeout(const Duration(seconds: 10));
+
+      return result;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<http.Response> httpGetAsync(String url) async {
+    try {
+      var address = globalServer.getServerAddress;
+      var result = await http.get(address + url, headers: {
+        "Content-Type": 'application/json',
+      }).timeout(const Duration(seconds: 10));
+
+      return result;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<http.Response> httpGetApi(String url) async {
+    try {
+      var address = globalServer.getServerApi;
+      var result = await http.get(address + url, headers: {
+        "Content-Type": 'application/json'
+      }).timeout(const Duration(seconds: 10));
+      return result;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<http.Response> httpPostAsync(String url, dynamic body) async {
+    try {
+      var address = globalServer.getServerAddress;
+      var result = await http.post(address + url,
+          body: json.encode(body),
+          headers: {
+            "Content-Type": 'application/json'
+          }).timeout(const Duration(seconds: 10));
+
+      return result;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<http.Response> httpPostApi(String url, dynamic body) async {
+    try {
+      var address = globalServer.getServerApi;
+      var result = await http.post(address + url,
+          body: json.encode(body),
+          headers: {
+            "Content-Type": 'application/json'
+          }).timeout(const Duration(seconds: 10));
+
+      return result;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<http.Response> httpPost(String url, dynamic body) {
+    try {
+      var address = globalServer.getServerAddress;
+      var result = http.post(address + url, body: json.encode(body), headers: {
+        "Content-Type": 'application/json'
+      }).timeout(const Duration(seconds: 10));
+      return result;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<http.Response> httpPostToken(String url, dynamic body) async {
+    String token = globalUser.gettoken;
+    var address = globalServer.getServerAddress;
+    http.Response result;
+    try {
+      result = await http.post(address + url,
+          body: json.encode(body),
+          headers: {
+            "Content-Type": 'application/json',
+            "Authorization": 'Bearer $token'
+          }).timeout(const Duration(seconds: 10));
+    } catch (e) {
+      print(url + ": " + e.message);
+      // result.statusCode = 4;
+      return null;
+    }
+
+    return result;
+  }
+
+  Future<http.Response> httpPostEncoded(String url, dynamic body) async {
+    var address = globalServer.getServerSSO;
+    http.Response result;
+    try {
+      result = await http
+          .post(address + url,
+              body: body,
+              headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/x-www-form-urlencoded"
+              },
+              encoding: Encoding.getByName("utf-8"))
+          .timeout(const Duration(seconds: 5));
+    } catch (e) {
+      result = await http
+          .post(address + url,
+              body: body,
+              headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/x-www-form-urlencoded"
+              },
+              encoding: Encoding.getByName("utf-8"))
+          .timeout(const Duration(seconds: 5));
+    }
+
+    return result;
+  }
+
+  Future<http.Response> httpGetSSO(String url) async {
+    try {
+      String token = globalUser.gettoken;
+      var address = globalServer.getServerSSO;
+      var result = await http.get(address + url, headers: {
+        "Content-Type": 'application/json',
+        "Authorization": 'Bearer $token'
+      }).timeout(const Duration(seconds: 10));
+
+      return result;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<http.Response> httpPostSSO(String url, dynamic body) async {
+    String token = globalUser.gettoken;
+    var address = globalServer.getServerSSO;
+    http.Response result;
+    try {
+      result = await http.post(address + url,
+          body: json.encode(body),
+          headers: {
+            "Content-Type": 'application/json',
+            "Authorization": 'Bearer $token'
+          }).timeout(const Duration(seconds: 10));
+    } catch (e) {
+      return null;
+    }
+
+    return result;
+  }
+
+  Future<http.StreamedResponse> httpPostOpenalpr(
+      File file, int refNoValue) async {
+    try {
+      //      final bytes = await file.readAsBytes();
+      //    final img.Image image = img.decodeImage(bytes);
+      // final img.Image resized1 = img.copyResize(image, width: 800);
+      // String base64Image = resized1.
+      String token = globalUser.gettoken;
+      Map<String, String> headers = {
+        "Content-Type": 'application/json',
+        "Authorization": 'Bearer $token'
+      };
+      var address = globalServer.getServerAddress;
+      var uri = Uri.parse(
+          "https://fbmp.enterprise.vn:9110/api/document/savedocument");
+      var request = new http.MultipartRequest("POST", uri);
+      request.headers.addAll(headers);
+      var stream = new http.ByteStream(DelegatingStream.typed(file.openRead()));
+      var length = await file.length();
+
+      var multipartFile = new http.MultipartFile(
+        'image',
+        stream,
+        length,
+        filename: new DateTime.now().millisecondsSinceEpoch.toString() + '.jpg',
+      );
+
+      request.fields['docRefType'] = 'TRR';
+      request.fields['refNoType'] = 'TRR';
+      request.fields['refNoValue'] = refNoValue.toString();
+      request.fields['createUser'] = globalUser.getId.toString();
+      request.fields['userId'] = globalUser.getId.toString();
+      print({"createuser": globalUser.getId});
+      request.files.add(multipartFile);
+
+      var result = await request.send().timeout(const Duration(seconds: 10));
+      print({"292_reasonPhrase": result.reasonPhrase});
+      return result;
+    } catch (e) {
+      print({"294": e});
+      return null;
+    }
+  }
+
+  Future<void> compress() async {
+    final img = AssetImage("img/img.jpg");
+    print("pre compress");
+    final config = new ImageConfiguration();
+
+    AssetBundleImageKey key = await img.obtainKey(config);
+    final ByteData data = await key.bundle.load(key.name);
+
+    final beforeCompress = data.lengthInBytes;
+    print("beforeCompress = $beforeCompress");
+
+    final result =
+        await FlutterImageCompress.compressWithList(data.buffer.asUint8List());
+
+    print("after = ${result?.length ?? 0}");
+  }
+
+//   Future<File> compressImage(File f) async {
+//   ReceivePort receivePort = ReceivePort();
+
+//   await Isolate.spawn(getCompressedImage, receivePort.sendPort);
+//   SendPort sendPort = await receivePort.first;
+
+//   ReceivePort receivePort2 = ReceivePort();
+
+//   sendPort.send([
+//     f.path,
+//     f.uri.pathSegments.last,
+//     (await getTemporaryDirectory()).path,
+//     receivePort2.sendPort,
+//   ]);
+
+//   var msg = await receivePort2.first;
+
+//   return new File(msg);
+// }
+
+}

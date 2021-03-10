@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>738449054098-2gk8588ms57q4oieiiq0rrlig089bnf3.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.738449054098-2gk8588ms57q4oieiiq0rrlig089bnf3</string>
+	<key>API_KEY</key>
+	<string>AIzaSyA5QMnwzOsyil1TxfPphkypS7dpKfvfzFA</string>
+	<key>GCM_SENDER_ID</key>
+	<string>738449054098</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.mpl.fbmp</string>
+	<key>PROJECT_ID</key>
+	<string>mplmobile-1555992338428</string>
+	<key>STORAGE_BUCKET</key>
+	<string>mplmobile-1555992338428.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:738449054098:ios:685b601f96d14259</string>
+	<key>DATABASE_URL</key>
+	<string>https://mplmobile-1555992338428.firebaseio.com</string>
+</dict>
+</plist>
