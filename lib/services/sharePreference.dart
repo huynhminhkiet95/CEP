@@ -55,6 +55,7 @@ class SharePreferenceService {
     globalServer.setServerInspection = serverInfo.serverInspection;
     globalServer.setServerHub = serverInfo.serverHub;
     globalServer.setServerSSO = serverInfo.serverSSO;
+    globalServer.setServerApi = serverInfo.serverApi;
   }
 
   Future<void> saveDriverProfile(

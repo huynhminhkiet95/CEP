@@ -3,6 +3,13 @@ import 'package:CEPmobile/ui/components/Widget/customClipper.dart';
 import 'package:CEPmobile/ui/screens/Login/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:CEPmobile/GlobalTranslations.dart';
+import 'package:CEPmobile/blocs/authentication/authentication_bloc.dart';
+import 'package:CEPmobile/blocs/authentication/authentication_event.dart';
+import 'package:CEPmobile/blocs/authentication/authentication_state.dart';
+import 'package:CEPmobile/services/service.dart';
+import 'package:CEPmobile/bloc_helpers/bloc_provider.dart';
+import 'package:CEPmobile/ui/components/ModalProgressHUDCustomize.dart';
+import 'package:CEPmobile/bloc_widgets/bloc_state_builder.dart';
 
 // import 'package:flutter_login_signup/src/signup.dart';
 // import 'package:google_fonts/google_fonts.dart';
@@ -17,12 +24,40 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  String userName = '';
+  String password = '';
+  String _server = 'DEV';
   bool _isRemember = false;
   TextEditingController _userNameController =
       new TextEditingController(text: "");
   TextEditingController _passwordController =
       new TextEditingController(text: "");
   String language = allTranslations.currentLanguage;
+  GlobalKey<FormState> formkey = GlobalKey<FormState>();
+  bool _autoValidate = false;
+
+  //#region BLOC
+  AuthenticationBloc authenticationBloc;
+  Services services;
+  //#endregion
+  void _validateInputs() {
+    if (formkey.currentState.validate()) {
+//    If all data are correct then save data to out variables
+      formkey.currentState.save();
+      userName = _userNameController.text.toString();
+      password = _passwordController.text.toString();
+      authenticationBloc.emitEvent(AuthenticationEventLogin(
+          userName: _userNameController.text.toString(),
+          password: _passwordController.text.toString(),
+          serverCode: _server,
+          isRemember: _isRemember));
+    } else {
+//    If all data are not valid then start auto validation.
+      setState(() {
+        _autoValidate = true;
+      });
+    }
+  }
 
   void _updateRemember(bool value) => {
         setState(() {
@@ -51,49 +86,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _entryField(String title, {bool isPassword = false}) {
-    var iconField = isPassword == true ? Icons.lock : Icons.account_circle;
-
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          SizedBox(
-            height: 10,
-          ),
-          TextField(
-              controller: _userNameController,
-              obscureText: isPassword,
-              style: TextStyle(color: Colors.blue),
-              decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                    borderSide: BorderSide(color: Colors.blue),
-                  ),
-                  fillColor: Colors.red,
-                  border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.red),
-                      borderRadius: BorderRadius.circular(20.0)),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                    borderSide: BorderSide(color: Colors.red),
-                  ),
-                  contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                  hintText: title,
-                  prefixIcon: Padding(
-                    padding: EdgeInsets.all(0.0),
-                    child: Icon(
-                      iconField,
-                      color: Colors.blue,
-                    ),
-                  ),
-                  suffixStyle: TextStyle(color: Colors.red)))
-        ],
-      ),
-    );
-  }
-
   Widget _submitButton() {
     return Container(
       width: MediaQuery.of(context).size.width,
@@ -117,7 +109,12 @@ class _LoginPageState extends State<LoginPage> {
         borderRadius: BorderRadius.all(Radius.circular(20)),
         child: InkWell(
           onTap: () {
-            var a = "";
+            _validateInputs();
+            // if (formkey.currentState.validate()) {
+            //   print("Validated");
+            // } else {
+            //   print("Not Validated");
+            // }
           },
           child: Container(
             decoration: BoxDecoration(
@@ -131,147 +128,6 @@ class _LoginPageState extends State<LoginPage> {
               style: TextStyle(fontSize: 20, color: Colors.white),
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _divider() {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      child: Row(
-        children: <Widget>[
-          SizedBox(
-            width: 20,
-          ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Divider(
-                thickness: 1,
-              ),
-            ),
-          ),
-          Text('or'),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Divider(
-                thickness: 1,
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 20,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _facebookButton() {
-    return Container(
-      height: 50,
-      margin: EdgeInsets.symmetric(vertical: 20),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-      ),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            flex: 1,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color(0xff1959a9),
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(5),
-                    topLeft: Radius.circular(5)),
-              ),
-              alignment: Alignment.center,
-              child: Text('f',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 25,
-                      fontWeight: FontWeight.w400)),
-            ),
-          ),
-          Expanded(
-            flex: 5,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color(0xff2872ba),
-                borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(5),
-                    topRight: Radius.circular(5)),
-              ),
-              alignment: Alignment.center,
-              child: Text('Log in with Facebook',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400)),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _fingerCheck() {
-    return InkWell(
-      onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => SignUpPage()));
-      },
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 20),
-        padding: EdgeInsets.all(15),
-        alignment: Alignment.bottomCenter,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Icon(Icons.fingerprint, size: 20, color: Colors.red),
-            Text(
-              'Xác thực với vân tay.',
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _createAccountLabel() {
-    return InkWell(
-      onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => SignUpPage()));
-      },
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 20),
-        padding: EdgeInsets.all(15),
-        alignment: Alignment.bottomCenter,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Don\'t have an account ?',
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              'Register',
-              style: TextStyle(
-                  color: Color(0xff223f92),
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600),
-            ),
-          ],
         ),
       ),
     );
@@ -302,13 +158,11 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _emailPasswordWidget() {
-    return Column(
-      children: <Widget>[
-        _entryField(allTranslations.text("user_name")),
-        _entryField(allTranslations.text("password"), isPassword: true),
-      ],
-    );
+  @override
+  void initState() {
+    services = Services.of(context);
+    authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
+    super.initState();
   }
 
   @override
@@ -317,162 +171,207 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: Container(
         height: height,
-        child: Stack(
-          children: <Widget>[
-            Positioned(
-                top: -height * .36,
-                right: MediaQuery.of(context).size.width * .1,
-                child: BezierContainer()),
-            Positioned(
-                top: height * .55,
-                right: -MediaQuery.of(context).size.width * .10,
-                child: Container(
-                    child: Transform.rotate(
-                  angle: 3.1415926535897932 / 2.5,
-                  child: ClipPath(
-                    clipper: ClipPainter(),
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 1.1,
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomCenter,
-                              colors: [Color(0xff223f92), Color(0xff223f92)])),
-                    ),
-                  ),
-                ))),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
+        child: BlocEventStateBuilder<AuthenticationState>(
+            bloc: authenticationBloc,
+            builder: (BuildContext context, AuthenticationState state) {
+              return ModalProgressHUDCustomize(
+                inAsyncCall: state.isAuthenticating,
+                child: Stack(
                   children: <Widget>[
-                    SizedBox(height: height * .12),
-                    _title(),
-                    SizedBox(height: 50),
-                    //_emailPasswordWidget(),
-                    Container(
-                      margin: EdgeInsets.symmetric(vertical: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          SizedBox(
-                            height: 10,
+                    Positioned(
+                        top: -height * .36,
+                        right: MediaQuery.of(context).size.width * .1,
+                        child: BezierContainer()),
+                    Positioned(
+                        top: height * .55,
+                        right: -MediaQuery.of(context).size.width * .10,
+                        child: Container(
+                            child: Transform.rotate(
+                          angle: 3.1415926535897932 / 2.5,
+                          child: ClipPath(
+                            clipper: ClipPainter(),
+                            child: Container(
+                              height: MediaQuery.of(context).size.height * 1.1,
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                    Color(0xff223f92),
+                                    Color(0xff223f92)
+                                  ])),
+                            ),
                           ),
-                          TextField(
-                              controller: _userNameController,
-                              style: TextStyle(color: Colors.blue),
-                              decoration: InputDecoration(
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20.0)),
-                                    borderSide: BorderSide(color: Colors.blue),
-                                  ),
-                                  fillColor: Colors.red,
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.red),
-                                      borderRadius:
-                                          BorderRadius.circular(20.0)),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20.0)),
-                                    borderSide: BorderSide(color: Colors.red),
-                                  ),
-                                  contentPadding: EdgeInsets.fromLTRB(
-                                      20.0, 15.0, 20.0, 15.0),
-                                  hintText: allTranslations.text("user_name"),
-                                  prefixIcon: Padding(
-                                    padding: EdgeInsets.all(0.0),
-                                    child: Icon(
-                                      Icons.account_circle,
-                                      color: Colors.blue,
+                        ))),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: SingleChildScrollView(
+                        child: Form(
+                          key: formkey,
+                          autovalidate: _autoValidate,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              SizedBox(height: height * .12),
+                              _title(),
+                              SizedBox(height: 50),
+                              //_emailPasswordWidget(),
+                              Container(
+                                margin: EdgeInsets.symmetric(vertical: 10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    SizedBox(
+                                      height: 10,
                                     ),
-                                  ),
-                                  suffixStyle: TextStyle(color: Colors.red)))
-                        ],
+                                    TextFormField(
+                                        controller: _userNameController,
+                                        style: TextStyle(color: Colors.blue),
+                                        validator: (String str) {
+                                          if (str.length < 1)
+                                            return allTranslations
+                                                .text("UserNameValidation");
+                                          else
+                                            return null;
+                                        },
+                                        onSaved: (String val) {
+                                          userName = val;
+                                        },
+                                        decoration: InputDecoration(
+                                            enabledBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(20.0)),
+                                              borderSide: BorderSide(
+                                                  color: Colors.blue),
+                                            ),
+                                            fillColor: Colors.red,
+                                            border: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Colors.red),
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        20.0)),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(20.0)),
+                                              borderSide:
+                                                  BorderSide(color: Colors.red),
+                                            ),
+                                            contentPadding: EdgeInsets.fromLTRB(
+                                                20.0, 15.0, 20.0, 15.0),
+                                            hintText: allTranslations
+                                                .text("user_name"),
+                                            prefixIcon: Padding(
+                                              padding: EdgeInsets.all(0.0),
+                                              child: Icon(
+                                                Icons.account_circle,
+                                                color: Colors.blue,
+                                              ),
+                                            ),
+                                            suffixStyle:
+                                                TextStyle(color: Colors.red)))
+                                  ],
+                                ),
+                              ),
+
+                              Container(
+                                margin: EdgeInsets.symmetric(vertical: 10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    TextFormField(
+                                        controller: _passwordController,
+                                        obscureText: true,
+                                        style: TextStyle(color: Colors.blue),
+                                        validator: (String str) {
+                                          if (str.length < 1)
+                                            return allTranslations
+                                                .text("PasswordValidation");
+                                          else
+                                            return null;
+                                        },
+                                        decoration: InputDecoration(
+                                            enabledBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(20.0)),
+                                              borderSide: BorderSide(
+                                                  color: Colors.blue),
+                                            ),
+                                            fillColor: Colors.red,
+                                            border: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Colors.red),
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        20.0)),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(20.0)),
+                                              borderSide:
+                                                  BorderSide(color: Colors.red),
+                                            ),
+                                            contentPadding: EdgeInsets.fromLTRB(
+                                                20.0, 15.0, 20.0, 15.0),
+                                            hintText: allTranslations
+                                                .text("password"),
+                                            prefixIcon: Padding(
+                                              padding: EdgeInsets.all(0.0),
+                                              child: Icon(
+                                                Icons.lock_open,
+                                                color: Colors.blue,
+                                              ),
+                                            ),
+                                            suffixStyle:
+                                                TextStyle(color: Colors.red)))
+                                  ],
+                                ),
+                              ),
+                              new Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  new Switch(
+                                      value: _isRemember,
+                                      onChanged: _updateRemember,
+                                      activeColor: Colors.blue),
+                                  new Text(
+                                    allTranslations.text("Rememberme"),
+                                    style: TextStyle(color: Colors.black87),
+                                  )
+                                ],
+                              ),
+                              SizedBox(height: 20),
+                              _submitButton(),
+
+                              Container(
+                                padding: EdgeInsets.symmetric(vertical: 10),
+                                alignment: Alignment.centerRight,
+                                child: Text(
+                                    allTranslations.text("forgotpassword"),
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500)),
+                              ),
+                              //_divider(),
+                              // _facebookButton(),
+                              SizedBox(height: height * .055),
+                              // _createAccountLabel(),
+                              // _fingerCheck(),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
-
-                    Container(
-                      margin: EdgeInsets.symmetric(vertical: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          SizedBox(
-                            height: 10,
-                          ),
-                          TextField(
-                              controller: _passwordController,
-                              obscureText: true,
-                              style: TextStyle(color: Colors.blue),
-                              decoration: InputDecoration(
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20.0)),
-                                    borderSide: BorderSide(color: Colors.blue),
-                                  ),
-                                  fillColor: Colors.red,
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.red),
-                                      borderRadius:
-                                          BorderRadius.circular(20.0)),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20.0)),
-                                    borderSide: BorderSide(color: Colors.red),
-                                  ),
-                                  contentPadding: EdgeInsets.fromLTRB(
-                                      20.0, 15.0, 20.0, 15.0),
-                                  hintText: allTranslations.text("password"),
-                                  prefixIcon: Padding(
-                                    padding: EdgeInsets.all(0.0),
-                                    child: Icon(
-                                      Icons.lock_open,
-                                      color: Colors.blue,
-                                    ),
-                                  ),
-                                  suffixStyle: TextStyle(color: Colors.red)))
-                        ],
-                      ),
-                    ),
-                    new Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        new Switch(
-                            value: _isRemember,
-                            onChanged: _updateRemember,
-                            activeColor: Colors.blue),
-                        new Text(
-                          allTranslations.text("Rememberme"),
-                          style: TextStyle(color: Colors.black87),
-                        )
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    _submitButton(),
-
-                    Container(
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      alignment: Alignment.centerRight,
-                      child: Text(allTranslations.text("forgotpassword"),
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.w500)),
-                    ),
-                    //_divider(),
-                    // _facebookButton(),
-                    SizedBox(height: height * .055),
-                    // _createAccountLabel(),
-                    // _fingerCheck(),
+                    Positioned(top: 40, left: 0, child: _backButton()),
                   ],
                 ),
-              ),
-            ),
-            Positioned(top: 40, left: 0, child: _backButton()),
-          ],
-        ),
+              );
+            }),
       ),
       floatingActionButton: FloatingActionButton(
           mini: true,

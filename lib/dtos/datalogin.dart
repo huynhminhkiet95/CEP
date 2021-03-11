@@ -1,20 +1,19 @@
 import 'package:CEPmobile/dtos/dtobase.dart';
 
 class DataLogin extends BaseDto {
-  String username;
+  String userName;
   String password;
-  String granttype;
-  String clientid;
+  String key;
+  bool rememberMe;
 
-  DataLogin({this.username, this.password, this.granttype, this.clientid});
+  DataLogin({this.userName, this.password, this.key, this.rememberMe});
 
   @override
   Map toJson() {
     Map map = new Map();
-    map["username"] = username;
+    map["userName"] = userName;
     map["password"] = password;
-    map["grant_type"] = granttype;
-    map["client_id"] = clientid;
+    map["key"] = key;
     return map;
   }
 }

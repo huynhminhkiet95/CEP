@@ -75,7 +75,7 @@ class GlobalTranslations {
 
     // Set the locale
     if (language == "") {
-      language = "en";
+      language = "vi";
     }
     _locale = Locale(language, "");
 
@@ -87,6 +87,10 @@ class GlobalTranslations {
     // If we are asked to save the new language in the application preferences
     if (saveInPrefs) {
       await setPreferredLanguage(language);
+    }
+    if (!saveInPrefs) {
+      await setPreferredLanguage("en");
+      await setPreferredLanguage("vi");
     }
 
     // If there is a callback to invoke to notify that a language has changed

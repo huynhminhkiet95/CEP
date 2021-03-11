@@ -177,32 +177,31 @@ class HttpBase {
     return result;
   }
 
-  Future<http.Response> httpPostEncoded(String url, dynamic body) async {
-    var address = globalServer.getServerSSO;
-    http.Response result;
+  Future<http.Response> postRequest(String url,dynamic body) async {
+    var response;
     try {
-      result = await http
-          .post(address + url,
-              body: body,
-              headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/x-www-form-urlencoded"
-              },
-              encoding: Encoding.getByName("utf-8"))
-          .timeout(const Duration(seconds: 5));
+      var address = globalServer.getServerApi + url;
+      var jsonBody = json.encode(body);
+      response = await http.post(address,headers: {"Content-Type": "application/json"}, body: jsonBody);
+      return response;
+    }
+    catch (e) {
+      throw Exception(body);
+    }
+  }
+
+  Future<http.Response> httpPostEncoded(String url, dynamic body) async {
+    var address = globalServer.getServerApi + url;
+    var jsonBody = json.encode(body);
+    var response;
+    try {
+      response = await http.post(address,
+          headers: {"Content-Type": "application/json"}, body: jsonBody);
     } catch (e) {
-      result = await http
-          .post(address + url,
-              body: body,
-              headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/x-www-form-urlencoded"
-              },
-              encoding: Encoding.getByName("utf-8"))
-          .timeout(const Duration(seconds: 5));
+      //result.statusCode =
     }
 
-    return result;
+    return response;
   }
 
   Future<http.Response> httpGetSSO(String url) async {

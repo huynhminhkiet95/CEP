@@ -40,7 +40,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
     }
 
     _listOfGroup = List<Column>.generate(
-      listGroupMenuPermission.length,
+      //listGroupMenuPermission.length,
+      1,
       (i) => Column(
         mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -48,7 +49,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
           Container(
             child: ListTile(
                 title: Text(
-              textMenuName(listGroupMenuPermission[i].menu.menuName),
+              //textMenuName(listGroupMenuPermission[i].menu.menuName),//Packages
+              textMenuName("Packages"), //Packages
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.amberAccent,
@@ -57,21 +59,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 15.0),
-            child:
-                //  Column(
-                //   children: <Widget>[
-                //     ListTile(
-                //         title: new Text("Announcement",
-                //             style: TextStyle(
-                //               color: Colors.white70,
-                //             )),
-                //         onTap: () {
-                //           Navigator.pushNamed(context, "announcement");
-                //           //data.menuId == 'MB004' ? CommonService.goInspectionList(TypeInspectionConstants.technical): Navigator.pushNamed(context, data.menuId);
-                //         })
-                //   ],
-                // )
-                Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: listGroupMenuPermission[i]
                   .menu

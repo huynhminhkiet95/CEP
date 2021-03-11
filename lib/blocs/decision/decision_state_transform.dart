@@ -2,7 +2,9 @@ import 'package:CEPmobile/bloc_helpers/bloc_state_transform_base.dart';
 import 'package:CEPmobile/blocs/authentication/authentication_bloc.dart';
 import 'package:CEPmobile/blocs/authentication/authentication_state.dart';
 import 'package:CEPmobile/blocs/decision/decision_state_action.dart';
+import 'package:CEPmobile/ui/screens/Home/googleiofilteroptionanimation.dart';
 import 'package:CEPmobile/ui/screens/Home/home.dart';
+import 'package:CEPmobile/ui/screens/Home/dashboard.dart';
 import 'package:CEPmobile/ui/screens/Login/index.dart';
 import 'package:CEPmobile/ui/screens/Login/welcomePage.dart';
 
@@ -39,7 +41,7 @@ class DecisionStateTransform
     DecisionStateAction action = DecisionStateAction.doNothing();
 
     if (newState.isAuthenticated) {
-      action = DecisionStateAction.routeToPage(HomePage());
+      action = DecisionStateAction.routeToPage(MenuDashboardPage());
     } else if (newState.isAuthenticating || newState.hasFailed) {
       // do nothing
     } else {

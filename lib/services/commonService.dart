@@ -26,21 +26,18 @@ class CommonService {
   CommonService(this._httpBase);
 
   Future<Response> getUser(UserLogin userInfo) {
-    return _httpBase.httpPostToken(
-        ServiceName.Get_ValidateUser.toString(), userInfo.toJson());
+    return _httpBase.httpPostToken(ServiceName.Get_ValidateUser.toString(), userInfo.toJson());
   }
 
   Future<Response> getToken(DataLogin datalogin) {
-    return _httpBase.httpPostEncoded(
-        ServiceName.Get_Token.toString(), datalogin.toJson());
+    return _httpBase.postRequest(ServiceName.Get_Token.toString(), datalogin.toJson());
   }
 
   Future<Response> getEmployeePrivate(String employeeId, String systemId) {
     Map map = new Map();
     map["EmployeeId"] = employeeId;
     map["SystemId"] = systemId;
-    return _httpBase.httpPostSSO(
-        ServiceName.GetEmployeePrivate.toString(), map);
+    return _httpBase.httpPostSSO(ServiceName.GetEmployeePrivate.toString(), map);
   }
 
   Future<Response> getMenuPermission(

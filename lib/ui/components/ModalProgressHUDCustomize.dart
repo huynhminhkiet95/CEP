@@ -37,13 +37,12 @@ class ModalProgressHUDCustomize extends StatelessWidget {
       height: 100.0,
       alignment: AlignmentDirectional.center,
       decoration: new BoxDecoration(
-          color: Colors.green.withOpacity(0.8),
+          color: Colors.green[900].withOpacity(0.5),
           borderRadius: new BorderRadius.circular(10.0)),
       child: new Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           new CircularProgressIndicator(
-     
             strokeWidth: 3.0,
             valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
           ),

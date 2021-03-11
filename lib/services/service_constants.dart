@@ -1,6 +1,6 @@
 mixin ServiceName {
     static const String Get_ValidateUser = "api/authentication/validateuser";
-    static const String Get_Token = "token";
+    static const String Get_Token = "Authentication/Login";
     static const String Get_PageMenuPermission = "/api/ssocommonservice/menus";
     static const String Get_UserProfile = "api/authentication/userprofile/";
     static const String Get_TodoBookings = "api/etp/booking/gettodobooking";
