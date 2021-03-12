@@ -1,9 +1,12 @@
+import 'dart:async';
 import 'dart:convert';
+import 'package:CEPmobile/GlobalTranslations.dart';
 import 'package:CEPmobile/GlobalUser.dart';
 import 'package:CEPmobile/bloc_helpers/bloc_event_state.dart';
 import 'package:CEPmobile/bloc_helpers/bloc_sinletion.dart';
 import 'package:CEPmobile/blocs/authentication/authentication_event.dart';
 import 'package:CEPmobile/blocs/authentication/authentication_state.dart';
+import 'package:CEPmobile/config/status_code.dart';
 import 'package:CEPmobile/dtos/datalogin.dart';
 import 'package:CEPmobile/dtos/serverInfo.dart';
 import 'package:CEPmobile/dtos/userInfor.dart';
@@ -15,6 +18,8 @@ import 'package:CEPmobile/models/users/ValidateUserIdPwdJsonResult.dart';
 import 'package:CEPmobile/services/commonService.dart';
 import 'package:CEPmobile/services/sharePreference.dart';
 import 'package:CEPmobile/ui/screens/Home/home.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AuthenticationBloc
     extends BlocEventStateBase<AuthenticationEvent, AuthenticationState> {
@@ -34,9 +39,6 @@ class AuthenticationBloc
       AuthenticationEvent event, AuthenticationState currentState) async* {
     if (event is AuthenticationEventLogin) {
       yield AuthenticationState.authenticating(currentState);
-      UserInfoPwdJsonResult userIdPwdJsonResult;
-      yield AuthenticationState.authenticated(event.isRemember, event.userName,
-          event.password, currentState.serverCode, userIdPwdJsonResult);
 
       var server = new ServerInfo();
       switch (event.serverCode) {
@@ -70,7 +72,46 @@ class AuthenticationBloc
           ._commonService
           .getToken(dataToken)
           .then((response) => response);
-      var a = "";
+      if (token != null || token.body.isEmpty != true) {
+
+        var jsonBodyToken = json.decode(token.body);
+          if (token.statusCode == StatusCodeConstants.OK) {
+        
+            if (jsonBodyToken["IsSuccessed"] == true) {
+              globalUser.settoken = jsonBodyToken["Token"];
+              UserInfoPwdJsonResult userIdPwdJsonResult;
+              yield AuthenticationState.authenticated(
+                  event.isRemember,
+                  event.userName,
+                  event.password,
+                  currentState.serverCode,
+                  userIdPwdJsonResult);
+            } else {
+              yield AuthenticationState.failedByUser(currentState);
+              Fluttertoast.showToast(
+                msg: allTranslations.text("UserIsNotExist"),
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM, // also possible "TOP" and "CENTER"
+                backgroundColor: Colors.red[300].withOpacity(0.7),
+                textColor: Colors.white,
+                
+              );
+            }
+        } 
+        else if(token.statusCode == StatusCodeConstants.BAD_REQUEST)
+        {
+            yield AuthenticationState.failedByUser(currentState);
+            Fluttertoast.showToast(
+                msg: allTranslations.text("UserIsNotExist"),
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM, // also possible "TOP" and "CENTER"
+                backgroundColor: Colors.red[300].withOpacity(0.7),
+                textColor: Colors.white,
+                
+              );
+        }
+      }
+      
       // if (token.statusCode == 200) {
       //   var jsonBodyToken = json.decode(token.body);
       //   globalUser.settoken = jsonBodyToken["access_token"];

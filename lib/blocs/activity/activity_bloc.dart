@@ -81,7 +81,6 @@ class ActivityBloc extends BlocEventStateBase<ActivityEvent, ActivityState> {
               msg: allTranslations.text("deletesuccess"),
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.CENTER,
-              timeInSecForIos: 1,
               backgroundColor: Colors.blueAccent,
               textColor: Colors.white,
               fontSize: 16.0);
@@ -105,7 +104,6 @@ class ActivityBloc extends BlocEventStateBase<ActivityEvent, ActivityState> {
               msg: allTranslations.text("deletefail"),
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.CENTER,
-              timeInSecForIos: 1,
               backgroundColor: Colors.redAccent,
               textColor: Colors.white,
               fontSize: 16.0);
@@ -116,7 +114,6 @@ class ActivityBloc extends BlocEventStateBase<ActivityEvent, ActivityState> {
             msg: allTranslations.text("deletefail"),
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
-            timeInSecForIos: 1,
             backgroundColor: Colors.redAccent,
             textColor: Colors.white,
             fontSize: 16.0);

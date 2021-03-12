@@ -186,7 +186,7 @@ class HttpBase {
       return response;
     }
     catch (e) {
-      throw Exception(body);
+      throw Exception(e);
     }
   }
 

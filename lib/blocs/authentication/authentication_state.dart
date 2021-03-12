@@ -114,7 +114,7 @@ class AuthenticationState extends BlocState {
         userIsNotExit: false);
   }
 
-  factory AuthenticationState.failure(AuthenticationState currentState) {
+  factory AuthenticationState.failedByServer(AuthenticationState currentState) {
     return AuthenticationState(
         isAuthenticated: false,
         hasFailed: true,
@@ -124,6 +124,18 @@ class AuthenticationState extends BlocState {
         password: currentState?.password ?? "",
         userIsNotExit: false);
   }
+
+  factory AuthenticationState.failedByUser(AuthenticationState currentState) {
+    return AuthenticationState(
+        isAuthenticated: false,
+        hasFailed: false,
+        isAuthenticating: false,
+        isRemember: currentState?.isRemember ?? false,
+        userName: currentState?.userName ?? "",
+        password: currentState?.password ?? "",
+        userIsNotExit: true);
+  }
+
 
   factory AuthenticationState.updateSelectServer(
       AuthenticationState currentState, String serverCode) {

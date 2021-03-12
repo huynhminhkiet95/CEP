@@ -77,7 +77,6 @@ class TripTodoBloc extends BlocEventStateBase<TripTodoEvent, TripTodoState> {
             msg: allTranslations.text("Acceptsuccess"),
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
-            timeInSecForIos: 1,
             backgroundColor: Colors.blueAccent,
             textColor: Colors.white,
             fontSize: 16.0);
@@ -100,7 +99,6 @@ class TripTodoBloc extends BlocEventStateBase<TripTodoEvent, TripTodoState> {
               msg: allTranslations.text("PickupSuccess"),
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
-              timeInSecForIos: 1,
               backgroundColor: Colors.blueAccent,
               textColor: Colors.white,
               fontSize: 16.0);

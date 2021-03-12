@@ -34,7 +34,7 @@
     "PartialCompleted":"Hoàn thành một phần",
     "Fail":"Thất bại",
     "FailReason":"Lý do",
-    "UserIsNotExist":"Tài khoản không tồn tại",
+    "UserIsNotExist":"Tài khoản hoặc mật khẩu không đúng !",
     "SimpleUpdate":"Cập nhật đơn hàng",
     "SavePosition":"Cập nhật vị trí",
     "CompletedTrip":"Hoàn thành",

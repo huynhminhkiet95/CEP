@@ -199,9 +199,20 @@ flutter:
   - assets/images/container_shipmentstatus.png
   - assets/images/logoshipmentstatus2.png
   - assets/images/logoshipmentstatus3.png
-
   #avatars
-  
+  - assets/dashboard/notification.png
+  - assets/dashboard/calendar.png
+  - assets/dashboard/festival.png
+  - assets/dashboard/food.png
+  - assets/dashboard/map.png
+  - assets/dashboard/setting.png
+  - assets/dashboard/todo.png
+  - assets/dashboard/cep-slogan-intro.png
+  - assets/dashboard/contact-hover.png
+  - assets/dashboard/credit-hover.png
+  - assets/dashboard/develop-hover.png
+  - assets/dashboard/home.png
+  - assets/dashboard/saving-hover.png
 
 
   # To add assets to your application, add an assets section, like this:

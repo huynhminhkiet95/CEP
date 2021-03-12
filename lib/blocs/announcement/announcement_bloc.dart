@@ -74,7 +74,6 @@ class AnnouncementBloc
               msg: allTranslations.text("Savesuccess"),
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
-              timeInSecForIos: 1,
               backgroundColor: Colors.blueAccent,
               textColor: Colors.white,
               fontSize: 16.0);

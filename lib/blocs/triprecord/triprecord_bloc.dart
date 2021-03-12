@@ -60,7 +60,6 @@ class TripRecordBloc
               msg: allTranslations.text("Savesuccess"),
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
-              timeInSecForIos: 1,
               backgroundColor: Colors.blueAccent,
               textColor: Colors.white,
               fontSize: 16.0);
@@ -69,7 +68,6 @@ class TripRecordBloc
               msg: allTranslations.text("Savefail"),
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
-              timeInSecForIos: 1,
               backgroundColor: Colors.redAccent,
               textColor: Colors.white,
               fontSize: 16.0);
@@ -79,7 +77,6 @@ class TripRecordBloc
             msg: allTranslations.text("Savefail"),
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
-            timeInSecForIos: 1,
             backgroundColor: Colors.redAccent,
             textColor: Colors.white,
             fontSize: 16.0);
@@ -108,7 +105,6 @@ class TripRecordBloc
                     msg: "Save Image success",
                     toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.BOTTOM,
-                    timeInSecForIos: 1,
                     backgroundColor: Colors.blueAccent,
                     textColor: Colors.white,
                     fontSize: 16.0);
@@ -119,7 +115,6 @@ class TripRecordBloc
               msg: allTranslations.text("Savesuccess"),
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
-              timeInSecForIos: 1,
               backgroundColor: Colors.blueAccent,
               textColor: Colors.white,
               fontSize: 16.0);
@@ -128,7 +123,6 @@ class TripRecordBloc
               msg: allTranslations.text("Savefail"),
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
-              timeInSecForIos: 1,
               backgroundColor: Colors.redAccent,
               textColor: Colors.white,
               fontSize: 16.0);
@@ -138,7 +132,6 @@ class TripRecordBloc
             msg: allTranslations.text("Savefail"),
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
-            timeInSecForIos: 1,
             backgroundColor: Colors.redAccent,
             textColor: Colors.white,
             fontSize: 16.0);

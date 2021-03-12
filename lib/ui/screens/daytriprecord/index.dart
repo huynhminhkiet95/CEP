@@ -152,7 +152,6 @@ class _TripRecordState extends State<DayTripRecordComponent> {
           msg: allTranslations.text("CheckRouteNote"),
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
-          timeInSecForIos: 1,
           backgroundColor: Colors.redAccent,
           textColor: Colors.white,
           fontSize: 14.0);

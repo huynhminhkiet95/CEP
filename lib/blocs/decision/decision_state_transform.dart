@@ -44,7 +44,13 @@ class DecisionStateTransform
       action = DecisionStateAction.routeToPage(MenuDashboardPage());
     } else if (newState.isAuthenticating || newState.hasFailed) {
       // do nothing
-    } else {
+    } 
+    else if(!newState.isAuthenticating && (newState.userIsNotExit == true || newState.hasFailed == true))
+    {
+
+    }
+
+    else {
       action = DecisionStateAction.routeToPage(WelcomePage());
     }
     yield action;

@@ -46,7 +46,7 @@
     "PartialCompleted":"Partial",
     "Fail":"Fail",
     "FailReason":"Fail Reason",
-    "UserIsNotExist":"This user is not exits",
+    "UserIsNotExist":"This user or password is not correct !",
     "SimpleUpdate":"Simple Update",
     "SavePosition":"I am Here",
     "CompletedTrip":"Completed Trip",

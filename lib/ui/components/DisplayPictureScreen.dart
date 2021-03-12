@@ -74,7 +74,6 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
               msg: "Upload success!",
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.CENTER,
-              timeInSecForIos: 1,
               backgroundColor: Colors.blueAccent,
               textColor: Colors.white,
               fontSize: 16.0);
@@ -92,7 +91,6 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
               msg: response.body,
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.CENTER,
-              timeInSecForIos: 1,
               backgroundColor: Colors.redAccent,
               textColor: Colors.white,
               fontSize: 16.0);
@@ -102,7 +100,6 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
             msg: response.body,
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
-            timeInSecForIos: 1,
             backgroundColor: Colors.redAccent,
             textColor: Colors.white,
             fontSize: 16.0);
@@ -112,7 +109,6 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
           msg: e.toString(),
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 1,
           backgroundColor: Colors.redAccent,
           textColor: Colors.white,
           fontSize: 16.0);

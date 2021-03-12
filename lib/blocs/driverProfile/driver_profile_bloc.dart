@@ -94,7 +94,6 @@ class DriverProfileBloc
           msg: allTranslations.text("Updatesuccess"),
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
-          timeInSecForIos: 1,
           backgroundColor: Colors.blueAccent,
           textColor: Colors.white,
           fontSize: 16.0);

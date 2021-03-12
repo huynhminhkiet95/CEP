@@ -70,7 +70,6 @@ class DocumentBloc extends BlocEventStateBase<DocumentEvent, DocumentState> {
               msg: "Delete Image success",
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
-              timeInSecForIos: 1,
               backgroundColor: Colors.blueAccent,
               textColor: Colors.white,
               fontSize: 16.0);
@@ -85,7 +84,6 @@ class DocumentBloc extends BlocEventStateBase<DocumentEvent, DocumentState> {
             msg: "Save Image success",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
-            timeInSecForIos: 1,
             backgroundColor: Colors.blueAccent,
             textColor: Colors.white,
             fontSize: 16.0);

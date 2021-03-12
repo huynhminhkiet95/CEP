@@ -51,6 +51,7 @@ class _LoginPageState extends State<LoginPage> {
           password: _passwordController.text.toString(),
           serverCode: _server,
           isRemember: _isRemember));
+      
     } else {
 //    If all data are not valid then start auto validation.
       setState(() {
@@ -174,7 +175,9 @@ class _LoginPageState extends State<LoginPage> {
         child: BlocEventStateBuilder<AuthenticationState>(
             bloc: authenticationBloc,
             builder: (BuildContext context, AuthenticationState state) {
+           
               return ModalProgressHUDCustomize(
+                
                 inAsyncCall: state.isAuthenticating,
                 child: Stack(
                   children: <Widget>[
@@ -357,6 +360,9 @@ class _LoginPageState extends State<LoginPage> {
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500)),
                               ),
+                               
+                              
+                              
                               //_divider(),
                               // _facebookButton(),
                               SizedBox(height: height * .055),

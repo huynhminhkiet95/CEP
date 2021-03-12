@@ -492,7 +492,6 @@ class LoginScreenState extends State<LoginScreen> {
           msg: allTranslations.text("Automaticlogin"),
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 1,
           backgroundColor: Colors.redAccent,
           textColor: Colors.white,
           fontSize: 14.0);
@@ -521,7 +520,6 @@ class LoginScreenState extends State<LoginScreen> {
             msg: allTranslations.text("TouchIdOff"),
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
-            timeInSecForIos: 1,
             backgroundColor: Colors.redAccent,
             textColor: Colors.white,
             fontSize: 16.0);
@@ -530,7 +528,6 @@ class LoginScreenState extends State<LoginScreen> {
             msg: allTranslations.text("TouchIdnotAvailable"),
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
-            timeInSecForIos: 1,
             backgroundColor: Colors.redAccent,
             textColor: Colors.white,
             fontSize: 16.0);
