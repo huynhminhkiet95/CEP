@@ -213,6 +213,11 @@ flutter:
   - assets/dashboard/develop-hover.png
   - assets/dashboard/home.png
   - assets/dashboard/saving-hover.png
+  - assets/dashboard/document-download-outline.png
+  - assets/dashboard/survey.png
+  - assets/dashboard/statistical-analysis.png
+  - assets/dashboard/document-download-outline.png
+  
 
 
   # To add assets to your application, add an assets section, like this:

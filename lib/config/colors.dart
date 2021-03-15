@@ -7,7 +7,7 @@ class ColorConstants {
   static Color whiteColor = Color.fromARGB(255, 255, 155, 255);
   static String backgroud = '#169a5a';
   static Color backgroudButton = Color(getColorHexFromStr('009750'));
-
+  static Color cepColorBackground = Color(0xff003399);
   static int getColorHexFromStr(String colorStr) {
     colorStr = "FF" + colorStr;
     colorStr = colorStr.replaceAll("#", "");

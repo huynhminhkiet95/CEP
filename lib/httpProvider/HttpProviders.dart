@@ -182,7 +182,8 @@ class HttpBase {
     try {
       var address = globalServer.getServerApi + url;
       var jsonBody = json.encode(body);
-      response = await http.post(address,headers: {"Content-Type": "application/json"}, body: jsonBody);
+      response = await http.post(address,headers: {"Content-Type": "application/json"}, body: jsonBody)
+      .timeout(const Duration(seconds: 10));
       return response;
     }
     catch (e) {

@@ -39,12 +39,21 @@ class AuthenticationBloc
       AuthenticationEvent event, AuthenticationState currentState) async* {
     if (event is AuthenticationEventLogin) {
       yield AuthenticationState.authenticating(currentState);
+      // /// khi khong co mang//
 
+      // UserInfoPwdJsonResult userIdPwdJsonResult;
+      // yield AuthenticationState.authenticated(
+      //                   event.isRemember,
+      //                   event.userName,
+      //                   event.password,
+      //                   currentState.serverCode,
+      //                   userIdPwdJsonResult);
+      // ///
       var server = new ServerInfo();
       switch (event.serverCode) {
         case "DEV":
-          server.serverAddress = "https://api-cep.cep.org.vn:8998/api/";
-          server.serverApi = "https://api-cep.cep.org.vn:8998/api/";
+          server.serverAddress = "http://10.10.12.58:8055/";
+          server.serverApi = "http://10.10.12.58:8055/";
           server.serverCode = event.serverCode;
           server.serverNotification = "https://dev.igls.vn:8091/";
           server.serverInspection = "https://dev.igls.vn:9102/";
@@ -52,8 +61,8 @@ class AuthenticationBloc
           server.serverSSO = "https://dev.igls.vn:9110/";
           break;
         case "PROD":
-          server.serverAddress = "https://api-cep.cep.org.vn:8998/api";
-          server.serverApi = "https://api-cep.cep.org.vn:8998/api";
+          server.serverAddress = "http://10.10.12.58:8055/";
+          server.serverApi = "http://10.10.12.58:8055/";
           server.serverCode = event.serverCode;
           server.serverNotification = "https://fbmp.enterprise.vn:9101/";
           server.serverInspection = "https://fmbp.enterprise.vn/";
@@ -65,7 +74,6 @@ class AuthenticationBloc
       var dataToken = new DataLogin(
         userName: event.userName,
         password: event.password,
-        key: "CEP!@#021191",
       );
       this._sharePreferenceService.updateServerInfo(server);
       var token = await this
@@ -73,45 +81,39 @@ class AuthenticationBloc
           .getToken(dataToken)
           .then((response) => response);
       if (token != null || token.body.isEmpty != true) {
-
         var jsonBodyToken = json.decode(token.body);
-          if (token.statusCode == StatusCodeConstants.OK) {
-        
-            if (jsonBodyToken["IsSuccessed"] == true) {
-              globalUser.settoken = jsonBodyToken["Token"];
-              UserInfoPwdJsonResult userIdPwdJsonResult;
-              yield AuthenticationState.authenticated(
-                  event.isRemember,
-                  event.userName,
-                  event.password,
-                  currentState.serverCode,
-                  userIdPwdJsonResult);
-            } else {
-              yield AuthenticationState.failedByUser(currentState);
-              Fluttertoast.showToast(
-                msg: allTranslations.text("UserIsNotExist"),
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM, // also possible "TOP" and "CENTER"
-                backgroundColor: Colors.red[300].withOpacity(0.7),
-                textColor: Colors.white,
-                
-              );
-            }
-        } 
-        else if(token.statusCode == StatusCodeConstants.BAD_REQUEST)
-        {
+        if (token.statusCode == StatusCodeConstants.OK) {
+          if (jsonBodyToken["isSuccessed"] == true) {
+            globalUser.settoken = jsonBodyToken["token"];
+            UserInfoPwdJsonResult userIdPwdJsonResult;
+            yield AuthenticationState.authenticated(
+                event.isRemember,
+                event.userName,
+                event.password,
+                currentState.serverCode,
+                userIdPwdJsonResult);
+          } else {
             yield AuthenticationState.failedByUser(currentState);
             Fluttertoast.showToast(
-                msg: allTranslations.text("UserIsNotExist"),
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM, // also possible "TOP" and "CENTER"
-                backgroundColor: Colors.red[300].withOpacity(0.7),
-                textColor: Colors.white,
-                
-              );
+              msg: allTranslations.text("UserIsNotExist"),
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM, // also possible "TOP" and "CENTER"
+              backgroundColor: Colors.red[300].withOpacity(0.7),
+              textColor: Colors.white,
+            );
+          }
+        } else if (token.statusCode == StatusCodeConstants.BAD_REQUEST) {
+          yield AuthenticationState.failedByUser(currentState);
+          Fluttertoast.showToast(
+            msg: allTranslations.text("UserIsNotExist"),
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM, // also possible "TOP" and "CENTER"
+            backgroundColor: Colors.red[300].withOpacity(0.7),
+            textColor: Colors.white,
+          );
         }
       }
-      
+
       // if (token.statusCode == 200) {
       //   var jsonBodyToken = json.decode(token.body);
       //   globalUser.settoken = jsonBodyToken["access_token"];

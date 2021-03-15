@@ -35,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
   String language = allTranslations.currentLanguage;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
   bool _autoValidate = false;
-
+  bool _passwordVisible;
   //#region BLOC
   AuthenticationBloc authenticationBloc;
   Services services;
@@ -51,7 +51,6 @@ class _LoginPageState extends State<LoginPage> {
           password: _passwordController.text.toString(),
           serverCode: _server,
           isRemember: _isRemember));
-      
     } else {
 //    If all data are not valid then start auto validation.
       setState(() {
@@ -72,11 +71,11 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.pop(context);
       },
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10),
+        // padding: EdgeInsets.symmetric(horizontal: 10),
         child: Row(
           children: <Widget>[
             Container(
-              padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
+              //padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
               child: Icon(Icons.keyboard_arrow_left, color: Colors.black),
             ),
             Text('Back',
@@ -163,6 +162,7 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     services = Services.of(context);
     authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
+    _passwordVisible = false;
     super.initState();
   }
 
@@ -175,38 +175,42 @@ class _LoginPageState extends State<LoginPage> {
         child: BlocEventStateBuilder<AuthenticationState>(
             bloc: authenticationBloc,
             builder: (BuildContext context, AuthenticationState state) {
-           
               return ModalProgressHUDCustomize(
-                
                 inAsyncCall: state.isAuthenticating,
                 child: Stack(
-                  children: <Widget>[
-                    Positioned(
-                        top: -height * .36,
-                        right: MediaQuery.of(context).size.width * .1,
-                        child: BezierContainer()),
-                    Positioned(
-                        top: height * .55,
-                        right: -MediaQuery.of(context).size.width * .10,
-                        child: Container(
-                            child: Transform.rotate(
-                          angle: 3.1415926535897932 / 2.5,
-                          child: ClipPath(
-                            clipper: ClipPainter(),
+                  children: [
+                    Stack(
+                      children: <Widget>[
+                        Positioned(
+                            top: -height * .36,
+                            right: MediaQuery.of(context).size.width * .1,
+                            child: BezierContainer()),
+                        Positioned(
+                            top: height * .55,
+                            right: -MediaQuery.of(context).size.width * .10,
                             child: Container(
-                              height: MediaQuery.of(context).size.height * 1.1,
-                              width: MediaQuery.of(context).size.width * 0.9,
-                              decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomCenter,
-                                      colors: [
-                                    Color(0xff223f92),
-                                    Color(0xff223f92)
-                                  ])),
-                            ),
-                          ),
-                        ))),
+                                child: Transform.rotate(
+                              angle: 3.1415926535897932 / 2.5,
+                              child: ClipPath(
+                                clipper: ClipPainter(),
+                                child: Container(
+                                  height:
+                                      MediaQuery.of(context).size.height * 1.1,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.9,
+                                  decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomCenter,
+                                          colors: [
+                                        Color(0xff223f92),
+                                        Color(0xff223f92)
+                                      ])),
+                                ),
+                              ),
+                            ))),
+                      ],
+                    ),
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       child: SingleChildScrollView(
@@ -217,10 +221,11 @@ class _LoginPageState extends State<LoginPage> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              SizedBox(height: height * .12),
+                              SizedBox(height: height * .06),
+                              Container(child: _backButton()),
+                              SizedBox(height: height * .02),
                               _title(),
                               SizedBox(height: 50),
-                              //_emailPasswordWidget(),
                               Container(
                                 margin: EdgeInsets.symmetric(vertical: 10),
                                 child: Column(
@@ -288,49 +293,66 @@ class _LoginPageState extends State<LoginPage> {
                                       height: 10,
                                     ),
                                     TextFormField(
-                                        controller: _passwordController,
-                                        obscureText: true,
-                                        style: TextStyle(color: Colors.blue),
-                                        validator: (String str) {
-                                          if (str.length < 1)
-                                            return allTranslations
-                                                .text("PasswordValidation");
-                                          else
-                                            return null;
-                                        },
-                                        decoration: InputDecoration(
-                                            enabledBorder: OutlineInputBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(20.0)),
-                                              borderSide: BorderSide(
-                                                  color: Colors.blue),
-                                            ),
-                                            fillColor: Colors.red,
-                                            border: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Colors.red),
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        20.0)),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(20.0)),
+                                      controller: _passwordController,
+                                      obscureText: !_passwordVisible,
+                                      style: TextStyle(color: Colors.blue),
+                                      validator: (String str) {
+                                        if (str.length < 1)
+                                          return allTranslations
+                                              .text("PasswordValidation");
+                                        else
+                                          return null;
+                                      },
+                                      decoration: InputDecoration(
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(20.0)),
+                                            borderSide:
+                                                BorderSide(color: Colors.blue),
+                                          ),
+                                          fillColor: Colors.red,
+                                          border: OutlineInputBorder(
                                               borderSide:
                                                   BorderSide(color: Colors.red),
+                                              borderRadius:
+                                                  BorderRadius.circular(20.0)),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(20.0)),
+                                            borderSide:
+                                                BorderSide(color: Colors.red),
+                                          ),
+                                          contentPadding: EdgeInsets.fromLTRB(
+                                              20.0, 15.0, 20.0, 15.0),
+                                          hintText:
+                                              allTranslations.text("password"),
+                                          prefixIcon: Padding(
+                                            padding: EdgeInsets.all(0.0),
+                                            child: Icon(
+                                              Icons.lock_open,
+                                              color: Colors.blue,
                                             ),
-                                            contentPadding: EdgeInsets.fromLTRB(
-                                                20.0, 15.0, 20.0, 15.0),
-                                            hintText: allTranslations
-                                                .text("password"),
-                                            prefixIcon: Padding(
-                                              padding: EdgeInsets.all(0.0),
-                                              child: Icon(
-                                                Icons.lock_open,
-                                                color: Colors.blue,
-                                              ),
+                                          ),
+                                          suffixStyle:
+                                              TextStyle(color: Colors.red),
+                                          suffixIcon: IconButton(
+                                            icon: Icon(
+                                              // Based on passwordVisible state choose the icon
+                                              _passwordVisible
+                                                  ? Icons.visibility
+                                                  : Icons.visibility_off,
+                                              color: Theme.of(context)
+                                                  .primaryColorDark,
                                             ),
-                                            suffixStyle:
-                                                TextStyle(color: Colors.red)))
+                                            onPressed: () {
+                                              // Update the state i.e. toogle the state of passwordVisible variable
+                                              setState(() {
+                                                _passwordVisible =
+                                                    !_passwordVisible;
+                                              });
+                                            },
+                                          )),
+                                    )
                                   ],
                                 ),
                               ),
@@ -360,9 +382,7 @@ class _LoginPageState extends State<LoginPage> {
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500)),
                               ),
-                               
-                              
-                              
+
                               //_divider(),
                               // _facebookButton(),
                               SizedBox(height: height * .055),
@@ -372,8 +392,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                       ),
-                    ),
-                    Positioned(top: 40, left: 0, child: _backButton()),
+                    )
                   ],
                 ),
               );
