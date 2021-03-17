@@ -8,14 +8,12 @@ import 'package:CEPmobile/blocs/notification/notification_state.dart';
 import 'package:CEPmobile/models/comon/notification.dart';
 import 'package:CEPmobile/notifications/getType.dart';
 import 'package:CEPmobile/ui/components/ModalProgressHUDCustomize.dart';
-import 'package:CEPmobile/ui/screens/Home/home.dart';
 import 'package:CEPmobile/ui/screens/todolist/index.dart';
 import 'package:flutter/material.dart';
 import 'package:CEPmobile/GlobalTranslations.dart';
 import 'package:CEPmobile/bloc_widgets/bloc_state_builder.dart';
 import 'package:CEPmobile/config/colors.dart';
 import 'package:CEPmobile/services/service.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class ListNotification extends StatefulWidget {
@@ -226,7 +224,7 @@ class _ListNotificationState extends State<ListNotification> {
                               reqIds = reqIds.substring(0, reqIds.length - 1);
 
                               widget.shouldTriggerClearAll.sink.add(null);
-                              notifications.cancelAll();
+                              //notifications.cancelAll();
                               updateNotification(reqIds, 'READ');
                             },
                           )),

@@ -26,7 +26,7 @@ class HttpBase {
   Future<http.Response> httpGetToken(String url) async {
     try {
       String token = globalUser.gettoken;
-      var address = globalServer.getServerAddress;
+      var address = globalServer.getServerApi;
       var result = await http.get(address + url, headers: {
         "Content-Type": 'application/json',
         "Authorization": 'Bearer $token'

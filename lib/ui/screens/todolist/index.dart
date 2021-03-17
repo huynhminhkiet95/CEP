@@ -12,7 +12,6 @@ import 'package:CEPmobile/dtos/common/savePickUpTrip.dart';
 import 'package:CEPmobile/globalDriverProfile.dart';
 import 'package:CEPmobile/models/comon/TripTodo.dart';
 import 'package:CEPmobile/ui/components/ModalProgressHUDCustomize.dart';
-import 'package:CEPmobile/ui/screens/Home/home.dart';
 import 'package:CEPmobile/ui/screens/checklist/index.dart';
 import 'package:CEPmobile/ui/screens/triprecord/index.dart';
 import 'package:flutter/material.dart';
@@ -515,10 +514,7 @@ class _TodoListState extends State<TodoListComponent> {
                       if (widget.repalace == 1) {
                         Navigator.pop(context);
                       } else {
-                        Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (context) {
-                          return HomePage();
-                        }));
+                       
                       }
                     })),
             body: new Container(

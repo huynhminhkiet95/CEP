@@ -33,6 +33,14 @@ class CommonService {
     return _httpBase.postRequest(ServiceName.Get_Token.toString(), datalogin.toJson());
   }
 
+  Future<Response> getGetUser(String userName) {
+    return _httpBase.httpGetToken(sprintf(ServiceName.GetUserInfo.toString(),[userName]));
+  }
+
+  Future<Response> getUserRoles(String userName) {
+    return _httpBase.httpGetToken(sprintf(ServiceName.GetUserRoles.toString(),[userName]));
+  }
+
   Future<Response> getEmployeePrivate(String employeeId, String systemId) {
     Map map = new Map();
     map["EmployeeId"] = employeeId;

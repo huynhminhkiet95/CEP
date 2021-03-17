@@ -1,6 +1,8 @@
 import 'package:CEPmobile/ui/components/Widget/bezierContainer.dart';
 import 'package:CEPmobile/ui/components/Widget/customClipper.dart';
+import 'package:CEPmobile/ui/navigation/slide_route.dart';
 import 'package:CEPmobile/ui/screens/Login/signup.dart';
+import 'package:CEPmobile/ui/screens/Login/welcomePage.dart';
 import 'package:flutter/material.dart';
 import 'package:CEPmobile/GlobalTranslations.dart';
 import 'package:CEPmobile/blocs/authentication/authentication_bloc.dart';
@@ -40,9 +42,8 @@ class _LoginPageState extends State<LoginPage> {
   AuthenticationBloc authenticationBloc;
   Services services;
   //#endregion
-  void _validateInputs() {
+  void _loginSubmit() {
     if (formkey.currentState.validate()) {
-//    If all data are correct then save data to out variables
       formkey.currentState.save();
       userName = _userNameController.text.toString();
       password = _passwordController.text.toString();
@@ -52,7 +53,6 @@ class _LoginPageState extends State<LoginPage> {
           serverCode: _server,
           isRemember: _isRemember));
     } else {
-//    If all data are not valid then start auto validation.
       setState(() {
         _autoValidate = true;
       });
@@ -76,10 +76,10 @@ class _LoginPageState extends State<LoginPage> {
           children: <Widget>[
             Container(
               //padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
-              child: Icon(Icons.keyboard_arrow_left, color: Colors.black),
+              child: Icon(Icons.keyboard_arrow_left, color: Colors.white),
             ),
             Text('Back',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500))
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500,color: Colors.white))
           ],
         ),
       ),
@@ -109,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
         borderRadius: BorderRadius.all(Radius.circular(20)),
         child: InkWell(
           onTap: () {
-            _validateInputs();
+            _loginSubmit();
             // if (formkey.currentState.validate()) {
             //   print("Validated");
             // } else {
@@ -169,6 +169,410 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
+    Orientation orientation = MediaQuery.of(context).orientation;
+    var loginPage;
+    if (orientation == Orientation.portrait) {
+      loginPage = Stack(
+        children: [
+          Stack(
+            children: <Widget>[
+              Positioned(
+                  top: -height * .36,
+                  right: MediaQuery.of(context).size.width * .1,
+                  child: BezierContainer()),
+              Positioned(
+                  top: height * .55,
+                  right: -MediaQuery.of(context).size.width * .10,
+                  child: Container(
+                      child: Transform.rotate(
+                    angle: 3.1415926535897932 / 2.5,
+                    child: ClipPath(
+                      clipper: ClipPainter(),
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * 1.1,
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                              Color(0xff223f92),
+                              Color(0xff223f92)
+                            ])),
+                      ),
+                    ),
+                  ))),
+            ],
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: SingleChildScrollView(
+              child: Form(
+                key: formkey,
+                autovalidate: _autoValidate,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(height: height * .06),
+                    Container(child: _backButton()),
+                    SizedBox(height: height * .02),
+                    _title(),
+                    SizedBox(height: 50),
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(
+                            height: 10,
+                          ),
+                          TextFormField(
+                              controller: _userNameController,
+                              style: TextStyle(color: Colors.blue),
+                              validator: (String str) {
+                                if (str.length < 1)
+                                  return allTranslations
+                                      .text("UserNameValidation");
+                                else
+                                  return null;
+                              },
+                              onSaved: (String val) {
+                                userName = val;
+                              },
+                              decoration: InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20.0)),
+                                    borderSide: BorderSide(color: Colors.blue),
+                                  ),
+                                  fillColor: Colors.red,
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.red),
+                                      borderRadius:
+                                          BorderRadius.circular(20.0)),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20.0)),
+                                    borderSide: BorderSide(color: Colors.red),
+                                  ),
+                                  contentPadding: EdgeInsets.fromLTRB(
+                                      20.0, 15.0, 20.0, 15.0),
+                                  hintText: allTranslations.text("user_name"),
+                                  prefixIcon: Padding(
+                                    padding: EdgeInsets.all(0.0),
+                                    child: Icon(
+                                      Icons.account_circle,
+                                      color: Colors.blue,
+                                    ),
+                                  ),
+                                  suffixStyle: TextStyle(color: Colors.red)))
+                        ],
+                      ),
+                    ),
+
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(
+                            height: 10,
+                          ),
+                          TextFormField(
+                            controller: _passwordController,
+                            obscureText: !_passwordVisible,
+                            style: TextStyle(color: Colors.blue),
+                            validator: (String str) {
+                              if (str.length < 1)
+                                return allTranslations
+                                    .text("PasswordValidation");
+                              else
+                                return null;
+                            },
+                            decoration: InputDecoration(
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20.0)),
+                                  borderSide: BorderSide(color: Colors.blue),
+                                ),
+                                fillColor: Colors.red,
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.red),
+                                    borderRadius: BorderRadius.circular(20.0)),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20.0)),
+                                  borderSide: BorderSide(color: Colors.red),
+                                ),
+                                contentPadding:
+                                    EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                                hintText: allTranslations.text("password"),
+                                prefixIcon: Padding(
+                                  padding: EdgeInsets.all(0.0),
+                                  child: Icon(
+                                    Icons.lock_open,
+                                    color: Colors.blue,
+                                  ),
+                                ),
+                                suffixStyle: TextStyle(color: Colors.red),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _passwordVisible
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                    color: Theme.of(context).primaryColorDark,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _passwordVisible = !_passwordVisible;
+                                    });
+                                  },
+                                )),
+                          )
+                        ],
+                      ),
+                    ),
+                    new Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        new Switch(
+                            value: _isRemember,
+                            onChanged: _updateRemember,
+                            activeColor: Colors.blue),
+                        new Text(
+                          allTranslations.text("Rememberme"),
+                          style: TextStyle(color: Colors.black87),
+                        )
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    _submitButton(),
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      alignment: Alignment.centerRight,
+                      child: Text(allTranslations.text("forgotpassword"),
+                          style: TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w500)),
+                    ),
+                    SizedBox(height: height * .055),
+                  ],
+                ),
+              ),
+            ),
+          )
+        ],
+      );
+    } else {
+      loginPage = Stack(
+        children: [
+          Stack(
+            children: <Widget>[
+              Positioned(
+                  top: -height * .45,
+                  right: -MediaQuery.of(context).size.width * .22,
+                  child: Container(
+                      child: Transform.rotate(
+                    angle: -3.1415926535897932 / 1.1,
+                    child: ClipPath(
+                      clipper: ClipPainter(),
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * .99,
+                        width: MediaQuery.of(context).size.width * 1.20,
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                              Color(0xff223f92),
+                              Color(0xff223f92)
+                            ])),
+                      ),
+                    ),
+                  ))),
+              Positioned(
+                  top: height * .55,
+                  right: -MediaQuery.of(context).size.width * .10,
+                  child: Container(
+                      child: Transform.rotate(
+                    angle: 3.1415926535897932 / 1.7,
+                    child: ClipPath(
+                      clipper: ClipPainter(),
+                      child: Container(
+                        margin: EdgeInsets.only(right: 10),
+                        height: MediaQuery.of(context).size.height * 1.9,
+                        width: MediaQuery.of(context).size.width * 1.3,
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                              Color(0xff223f92),
+                              Color(0xff223f92)
+                            ])),
+                      ),
+                    ),
+                  ))),
+            ],
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: SingleChildScrollView(
+              child: Form(
+                key: formkey,
+                autovalidate: _autoValidate,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(height: height * .06),
+                    Container(child: _backButton()),
+                    _title(),
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(
+                            height: 10,
+                          ),
+                          TextFormField(
+                              controller: _userNameController,
+                              style: TextStyle(color: Colors.blue),
+                              validator: (String str) {
+                                if (str.length < 1)
+                                  return allTranslations
+                                      .text("UserNameValidation");
+                                else
+                                  return null;
+                              },
+                              onSaved: (String val) {
+                                userName = val;
+                              },
+                              decoration: InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20.0)),
+                                    borderSide: BorderSide(color: Colors.blue),
+                                  ),
+                                  fillColor: Colors.red,
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.red),
+                                      borderRadius:
+                                          BorderRadius.circular(20.0)),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20.0)),
+                                    borderSide: BorderSide(color: Colors.red),
+                                  ),
+                                  contentPadding: EdgeInsets.fromLTRB(
+                                      20.0, 15.0, 20.0, 15.0),
+                                  hintText: allTranslations.text("user_name"),
+                                  prefixIcon: Padding(
+                                    padding: EdgeInsets.all(0.0),
+                                    child: Icon(
+                                      Icons.account_circle,
+                                      color: Colors.blue,
+                                    ),
+                                  ),
+                                  suffixStyle: TextStyle(color: Colors.red)))
+                        ],
+                      ),
+                    ),
+                    Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(
+                            height: 10,
+                          ),
+                          TextFormField(
+                            controller: _passwordController,
+                            obscureText: !_passwordVisible,
+                            style: TextStyle(color: Colors.blue),
+                            validator: (String str) {
+                              if (str.length < 1)
+                                return allTranslations
+                                    .text("PasswordValidation");
+                              else
+                                return null;
+                            },
+                            decoration: InputDecoration(
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20.0)),
+                                  borderSide: BorderSide(color: Colors.blue),
+                                ),
+                                fillColor: Colors.red,
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.red),
+                                    borderRadius: BorderRadius.circular(20.0)),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20.0)),
+                                  borderSide: BorderSide(color: Colors.red),
+                                ),
+                                contentPadding:
+                                    EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                                hintText: allTranslations.text("password"),
+                                prefixIcon: Padding(
+                                  padding: EdgeInsets.all(0.0),
+                                  child: Icon(
+                                    Icons.lock_open,
+                                    color: Colors.blue,
+                                  ),
+                                ),
+                                suffixStyle: TextStyle(color: Colors.red),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    // Based on passwordVisible state choose the icon
+                                    _passwordVisible
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                    color: Theme.of(context).primaryColorDark,
+                                  ),
+                                  onPressed: () {
+                                    // Update the state i.e. toogle the state of passwordVisible variable
+                                    setState(() {
+                                      _passwordVisible = !_passwordVisible;
+                                    });
+                                  },
+                                )),
+                          )
+                        ],
+                      ),
+                    ),
+                    new Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        new Switch(
+                            value: _isRemember,
+                            onChanged: _updateRemember,
+                            activeColor: Colors.blue),
+                        new Text(
+                          allTranslations.text("Rememberme"),
+                          style: TextStyle(color: Colors.black87),
+                        )
+                      ],
+                    ),
+                    _submitButton(),
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      alignment: Alignment.centerRight,
+                      child: Text(allTranslations.text("forgotpassword"),
+                          style: TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w500)),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          )
+        ],
+      );
+    }
     return Scaffold(
       body: Container(
         height: height,
@@ -177,224 +581,7 @@ class _LoginPageState extends State<LoginPage> {
             builder: (BuildContext context, AuthenticationState state) {
               return ModalProgressHUDCustomize(
                 inAsyncCall: state.isAuthenticating,
-                child: Stack(
-                  children: [
-                    Stack(
-                      children: <Widget>[
-                        Positioned(
-                            top: -height * .36,
-                            right: MediaQuery.of(context).size.width * .1,
-                            child: BezierContainer()),
-                        Positioned(
-                            top: height * .55,
-                            right: -MediaQuery.of(context).size.width * .10,
-                            child: Container(
-                                child: Transform.rotate(
-                              angle: 3.1415926535897932 / 2.5,
-                              child: ClipPath(
-                                clipper: ClipPainter(),
-                                child: Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * 1.1,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.9,
-                                  decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomCenter,
-                                          colors: [
-                                        Color(0xff223f92),
-                                        Color(0xff223f92)
-                                      ])),
-                                ),
-                              ),
-                            ))),
-                      ],
-                    ),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: SingleChildScrollView(
-                        child: Form(
-                          key: formkey,
-                          autovalidate: _autoValidate,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              SizedBox(height: height * .06),
-                              Container(child: _backButton()),
-                              SizedBox(height: height * .02),
-                              _title(),
-                              SizedBox(height: 50),
-                              Container(
-                                margin: EdgeInsets.symmetric(vertical: 10),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    TextFormField(
-                                        controller: _userNameController,
-                                        style: TextStyle(color: Colors.blue),
-                                        validator: (String str) {
-                                          if (str.length < 1)
-                                            return allTranslations
-                                                .text("UserNameValidation");
-                                          else
-                                            return null;
-                                        },
-                                        onSaved: (String val) {
-                                          userName = val;
-                                        },
-                                        decoration: InputDecoration(
-                                            enabledBorder: OutlineInputBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(20.0)),
-                                              borderSide: BorderSide(
-                                                  color: Colors.blue),
-                                            ),
-                                            fillColor: Colors.red,
-                                            border: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Colors.red),
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        20.0)),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(20.0)),
-                                              borderSide:
-                                                  BorderSide(color: Colors.red),
-                                            ),
-                                            contentPadding: EdgeInsets.fromLTRB(
-                                                20.0, 15.0, 20.0, 15.0),
-                                            hintText: allTranslations
-                                                .text("user_name"),
-                                            prefixIcon: Padding(
-                                              padding: EdgeInsets.all(0.0),
-                                              child: Icon(
-                                                Icons.account_circle,
-                                                color: Colors.blue,
-                                              ),
-                                            ),
-                                            suffixStyle:
-                                                TextStyle(color: Colors.red)))
-                                  ],
-                                ),
-                              ),
-
-                              Container(
-                                margin: EdgeInsets.symmetric(vertical: 10),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    TextFormField(
-                                      controller: _passwordController,
-                                      obscureText: !_passwordVisible,
-                                      style: TextStyle(color: Colors.blue),
-                                      validator: (String str) {
-                                        if (str.length < 1)
-                                          return allTranslations
-                                              .text("PasswordValidation");
-                                        else
-                                          return null;
-                                      },
-                                      decoration: InputDecoration(
-                                          enabledBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(20.0)),
-                                            borderSide:
-                                                BorderSide(color: Colors.blue),
-                                          ),
-                                          fillColor: Colors.red,
-                                          border: OutlineInputBorder(
-                                              borderSide:
-                                                  BorderSide(color: Colors.red),
-                                              borderRadius:
-                                                  BorderRadius.circular(20.0)),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(20.0)),
-                                            borderSide:
-                                                BorderSide(color: Colors.red),
-                                          ),
-                                          contentPadding: EdgeInsets.fromLTRB(
-                                              20.0, 15.0, 20.0, 15.0),
-                                          hintText:
-                                              allTranslations.text("password"),
-                                          prefixIcon: Padding(
-                                            padding: EdgeInsets.all(0.0),
-                                            child: Icon(
-                                              Icons.lock_open,
-                                              color: Colors.blue,
-                                            ),
-                                          ),
-                                          suffixStyle:
-                                              TextStyle(color: Colors.red),
-                                          suffixIcon: IconButton(
-                                            icon: Icon(
-                                              // Based on passwordVisible state choose the icon
-                                              _passwordVisible
-                                                  ? Icons.visibility
-                                                  : Icons.visibility_off,
-                                              color: Theme.of(context)
-                                                  .primaryColorDark,
-                                            ),
-                                            onPressed: () {
-                                              // Update the state i.e. toogle the state of passwordVisible variable
-                                              setState(() {
-                                                _passwordVisible =
-                                                    !_passwordVisible;
-                                              });
-                                            },
-                                          )),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              new Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget>[
-                                  new Switch(
-                                      value: _isRemember,
-                                      onChanged: _updateRemember,
-                                      activeColor: Colors.blue),
-                                  new Text(
-                                    allTranslations.text("Rememberme"),
-                                    style: TextStyle(color: Colors.black87),
-                                  )
-                                ],
-                              ),
-                              SizedBox(height: 20),
-                              _submitButton(),
-
-                              Container(
-                                padding: EdgeInsets.symmetric(vertical: 10),
-                                alignment: Alignment.centerRight,
-                                child: Text(
-                                    allTranslations.text("forgotpassword"),
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500)),
-                              ),
-
-                              //_divider(),
-                              // _facebookButton(),
-                              SizedBox(height: height * .055),
-                              // _createAccountLabel(),
-                              // _fingerCheck(),
-                            ],
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+                child: loginPage,
               );
             }),
       ),

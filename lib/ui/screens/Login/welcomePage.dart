@@ -14,11 +14,14 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
+  
+  double screenWidth, screenHeight;
+
   Widget _loginButton() {
     return InkWell(
       onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => LoginPage()));
+        Navigator.pushNamed(context,'/login');
+
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -48,7 +51,7 @@ class _WelcomePageState extends State<WelcomePage> {
             SizedBox(
               height: 20,
             ),
-            Icon(Icons.fingerprint, size: 90, color: Colors.white),
+            Icon(Icons.fingerprint, size: screenHeight * 0.1, color: Colors.white),
             SizedBox(
               height: 20,
             ),
@@ -89,6 +92,9 @@ class _WelcomePageState extends State<WelcomePage> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    screenHeight = size.height;
+    screenWidth = size.width;
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -117,7 +123,7 @@ class _WelcomePageState extends State<WelcomePage> {
             children: <Widget>[
               //_title(),
               SizedBox(
-                height: 80,
+                height: screenHeight * 0.2,
                 child: Image.asset(
                   'assets/logo/cep-large-icon-logo-intro.png',
                   width: 150.0,
@@ -126,12 +132,12 @@ class _WelcomePageState extends State<WelcomePage> {
                 ),
               ),
               SizedBox(
-                height: 50,
+                height: screenHeight * 0.15,
               ),
               _loginButton(),
-              SizedBox(
-                height: 20,
-              ),
+              // SizedBox(
+              //   height: 20,
+              // ),
               _label()
             ],
           ),

@@ -63,7 +63,7 @@ class AuthenticationState extends BlocState {
   }
 
   factory AuthenticationState.notAuthenticated(
-      String serverCode, String userName, String password, bool isRemember) {
+      String userName, String password, bool isRemember) {
     return AuthenticationState(
         isAuthenticated: false,
         isAuthenticating: false,
@@ -90,8 +90,7 @@ class AuthenticationState extends BlocState {
       bool isRemember,
       String userName,
       String password,
-      String serverCode,
-      UserInfoPwdJsonResult validateUserIdPwdJsonResult) {
+      String serverCode) {
     return AuthenticationState(
         isAuthenticated: true,
         isAuthenticating: false,

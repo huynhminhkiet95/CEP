@@ -1,3 +1,8 @@
+import 'package:CEPmobile/ui/navigation/slide_route.dart';
+import 'package:CEPmobile/ui/screens/Home/dashboard.dart';
+import 'package:CEPmobile/ui/screens/Login/loginPage.dart';
+import 'package:CEPmobile/ui/screens/error/error.dart';
+import 'package:CEPmobile/ui/screens/survey/survey.dart';
 import 'package:camera/camera.dart';
 import 'package:CEPmobile/ui/screens/Login/index.dart';
 import 'package:CEPmobile/ui/screens/announcement/announcement_screen.dart';
@@ -11,18 +16,23 @@ import 'package:CEPmobile/route.dart';
 import 'package:CEPmobile/services/service.dart';
 import 'package:CEPmobile/ui/decision_page_no_business.dart';
 import 'package:CEPmobile/ui/initialization_page.dart';
-import 'package:CEPmobile/ui/screens/Home/home.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'config/typeinspectionconstants.dart';
 import 'database/DBProvider.dart';
 import 'globalDriverProfile.dart';
 import 'models/comon/message.dart';
-import 'ui/screens/activity/aprrovetriprecords.dart';
+import 'ui/screens/Login/welcomePage.dart';
 import 'ui/screens/checklistqc/records.dart';
 import 'ui/screens/daytriprecord/index.dart';
 import 'ui/screens/profile/index.dart';
 import 'ui/screens/todolist/index.dart';
+
+// extension ExtendedString on String {
+//   bool get isValidName {
+//     return !this.contains(new RegExp(r'[0–9]'));
+//   }
+// }
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -84,13 +94,12 @@ class AppState extends State<Application> {
               );
               break;
             case '/login':
-              return new MyCustomRoute(
-                builder: (_) => new LoginScreen(),
-                settings: settings,
-              );
+              return SlideLeftRoute(page: LoginPage());
+            case '/welcomeLogin':
+              return SlideRightRoute(page: WelcomePage());
             case '/home':
               return new MyCustomRoute(
-                builder: (_) => new HomePage(),
+                builder: (_) => new MenuDashboardPage(),
                 settings: settings,
               );
             case 'MB001':
@@ -138,12 +147,7 @@ class AppState extends State<Application> {
               );
               //}
               break;
-            case '/ListAprroves':
-              return new MyCustomRoute(
-                builder: (_) => new ListAprrovetriprecords(),
-                settings: settings,
-              );
-              break;
+    
             case 'MB005':
               return new MyCustomRoute(
                 builder: (_) =>
@@ -164,9 +168,26 @@ class AppState extends State<Application> {
                 settings: settings,
               );
               break;
+            case 'error':
+                return SlideLeftRoute(page: ErrorScreen());
+              
+              // return new MyCustomRoute(
+              //   builder: (_) => new ErrorScreen(),
+              //   settings: settings,
+              // );
+              break;
+            case 'survey':
+                return SlideLeftRoute(page: Example());
+              
+              // return new MyCustomRoute(
+              //   builder: (_) => new ErrorScreen(),
+              //   settings: settings,
+              // );
+              break;
+              
             default:
               return new MyCustomRoute(
-                builder: (_) => new HomePage(),
+                builder: (_) => new ErrorScreen(),
                 settings: settings,
               );
               break;

@@ -9,15 +9,14 @@ import 'package:CEPmobile/blocs/authentication/authentication_state.dart';
 import 'package:CEPmobile/config/status_code.dart';
 import 'package:CEPmobile/dtos/datalogin.dart';
 import 'package:CEPmobile/dtos/serverInfo.dart';
-import 'package:CEPmobile/dtos/userInfor.dart';
 import 'package:CEPmobile/globalDriverProfile.dart';
 import 'package:CEPmobile/globalRememberUser.dart';
 import 'package:CEPmobile/globalServer.dart';
-import 'package:CEPmobile/models/comon/PageMenuPermission.dart';
 import 'package:CEPmobile/models/users/ValidateUserIdPwdJsonResult.dart';
+import 'package:CEPmobile/models/users/user_info.dart';
+import 'package:CEPmobile/models/users/user_roles.dart';
 import 'package:CEPmobile/services/commonService.dart';
 import 'package:CEPmobile/services/sharePreference.dart';
-import 'package:CEPmobile/ui/screens/Home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -39,7 +38,8 @@ class AuthenticationBloc
       AuthenticationEvent event, AuthenticationState currentState) async* {
     if (event is AuthenticationEventLogin) {
       yield AuthenticationState.authenticating(currentState);
-      // /// khi khong co mang//
+
+      /// khi khong co mang//
 
       // UserInfoPwdJsonResult userIdPwdJsonResult;
       // yield AuthenticationState.authenticated(
@@ -48,26 +48,22 @@ class AuthenticationBloc
       //                   event.password,
       //                   currentState.serverCode,
       //                   userIdPwdJsonResult);
-      // ///
+      ///
+
+      // the network is ready to test
       var server = new ServerInfo();
       switch (event.serverCode) {
         case "DEV":
-          server.serverAddress = "http://10.10.12.58:8055/";
-          server.serverApi = "http://10.10.12.58:8055/";
+          server.serverAddress = "http://10.10.0.36:8889/";
+          server.serverApi = "http://10.10.0.36:8889/";
           server.serverCode = event.serverCode;
-          server.serverNotification = "https://dev.igls.vn:8091/";
-          server.serverInspection = "https://dev.igls.vn:9102/";
-          server.serverHub = "http://192.168.70.132:8079/";
-          server.serverSSO = "https://dev.igls.vn:9110/";
+          server.serverNotification = "http://10.10.0.36:8889/";
           break;
         case "PROD":
-          server.serverAddress = "http://10.10.12.58:8055/";
-          server.serverApi = "http://10.10.12.58:8055/";
+          server.serverAddress = "http://10.10.0.36:8889/";
+          server.serverApi = "http://10.10.0.36:8889/";
           server.serverCode = event.serverCode;
-          server.serverNotification = "https://fbmp.enterprise.vn:9101/";
-          server.serverInspection = "https://fmbp.enterprise.vn/";
-          server.serverHub = "https://pro.igls.vn:8182/";
-          server.serverSSO = "https://fbmp.enterprise.vn:9110/";
+          server.serverNotification = "http://10.10.0.36:8889/";
           break;
       }
 
@@ -84,20 +80,25 @@ class AuthenticationBloc
         var jsonBodyToken = json.decode(token.body);
         if (token.statusCode == StatusCodeConstants.OK) {
           if (jsonBodyToken["isSuccessed"] == true) {
-            globalUser.settoken = jsonBodyToken["token"];
-            UserInfoPwdJsonResult userIdPwdJsonResult;
-            yield AuthenticationState.authenticated(
-                event.isRemember,
-                event.userName,
-                event.password,
-                currentState.serverCode,
-                userIdPwdJsonResult);
+            if (jsonBodyToken["token"] != null) {
+              globalUser.settoken = jsonBodyToken["token"];
+              List responses = await Future.wait(
+                  [getUserInfo(event.userName), getUserRoles(event.userName)]);
+              if (responses != null &&
+                  (responses[0] is UserInfo || responses[0] != null) &&
+                  (responses[1] is UserRoles || responses[1] != null)) {
+                globalUser.setUserInfo = responses[0];
+                globalUser.setUserRoles = responses[1];
+                yield AuthenticationState.authenticated(event.isRemember,
+                    event.userName, event.password, currentState.serverCode);
+              }
+            }
           } else {
             yield AuthenticationState.failedByUser(currentState);
             Fluttertoast.showToast(
               msg: allTranslations.text("UserIsNotExist"),
               toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM, // also possible "TOP" and "CENTER"
+              gravity: ToastGravity.BOTTOM,
               backgroundColor: Colors.red[300].withOpacity(0.7),
               textColor: Colors.white,
             );
@@ -113,147 +114,15 @@ class AuthenticationBloc
           );
         }
       }
-
-      // if (token.statusCode == 200) {
-      //   var jsonBodyToken = json.decode(token.body);
-      //   globalUser.settoken = jsonBodyToken["access_token"];
-      //   var employeeId = jsonBodyToken["as:employee_id"];
-      //   var systemid = jsonBodyToken["as:system_id"];
-      //   globalUser.setId = int.parse(employeeId);
-
-      //   var result = await this
-      //       ._commonService
-      //       .getEmployeePrivate(employeeId, systemid)
-      //       .then((response) => response);
-      //   if (result == null) {
-      //     yield AuthenticationState.failure(currentState);
-      //   } else if (result.statusCode == 200) {
-      //     if (result.contentLength > 0 && result.body.isNotEmpty) {
-      //       var jsonBody = json.decode(result.body);
-      //       if (jsonBody["payload"]["userDetail"] != null) {
-      //         globalRememberUser.setIsRemember = event.isRemember;
-      //         globalRememberUser.setUserName = event.userName;
-      //         globalRememberUser.setPassword = event.password;
-      //         globalServer.setServerCode = event.serverCode;
-      //         globalServer.setServerApi = server.serverApi;
-
-      //         getStaffInfo();
-
-      //         UserInfoPwdJsonResult userIdPwdJsonResult;
-      //         userIdPwdJsonResult = UserInfoPwdJsonResult.fromJson(jsonBody);
-
-      //         if (userIdPwdJsonResult != null) {
-      //           //get list menu
-      //           final response = await this._commonService.getMenuPermission(
-      //               event.userName,
-      //               "MB_ENT",
-      //               userIdPwdJsonResult.userInfo.subsidiaryId);
-
-      //           if (response != null &&
-      //               response.statusCode == 200 &&
-      //               response.body.isNotEmpty) {
-      //             var pageMenuJson = json.decode(response.body);
-      //             if (pageMenuJson.length > 0) {
-      //               var menuChildJson = pageMenuJson["payload"]
-      //                   .cast<Map<String, dynamic>>() as List;
-      //               var menus = new List<PageMenuPermission>();
-      //               if (menuChildJson.length > 0) {
-      //                 menus = menuChildJson
-      //                     .map<PageMenuPermission>((jsonItem) =>
-      //                         PageMenuPermission.fromJson(jsonItem))
-      //                     .toList();
-      //               }
-      //               pages.clear();
-      //               pages.addAll(menus);
-      //             }
-
-      //             yield AuthenticationState.authenticated(
-      //                 event.isRemember,
-      //                 event.userName,
-      //                 event.password,
-      //                 currentState.serverCode,
-      //                 userIdPwdJsonResult);
-
-      //             server.serverHub =
-      //                 userIdPwdJsonResult.systemInfo.notificationUrl.trim();
-      //             server.serverInspection =
-      //                 userIdPwdJsonResult.systemInfo.inspectionUrl.trim();
-      //             this._sharePreferenceService.updateServerInfo(server);
-
-      //             globalUser.setSystemId =
-      //                 userIdPwdJsonResult.systemInfo.systemId;
-      //             globalBloc.addUserInfo(userIdPwdJsonResult);
-      //             globalUser.setUserName =
-      //                 userIdPwdJsonResult.userInfo.employeeName;
-      //             globalUser.setuserId = event.userName;
-      //             globalUser.setSubsidiaryId =
-      //                 userIdPwdJsonResult.userInfo.subsidiaryId;
-      //             //globalUser.setStaffId = userIdPwdJsonResult.staffInfo.staffId;
-      //             if (userIdPwdJsonResult.userInfo.employeeName.isNotEmpty) {
-      //               globalDriverProfile.setDriverName =
-      //                   userIdPwdJsonResult.userInfo.employeeName;
-      //             }
-      //             //if (userIdPwdJsonResult.staffInfo.fleetdesc.isNotEmpty) {
-      //             // if (globalDriverProfile.getfleet !=
-      //             //     validateUserIdPwdJsonResult.staffInfo.fleetdesc) {
-      //             //   if (globalUser.getNotification == null ||
-      //             //       !globalUser.getNotification) {
-      //             //     if (socket != null &&
-      //             //         sessionId.isNotEmpty &&
-      //             //         tokenfcm.isNotEmpty) {
-      //             //       var strJson =
-      //             //           '{"SessionId": "$sessionId", "FleetId": "${validateUserIdPwdJsonResult.staffInfo.fleetdesc}", "Token":"$tokenfcm"}';
-      //             //       socket.emit(SocketIOEvent.update_fleetId, [strJson]);
-      //             //     }
-      //             //   }
-      //             // }
-      //             //   if (userIdPwdJsonResult.staffInfo.fleetdesc != null &&
-      //             //       userIdPwdJsonResult.staffInfo.fleetdesc.isNotEmpty) {
-      //             //     globalDriverProfile.setfleet =
-      //             //         userIdPwdJsonResult.staffInfo.fleetdesc;
-      //             //   }
-      //             // }
-      //             if (userIdPwdJsonResult.userInfo.mobile.isNotEmpty) {
-      //               globalDriverProfile.setPhoneNumber =
-      //                   userIdPwdJsonResult.userInfo.mobile;
-      //             }
-
-      //             var user = new RememberUser();
-      //             if (event.isRemember == true) {
-      //               user.setIsRemember = event.isRemember;
-      //               user.setPassword = event.password;
-      //               user.setUserName = event.userName;
-      //             }
-
-      //             this._sharePreferenceService.saveRememberUser(user);
-      //           }
-      //         } else {
-      //           yield AuthenticationState.userIsNotExits(currentState, true);
-      //         }
-      //       } else {
-      //         yield AuthenticationState.userIsNotExits(currentState, true);
-      //       }
-      //     } else {
-      //       yield AuthenticationState.userIsNotExits(currentState, true);
-      //     }
-      //   } else {
-      //     yield AuthenticationState.failure(currentState);
-      //   }
-      // } else {
-      //   yield AuthenticationState.userIsNotExits(currentState, true);
-      // }
     }
 
     if (event is AuthenticationEventLogout) {
+      globalUser.settoken = "";
       if (currentState.isRemember) {
-        yield AuthenticationState.notAuthenticated(
-            currentState.serverCode,
-            currentState.userName,
-            currentState.password,
-            currentState.isRemember);
+        yield AuthenticationState.notAuthenticated(currentState.userName,
+            currentState.password, currentState.isRemember);
       } else {
-        yield AuthenticationState.notAuthenticated(
-            currentState.serverCode, "", "", false);
+        yield AuthenticationState.notAuthenticated("", "", false);
       }
     }
   }
@@ -268,5 +137,45 @@ class AuthenticationBloc
         globalDriverProfile.setfleet = staffInfo.fleetdesc;
       }
     }
+  }
+
+  Future<UserInfo> getUserInfo(String userName) async {
+    UserInfo userInfoModel = null;
+    try {
+      var userInfo = await this
+          ._commonService
+          .getGetUser(userName)
+          .then((response) => response);
+      if (userInfo.statusCode == StatusCodeConstants.OK) {
+        var jsonBodyUserInfo = json.decode(userInfo.body);
+        if (jsonBodyUserInfo["isSuccessed"]) {
+          var dataUserInfo = UserInfo.fromJson(jsonBodyUserInfo["data"]);
+          userInfoModel = dataUserInfo;
+        }
+      }
+    } catch (e) {
+      userInfoModel = null;
+    }
+    return userInfoModel;
+  }
+
+  Future<UserRoles> getUserRoles(String userName) async {
+    UserRoles userRolesModel = null;
+    try {
+      var userRoles = await this
+          ._commonService
+          .getUserRoles(userName)
+          .then((response) => response);
+      if (userRoles.statusCode == StatusCodeConstants.OK) {
+        var jsonBodyUserRoles = json.decode(userRoles.body);
+        if (jsonBodyUserRoles["isSuccessed"]) {
+          var dataUserRoles = UserRoles.fromJson(jsonBodyUserRoles["data"]);
+          userRolesModel = dataUserRoles;
+        }
+      }
+    } catch (e) {
+      userRolesModel = null;
+    }
+    return userRolesModel;
   }
 }

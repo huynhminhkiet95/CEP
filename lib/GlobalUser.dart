@@ -1,3 +1,7 @@
+import 'package:CEPmobile/models/users/user_roles.dart';
+
+import 'models/users/user_info.dart';
+
 class GlobalUser {
   String _defaultCenter;
   String _defaultClient;
@@ -14,6 +18,8 @@ class GlobalUser {
   int _staffId;
   int _employeeId;
   String _systemId;
+  UserInfo _userInfo;
+  UserRoles _userRoles;
 
   int get getId => _id;
 
@@ -67,6 +73,14 @@ class GlobalUser {
 
   set settoken(String value) => _token = value;
 
+  UserInfo get getUserInfo => _userInfo;
+
+  set setUserInfo(UserInfo value) => _userInfo = value;
+
+  UserRoles get getUserRoles => _userRoles;
+
+  set setUserRoles(UserRoles value) => _userRoles = value;
+  
   bool get getNotification => _isNotification;
 
   set setNotification(bool value) => _isNotification = value;

@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:CEPmobile/bloc_helpers/bloc_event_state.dart';
 import 'package:CEPmobile/blocs/DriverProfile/driver_profile_event.dart';
 import 'package:CEPmobile/blocs/DriverProfile/driver_profile_state.dart';
-import 'package:CEPmobile/models/users/userprofile.dart';
+import 'package:CEPmobile/models/users/user_info.dart';
 import 'package:CEPmobile/services/commonService.dart';
 import 'package:CEPmobile/services/sharePreference.dart';
 import 'package:flutter/material.dart';
@@ -28,9 +28,9 @@ class DriverProfileBloc
       licenseNumber: globalDriverProfile.getlicenseNumber,
       fleet: globalDriverProfile.getfleet);
 
-  static final BehaviorSubject<Userprofile> _userProfileController =
-      BehaviorSubject<Userprofile>();
-  Stream<Userprofile> get dataUserProfile => _userProfileController;
+  static final BehaviorSubject<UserInfo> _userProfileController =
+      BehaviorSubject<UserInfo>();
+  Stream<UserInfo> get dataUserProfile => _userProfileController;
 
   @override
   Stream<DriverProfileState> eventHandler(
@@ -53,11 +53,11 @@ class DriverProfileBloc
           if (dataJson.length > 0) {
             var childJson =
                 dataJson["payload"].cast<Map<String, dynamic>>() as List;
-            var datas = new List<Userprofile>();
+            var datas = new List<UserInfo>();
             if (childJson.length > 0) {
               datas = childJson
-                  .map<Userprofile>(
-                      (jsonItem) => Userprofile.fromJson(jsonItem))
+                  .map<UserInfo>(
+                      (jsonItem) => UserInfo.fromJson(jsonItem))
                   .toList();
               if (!_userProfileController.isClosed) {
                 _userProfileController.sink.add(datas[0]);

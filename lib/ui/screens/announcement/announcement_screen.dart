@@ -7,7 +7,6 @@ import 'package:CEPmobile/config/colors.dart';
 import 'package:CEPmobile/models/comon/announcement.dart';
 import 'package:CEPmobile/services/service.dart';
 import 'package:CEPmobile/ui/components/ModalProgressHUDCustomize.dart';
-import 'package:CEPmobile/ui/screens/Home/home.dart';
 import 'package:CEPmobile/ui/screens/error/error.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -171,12 +170,7 @@ class _AnnouncementState extends State<AnnouncementScreen> {
               leading: new IconButton(
                   icon: new Icon(Icons.arrow_back),
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => HomePage(),
-                      ),
-                    );
+                   
                   })),
           body: BlocEventStateBuilder<AnnouncementState>(
             bloc: _announcementBloc,

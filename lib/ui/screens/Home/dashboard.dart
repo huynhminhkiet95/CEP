@@ -1,13 +1,12 @@
+import 'package:CEPmobile/bloc_helpers/bloc_provider.dart';
+import 'package:CEPmobile/blocs/authentication/authentication_bloc.dart';
+import 'package:CEPmobile/blocs/authentication/authentication_event.dart';
 import 'package:CEPmobile/config/colors.dart';
+import 'package:CEPmobile/models/dashboard/ItemDashboard.dart';
+import 'package:CEPmobile/ui/navigation/slide_route.dart';
+import 'package:CEPmobile/ui/screens/error/error.dart';
 import 'package:flutter/material.dart';
-
-final Color backgroundColor = ColorConstants.cepColorBackground;
-
-class Items {
-  String title;
-  String img;
-  Items({this.title, this.img});
-}
+//import 'package:path/path.dart';
 
 class MenuDashboardPage extends StatefulWidget {
   @override
@@ -18,12 +17,12 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
     with SingleTickerProviderStateMixin {
   bool isCollapsed = true;
   double screenWidth, screenHeight;
-  final Duration duration = const Duration(milliseconds: 500);
+  final Duration duration = const Duration(milliseconds: 400);
   AnimationController _controller;
   Animation<double> _scaleAnimation;
   Animation<double> _menuScaleAnimation;
   Animation<Offset> _slideAnimation;
-
+  AuthenticationBloc _authenticationBloc;
   @override
   void initState() {
     super.initState();
@@ -33,12 +32,32 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
         Tween<double>(begin: 0.5, end: 1).animate(_controller);
     _slideAnimation = Tween<Offset>(begin: Offset(-1, 0), end: Offset(0, 0))
         .animate(_controller);
+    _authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
   }
 
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  void _onTapMenuItem(String nameMenu) {
+    switch (nameMenu) {
+      case 'Khảo Sát':
+        Navigator.pushNamed(context, 'survey');
+        break;
+
+      case 'Đăng Xuất':
+        _loginSubmit();
+        break;
+      
+      default:
+        Navigator.pushNamed(context, 'error');
+    }
+  }
+
+  void _loginSubmit() {
+    _authenticationBloc.emitEvent(AuthenticationEventLogout());
   }
 
   @override
@@ -48,7 +67,7 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
     screenWidth = size.width;
 
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: ColorConstants.cepColorBackground,
       body: Stack(
         children: <Widget>[
           menu(context),
@@ -112,311 +131,7 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
                       decoration: new BoxDecoration(
                           color: ColorConstants.cepColorBackground),
                       child: ListView(
-                        padding: EdgeInsets.all(0),
-                        children: [
-                          Divider(
-                            color: Colors.white,
-                            height: 2,
-                          ),
-
-                          Material(
-                            color: ColorConstants.cepColorBackground,
-                            child: InkWell(
-                              splashColor: Colors.green,
-                              onTap: () {},
-                              child: Container(
-                                color: Colors.blue[100].withOpacity(0),
-                                padding: EdgeInsets.all(10),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.download_rounded,
-                                      size: screenWidth * 0.07,
-                                      color: Colors.white,
-                                    ),
-                                    SizedBox(
-                                      width: 20,
-                                    ),
-                                    Text(
-                                      'DownLoad',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(
-                                      width: 70,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Divider(
-                            color: Colors.white,
-                            height: 2,
-                          ),
-                          Material(
-                            color: ColorConstants.cepColorBackground,
-                            child: InkWell(
-                              splashColor: Colors.green,
-                              onTap: () {},
-                              child: Container(
-                                color: Colors.blue[100].withOpacity(0),
-                                padding: EdgeInsets.all(10),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.library_books,
-                                      size: screenWidth * 0.07,
-                                      color: Colors.white,
-                                    ),
-                                    SizedBox(
-                                      width: 20,
-                                    ),
-                                    Text(
-                                      'Khảo Sát',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(
-                                      width: 70,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Divider(
-                            color: Colors.white,
-                            height: 2,
-                          ),
-                          Material(
-                            color: ColorConstants.cepColorBackground,
-                            child: InkWell(
-                              splashColor: Colors.green,
-                              onTap: () {},
-                              child: Container(
-                                color: Colors.blue[100].withOpacity(0),
-                                padding: EdgeInsets.all(10),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.attach_money,
-                                      size: screenWidth * 0.07,
-                                      color: Colors.white,
-                                    ),
-                                    SizedBox(
-                                      width: 20,
-                                    ),
-                                    Text(
-                                      'Thu Nợ',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(
-                                      width: 70,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Divider(
-                            color: Colors.white,
-                            height: 2,
-                          ),
-                          Material(
-                            color: ColorConstants.cepColorBackground,
-                            child: InkWell(
-                              splashColor: Colors.green,
-                              onTap: () {},
-                              child: Container(
-                                color: Colors.blue[100].withOpacity(0),
-                                padding: EdgeInsets.all(10),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.record_voice_over_outlined,
-                                      size: screenWidth * 0.07,
-                                      color: Colors.white,
-                                    ),
-                                    SizedBox(
-                                      width: 20,
-                                    ),
-                                    Text(
-                                      'Tư Vấn Tiết Kiệm',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(
-                                      width: 70,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Divider(
-                            color: Colors.white,
-                            height: 2,
-                          ),
-                          Material(
-                            color: ColorConstants.cepColorBackground,
-                            child: InkWell(
-                              splashColor: Colors.green,
-                              onTap: () {},
-                              child: Container(
-                                color: Colors.blue[100].withOpacity(0),
-                                padding: EdgeInsets.all(10),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.people_rounded,
-                                      size: screenWidth * 0.07,
-                                      color: Colors.white,
-                                    ),
-                                    SizedBox(
-                                      width: 20,
-                                    ),
-                                    Text(
-                                      'Phát Triển Cộng Đồng',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(
-                                      width: 70,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Divider(
-                            color: Colors.white,
-                            height: 2,
-                          ),
-                          Material(
-                            color: ColorConstants.cepColorBackground,
-                            child: InkWell(
-                              splashColor: Colors.green,
-                              onTap: () {},
-                              child: Container(
-                                color: Colors.blue[100].withOpacity(0),
-                                padding: EdgeInsets.all(10),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.insert_chart_outlined,
-                                      size: screenWidth * 0.07,
-                                      color: Colors.white,
-                                    ),
-                                    SizedBox(
-                                      width: 20,
-                                    ),
-                                    Text(
-                                      'Thống Kê',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(
-                                      width: 70,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Divider(
-                            color: Colors.white,
-                            height: 2,
-                          ),
-                          Material(
-                            color: ColorConstants.cepColorBackground,
-                            child: InkWell(
-                              splashColor: Colors.green,
-                              onTap: () {},
-                              child: Container(
-                                color: Colors.blue[100].withOpacity(0),
-                                padding: EdgeInsets.all(10),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.delete_forever_rounded,
-                                      size: screenWidth * 0.07,
-                                      color: Colors.white,
-                                    ),
-                                    SizedBox(
-                                      width: 20,
-                                    ),
-                                    Text(
-                                      'Xóa Dữ Liệu',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(
-                                      width: 70,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Divider(
-                            color: Colors.white,
-                            height: 2,
-                          ),
-                          Material(
-                            color: ColorConstants.cepColorBackground,
-                            child: InkWell(
-                              splashColor: Colors.green,
-                              onTap: () {},
-                              child: Container(
-                                color: Colors.blue[100].withOpacity(0),
-                                padding: EdgeInsets.all(10),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.logout,
-                                      size: screenWidth * 0.07,
-                                      color: Colors.white,
-                                    ),
-                                    SizedBox(
-                                      width: 20,
-                                    ),
-                                    Text(
-                                      'Đăng Xuất',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(
-                                      width: 70,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Divider(
-                            color: Colors.white,
-                            height: 2,
-                          ),
-                        ],
-                      ),
+                          padding: EdgeInsets.all(0), children: getListMenu()),
                     ),
                   ),
                 ],
@@ -428,32 +143,107 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
     );
   }
 
-  Items item1 =
-      new Items(title: "Khảo Sát", img: "assets/dashboard/survey.png");
+  List<Widget> getListMenu() {
+    List<Widget> listWidget = new List<Widget>();
+    var listMenuByUser = ItemDashBoard.getItemDashboard();
+    var listMenuDefault = ItemDashBoard.getItemMenuDefault();
 
-  Items item2 = new Items(
-    title: "Thu Nợ",
-    img: "assets/dashboard/credit-hover.png",
-  );
-  Items item3 = new Items(
-    title: "Tư Vấn Tiết Kiệm",
-    img: "assets/dashboard/saving-hover.png",
-  );
-  Items item4 = new Items(
-    title: "Phát Triển Cộng Đồng",
-    img: "assets/dashboard/develop-hover.png",
-  );
-  Items item5 = new Items(
-    title: "Thống Kê",
-    img: "assets/dashboard/statistical-analysis.png",
-  );
-  Items item6 = new Items(
-    title: "Tải Xuống",
-    img: "assets/dashboard/document-download-outline.png",
-  );
+    for (var item in listMenuByUser) {
+      listWidget.add(
+        Divider(
+          color: Colors.white,
+          height: 2,
+        ),
+      );
+      Widget widgetTileMenu = Material(
+        color: ColorConstants.cepColorBackground,
+        child: InkWell(
+          splashColor: Colors.blue,
+          onTap: () {
+            _onTapMenuItem(item.title);
+          },
+          child: Container(
+            color: Colors.blue[100].withOpacity(0),
+            padding: EdgeInsets.all(10),
+            child: Row(
+              children: [
+                Icon(
+                  item.icon,
+                  size: screenWidth * 0.07,
+                  color: Colors.white,
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                Text(
+                  item.title,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  width: 70,
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      listWidget.add(widgetTileMenu);
+    }
+
+    for (var item in listMenuDefault) {
+      listWidget.add(
+        Divider(
+          color: Colors.white,
+          height: 2,
+        ),
+      );
+      Widget widgetTileMenu = Material(
+        color: ColorConstants.cepColorBackground,
+        child: InkWell(
+          splashColor: Colors.blue,
+          onTap: () {
+            _onTapMenuItem(item.title);
+            
+          },
+          child: Container(
+            color: Colors.blue[100].withOpacity(0),
+            padding: EdgeInsets.all(10),
+            child: Row(
+              children: [
+                Icon(
+                  item.icon,
+                  size: screenWidth * 0.07,
+                  color: Colors.white,
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                Text(
+                  item.title,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  width: 70,
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      listWidget.add(widgetTileMenu);
+    }
+
+    return listWidget;
+  }
 
   Widget dashboard(context) {
-    List<Items> listDashboard = [item1, item2, item3, item4, item5, item6];
+    List<ItemDashBoard> listDashboard = ItemDashBoard.getItemDashboard();
     var color = ColorConstants.cepColorBackground;
     var border = !isCollapsed
         ? BorderRadius.all(Radius.circular(40))
@@ -470,6 +260,8 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
             color: Colors.white,
             size: screenWidth * 0.06,
           );
+    Orientation orientation = MediaQuery.of(context).orientation;
+
     return AnimatedPositioned(
       duration: duration,
       top: 0,
@@ -487,82 +279,116 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             physics: ClampingScrollPhysics(),
-            child: Container(
-              padding: const EdgeInsets.only(left: 16, right: 16, top: 48),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      InkWell(
-                        child: menuIcon,
-                        onTap: () {
-                          setState(() {
-                            if (isCollapsed)
-                              _controller.forward();
-                            else
-                              _controller.reverse();
+            child: GestureDetector(
+              onHorizontalDragUpdate: (details) {
+                int sensitivity = 8;
+                if (details.delta.dx > sensitivity) {
+                  setState(() {
+                    if (isCollapsed) {
+                      isCollapsed = !isCollapsed;
+                      _controller.forward();
+                    }
+                  });
+                } else if (details.delta.dx < -sensitivity) {
+                  //Left Swipe
+                  setState(() {
+                    if (!isCollapsed) {
+                      isCollapsed = !isCollapsed;
+                      _controller.reverse();
+                    }
+                  });
+                }
+              },
+              child: Container(
+                padding: const EdgeInsets.only(left: 16, right: 16, top: 48),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        InkWell(
+                          child: menuIcon,
+                          onTap: () {
+                            setState(() {
+                              if (isCollapsed)
+                                _controller.forward();
+                              else
+                                _controller.reverse();
 
-                            isCollapsed = !isCollapsed;
-                          });
-                        },
-                      ),
-                      Text("Màn Hình Chính",
-                          style: TextStyle(fontSize: 24, color: Colors.white)),
-                      Icon(Icons.settings, color: Colors.white),
-                    ],
-                  ),
-                  Container(
-                    height: screenHeight * 0.86,
-                    width: screenWidth * 1,
-                    margin: EdgeInsets.only(top: 20),
-                    child: GridView.count(
-                        childAspectRatio: 1.0,
-                        padding: EdgeInsets.only(left: 16, right: 16),
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 20,
-                        mainAxisSpacing: 20,
-                        children: listDashboard.map((data) {
-                          return Container(
-                            height: 30,
-                            decoration: BoxDecoration(
-                                border:
-                                    Border.all(width: 3.0, color: Colors.white),
-                                color: color,
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Image.asset(
-                                  data.img,
-                                  width: screenWidth * 0.07,
+                              isCollapsed = !isCollapsed;
+                            });
+                          },
+                        ),
+                        Text("Màn Hình Chính",
+                            style:
+                                TextStyle(fontSize: 24, color: Colors.white)),
+                        Icon(Icons.settings, color: Colors.white),
+                      ],
+                    ),
+                    Container(
+                      height: screenHeight * 0.86,
+                      width: screenWidth * 1,
+                      margin: EdgeInsets.only(top: 20),
+                      child: GridView.count(
+                          childAspectRatio:
+                              orientation == Orientation.portrait ? 1.0 : 1.3,
+                          padding: EdgeInsets.only(left: 16, right: 16),
+                          crossAxisCount:
+                              orientation == Orientation.portrait ? 2 : 4,
+                          crossAxisSpacing:
+                              orientation == Orientation.portrait ? 20 : 30,
+                          mainAxisSpacing:
+                              orientation == Orientation.portrait ? 20 : 30,
+                          children: listDashboard.map((data) {
+                            return InkWell(
+                              onTap: () {
+                                _onTapMenuItem(data.title);
+
+                              },
+                              child: Container(
+                                height: 30,
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        width: 3.0, color: Colors.white),
+                                    color: color,
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Image.asset(
+                                      data.img,
+                                      width: screenWidth * 0.07,
+                                    ),
+                                    SizedBox(
+                                      height: 14,
+                                    ),
+                                    Flexible(
+                                      child: Text(
+                                        data.title,
+                                        textAlign: TextAlign.center,
+                                        // overflow: TextOverflow.fade,
+                                        //maxLines: 1,
+                                        // softWrap: false,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                  ],
                                 ),
-                                SizedBox(
-                                  height: 14,
-                                ),
-                                Flexible(
-                                  child: Text(
-                                    data.title,
-                                    overflow: TextOverflow.fade,
-                                    maxLines: 1,
-                                    softWrap: false,
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                              ],
-                            ),
-                          );
-                        }).toList()),
-                  )
-                ],
+                              ),
+                            );
+                          }).toList()),
+                    )
+                  ],
+                ),
               ),
             ),
           ),

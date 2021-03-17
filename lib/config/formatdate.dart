@@ -70,13 +70,14 @@ class FormatDateConstants {
     } else {
       int milliseconds =
           int.parse(date.replaceAll('/Date(', '').replaceAll('+0700)/', ''));
-      strdate = DateTime.fromMicrosecondsSinceEpoch(milliseconds * 1000).toString();
+      strdate =
+          DateTime.fromMicrosecondsSinceEpoch(milliseconds * 1000).toString();
     }
     return strdate;
   }
+
   static String getCurrentDateMMDDYYYY() {
-    var result =
-        formatDate(DateTime.now(), [mm, '/', dd, '/', yyyy]);
+    var result = formatDate(DateTime.now(), [mm, '/', dd, '/', yyyy]);
     return result;
   }
 
@@ -87,7 +88,8 @@ class FormatDateConstants {
     } else {
       int milliseconds =
           int.parse(date.replaceAll('/Date(', '').replaceAll('+0700)/', ''));
-      strdate = DateTime.fromMicrosecondsSinceEpoch(milliseconds * 1000).toString();
+      strdate =
+          DateTime.fromMicrosecondsSinceEpoch(milliseconds * 1000).toString();
     }
     return strdate;
   }
@@ -96,17 +98,24 @@ class FormatDateConstants {
     if (date == null) {
       return "";
     }
-    var result = formatDate(DateTime.fromMicrosecondsSinceEpoch(date * 1000).add(Duration(hours: -7)), [dd, '/', mm, '/', yyyy, ' ', HH, ':', nn]);
+    var result = formatDate(
+        DateTime.fromMicrosecondsSinceEpoch(date * 1000)
+            .add(Duration(hours: -7)),
+        [dd, '/', mm, '/', yyyy, ' ', HH, ':', nn]);
     return result;
   }
 
   static String convertUTCDateShort(int date) {
-     var result = formatDate(DateTime.fromMicrosecondsSinceEpoch(date * 1000).add(Duration(hours: -7)), [HH, ':', nn, ' ',dd, '/', mm ]);
+    var result = formatDate(
+        DateTime.fromMicrosecondsSinceEpoch(date * 1000)
+            .add(Duration(hours: -7)),
+        [HH, ':', nn, ' ', dd, '/', mm]);
     return result;
   }
 
   static String convertUTCDateTimeShort(int date) {
-     var result = formatDate(DateTime.fromMicrosecondsSinceEpoch(date * 1000), [dd, '/', mm, ' ', HH, ':', nn]);
+    var result = formatDate(DateTime.fromMicrosecondsSinceEpoch(date * 1000),
+        [dd, '/', mm, ' ', HH, ':', nn]);
     return result;
   }
 
@@ -114,12 +123,23 @@ class FormatDateConstants {
     if (date == null) {
       return "";
     }
-    var result = formatDate(DateTime.fromMicrosecondsSinceEpoch(date * 1000), [dd, '/', mm, '/', yyyy]);
+    var result = formatDate(DateTime.fromMicrosecondsSinceEpoch(date * 1000),
+        [dd, '/', mm, '/', yyyy]);
     return result;
   }
 
   static String convertUTCTime(int date) {
-     var result = formatDate(DateTime.fromMicrosecondsSinceEpoch(date * 1000), [HH, ':', nn]);
+    var result = formatDate(
+        DateTime.fromMicrosecondsSinceEpoch(date * 1000), [HH, ':', nn]);
     return result;
+  }
+
+  static DateTime convertJsonDateToDateTime(String jsonDate) {
+    if (jsonDate.isEmpty) {
+      return null;
+    }
+    jsonDate = jsonDate.replaceAll("T", " ");
+    DateTime datetime = new DateFormat("yyyy-MM-dd hh:mm:ss").parse(jsonDate);
+    return datetime;
   }
 }
