@@ -1,3 +1,4 @@
+import 'package:CEPmobile/GlobalUser.dart';
 import 'package:CEPmobile/bloc_helpers/bloc_provider.dart';
 import 'package:CEPmobile/blocs/authentication/authentication_bloc.dart';
 import 'package:CEPmobile/blocs/authentication/authentication_event.dart';
@@ -6,6 +7,8 @@ import 'package:CEPmobile/models/dashboard/ItemDashboard.dart';
 import 'package:CEPmobile/ui/navigation/slide_route.dart';
 import 'package:CEPmobile/ui/screens/error/error.dart';
 import 'package:flutter/material.dart';
+
+import '../../../globalServer.dart';
 //import 'package:path/path.dart';
 
 class MenuDashboardPage extends StatefulWidget {
@@ -102,8 +105,7 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
                   SizedBox(
                     height: 60,
                     child: ListTile(
-                      title: Text(
-                        "HUỲNH MINH KIỆT",
+                      title: Text( globalUser.getUserInfo.tenNhanVien,
                         style: TextStyle(
                             color: Colors.white, fontWeight: FontWeight.bold),
                       ),

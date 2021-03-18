@@ -147,7 +147,7 @@ class AppState extends State<Application> {
               );
               //}
               break;
-    
+
             case 'MB005':
               return new MyCustomRoute(
                 builder: (_) =>
@@ -169,22 +169,22 @@ class AppState extends State<Application> {
               );
               break;
             case 'error':
-                return SlideLeftRoute(page: ErrorScreen());
-              
+              return SlideLeftRoute(page: ErrorScreen());
+
               // return new MyCustomRoute(
               //   builder: (_) => new ErrorScreen(),
               //   settings: settings,
               // );
               break;
             case 'survey':
-                return SlideLeftRoute(page: Example());
-              
+              return SlideLeftRoute(page: Example());
+
               // return new MyCustomRoute(
               //   builder: (_) => new ErrorScreen(),
               //   settings: settings,
               // );
               break;
-              
+
             default:
               return new MyCustomRoute(
                 builder: (_) => new ErrorScreen(),
@@ -193,6 +193,12 @@ class AppState extends State<Application> {
               break;
           }
         },
+        // onUnknownRoute: (RouteSettings settings) {
+        //   if (settings.name != null) {
+        //     SlideLeftRoute(page: ErrorScreen());
+        //   }
+          
+        // },
         home: InitializationPage(),
       ),
     );

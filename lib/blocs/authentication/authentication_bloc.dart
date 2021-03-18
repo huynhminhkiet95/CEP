@@ -77,8 +77,8 @@ class AuthenticationBloc
           .getToken(dataToken)
           .then((response) => response);
       if (token != null || token.body.isEmpty != true) {
-        var jsonBodyToken = json.decode(token.body);
         if (token.statusCode == StatusCodeConstants.OK) {
+          var jsonBodyToken = json.decode(token.body);
           if (jsonBodyToken["isSuccessed"] == true) {
             if (jsonBodyToken["token"] != null) {
               globalUser.settoken = jsonBodyToken["token"];
@@ -106,7 +106,7 @@ class AuthenticationBloc
         } else if (token.statusCode == StatusCodeConstants.BAD_REQUEST) {
           yield AuthenticationState.failedByUser(currentState);
           Fluttertoast.showToast(
-            msg: allTranslations.text("UserIsNotExist"),
+            msg: allTranslations.text("ServerNotFound"),
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM, // also possible "TOP" and "CENTER"
             backgroundColor: Colors.red[300].withOpacity(0.7),

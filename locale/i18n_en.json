@@ -47,6 +47,7 @@
     "Fail":"Fail",
     "FailReason":"Fail Reason",
     "UserIsNotExist":"This user or password is not correct !",
+    "ServerNotFound":"Server is not found, please waiting a few minutes !",
     "SimpleUpdate":"Simple Update",
     "SavePosition":"I am Here",
     "CompletedTrip":"Completed Trip",
