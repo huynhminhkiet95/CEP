@@ -14,7 +14,7 @@ import 'package:CEPmobile/globalRememberUser.dart';
 import 'package:CEPmobile/globalServer.dart';
 import 'package:CEPmobile/models/users/ValidateUserIdPwdJsonResult.dart';
 import 'package:CEPmobile/models/users/user_info.dart';
-import 'package:CEPmobile/models/users/user_roles.dart';
+import 'package:CEPmobile/models/users/user_role.dart';
 import 'package:CEPmobile/services/commonService.dart';
 import 'package:CEPmobile/services/sharePreference.dart';
 import 'package:flutter/material.dart';
@@ -82,11 +82,12 @@ class AuthenticationBloc
           if (jsonBodyToken["isSuccessed"] == true) {
             if (jsonBodyToken["token"] != null) {
               globalUser.settoken = jsonBodyToken["token"];
+              
               List responses = await Future.wait(
-                  [getUserInfo(event.userName), getUserRoles(event.userName)]);
+                  [getUserInfo(event.userName),getUserRoles(event.userName)]);
               if (responses != null &&
                   (responses[0] is UserInfo || responses[0] != null) &&
-                  (responses[1] is UserRoles || responses[1] != null)) {
+                  (responses[1] is UserRole || responses[1] != null)) {
                 globalUser.setUserInfo = responses[0];
                 globalUser.setUserRoles = responses[1];
                 yield AuthenticationState.authenticated(event.isRemember,
@@ -149,7 +150,7 @@ class AuthenticationBloc
       if (userInfo.statusCode == StatusCodeConstants.OK) {
         var jsonBodyUserInfo = json.decode(userInfo.body);
         if (jsonBodyUserInfo["isSuccessed"]) {
-          var dataUserInfo = UserInfo.fromJson(jsonBodyUserInfo["data"]);
+          var dataUserInfo = UserInfo.fromJson(jsonBodyUserInfo["data"] == null || jsonBodyUserInfo["data"].isEmpty ? null : jsonBodyUserInfo["data"].first);
           userInfoModel = dataUserInfo;
         }
       }
@@ -159,8 +160,8 @@ class AuthenticationBloc
     return userInfoModel;
   }
 
-  Future<UserRoles> getUserRoles(String userName) async {
-    UserRoles userRolesModel = null;
+  Future<UserRole> getUserRoles(String userName) async {
+    UserRole userRolesModel = null;
     try {
       var userRoles = await this
           ._commonService
@@ -169,7 +170,7 @@ class AuthenticationBloc
       if (userRoles.statusCode == StatusCodeConstants.OK) {
         var jsonBodyUserRoles = json.decode(userRoles.body);
         if (jsonBodyUserRoles["isSuccessed"]) {
-          var dataUserRoles = UserRoles.fromJson(jsonBodyUserRoles["data"]);
+          var dataUserRoles = UserRole.fromJson(jsonBodyUserRoles["data"] == null || jsonBodyUserRoles["data"].isEmpty ? null : jsonBodyUserRoles["data"].first);
           userRolesModel = dataUserRoles;
         }
       }

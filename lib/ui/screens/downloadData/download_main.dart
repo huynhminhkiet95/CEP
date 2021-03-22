@@ -1,40 +1,28 @@
 import 'package:CEPmobile/config/colors.dart';
+import 'package:CEPmobile/ui/screens/downloadData/download_survey.dart';
+import 'package:CEPmobile/ui/screens/downloadData/download_dept.dart';
+import 'package:CEPmobile/ui/screens/downloadData/download_saving.dart';
+import 'package:CEPmobile/ui/screens/downloadData/download_community_development.dart';
+import 'package:CEPmobile/ui/screens/downloadData/download_metadata.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:CEPmobile/config/CustomIcons/my_flutter_app_icons.dart';
-import 'package:CEPmobile/ui/screens/survey/listofsurveymembers.dart';
 
-class SurveyScreen extends StatefulWidget {
+class DownloadScreen extends StatefulWidget {
   @override
-  _SurveyScreenState createState() => _SurveyScreenState();
+  _DownloadScreenState createState() => _DownloadScreenState();
 }
 
-class _SurveyScreenState extends State<SurveyScreen> {
+class _DownloadScreenState extends State<DownloadScreen> {
   int _selectedIndex = 0;
   static TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.w600);
   List<Widget> _widgetOptions = <Widget>[
-    new ListOfSurveyMembers(),
-    Text(
-      'Thông Tin',
-      style: optionStyle,
-    ),
-    Text(
-      'Vay Lần 1',
-      style: optionStyle,
-    ),
-    Text(
-      'Nhu Cầu Vây',
-      style: optionStyle,
-    ),
-    Text(
-      'Vay Nguồn Khác',
-      style: optionStyle,
-    ),
-    Text(
-      'Đánh Giá',
-      style: optionStyle,
-    ),
+    new DownloadSurvey(),
+    new DownloadDept(),
+    new DownloadSaving(),
+    new DownloadCommunityDevelopment(),
+    new DownloadMetaData(),
   ];
 
   void onItemTapped(int index) {
@@ -59,7 +47,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
         ),
         backgroundColor: ColorConstants.cepColorBackground,
         elevation: 20,
-        title: const Text('Khảo Sát Vay Vốn'),
+        title: const Text('Tải Xuống'),
       ),
       body: Container(
         child: _widgetOptions.elementAt(_selectedIndex),
@@ -68,24 +56,23 @@ class _SurveyScreenState extends State<SurveyScreen> {
           height: 60,
           items: [
             TabItem(
-              icon: Icons.list,
+              icon: IconsCustomize.survey_icon,
               title: orientation == Orientation.portrait
-                  ? 'Danh S...'
-                  : 'Danh Sách',
+                  ? 'Khảo Sát'
+                  : 'Khảo Sát',
             ),
-            TabItem(icon: Icons.info, title: 'Thông Tin'),
-            TabItem(icon: IconsCustomize.loan, title: 'Vay Lần 1'),
+            TabItem(icon: IconsCustomize.thu_no, title: 'Thu Nợ'),
+            TabItem(icon: IconsCustomize.tu_van, title: orientation == Orientation.portrait ?'Tư Vấn T...' : 'Tư Vấn Tiết Kiệm'),
             TabItem(
-                icon: Icons.money,
+                icon: IconsCustomize.phattriencongdong,
                 title: orientation == Orientation.portrait
-                    ? 'Nhu Cầu...'
-                    : 'Nhu Cầu Vốn'),
+                    ? 'PTCĐ'
+                    : 'PTCĐ'),
             TabItem(
-                icon: IconsCustomize.networking,
+                icon: Icons.list,
                 title: orientation == Orientation.portrait
-                    ? 'Vay Ng...'
-                    : 'Vay Nguồn Khác'),
-            TabItem(icon: IconsCustomize.survey_icon, title: 'Đánh Giá'),
+                    ? 'Danh Sách...'
+                    : 'Danh Sách Chọn'),
           ],
           //curveSize: 100,
           //initialActiveIndex: 3,

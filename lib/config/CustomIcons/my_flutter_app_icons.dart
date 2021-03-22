@@ -26,6 +26,12 @@ class IconsCustomize {
   static const IconData networking = IconData(0xe801, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData loan = IconData(0xe802, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData money_1 = IconData(0xe803, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData birth_date = IconData(0xe804, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData id_card = IconData(0xe805, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData gender = IconData(0xe806, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData thu_no = IconData(0xe807, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData tu_van = IconData(0xe808, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData phattriencongdong = IconData(0xe809, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData money = IconData(0xf0d6, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData dollar_sign = IconData(0xf155, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData bank = IconData(0xf19c, fontFamily: _kFontFam, fontPackage: _kFontPkg);

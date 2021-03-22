@@ -584,9 +584,7 @@ class _TripRecordState extends State<DayTripRecordComponent> {
                                                     EdgeInsets.only(right: 20),
                                                 child: isLoading
                                                     ? Container()
-                                                    : searchTextField =
-                                                        AutoCompleteTextField<
-                                                            TriprecordModel>(
+                                                    : searchTextField = AutoCompleteTextField<TriprecordModel>(
                                                         key: key,
                                                         suggestions: dataTrips,
                                                         clearOnSubmit: false,

@@ -1,10 +1,9 @@
 import 'package:CEPmobile/ui/navigation/slide_route.dart';
 import 'package:CEPmobile/ui/screens/Home/dashboard.dart';
 import 'package:CEPmobile/ui/screens/Login/loginPage.dart';
+import 'package:CEPmobile/ui/screens/downloadData/download_main.dart';
 import 'package:CEPmobile/ui/screens/error/error.dart';
 import 'package:CEPmobile/ui/screens/survey/survey.dart';
-import 'package:camera/camera.dart';
-import 'package:CEPmobile/ui/screens/Login/index.dart';
 import 'package:CEPmobile/ui/screens/announcement/announcement_screen.dart';
 import 'package:CEPmobile/ui/screens/checklist/records.dart';
 import 'package:flutter/material.dart';
@@ -170,21 +169,13 @@ class AppState extends State<Application> {
               break;
             case 'error':
               return SlideLeftRoute(page: ErrorScreen());
-
-              // return new MyCustomRoute(
-              //   builder: (_) => new ErrorScreen(),
-              //   settings: settings,
-              // );
               break;
             case 'survey':
-              return SlideLeftRoute(page: Example());
-
-              // return new MyCustomRoute(
-              //   builder: (_) => new ErrorScreen(),
-              //   settings: settings,
-              // );
+              return SlideLeftRoute(page: SurveyScreen());
               break;
-
+            case 'download':
+              return SlideLeftRoute(page: DownloadScreen());
+              break;
             default:
               return new MyCustomRoute(
                 builder: (_) => new ErrorScreen(),

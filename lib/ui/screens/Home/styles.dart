@@ -39,6 +39,46 @@ DecorationImage avatar6 = new DecorationImage(
   fit: BoxFit.cover,
 );
 
+InputDecoration decorationTextFieldCEP = InputDecoration(
+  contentPadding: EdgeInsets.fromLTRB(0.0, 15.0, 20.0, 15.0),
+  labelStyle: new TextStyle(color: Colors.blue),
+  enabledBorder: UnderlineInputBorder(
+    borderSide: BorderSide(color: Colors.blue),
+  ),
+  focusedBorder: UnderlineInputBorder(
+    borderSide: BorderSide(color: Colors.red),
+  ),
+);
+
+Widget customScrollViewSliverAppBarForDownload(String title,List<Widget> listChildren,BuildContext context) {
+  Size size = MediaQuery.of(context).size;
+  return CustomScrollView(
+    slivers: <Widget>[
+      SliverAppBar(
+          automaticallyImplyLeading: false,
+          expandedHeight: size.height * 0.07,
+          flexibleSpace: Container(
+            child: 
+              Center(
+                child: Text(title,
+                //  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Color(0xff003399),
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,),
+                ),
+              ),
+           
+          ),
+          backgroundColor: Colors.white),
+      SliverList(
+        delegate: SliverChildListDelegate(
+          listChildren,
+        ),
+      ),
+    ],
+  );
+}
 // DecorationImage profileImage = new DecorationImage(
 //   image: new ExactAssetImage('assets/avatars/avatar-7.gif'),
 //   fit: BoxFit.cover,

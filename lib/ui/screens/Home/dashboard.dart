@@ -49,7 +49,9 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
       case 'Khảo Sát':
         Navigator.pushNamed(context, 'survey');
         break;
-
+      case 'Tải Xuống':
+        Navigator.pushNamed(context, 'download');
+        break;
       case 'Đăng Xuất':
         _loginSubmit();
         break;
@@ -105,7 +107,7 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
                   SizedBox(
                     height: 60,
                     child: ListTile(
-                      title: Text( globalUser.getUserInfo.tenNhanVien,
+                      title: Text( globalUser.getUserInfo == null ? '' : globalUser.getUserInfo.hoTen,
                         style: TextStyle(
                             color: Colors.white, fontWeight: FontWeight.bold),
                       ),

@@ -142,4 +142,9 @@ class FormatDateConstants {
     DateTime datetime = new DateFormat("yyyy-MM-dd hh:mm:ss").parse(jsonDate);
     return datetime;
   }
+
+  static String convertDateTimeToString(DateTime dateTime) {
+    String formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
+    return formattedDate;
+  }
 }

@@ -1,5 +1,5 @@
 
-class UserRoles {
+class UserRole {
   bool salary;
   bool hPqlnlhc;
   bool banTgd;
@@ -27,9 +27,9 @@ class UserRoles {
   bool upLoad;
   bool hPktnb;
 
-  UserRoles({this.salary, this.hPqlnlhc, this.banTgd, this.administrator, this.td, this.giaoDich, this.ktv, this.tq, this.kiemSoat2, this.hHs, this.hPtckt, this.gdcn, this.provisional, this.ptcd, this.hPcntt, this.dataBase, this.tpkt, this.chiNhanh, this.kiemSoat, this.thionline, this.tttd, this.hPqltd, this.hPhlptd, this.tptd, this.upLoad, this.hPktnb});
+  UserRole({this.salary, this.hPqlnlhc, this.banTgd, this.administrator, this.td, this.giaoDich, this.ktv, this.tq, this.kiemSoat2, this.hHs, this.hPtckt, this.gdcn, this.provisional, this.ptcd, this.hPcntt, this.dataBase, this.tpkt, this.chiNhanh, this.kiemSoat, this.thionline, this.tttd, this.hPqltd, this.hPhlptd, this.tptd, this.upLoad, this.hPktnb});
 
-  UserRoles.fromJson(Map<String, dynamic> json) {
+  UserRole.fromJson(Map<String, dynamic> json) {
     if(json["Salary"] is bool)
       this.salary = json["Salary"];
     if(json["H-PQLNLHC"] is bool)
