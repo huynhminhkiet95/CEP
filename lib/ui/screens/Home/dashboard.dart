@@ -47,6 +47,7 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
   void _onTapMenuItem(String nameMenu) {
     switch (nameMenu) {
       case 'Khảo Sát':
+      
         Navigator.pushNamed(context, 'survey');
         break;
       case 'Tải Xuống':
@@ -55,7 +56,7 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
       case 'Đăng Xuất':
         _loginSubmit();
         break;
-      
+
       default:
         Navigator.pushNamed(context, 'error');
     }
@@ -107,7 +108,10 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
                   SizedBox(
                     height: 60,
                     child: ListTile(
-                      title: Text( globalUser.getUserInfo == null ? '' : globalUser.getUserInfo.hoTen,
+                      title: Text(
+                        globalUser.getUserInfo == null
+                            ? ''
+                            : globalUser.getUserInfo.hoTen,
                         style: TextStyle(
                             color: Colors.white, fontWeight: FontWeight.bold),
                       ),
@@ -210,7 +214,6 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
           splashColor: Colors.blue,
           onTap: () {
             _onTapMenuItem(item.title);
-            
           },
           child: Container(
             color: Colors.blue[100].withOpacity(0),
@@ -331,28 +334,28 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
                         Icon(Icons.settings, color: Colors.white),
                       ],
                     ),
+                    
                     Container(
-                      height: screenHeight * 0.86,
+                      height: screenHeight * 0.8,
                       width: screenWidth * 1,
                       margin: EdgeInsets.only(top: 20),
                       child: GridView.count(
                           childAspectRatio:
                               orientation == Orientation.portrait ? 1.0 : 1.3,
-                          padding: EdgeInsets.only(left: 16, right: 16),
+                          padding: EdgeInsets.only(left: 16, right: 16, bottom: 10, top :10),
                           crossAxisCount:
-                              orientation == Orientation.portrait ? 2 : 4,
+                              orientation == Orientation.portrait ? 3 : 4,
                           crossAxisSpacing:
-                              orientation == Orientation.portrait ? 20 : 30,
+                              orientation == Orientation.portrait ? 10 : 30,
                           mainAxisSpacing:
-                              orientation == Orientation.portrait ? 20 : 30,
+                              orientation == Orientation.portrait ? 10 : 30,
                           children: listDashboard.map((data) {
                             return InkWell(
                               onTap: () {
                                 _onTapMenuItem(data.title);
-
                               },
                               child: Container(
-                                height: 30,
+                                height: 20,
                                 decoration: BoxDecoration(
                                     border: Border.all(
                                         width: 3.0, color: Colors.white),

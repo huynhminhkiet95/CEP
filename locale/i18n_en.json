@@ -48,6 +48,7 @@
     "FailReason":"Fail Reason",
     "UserIsNotExist":"This user or password is not correct !",
     "ServerNotFound":"Server is not found, please waiting a few minutes !",
+    "DownLoadDataSuccess":"Download the data successfully !",
     "SimpleUpdate":"Simple Update",
     "SavePosition":"I am Here",
     "CompletedTrip":"Completed Trip",

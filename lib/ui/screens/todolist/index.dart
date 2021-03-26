@@ -162,15 +162,15 @@ class _TodoListState extends State<TodoListComponent> {
                           textColor: Colors.white,
                           onPressed: () {
                             //  CommonService.goInspectionListTrip(TypeInspectionConstants.technicaldriver, values.bookNo);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => CheckListComponent(
-                                        type: TypeInspectionConstants
-                                            .technicaldriver,
-                                        bookNo: values.bookNo,
-                                      )),
-                            );
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //       builder: (context) => CheckListComponent(
+                            //             type: TypeInspectionConstants
+                            //                 .technicaldriver,
+                            //             bookNo: values.bookNo,
+                            //           )),
+                            // );
                           },
                           child: Row(
                             children: <Widget>[

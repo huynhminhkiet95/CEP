@@ -16,8 +16,6 @@ import 'package:CEPmobile/resources/CurrencyInputFormatter.dart';
 import 'package:CEPmobile/resources/DateTextFormatter.dart';
 import 'package:CEPmobile/resources/TimeTextFormatter.dart';
 import 'package:CEPmobile/ui/components/ModalProgressHUDCustomize.dart';
-import 'package:CEPmobile/ui/components/PhotoViewGallery.dart';
-import 'package:CEPmobile/ui/components/TakePictureScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:CEPmobile/GlobalTranslations.dart';
 import 'package:CEPmobile/GlobalUser.dart';
@@ -760,18 +758,7 @@ class _TripRecordState extends State<DayTripRecordComponent> {
                                                   // );
 
                                                   // PreviewPhotoGallery
-                                                  // SystemChrome.setEnabledSystemUIOverlays([]);
-
-                                                  result = await Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            TakePictureScreen(
-                                                              camera:
-                                                                  cameras.first,
-                                                            )),
-                                                  );
-
+                                                  // SystemChrome.setEnabledSystemUIOverlays([])
                                                   print({"result": result});
                                                   if (result != null) {
                                                     listImage.add(result);
@@ -867,12 +854,12 @@ class _TripRecordState extends State<DayTripRecordComponent> {
       isLoading = true;
     });
     try {
-      List<TriprecordModel> datas = await DBProvider.db.getAllTripReCord();
-      if (datas.length > 0) {
-        setState(() {
-          dataTrips = datas;
-        });
-      }
+      //List<TriprecordModel> datas = await DBProvider.db.getAllTripReCord();
+      // if (datas.length > 0) {
+      //   setState(() {
+      //     dataTrips = datas;
+      //   });
+      // }
     } catch (e) {}
     setState(() {
       isLoading = false;
@@ -915,12 +902,7 @@ class _TripRecordState extends State<DayTripRecordComponent> {
                 padding: EdgeInsets.only(top: 10),
                 child: InkWell(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PreviewPhotoGallery(
-                              imageList: listImage, indexItem: i)),
-                    );
+                 
                   },
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),

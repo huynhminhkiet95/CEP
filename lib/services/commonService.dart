@@ -221,4 +221,13 @@ class CommonService {
   Future<StreamedResponse> saveImage(File file, int itemId) {
     return _httpBase.httpPostOpenalpr(file, itemId);
   }
+
+  Future<Response> getDownloadData(int chiNhanhID, String cumID, String ngayxuatDS,String masoql) {
+    Map map = new Map();
+    map["chiNhanhID"] = chiNhanhID;
+    map["cumID"] = cumID;
+    map["ngayxuatDanhSach"] = ngayxuatDS;
+    map["masoql"] = masoql;
+    return _httpBase.httpPostToken(ServiceName.GetSurveyInfo.toString(), map);
+  }
 }

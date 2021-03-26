@@ -1,4 +1,5 @@
 import 'package:CEPmobile/models/users/user_role.dart';
+import 'package:CEPmobile/models/historyscreen/history_screen.dart';
 
 import 'models/users/user_info.dart';
 
@@ -18,8 +19,9 @@ class GlobalUser {
   int _staffId;
   int _employeeId;
   String _systemId;
-  UserInfo _userInfo ;
+  UserInfo _userInfo;
   UserRole _userRole;
+  HistoryScreen _historyScreen;
 
   int get getId => _id;
 
@@ -79,8 +81,12 @@ class GlobalUser {
 
   UserRole get getUserRoles => _userRole;
 
+  set setHistoryScreen(HistoryScreen value) => _historyScreen = value;
+
+  HistoryScreen get getHistoryScreen => _historyScreen;
+
   set setUserRoles(UserRole value) => _userRole = value;
-  
+
   bool get getNotification => _isNotification;
 
   set setNotification(bool value) => _isNotification = value;

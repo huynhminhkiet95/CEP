@@ -52,8 +52,8 @@ class TripRecordBloc
           event.tripRecord, globalUser.getSubsidiaryId);
 
       if (response.statusCode == 200) {
-        DBProvider.db.insertTriprecord(
-            event.tripRecord.routeMemo, event.tripRecord.tripMemo);
+        // DBProvider.db.insertTriprecord(
+        //     event.tripRecord.routeMemo, event.tripRecord.tripMemo);
         var dataJson = json.decode(response.body);
         if (dataJson["success"] == true) {
           Fluttertoast.showToast(
@@ -90,8 +90,8 @@ class TripRecordBloc
           event.daytripRecord, globalUser.getSubsidiaryId);
 
       if (response != null && response.statusCode == 200) {
-        DBProvider.db.insertTriprecord(
-            event.daytripRecord.routeMemo, event.daytripRecord.tripMemo);
+        // DBProvider.db.insertTriprecord(
+        //     event.daytripRecord.routeMemo, event.daytripRecord.tripMemo);
         var dataJson = json.decode(response.body);
 
         if (dataJson["success"] == true) {

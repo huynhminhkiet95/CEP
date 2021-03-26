@@ -76,11 +76,11 @@ class TakePictureScreenState extends State<TakePhoto> {
               icon: new Icon(Icons.arrow_back),
               onPressed: () {
                 //Navigator.pushReplacementNamed(context, '/webview');
-                Navigator.pushReplacement(
-                    context,
-                    new MaterialPageRoute(
-                        builder: (context) => WebViewPlugin(
-                            title: widget.itemId, url: widget.url)));
+                // Navigator.pushReplacement(
+                //     context,
+                //     new MaterialPageRoute(
+                //         builder: (context) => WebViewPlugin(
+                //             title: widget.itemId, url: widget.url)));
               })),
       body: FutureBuilder<void>(
         future: _initializeControllerFuture,

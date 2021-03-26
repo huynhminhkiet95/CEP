@@ -16,7 +16,7 @@ import 'package:CEPmobile/services/service.dart';
 import 'package:CEPmobile/ui/decision_page_no_business.dart';
 import 'package:CEPmobile/ui/initialization_page.dart';
 import 'package:permission_handler/permission_handler.dart';
-
+import 'package:CEPmobile/ui/screens/survey/survey_detail.dart';
 import 'config/typeinspectionconstants.dart';
 import 'database/DBProvider.dart';
 import 'globalDriverProfile.dart';
@@ -26,6 +26,7 @@ import 'ui/screens/checklistqc/records.dart';
 import 'ui/screens/daytriprecord/index.dart';
 import 'ui/screens/profile/index.dart';
 import 'ui/screens/todolist/index.dart';
+
 
 // extension ExtendedString on String {
 //   bool get isValidName {
@@ -57,7 +58,7 @@ class AppState extends State<Application> {
     final services = Services.of(context);
     authenticationBloc = new AuthenticationBloc(
         services.commonService, services.sharePreferenceService);
-    DBProvider.db.checkColumn();
+    //DBProvider.db.checkColumn();
   }
 
   @override
@@ -133,34 +134,6 @@ class AppState extends State<Application> {
                 );
               }
               break;
-            case 'MB004':
-              // if (globalDriverProfile.getfleet.isEmpty) {
-              //   return new MyCustomRoute(
-              //     builder: (_) => new DriverProfile(),
-              //     settings: settings,
-              //   );
-              // } else {
-              return new MyCustomRoute(
-                builder: (_) => new ListCheckListComponent(),
-                settings: settings,
-              );
-              //}
-              break;
-
-            case 'MB005':
-              return new MyCustomRoute(
-                builder: (_) =>
-                    new CheckListforQC(type: TypeInspectionConstants.qc),
-                settings: settings,
-              );
-              break;
-            case 'MB006':
-              return new MyCustomRoute(
-                builder: (_) =>
-                    new CheckListforQC(type: TypeInspectionConstants.technical),
-                settings: settings,
-              );
-              break;
             case 'MB007':
               return new MyCustomRoute(
                 builder: (_) => new AnnouncementScreen(),
@@ -173,6 +146,10 @@ class AppState extends State<Application> {
             case 'survey':
               return SlideLeftRoute(page: SurveyScreen());
               break;
+            case 'surveydetail':
+              return SlideTopRoute(page: SurveyDetailScreen());
+              break;
+              
             case 'download':
               return SlideLeftRoute(page: DownloadScreen());
               break;

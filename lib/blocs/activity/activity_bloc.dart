@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:CEPmobile/GlobalUser.dart';
 import 'package:CEPmobile/bloc_helpers/bloc_event_state.dart';
 import 'package:CEPmobile/dtos/common/getaprrovetriprecords.dart';

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import 'package:CEPmobile/httpProvider/HttpProviders.dart';
 import 'package:CEPmobile/services/commonService.dart';
-import 'package:CEPmobile/services/googleMapService.dart';
 import 'package:CEPmobile/services/sharePreference.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,10 +12,10 @@ class Services {
   final CommonService commonService;
   final SharePreferenceService sharePreferenceService;
   final DocumentService documentService;
-  final GoogleMapService googleMapService;
+  //final GoogleMapService googleMapService;
 
   Services(this.sharedPrefs, this.httpBase, this.commonService,
-      this.sharePreferenceService, this.googleMapService, this.documentService);
+      this.sharePreferenceService,  this.documentService);
 
   static Future<Services> initialize() async {
     // GET instance here and inject
@@ -25,14 +24,14 @@ class Services {
     final httpBase = new HttpBase();
     final commonService = new CommonService(httpBase);
     final documentService = new DocumentService(httpBase);
-    final googleMapService = new GoogleMapService();
+   // final googleMapService = new GoogleMapService();
 
     await sharePreferenceService.getRememberUser();
     await sharePreferenceService.getServerInfo();
     await sharePreferenceService.getDriverProfile();
 
     return Services(sharedPrefs, httpBase, commonService,
-        sharePreferenceService, googleMapService, documentService);
+        sharePreferenceService, documentService);
   }
 
   static Services of(BuildContext context) {

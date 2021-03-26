@@ -80,11 +80,11 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
           if (widget.url == null) {
             Navigator.pop(context);
           } else {
-            Navigator.pushReplacement(
-                context,
-                new MaterialPageRoute(
-                    builder: (context) =>
-                        WebViewPlugin(title: widget.itemId, url: widget.url)));
+            // Navigator.pushReplacement(
+            //     context,
+            //     new MaterialPageRoute(
+            //         builder: (context) =>
+            //             WebViewPlugin(title: widget.itemId, url: widget.url)));
           }
         } else {
           Fluttertoast.showToast(
@@ -128,11 +128,11 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                 if (widget.url == null) {
                   Navigator.pop(context);
                 } else {
-                  Navigator.pushReplacement(
-                      context,
-                      new MaterialPageRoute(
-                          builder: (context) => WebViewPlugin(
-                              title: widget.itemId, url: widget.url)));
+                  // Navigator.pushReplacement(
+                  //     context,
+                  //     new MaterialPageRoute(
+                  //         builder: (context) => WebViewPlugin(
+                  //             title: widget.itemId, url: widget.url)));
                 }
               })),
       body: FutureBuilder<File>(

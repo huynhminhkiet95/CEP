@@ -102,13 +102,13 @@ class _TripRecordState extends State<TripRecordComponent> {
 
   Future getTriprecords() async {
     try {
-      List<TriprecordModel> datas = await DBProvider.db.getAllTripReCord();
-      if (datas.length > 0) {
-        setState(() {
-          dataTrips = datas;
-          isLoading = false;
-        });
-      }
+      // List<TriprecordModel> datas = await DBProvider.db.getAllTripReCord();
+      // if (datas.length > 0) {
+      //   setState(() {
+      //     dataTrips = datas;
+      //     isLoading = false;
+      //   });
+      // }
     } catch (e) {}
     setState(() {
       isLoading = false;

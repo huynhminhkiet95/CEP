@@ -36,6 +36,7 @@
     "FailReason":"Lý do",
     "UserIsNotExist":"Tài khoản hoặc mật khẩu không đúng !",
     "ServerNotFound":"Server hiện đang bị lỗi, vui lòng chờ trong giây lát !",
+    "DownLoadDataSuccess":"Download Dữ liệu thành công !",
     "SimpleUpdate":"Cập nhật đơn hàng",
     "SavePosition":"Cập nhật vị trí",
     "CompletedTrip":"Hoàn thành",

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:CEPmobile/config/colors.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-import 'TakePictureScreen.dart';
 
 class WebViewContainer extends StatefulWidget {
   final url;

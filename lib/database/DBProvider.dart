@@ -1,7 +1,5 @@
 import 'dart:io';
-import 'package:CEPmobile/models/comon/activity.dart';
-import 'package:CEPmobile/models/comon/notification.dart';
-import 'package:CEPmobile/models/comon/triprecordModel.dart';
+import 'package:CEPmobile/models/download_data/survey_info.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -23,242 +21,341 @@ class DBProvider {
     return _database;
   }
 
-  checkColumn() async {
-    final db = await database;
-    // try {
-    //   var res = await db.rawQuery('SELECT isRead FROM Notification LIMIT 0');
-    //   if (res.isNotEmpty) {
-    //     await db.execute(
-    //       "ALTER TABLE Notification ADD COLUMN isRead INTEGER DEFAULT 0;",
-    //     );
-    //   }
-    // } catch (exception) {
-    //   await db.execute(
-    //     "ALTER TABLE Notification ADD COLUMN isRead INTEGER DEFAULT 0;",
-    //   );
-    // }
-    try {
-      // var res = await db.rawQuery('SELECT issuedate FROM Notification LIMIT 0');
-      // if (res.isNotEmpty) {
-      //   await db.execute(
-      //     "ALTER TABLE Notification ADD COLUMN issuedate INTEGER;",
-      //   );
-      // }
-      //await db.rawQuery('SELECT fleetid FROM Notification LIMIT 0');
-    } catch (exception) {
-      // await db.execute(
-      //   "ALTER TABLE Notification ADD COLUMN issuedate INTEGER;",
-      // );
-      //  await db.execute(
-      //     "ALTER TABLE Notification ADD COLUMN fleetid INTEGER;",
-      //   );
-    }
-    await db.execute(
-      "CREATE TABLE IF NOT EXISTS TripRecord(id INTEGER PRIMARY KEY,route TEXT DEFAULT '', memo  TEXT DEFAULT '');",
-    );
-    await db.execute(
-      "CREATE TABLE IF NOT EXISTS Activity(id INTEGER PRIMARY KEY, type INTEGER DEFAULT 0, pickupPlace TEXT DEFAULT '', returnPlace TEXT DEFAULT '', activity  TEXT DEFAULT '', createdate TEXT);",
-    );
-  }
-
   initDB() async {
-    // Get the location of our app directory. This is where files for our app,
-    // and only our app, are stored. Files in this directory are deleted
-    // when the app is deleted.
-    Directory documentsDir = await getApplicationDocumentsDirectory();
-    String path = join(documentsDir.path, 'app.db');
-
-    return await openDatabase(path, version: 1, onOpen: (db) async {},
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    String path = join(documentsDirectory.path, "CEP3dbo.db");
+    return await openDatabase(path, version: 1, onOpen: (db) {},
         onCreate: (Database db, int version) async {
-      // Create the note table
-      await db.execute(
-        "CREATE TABLE Notification(id INTEGER PRIMARY KEY, type INTEGER, message TEXT DEFAULT '', platform TEXT, createdate TEXT, issuedate INTEGER, itemCode  TEXT DEFAULT '', fleetid  TEXT DEFAULT '', userid  TEXT DEFAULT '', isRead INTEGER DEFAULT 0);",
-      );
-      await db.execute(
-        "CREATE TABLE TripRecord(id INTEGER PRIMARY KEY,route TEXT DEFAULT '', memo  TEXT DEFAULT '');",
-      );
+      await db.execute("CREATE TABLE KhaoSat("
+          "id INTEGER,"
+          "ngayXuatDanhSach TEXT,"
+          "ngayKhaoSat TEXT,"
+          "masoCanBoKhaoSat TEXT,"
+          "chinhanhId INTEGER,"
+          "duanId INTEGER,"
+          "cumId TEXT,"
+          "thanhvienId TEXT,"
+          "tinhTrangHonNhan TEXT,"
+          "trinhDoHocVan TEXT,"
+          "khuVuc INTEGER,"
+          "lanvay INTEGER,"
+          "nguoiTraloiKhaoSat TEXT,"
+          "songuoiTrongHo INTEGER,"
+          "songuoiCoviecLam INTEGER,"
+          "dientichDatTrong INTEGER,"
+          "giaTriVatNuoi INTEGER,"
+          "dungCuLaoDong INTEGER,"
+          "phuongTienDiLai INTEGER,"
+          "taiSanSinhHoat INTEGER,"
+          "quyenSoHuuNha TEXT,"
+          "hemTruocNha INTEGER,"
+          "maiNha TEXT,"
+          "tuongNha TEXT,"
+          "nenNha TEXT,"
+          "dienTichNhaTinhTren1Nguoi INTEGER,"
+          "dien TEXT,"
+          "nuoc TEXT,"
+          "mucDichSudungVon TEXT,"
+          "soTienCanThiet INTEGER,"
+          "soTienThanhVienDaCo INTEGER,"
+          "soTienCanVay INTEGER,"
+          "thoiDiemSuDungVonvay TEXT,"
+          "tongVonDauTu INTEGER,"
+          "thuNhapRongHangThang INTEGER,"
+          "thuNhapCuaVoChong INTEGER,"
+          "thuNhapCuaCacCon INTEGER,"
+          "thuNhapKhac INTEGER,"
+          "tongChiPhiCuaThanhvien INTEGER,"
+          "chiPhiDienNuoc INTEGER,"
+          "chiPhiAnUong INTEGER,"
+          "chiPhiHocTap INTEGER,"
+          "chiPhiKhac INTEGER,"
+          "chiTraTienVayHangThang INTEGER,"
+          "tichLuyTangThemHangThang INTEGER,"
+          "bienPhapThongNhat2 TEXT,"
+          "thanhVienThuocDien TEXT,"
+          "maSoHoNgheo TEXT,"
+          "hoTenChuHo TEXT,"
+          "soTienGuiTietKiemMoiKy INTEGER,"
+          "tietKiemBatBuocXinRut INTEGER,"
+          "tietKiemTuNguyenXinRut INTEGER,"
+          "tietKiemLinhHoatXinRut INTEGER,"
+          "thoiDiemRut TEXT,"
+          "mucVayBoSung INTEGER,"
+          "mucDichVayBoSung TEXT,"
+          "ngayVayBoSung TEXT,"
+          "ghiChu TEXT,"
+          "soTienDuyetChovay INTEGER,"
+          "tietKiemDinhHuong INTEGER,"
+          "mucDichVay TEXT,"
+          "duyetChovayNgay TEXT,"
+          "daCapNhatVaoHoSoChovay INTEGER,"
+          "tinhTrangNgheo TEXT,"
+          "daDuocDuyet INTEGER,"
+          "username TEXT,"
+          "ngaycapnhat TEXT,"
+          "masoCanBoKhaoSatPss INTEGER,"
+          "sotienVayLantruoc INTEGER,"
+          "thoiGianTaivay INTEGER,"
+          "songayNoquahanCaonhat INTEGER,"
+          "thoiGianKhaosatGannhat INTEGER,"
+          "ngayTatToanDotvayTruoc TEXT,"
+          "batBuocKhaosat INTEGER,"
+          "conNo INTEGER,"
+          "dichVuSgb INTEGER,"
+          "moTheMoi INTEGER,"
+          "soTienDuyetChoVayCk INTEGER,"
+          "gioiTinh INTEGER,"
+          "cmnd TEXT,"
+          "ngaySinh TEXT,"
+          "diaChi TEXT,"
+          "thoigianthamgia TEXT,"
+          "hoVaTen TEXT,"
+          "statusCheckBox INTEGER"
+          ")");
     });
   }
+  // void _onUpgrade(Database db, int oldVersion, int newVersion) {
+  //   if (oldVersion < newVersion) {
+  //     db.execute("ALTER TABLE Client ADD COLUMN last_name1 TEXT;");
+  //   }
+  // }
 
-  //Querry database
-  newNotification(NotificationModel newData) async {
+  newKhaoSat(SurveyInfo model) async {
+    int rs = 0;
     final db = await database;
-    var date = DateTime.now().millisecondsSinceEpoch;
-    var res = await db.rawInsert(
-        "INSERT Into Notification (id,type,message,platform,createdate,issuedate,itemCode)"
-        " VALUES (${newData.id},${newData.type},${newData.message},${newData.platform},${newData.createdate},$date),${newData.id})");
-    return res;
+    try {
+      int checkExistsData = Sqflite.firstIntValue(await db
+          .rawQuery("SELECT COUNT(*) FROM KhaoSat WHERE id=${model.id}"));
+      if (checkExistsData == 0) {
+        String queryString =
+            '''INSERT Into KhaoSat (id,ngayXuatDanhSach,ngayKhaoSat,
+                                    masoCanBoKhaoSat,
+                                    chinhanhId,
+                                    duanId,
+                                    cumId,
+                                    thanhvienId,
+                                    tinhTrangHonNhan,
+                                    trinhDoHocVan,
+                                    khuVuc,
+                                    lanvay,
+                                    nguoiTraloiKhaoSat,
+                                    songuoiTrongHo,
+                                    songuoiCoviecLam,
+                                    dientichDatTrong,
+                                    giaTriVatNuoi,
+                                    dungCuLaoDong,
+                                    phuongTienDiLai,
+                                    taiSanSinhHoat,
+                                    quyenSoHuuNha,
+                                    hemTruocNha,
+                                    maiNha,
+                                    tuongNha,
+                                    nenNha,
+                                    dienTichNhaTinhTren1Nguoi,
+                                    dien,
+                                    nuoc,
+                                    mucDichSudungVon,
+                                    soTienCanThiet,
+                                    soTienThanhVienDaCo,
+                                    soTienCanVay,
+                                    thoiDiemSuDungVonvay,
+                                    tongVonDauTu,
+                                    thuNhapRongHangThang,
+                                    thuNhapCuaVoChong,
+                                    thuNhapCuaCacCon,
+                                    thuNhapKhac,
+                                    tongChiPhiCuaThanhvien,
+                                    chiPhiDienNuoc,
+                                    chiPhiAnUong,
+                                    chiPhiHocTap,
+                                    chiPhiKhac,
+                                    chiTraTienVayHangThang,
+                                    tichLuyTangThemHangThang,
+                                    bienPhapThongNhat2,
+                                    thanhVienThuocDien,
+                                    maSoHoNgheo,
+                                    hoTenChuHo,
+                                    soTienGuiTietKiemMoiKy,
+                                    tietKiemBatBuocXinRut,
+                                    tietKiemTuNguyenXinRut,
+                                    tietKiemLinhHoatXinRut,
+                                    thoiDiemRut,
+                                    mucVayBoSung,
+                                    mucDichVayBoSung,
+                                    ngayVayBoSung,
+                                    ghiChu,
+                                    soTienDuyetChovay,
+                                    tietKiemDinhHuong,
+                                    mucDichVay,
+                                    duyetChovayNgay,
+                                    daCapNhatVaoHoSoChovay,
+                                    tinhTrangNgheo,
+                                    daDuocDuyet,
+                                    username,
+                                    ngaycapnhat,
+                                    masoCanBoKhaoSatPss,
+                                    sotienVayLantruoc,
+                                    thoiGianTaivay,
+                                    songayNoquahanCaonhat,
+                                    thoiGianKhaosatGannhat,
+                                    ngayTatToanDotvayTruoc,
+                                    batBuocKhaosat,
+                                    conNo,
+                                    dichVuSgb,
+                                    moTheMoi,
+                                    soTienDuyetChoVayCk,
+                                    gioiTinh,
+                                    cmnd,
+                                    ngaySinh,
+                                    diaChi,
+                                    thoigianthamgia,
+                                    hoVaTen,
+                                    statusCheckBox)
+                VALUES (${model.id},
+                        "${model.ngayXuatDanhSach}",
+                        "${model.ngayKhaoSat}",
+                        "${model.masoCanBoKhaoSat}",
+                        ${model.chinhanhId},
+                        ${model.duanId},
+                        "${model.cumId}",
+                        "${model.thanhvienId}",
+                        "${model.tinhTrangHonNhan}",
+                        "${model.trinhDoHocVan}",
+                        ${model.khuVuc},
+                        ${model.lanvay},
+                        "${model.nguoiTraloiKhaoSat}",
+                        ${model.songuoiTrongHo},
+                        ${model.songuoiCoviecLam},
+                        ${model.dientichDatTrong},
+                        ${model.giaTriVatNuoi},
+                        ${model.dungCuLaoDong},
+                        ${model.phuongTienDiLai},
+                        ${model.taiSanSinhHoat},
+                        "${model.quyenSoHuuNha}",
+                        ${model.hemTruocNha},
+                        "${model.maiNha}",
+                        "${model.tuongNha}",
+                        "${model.nenNha}",
+                        ${model.dienTichNhaTinhTren1Nguoi},
+                        "${model.dien}",
+                        "${model.nuoc}",
+                        "${model.mucDichSudungVon}",
+                        ${model.soTienCanThiet},
+                        ${model.soTienThanhVienDaCo},
+                        ${model.soTienCanVay},
+                        "${model.thoiDiemSuDungVonvay}",
+                        ${model.tongVonDauTu},
+                        ${model.thuNhapRongHangThang},
+                        ${model.thuNhapCuaVoChong},
+                        ${model.thuNhapCuaCacCon},
+                        ${model.thuNhapKhac},
+                        ${model.tongChiPhiCuaThanhvien},
+                        ${model.chiPhiDienNuoc},
+                        ${model.chiPhiAnUong},
+                        ${model.chiPhiHocTap},
+                        ${model.chiPhiKhac},
+                        ${model.chiTraTienVayHangThang},
+                        ${model.tichLuyTangThemHangThang},
+                        "${model.bienPhapThongNhat2}",
+                        "${model.thanhVienThuocDien}",
+                        "${model.maSoHoNgheo}",
+                        "${model.hoTenChuHo}",
+                        ${model.soTienGuiTietKiemMoiKy},
+                        ${model.tietKiemBatBuocXinRut},
+                        ${model.tietKiemTuNguyenXinRut},
+                        ${model.tietKiemLinhHoatXinRut},
+                        "${model.thoiDiemRut}",
+                        ${model.mucVayBoSung},
+                        "${model.mucDichVayBoSung}",
+                        "${model.ngayVayBoSung}",
+                        "${model.ghiChu}",
+                        ${model.soTienDuyetChovay},
+                        ${model.tietKiemDinhHuong},
+                        "${model.mucDichVay}",
+                        "${model.duyetChovayNgay}",
+                        ${model.daCapNhatVaoHoSoChovay},
+                        "${model.tinhTrangNgheo}",
+                        ${model.daDuocDuyet},
+                        "${model.username}",
+                        "${model.ngaycapnhat}",
+                        ${model.masoCanBoKhaoSatPss},
+                        ${model.sotienVayLantruoc},
+                        ${model.thoiGianTaivay},
+                        ${model.songayNoquahanCaonhat},
+                        ${model.thoiGianKhaosatGannhat},
+                        "${model.ngayTatToanDotvayTruoc}",
+                        ${model.batBuocKhaosat},
+                        ${model.conNo},
+                        ${model.dichVuSgb},
+                        ${model.moTheMoi},
+                        ${model.soTienDuyetChoVayCk},
+                        ${model.gioiTinh},
+                        "${model.cmnd}",
+                        "${model.ngaySinh}",
+                        "${model.diaChi}",
+                        "${model.thoigianthamgia}",
+                        "${model.hoVaTen}",
+                        "0")''';
+        print(queryString);
+        rs = await db.rawInsert(queryString);
+      }
+      return rs;
+    } on Exception catch (ex) {
+      // only executed if error is of type Exception
+    } catch (error) {
+      // executed for errors of all types other than Exception
+    }
   }
 
-  insertNotification(NotificationModel newData) async {
+  getKhaoSat(int id) async {
     final db = await database;
-    var res = await db.insert("Notification", newData.toMap());
-    return res;
+    var res = await db.query("KhaoSat", where: "id = ?", whereArgs: [id]);
+    return res.isNotEmpty ? SurveyInfo.fromMap(res.first) : Null;
   }
 
-  newClient(NotificationModel newClient) async {
+  getAllClients() async {
+    final db = await database;
+    var res = await db.query("KhaoSat");
+    List<SurveyInfo> list =
+        res.isNotEmpty ? res.map((c) => SurveyInfo.fromMap(c)).toList() : [];
+    return list;
+  }
+
+  insertKhaoSat(SurveyInfo model) async {
     final db = await database;
     //get the biggest id in the table
-    var table = await db.rawQuery("SELECT MAX(id)+1 as id FROM Notification");
+    var table = await db.rawQuery("SELECT MAX(id)+1 as id FROM KhaoSatDB");
     int id = table.first["id"] == null ? 1 : table.first["id"];
     //insert to the table using the new id
-    var date = DateTime.now().millisecondsSinceEpoch;
-    var raw = await db.rawInsert(
-        "INSERT Into Notification (id,type,message,platform,issuedate,createdate,itemCode,fleetid,userid)"
-        " VALUES (?,?,?,?,?,?,?,?,?)",
-        [
-          id,
-          newClient.type,
-          newClient.message,
-          newClient.platform,
-          newClient.createdate,
-          date,
-          newClient.id,
-          newClient.id,
-          newClient.receiver
-        ]);
+    // var raw = await db.rawInsert(
+    //     "INSERT Into KhaoSatDB (id,ngayXuatDanhSach,ngayKhaoSat,masoCanBoKhaoSat,chinhanhID,duanID,cumID,thanhvienID)"
+    //     " VALUES (?,?,?,?,?,?,?,?)",
+    var raw = await db
+        .rawInsert("INSERT Into KhaoSatDB (id,NgayXuatDanhSach,NgayKhaoSat)"
+            " VALUES (1,'1111','2222')");
     return raw;
   }
 
-  getNotificationItem(int id) async {
+  dropDataBase() async {
     final db = await database;
-    var res = await db.query("Notification", where: "id = ?", whereArgs: [id]);
-    return res.isNotEmpty ? NotificationModel.fromJson(res.first) : Null;
+    await db.execute("DROP DATABASE TestDB.db");
   }
 
-  getAllNotifications(String userid) async {
-    final db = await database;
-    var res = await db.rawQuery(
-        "SELECT * FROM Notification where userid = '$userid' Order by createdate desc");
-    List<NotificationModel> list = res.isNotEmpty
-        ? res.map((c) => NotificationModel.fromJson(c)).toList()
-        : [];
-    return list;
-  }
+//   Future<void> dropTableIfExistsThenReCreate() async {
 
-  getAllNotificationsBlank() async {
-    final db = await database;
-    var res = await db.query("Notification");
-    List<NotificationModel> list = res.isNotEmpty
-        ? res.map((c) => NotificationModel.fromJson(c)).toList()
-        : [];
-    return list;
-  }
+//     //here we get the Database object by calling the openDatabase method
+//     //which receives the path and onCreate function and all the good stuff
+//     Database db = await openDatabase(path,onCreate: ...);
 
-  getNotificationsbytype() async {
-    final db = await database;
-    var res = await db.rawQuery("SELECT * FROM Notification WHERE type=1");
-    List<NotificationModel> list = res.isNotEmpty
-        ? res.toList().map((c) => NotificationModel.fromJson(c))
-        : null;
-    return list;
-  }
+//     //here we execute a query to drop the table if exists which is called "tableName"
+//     //and could be given as method's input parameter too
+//     await db.execute("DROP TABLE IF EXISTS tableName");
 
-  getNotificationNotRead(String userid) async {
-    final db = await database;
-    var res = Sqflite.firstIntValue(await db.rawQuery(
-        "SELECT count(*) FROM Notification WHERE userid = '$userid' and isRead<>1"));
-    return res;
-  }
+//     //and finally here we recreate our beloved "tableName" again which needs
+//     //some columns initialization
+//     await db.execute("CREATE TABLE tableName (id INTEGER, name TEXT)");
 
-  getNotificationBookNotRead(String userid) async {
-    final db = await database;
-    var res = Sqflite.firstIntValue(await db.rawQuery(
-        "SELECT count(*) FROM Notification WHERE userid = '$userid' and isRead<>1 and type = 0"));
-    return res;
-  }
+// }
 
-  updateNotification(NotificationModel newClient) async {
-    final db = await database;
-    var res = await db.update("Notification", newClient.toMap(),
-        where: "id = ?", whereArgs: [newClient.id]);
-    return res;
-  }
-
-  updatestatusNotification(int id) async {
-    final db = await database;
-    var raw =
-        await db.rawUpdate("UPDATE Notification set isRead = 1 where id = $id");
-    return raw;
-  }
-
-  Future<void> deleteNotification(int id) async {
-    final db = await database;
-    await db.delete(
-      'Notification',
-      where: "id = ?",
-      whereArgs: [id],
-    );
-  }
-
-  Future<void> deleteNotifications() async {
-    final db = await database;
-    await db.delete(
-      'Notification',
-    );
-  }
-
-  //Save triprecord
-  insertTriprecord(String route, String memo) async {
-    final db = await database;
-    //get the biggest id in the table
-    var table = await db.rawQuery("SELECT MAX(id)+1 as id FROM TripRecord");
-    int id = table.first["id"] == null ? 1 : table.first["id"];
-    //insert to the table using the new id
-    var raw = await db.rawInsert(
-        "INSERT Into TripRecord (id,route,memo)"
-        " VALUES (?,?,?)",
-        [id, route, memo]);
-    return raw;
-  }
-
-  getAllTripReCord() async {
-    final db = await database;
-    var res = await db.query("TripRecord", limit: 10);
-    List<TriprecordModel> list = res.isNotEmpty
-        ? res.map((c) => TriprecordModel.fromJson(c)).toList()
-        : [];
-    return list;
-  }
-
-  //Save Activity
-  insertActivity(ActivityModel data) async {
-    final db = await database;
-    //get the biggest id in the table
-    var table = await db.rawQuery("SELECT MAX(id)+1 as id FROM Activity");
-    int id = table.first["id"] == null ? 1 : table.first["id"];
-    //insert to the table using the new id
-    var raw = await db.rawInsert(
-        "INSERT Into Activity (id,type,pickupPlace,returnPlace,createdate,activity,userId)"
-        " VALUES (?,?,?,?,?,?,?)",
-        [
-          id,
-          data.type,
-          data.pickupPlace,
-          data.returnPlace,
-          data.createdate,
-          data.activity,
-          data.userId
-        ]);
-    return raw;
-  }
-
-  getActivity() async {
-    final db = await database;
-    var res = await db.query("Activity");
-    List<ActivityModel> list = res.isNotEmpty
-        ? res.map((c) => ActivityModel.fromJson(c)).toList()
-        : [];
-    return list;
-  }
-
-  getActivitybyDate(String datefrom, String dateto) async {
-    final db = await database;
-    var res = await db.rawQuery(
-        "SELECT * FROM Activity WHERE createdate => '$datefrom' and createdate <= '$dateto'");
-    List<ActivityModel> list = res.isNotEmpty
-        ? res.map((c) => ActivityModel.fromJson(c)).toList()
-        : [];
-    return list;
-  }
 }
