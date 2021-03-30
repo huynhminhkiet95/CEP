@@ -143,6 +143,12 @@ class FormatDateConstants {
     return datetime;
   }
 
+  static String convertDateTimeToDDMMYYYY(String jsonDate) {
+    var datetime = convertJsonDateToDateTime(jsonDate);
+    var strDatetime = formatDate(datetime, [dd, '/', mm, '/', yyyy]);
+    return strDatetime;
+  }
+
   static String convertDateTimeToString(DateTime dateTime) {
     String formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
     return formattedDate;

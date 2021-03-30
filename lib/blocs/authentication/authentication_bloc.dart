@@ -54,10 +54,10 @@ class AuthenticationBloc
       var server = new ServerInfo();
       switch (event.serverCode) {
         case "DEV":
-          server.serverAddress = "http://10.10.0.36:8889/";
-          server.serverApi = "http://10.10.0.36:8889/";
+          server.serverAddress = "https://staff-api.cep.org.vn/";
+          server.serverApi = "https://staff-api.cep.org.vn/";
           server.serverCode = event.serverCode;
-          server.serverNotification = "http://10.10.0.36:8889/";
+          server.serverNotification = "https://staff-api.cep.org.vn/";
           break;
         case "PROD":
           server.serverAddress = "http://10.10.0.36:8889/";
@@ -82,9 +82,9 @@ class AuthenticationBloc
           if (jsonBodyToken["isSuccessed"] == true) {
             if (jsonBodyToken["token"] != null) {
               globalUser.settoken = jsonBodyToken["token"];
-              
+              globalUser.setUserName = event.userName;
               List responses = await Future.wait(
-                  [getUserInfo(event.userName),getUserRoles(event.userName)]);
+                  [getUserInfo(event.userName), getUserRoles(event.userName)]);
               if (responses != null &&
                   (responses[0] is UserInfo || responses[0] != null) &&
                   (responses[1] is UserRole || responses[1] != null)) {
@@ -150,7 +150,11 @@ class AuthenticationBloc
       if (userInfo.statusCode == StatusCodeConstants.OK) {
         var jsonBodyUserInfo = json.decode(userInfo.body);
         if (jsonBodyUserInfo["isSuccessed"]) {
-          var dataUserInfo = UserInfo.fromJson(jsonBodyUserInfo["data"] == null || jsonBodyUserInfo["data"].isEmpty ? null : jsonBodyUserInfo["data"].first);
+          var dataUserInfo = UserInfo.fromJson(
+              jsonBodyUserInfo["data"] == null ||
+                      jsonBodyUserInfo["data"].isEmpty
+                  ? null
+                  : jsonBodyUserInfo["data"].first);
           userInfoModel = dataUserInfo;
         }
       }
@@ -170,7 +174,11 @@ class AuthenticationBloc
       if (userRoles.statusCode == StatusCodeConstants.OK) {
         var jsonBodyUserRoles = json.decode(userRoles.body);
         if (jsonBodyUserRoles["isSuccessed"]) {
-          var dataUserRoles = UserRole.fromJson(jsonBodyUserRoles["data"] == null || jsonBodyUserRoles["data"].isEmpty ? null : jsonBodyUserRoles["data"].first);
+          var dataUserRoles = UserRole.fromJson(
+              jsonBodyUserRoles["data"] == null ||
+                      jsonBodyUserRoles["data"].isEmpty
+                  ? null
+                  : jsonBodyUserRoles["data"].first);
           userRolesModel = dataUserRoles;
         }
       }

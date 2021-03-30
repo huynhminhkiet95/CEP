@@ -664,6 +664,6 @@ class LoginScreenState extends State<LoginScreen> {
 
   void goUpdateApp() async {
     LaunchReview.launch(
-        androidAppId: 'com.mpl.CEPmobile', iOSAppId: '1477031564');
+        androidAppId: 'com.cep.CEPmobilenhanvien', iOSAppId: '1477031564');
   }
 }

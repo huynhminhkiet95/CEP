@@ -1,3 +1,9 @@
+import 'package:CEPmobile/bloc_widgets/bloc_state_builder.dart';
+import 'package:CEPmobile/blocs/download_data/download_data_bloc.dart';
+import 'package:CEPmobile/blocs/download_data/download_data_event.dart';
+import 'package:CEPmobile/blocs/download_data/download_data_state.dart';
+import 'package:CEPmobile/services/service.dart';
+import 'package:CEPmobile/ui/components/ModalProgressHUDCustomize.dart';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:CEPmobile/config/formatdate.dart';
@@ -18,6 +24,8 @@ class _DownloadMetaDataState extends State<DownloadMetaData> {
   TextEditingController _textDateEditingController = TextEditingController(
       text: FormatDateConstants.convertDateTimeToString(DateTime.now()));
   DateTime selectedDate = DateTime.now();
+  DownloadDataBloc downloadDataBloc;
+  Services services;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
@@ -33,6 +41,17 @@ class _DownloadMetaDataState extends State<DownloadMetaData> {
       });
   }
 
+  @override
+  void initState() {
+    services = Services.of(context);
+    downloadDataBloc = new DownloadDataBloc(
+        services.sharePreferenceService, services.commonService);
+    super.initState();
+  }
+
+  void _onSubmit() {
+    downloadDataBloc.emitEvent(DownloadDataComboBoxEvent());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,65 +61,71 @@ class _DownloadMetaDataState extends State<DownloadMetaData> {
     screenWidth = size.width;
     return Container(
       color: Colors.blue,
-      child: customScrollViewSliverAppBarForDownload("Download Danh Sách Chọn",
-      <Widget>[
-            Container(
-              height: orientation == Orientation.portrait
-                  ? size.height * 0.17
-                  : size.height * 0.3,
-              decoration: BoxDecoration(
-                borderRadius: new BorderRadius.only(
-                    bottomLeft: Radius.elliptical(260, 100)),
-                color: Colors.white,
-              ),
-              child: Column(
-                children: [
-                  
-                ],
-              ),
-            ),
-            Container(
-              height: orientation == Orientation.portrait
-                  ? screenHeight * 0.4
-                  : screenHeight * 0.154,
-              child: Container(
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: RawMaterialButton(
-                    fillColor: Colors.green,
-                    splashColor: Colors.blue,
-                    child: Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: const <Widget>[
-                          Icon(
-                            Icons.system_update,
-                            color: Colors.black,
-                          ),
-                          SizedBox(
-                            width: 10.0,
-                          ),
-                          Text(
-                            "Download Danh Sách Chọn",
-                            maxLines: 1,
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ],
+      child: BlocEventStateBuilder<DownloadDataState>(
+          bloc: downloadDataBloc,
+          builder: (BuildContext context, DownloadDataState state) {
+            return ModalProgressHUDCustomize(
+              inAsyncCall: state.isLoading,
+              child: customScrollViewSliverAppBarForDownload(
+                  "Download Danh Sách Chọn",
+                  <Widget>[
+                    Container(
+                      height: orientation == Orientation.portrait
+                          ? size.height * 0.17
+                          : size.height * 0.3,
+                      decoration: BoxDecoration(
+                        borderRadius: new BorderRadius.only(
+                            bottomLeft: Radius.elliptical(260, 100)),
+                        color: Colors.white,
+                      ),
+                      child: Column(
+                        children: [],
                       ),
                     ),
-                    onPressed: () {},
-                    shape: const StadiumBorder(),
-                  ),
-                ),
-              ),
-            )
-          ],
-      context),
+                    Container(
+                      height: orientation == Orientation.portrait
+                          ? screenHeight * 0.4
+                          : screenHeight * 0.154,
+                      child: Container(
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: RawMaterialButton(
+                            fillColor: Colors.green,
+                            splashColor: Colors.blue,
+                            child: Padding(
+                              padding: EdgeInsets.all(10.0),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: const <Widget>[
+                                  Icon(
+                                    Icons.system_update,
+                                    color: Colors.black,
+                                  ),
+                                  SizedBox(
+                                    width: 10.0,
+                                  ),
+                                  Text(
+                                    "Download Danh Sách Chọn",
+                                    maxLines: 1,
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            onPressed: () {
+                              _onSubmit();
+                            },
+                            shape: const StadiumBorder(),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                  context),
+            );
+          }),
     );
   }
-
- 
 }
 
 class AlwaysDisabledFocusNode extends FocusNode {

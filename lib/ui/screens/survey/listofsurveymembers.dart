@@ -445,21 +445,7 @@ class _ListOfSurveyMembersState extends State<ListOfSurveyMembers> {
                                 inAsyncCall: state?.isLoading ?? false,
                                 child: Padding(
                                   padding: const EdgeInsets.all(2.0),
-                                  child: StreamBuilder<List<SurveyInfo>>(
-                                      stream: surVeyBloc.getSurveys,
-                                      builder: (BuildContext context,
-                                          AsyncSnapshot<List<SurveyInfo>>
-                                              snapshot) {
-                                        List<SurveyInfo> listSurvey =
-                                            snapshot.data;
-                                        if (listSurvey == null) {
-                                          return Container(
-                                            child: null,
-                                          );
-                                        } else {
-                                          return getItemListView(listSurvey);
-                                        }
-                                      }),
+                                  child: null,
                                 ),
                               );
                             },

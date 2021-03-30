@@ -9,10 +9,15 @@ class LoadDownloadDataEvent extends DownloadDataEvent {
   String cumID;
   String ngayxuatDS;
   String masoql;
-  LoadDownloadDataEvent({this.chiNhanhID, this.cumID, this.ngayxuatDS,this.masoql})
+  LoadDownloadDataEvent(
+      {this.chiNhanhID, this.cumID, this.ngayxuatDS, this.masoql})
       : super();
 }
 
 class UpdateDownloadDataEvent extends DownloadDataEvent {
   UpdateDownloadDataEvent() : super();
+}
+
+class DownloadDataComboBoxEvent extends DownloadDataEvent {
+  DownloadDataComboBoxEvent() : super();
 }

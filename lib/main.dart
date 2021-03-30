@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:CEPmobile/ui/navigation/slide_route.dart';
 import 'package:CEPmobile/ui/screens/Home/dashboard.dart';
 import 'package:CEPmobile/ui/screens/Login/loginPage.dart';
@@ -34,7 +36,16 @@ import 'ui/screens/todolist/index.dart';
 //   }
 // }
 
+class MyHttpOverrides extends HttpOverrides{
+  @override
+  HttpClient createHttpClient(SecurityContext context){
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
+    }
+  }
+  
 void main() async {
+  HttpOverrides.global = new MyHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
 
   await allTranslations.init();
@@ -86,6 +97,7 @@ class AppState extends State<Application> {
         title: allTranslations.text('app_title'),
         debugShowCheckedModeBanner: false,
         onGenerateRoute: (RouteSettings settings) {
+          
           switch (settings.name) {
             case '/decision':
               return new MyCustomRoute(
@@ -147,7 +159,8 @@ class AppState extends State<Application> {
               return SlideLeftRoute(page: SurveyScreen());
               break;
             case 'surveydetail':
-              return SlideTopRoute(page: SurveyDetailScreen());
+              final  Map<String, Object> arguments = settings.arguments;
+              return SlideTopRoute(page: SurveyDetailScreen(id: arguments['id'],listCombobox: arguments['metadata'],surveyInfo: arguments['surveydetail'],));
               break;
               
             case 'download':

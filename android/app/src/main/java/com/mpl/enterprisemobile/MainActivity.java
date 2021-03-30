@@ -1,4 +1,4 @@
-package com.mpl.CEPmobile;
+package com.cep.CEPmobilenhanvien;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterFragmentActivity;

@@ -93,6 +93,7 @@ class SurveyInfo {
   String thoigianthamgia;
   String hoVaTen;
   int statusCheckBox;
+  int idHistoryKhaoSat;
 
   SurveyInfo(
       {this.id,
@@ -188,7 +189,8 @@ class SurveyInfo {
       this.diaChi,
       this.thoigianthamgia,
       this.hoVaTen,
-      this.statusCheckBox});
+      this.statusCheckBox,
+      this.idHistoryKhaoSat});
 
   SurveyInfo.fromJson(Map<String, dynamic> json) {
     if (json["ID"] is int) this.id = json["ID"];
@@ -334,7 +336,11 @@ class SurveyInfo {
     if (json["DiaChi"] is String) this.diaChi = json["DiaChi"];
     if (json["Thoigianthamgia"] is String)
       this.thoigianthamgia = json["Thoigianthamgia"];
-    if (json["HoVaTen"] is String) this.hoVaTen = json["HoVaTen"];
+    if (json["HoVaTen"] is String)
+     this.hoVaTen = json["HoVaTen"];
+    this.idHistoryKhaoSat = json["idHistoryKhaoSat"];
+    
+
   }
 
   Map<String, dynamic> toJson() {
@@ -432,6 +438,7 @@ class SurveyInfo {
     data["DiaChi"] = this.diaChi;
     data["Thoigianthamgia"] = this.thoigianthamgia;
     data["HoVaTen"] = this.hoVaTen;
+    data["idHistoryKhaoSat"] = this.idHistoryKhaoSat;
     return data;
   }
 
@@ -529,6 +536,7 @@ class SurveyInfo {
         diaChi: json["diaChi"],
         thoigianthamgia: json["thoigianthamgia"],
         hoVaTen: json["hoVaTen"],
-        statusCheckBox: json["statusCheckBox"]
+        statusCheckBox: json["statusCheckBox"],
+        idHistoryKhaoSat: json["idHistoryKhaoSat"],
       );
 }

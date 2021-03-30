@@ -162,8 +162,27 @@ class HttpBase {
     var address = globalServer.getServerAddress;
     http.Response result;
     try {
-      result = await http.post(address + url,
+      
+         result = await http.post(address + url,
           body: json.encode(body),
+          headers: {
+            "Content-Type": 'application/json',
+            "Authorization": 'Bearer $token'
+          }).timeout(const Duration(seconds: 10));
+    } catch (e) {
+      print(url + ": " + e.message);
+      // result.statusCode = 4;
+      return null;
+    }
+    return result;
+  }
+
+  Future<http.Response> httpPostTokenNotBody(String url) async {
+    String token = globalUser.gettoken;
+    var address = globalServer.getServerAddress;
+    http.Response result;
+    try {
+      result = await http.post(address + url,
           headers: {
             "Content-Type": 'application/json',
             "Authorization": 'Bearer $token'
@@ -190,6 +209,7 @@ class HttpBase {
       throw Exception(e);
     }
   }
+
 
   Future<http.Response> httpPostEncoded(String url, dynamic body) async {
     var address = globalServer.getServerApi + url;

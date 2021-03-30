@@ -118,7 +118,7 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
                       subtitle: Row(
                         children: <Widget>[
                           Icon(Icons.verified_user, color: Colors.yellowAccent),
-                          Text(" Mã số 04",
+                          Text(" Mã số " + globalUser.getUserInfo.masoql,
                               style: TextStyle(color: Colors.white))
                         ],
                       ),

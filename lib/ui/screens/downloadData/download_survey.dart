@@ -52,18 +52,17 @@ class _DownloadSurveyState extends State<DownloadSurvey> {
     services = Services.of(context);
     downloadDataBloc = new DownloadDataBloc(
         services.sharePreferenceService, services.commonService);
-    // downloadDataBloc = BlocProvider.of<DownloadDataBloc>(context);
     super.initState();
   }
 
   void _onSubmit() {
       downloadDataBloc.emitEvent(LoadDownloadDataEvent(
-          //chiNhanhID: globalUser.getUserInfo == null ? '' : globalUser.getUserInfo.chiNhanhID,
-          chiNhanhID: 4,
+          chiNhanhID: globalUser.getUserInfo == null ? '' : globalUser.getUserInfo.chiNhanhID,
+          //chiNhanhID: 4,
           cumID: _textCumIDAutoComplete.text.toString(),
           ngayxuatDS: _textDateEditingController.text.toString(),
           //masoql: globalUser.getUserInfo == null ? '' : globalUser.getUserInfo.masoql
-          masoql: "28"));
+          masoql: globalUser.getUserInfo.masoql.toString()));
   }
 
   @override

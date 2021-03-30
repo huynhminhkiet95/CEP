@@ -4,10 +4,7 @@ mixin ServiceName {
   static const String GetUserInfo = "api/NhanVien/GetUsers?UserName=%s";
   static const String GetUserRoles = "api/NhanVien/GetUserRoles?UserName=%s";
   static const String GetSurveyInfo = "api/NhanVien/LayThongTinKhaoSat";
-
-
-
-
+  static const String GetComboBoxValueChoTBD = "api/NhanVien/GetComboBoxValueChoTBĐ";
 
   static const String Get_PageMenuPermission = "/api/ssocommonservice/menus";
   static const String Get_UserProfile = "api/authentication/userprofile/";

@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:738449054098:android:440ce518f1f7c92b",
         "android_client_info": {
-          "package_name": "com.mpl.CEPmobile"
+          "package_name": "com.cep.CEPmobilenhanvien"
         }
       },
       "oauth_client": [
@@ -35,7 +35,7 @@
               "client_id": "738449054098-2gk8588ms57q4oieiiq0rrlig089bnf3.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.mpl.fbmp",
+                "bundle_id": "com.cep.CEPmobilenhanvien",
                 "app_store_id": "1477031564"
               }
             }

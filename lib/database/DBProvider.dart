@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:CEPmobile/models/download_data/comboboxmodel.dart';
 import 'package:CEPmobile/models/download_data/survey_info.dart';
+import 'package:CEPmobile/models/download_data/historysearchsurvey.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -111,7 +113,24 @@ class DBProvider {
           "diaChi TEXT,"
           "thoigianthamgia TEXT,"
           "hoVaTen TEXT,"
-          "statusCheckBox INTEGER"
+          "statusCheckBox INTEGER,"
+          "idHistoryKhaoSat INTEGER"
+          ")");
+
+      await db.execute("CREATE TABLE HistorySearchKhaoSat("
+          "id INTEGER,"
+          "cumID TEXT,"
+          "ngayXuatDanhSach TEXT,"
+          "username TEXT,"
+          "masoql TEXT"
+          ")");
+
+      await db.execute("CREATE TABLE metadata_tbd("
+          "server_id INTEGER,"
+          "group_id TEXT,"
+          "group_text TEXT,"
+          "item_id TEXT,"
+          "item_text TEXT"
           ")");
     });
   }
@@ -125,11 +144,11 @@ class DBProvider {
     int rs = 0;
     final db = await database;
     try {
-      int checkExistsData = Sqflite.firstIntValue(await db
-          .rawQuery("SELECT COUNT(*) FROM KhaoSat WHERE id=${model.id}"));
+      int checkExistsData = Sqflite.firstIntValue(await db.rawQuery(
+          "SELECT COUNT(*) FROM KhaoSat WHERE id=${model.id} and idHistoryKhaoSat= ${model.idHistoryKhaoSat}"));
       if (checkExistsData == 0) {
-        String queryString =
-            '''INSERT Into KhaoSat (id,ngayXuatDanhSach,ngayKhaoSat,
+        String queryString = '''INSERT Into KhaoSat(id,
+                                    ngayXuatDanhSach,ngayKhaoSat,
                                     masoCanBoKhaoSat,
                                     chinhanhId,
                                     duanId,
@@ -211,7 +230,8 @@ class DBProvider {
                                     diaChi,
                                     thoigianthamgia,
                                     hoVaTen,
-                                    statusCheckBox)
+                                    statusCheckBox,
+                                    idHistoryKhaoSat)
                 VALUES (${model.id},
                         "${model.ngayXuatDanhSach}",
                         "${model.ngayKhaoSat}",
@@ -296,12 +316,15 @@ class DBProvider {
                         "${model.diaChi}",
                         "${model.thoigianthamgia}",
                         "${model.hoVaTen}",
-                        "0")''';
+                        "0",
+                        ${model.idHistoryKhaoSat}
+                        )''';
         print(queryString);
         rs = await db.rawInsert(queryString);
       }
       return rs;
     } on Exception catch (ex) {
+      print(ex);
       // only executed if error is of type Exception
     } catch (error) {
       // executed for errors of all types other than Exception
@@ -314,7 +337,7 @@ class DBProvider {
     return res.isNotEmpty ? SurveyInfo.fromMap(res.first) : Null;
   }
 
-  getAllClients() async {
+  getAllKhaoSat() async {
     final db = await database;
     var res = await db.query("KhaoSat");
     List<SurveyInfo> list =
@@ -322,20 +345,80 @@ class DBProvider {
     return list;
   }
 
-  insertKhaoSat(SurveyInfo model) async {
+  newHistorySearchKhaoSat(String cumID, String ngayXuatDanhSach,
+      String username, String masoql) async {
+    int id = 0;
     final db = await database;
-    //get the biggest id in the table
-    var table = await db.rawQuery("SELECT MAX(id)+1 as id FROM KhaoSatDB");
-    int id = table.first["id"] == null ? 1 : table.first["id"];
-    //insert to the table using the new id
-    // var raw = await db.rawInsert(
-    //     "INSERT Into KhaoSatDB (id,ngayXuatDanhSach,ngayKhaoSat,masoCanBoKhaoSat,chinhanhID,duanID,cumID,thanhvienID)"
-    //     " VALUES (?,?,?,?,?,?,?,?)",
-    var raw = await db
-        .rawInsert("INSERT Into KhaoSatDB (id,NgayXuatDanhSach,NgayKhaoSat)"
-            " VALUES (1,'1111','2222')");
-    return raw;
+    try {
+      int checkExistsData = Sqflite.firstIntValue(await db.rawQuery(
+          "SELECT COUNT(*) FROM HistorySearchKhaoSat WHERE cumID='${cumID}' and username = '${username}'"));
+
+      if (checkExistsData == 0) {
+        String queryString =
+            '''INSERT Into HistorySearchKhaoSat(id,cumID,ngayXuatDanhSach,username,masoql)
+                VALUES ("${id}",
+                        "${cumID}",
+                        "${ngayXuatDanhSach}",
+                        "${username}",
+                        "${masoql}"
+                        )''';
+        print(queryString);
+        await db.rawInsert(queryString);
+        id = checkExistsData + 1;
+      } else {
+        id = checkExistsData;
+      }
+      return id;
+    } on Exception catch (ex) {
+      print(ex);
+      // only executed if error is of type Exception
+    } catch (error) {
+      // executed for errors of all types other than Exception
+    }
   }
+
+  getAllHistorySearchKhaoSat() async {
+    final db = await database;
+    var res = await db.query("HistorySearchKhaoSat");
+    List<HistorySearchSurvey> list = res.isNotEmpty
+        ? res.map((c) => HistorySearchSurvey.fromMap(c)).toList()
+        : [];
+    return list;
+  }
+
+  newMetaDataForTBD(List<ComboboxModel> comboboxList) async {
+    final db = await database;
+    try {
+      await db.rawDelete('DELETE FROM metadata_tbd');
+      for (var item in comboboxList) {
+        String queryString =
+          '''INSERT Into metadata_tbd(server_id,group_id,group_text,item_id,item_text)
+                VALUES ("${item.serverId}",
+                        "${item.groupId}",
+                        "${item.groupText}",
+                        "${item.itemId}",
+                        "${item.itemText}"
+                        )''';
+       db.rawInsert(queryString);
+      }
+    } on Exception catch (ex) {
+      print(ex);
+      // only executed if error is of type Exception
+    } catch (error) {
+      // executed for errors of all types other than Exception
+    }
+  }
+
+  getAllMetaDataForTBD() async {
+    final db = await database;
+    var res = await db.query("metadata_tbd");
+    List<ComboboxModel> list = res.isNotEmpty
+        ? res.map((c) => ComboboxModel.fromMap(c)).toList()
+        : [];
+    return list;
+  }
+
+  
 
   dropDataBase() async {
     final db = await database;
