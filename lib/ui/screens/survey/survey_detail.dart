@@ -1,28 +1,21 @@
 import 'package:CEPmobile/config/colors.dart';
 import 'package:CEPmobile/config/formatdate.dart';
 import 'package:CEPmobile/models/download_data/comboboxmodel.dart';
-import 'package:CEPmobile/models/historyscreen/history_screen.dart';
 import 'package:CEPmobile/ui/components/CardCustomWidget.dart';
 import 'package:CEPmobile/ui/components/dropdown.dart';
 import 'package:CEPmobile/ui/screens/survey/style.dart';
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
-import 'package:cupertino_radio_choice/cupertino_radio_choice.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:CEPmobile/config/CustomIcons/my_flutter_app_icons.dart';
-import 'package:CEPmobile/ui/screens/survey/listofsurveymembers.dart';
-import 'package:CEPmobile/GlobalUser.dart';
 import 'package:CEPmobile/services/service.dart';
 import 'package:CEPmobile/blocs/survey/survey_bloc.dart';
 import 'package:CEPmobile/blocs/survey/survey_event.dart';
-import 'package:CEPmobile/blocs/survey/survey_state.dart';
-import 'package:CEPmobile/bloc_widgets/bloc_state_builder.dart';
 import 'package:CEPmobile/services/service.dart';
 import 'package:CEPmobile/blocs/survey/survey_bloc.dart';
 import 'package:CEPmobile/blocs/survey/survey_event.dart';
-import 'package:CEPmobile/blocs/survey/survey_state.dart';
 import 'package:CEPmobile/models/download_data/survey_info.dart';
-import 'package:CEPmobile/ui/components/ModalProgressHUDCustomize.dart';
+import 'package:CEPmobile/resources/CurrencyInputFormatter.dart';
+
 import 'package:flutter/services.dart';
 
 class SurveyDetailScreen extends StatefulWidget {
@@ -55,6 +48,12 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
   List<DropdownMenuItem<String>> _floorModelDropdownList;
   List<DropdownMenuItem<String>> _powerModelDropdownList;
   List<DropdownMenuItem<String>> _waterModelDropdownList;
+  List<DropdownMenuItem<String>> _capitalModelDropdownList;
+  List<DropdownMenuItem<String>> _reasonLoanModelDropdownList;
+  List<DropdownMenuItem<String>> _uniformMeasuresModelDropdownList;
+  List<DropdownMenuItem<String>> _typeMemberModelDropdownList;
+  List<DropdownMenuItem<String>> _additionalLoanPurposeModelDropdownList;
+  List<DropdownMenuItem<String>> _loanPurposeModelDropdownList;
 
   String _surveyRespondentsValue;
   String _maritalStatusValue;
@@ -65,8 +64,18 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
   String _floorValue;
   String _powerValue;
   String _waterValue;
+  String _capital1Value;
+  String _capital2Value;
+  String _reasonLoan1Value;
+  String _reasonLoan2Value;
+  String _uniformMeasure1Value;
+  String _uniformMeasure2Value;
+  String _typeMemberValue;
+  String _additionalLoanPurposeValue;
+  String _loanPurposeValue;
 
   DateTime selectedSurveyDate;
+  DateTime selectedTimetoUseLoanDate;
   DateTime selectedDate = DateTime.now();
   List<DropdownMenuItem<String>> _buildDropdown(
       List<ComboboxModel> listCombobox) {
@@ -90,6 +99,9 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
 
   double _animatedHeight1 = 0.0;
   double _animatedHeight2 = 0.0;
+  double _animatedHeightCapital1 = 0.0;
+  double _animatedHeightCapital2 = 0.0;
+  double _animatedHeightTimeOfWithdrawal = 0.0;
 
   // DateTime _selectDate(BuildContext context, DateTime selectedDate) {
   //   final ThemeData theme = Theme.of(context);
@@ -138,6 +150,16 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
     if (picked != null) {
       setState(() {
         selectedSurveyDate = picked;
+      });
+    }
+  }
+
+  buildTimetoUseLoanPicker(
+      BuildContext context, DateTime selectedDateTime) async {
+    DateTime picked = await showDateTime(selectedDateTime);
+    if (picked != null) {
+      setState(() {
+        selectedTimetoUseLoanDate = picked;
       });
     }
   }
@@ -235,6 +257,41 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
     _waterModelDropdownList = _buildDropdown(
         widget.listCombobox.where((e) => e.groupId == 'Nuoc').toList());
     _waterValue = widget.surveyInfo.nuoc;
+
+    ///nguon vay 1
+    _capitalModelDropdownList = _buildDropdown(
+        widget.listCombobox.where((e) => e.groupId == 'NguonVay').toList());
+    _capital1Value = widget.surveyInfo.nguonVay1;
+    _capital2Value = widget.surveyInfo.nguonVay2;
+
+    ///ly do vay
+    _reasonLoanModelDropdownList = _buildDropdown(
+        widget.listCombobox.where((e) => e.groupId == 'LyDoVay').toList());
+    _reasonLoan1Value = widget.surveyInfo.lyDoVay1;
+    _reasonLoan2Value = widget.surveyInfo.lyDoVay2;
+
+    ///bien phap thong nhat
+    _uniformMeasuresModelDropdownList = _buildDropdown(widget.listCombobox
+        .where((e) => e.groupId == 'BienPhapThongNhat')
+        .toList());
+    _uniformMeasure1Value = widget.surveyInfo.bienPhapThongNhat1;
+    _uniformMeasure2Value = widget.surveyInfo.bienPhapThongNhat2;
+
+    //thanh vien thuoc dien
+    _typeMemberModelDropdownList = _buildDropdown(widget.listCombobox
+        .where((e) => e.groupId == 'ThanhVienThuocDien')
+        .toList());
+    _typeMemberValue = widget.surveyInfo.thanhVienThuocDien;
+
+    ///muc dich vay von bo sung
+    _additionalLoanPurposeModelDropdownList = _buildDropdown(
+        widget.listCombobox.where((e) => e.groupId == 'MucDich').toList());
+    _additionalLoanPurposeValue = widget.surveyInfo.mucDichVayBoSung;
+
+    ///muc dich vay von
+    _loanPurposeModelDropdownList = _buildDropdown(
+        widget.listCombobox.where((e) => e.groupId == 'MucDich').toList());
+    _loanPurposeValue = widget.surveyInfo.mucDichVay;
   }
 
   _onChangeSurveyRespondentsModelDropdown(String surveyRespondentsModel) {
@@ -274,6 +331,17 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
     });
   }
 
+  void changeIndexTimeOfWithdrawalRadioButton(int index) {
+    setState(() {
+      selectedIndexTotalMonthly = index;
+      if (index == 1) {
+        _animatedHeightTimeOfWithdrawal = 60;
+      } else {
+        _animatedHeightTimeOfWithdrawal = 0;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Orientation orientation = MediaQuery.of(context).orientation;
@@ -289,6 +357,12 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
       'Người trả lời biết tổng chi phí',
       'Người trả lời không biết tổng chi phí',
     ];
+
+    List<String> listTimeOfWithdrawal = [
+      'Cuối kỳ',
+      'Khác, cụ thể',
+    ];
+
     return DefaultTabController(
       length: 5,
       child: new Scaffold(
@@ -816,7 +890,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                           style: textStyleTextFieldCEP,
                                           decoration:
                                               inputDecorationTextFieldCEP(
-                                                  "Nhập số (Đồng)"),
+                                                  "Nhập số (Người)"),
                                           keyboardType: TextInputType.number,
                                           inputFormatters: <TextInputFormatter>[
                                             FilteringTextInputFormatter
@@ -870,7 +944,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                           style: textStyleTextFieldCEP,
                                           decoration:
                                               inputDecorationTextFieldCEP(
-                                                  "Nhập số (Đồng)"),
+                                                  "Nhập số tiền..."),
                                           keyboardType: TextInputType.number,
                                           inputFormatters: <TextInputFormatter>[
                                             FilteringTextInputFormatter
@@ -894,7 +968,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                           style: textStyleTextFieldCEP,
                                           decoration:
                                               inputDecorationTextFieldCEP(
-                                                  "Nhập số (Đồng)"),
+                                                  "Nhập số tiền..."),
                                           keyboardType: TextInputType.number,
                                           inputFormatters: <TextInputFormatter>[
                                             FilteringTextInputFormatter
@@ -918,7 +992,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                           style: textStyleTextFieldCEP,
                                           decoration:
                                               inputDecorationTextFieldCEP(
-                                                  "Nhập số (Đồng)"),
+                                                  "Nhập số tiền..."),
                                           keyboardType: TextInputType.number,
                                           inputFormatters: <TextInputFormatter>[
                                             FilteringTextInputFormatter
@@ -1136,7 +1210,9 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                           dropdownMenuItemList:
                                               _waterModelDropdownList,
                                           onChanged: (value) {
-                                            _waterValue = value;
+                                            setState(() {
+                                              _waterValue = value;
+                                            });
                                           },
                                           value: _waterValue,
                                           width: screenWidth * 1,
@@ -1229,12 +1305,11 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                           style: textStyleTextFieldCEP,
                                           decoration:
                                               inputDecorationTextFieldCEP(
-                                                  "Nhập số (Đồng)"),
+                                                  "Nhập số tiền..."),
                                           keyboardType: TextInputType.number,
-                                          inputFormatters: <TextInputFormatter>[
-                                            FilteringTextInputFormatter
-                                                .digitsOnly
-                                          ], // Only numbers can be entered
+                                          inputFormatters: [
+                                            CurrencyInputFormatter()
+                                          ],
                                         ),
                                       ),
                                       Divider(
@@ -1253,7 +1328,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                           style: textStyleTextFieldCEP,
                                           decoration:
                                               inputDecorationTextFieldCEP(
-                                                  "Nhập số (Đồng)"),
+                                                  "Nhập số tiền..."),
                                           keyboardType: TextInputType.number,
                                           inputFormatters: <TextInputFormatter>[
                                             FilteringTextInputFormatter
@@ -1277,7 +1352,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                           style: textStyleTextFieldCEP,
                                           decoration:
                                               inputDecorationTextFieldCEP(
-                                                  "Nhập số (Đồng)"),
+                                                  "Nhập số tiền..."),
                                           keyboardType: TextInputType.number,
                                           inputFormatters: <TextInputFormatter>[
                                             FilteringTextInputFormatter
@@ -1318,8 +1393,11 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                       .spaceBetween,
                                               children: [
                                                 Text(
-                                                  "${selectedDate.toLocal()}"
-                                                      .split(' ')[0],
+                                                  selectedTimetoUseLoanDate !=
+                                                          null
+                                                      ? "${selectedTimetoUseLoanDate.toLocal()}"
+                                                          .split(' ')[0]
+                                                      : "",
                                                   style: TextStyle(
                                                       fontSize: 13,
                                                       color: ColorConstants
@@ -1337,7 +1415,9 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                               ],
                                             ),
                                           ),
-                                          // onTap: () => _selectDate(context),
+                                          onTap: () => buildTimetoUseLoanPicker(
+                                              context,
+                                              selectedTimetoUseLoanDate),
                                         ),
                                       ),
                                     ],
@@ -1362,7 +1442,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                           style: textStyleTextFieldCEP,
                                           decoration:
                                               inputDecorationTextFieldCEP(
-                                                  "Nhập số (Đồng)"),
+                                                  "Nhập số tiền..."),
                                           keyboardType: TextInputType.number,
                                           inputFormatters: <TextInputFormatter>[
                                             FilteringTextInputFormatter
@@ -1396,7 +1476,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                           style: textStyleTextFieldCEP,
                                           decoration:
                                               inputDecorationTextFieldCEP(
-                                                  "Nhập số (Đồng)"),
+                                                  "Nhập số tiền..."),
                                           keyboardType: TextInputType.number,
                                           inputFormatters: <TextInputFormatter>[
                                             FilteringTextInputFormatter
@@ -1420,7 +1500,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                           style: textStyleTextFieldCEP,
                                           decoration:
                                               inputDecorationTextFieldCEP(
-                                                  "Nhập số (Đồng)"),
+                                                  "Nhập số tiền..."),
                                           keyboardType: TextInputType.number,
                                           inputFormatters: <TextInputFormatter>[
                                             FilteringTextInputFormatter
@@ -1444,7 +1524,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                           style: textStyleTextFieldCEP,
                                           decoration:
                                               inputDecorationTextFieldCEP(
-                                                  "Nhập số (Đồng)"),
+                                                  "Nhập số tiền..."),
                                           keyboardType: TextInputType.number,
                                           inputFormatters: <TextInputFormatter>[
                                             FilteringTextInputFormatter
@@ -1468,7 +1548,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                           style: textStyleTextFieldCEP,
                                           decoration:
                                               inputDecorationTextFieldCEP(
-                                                  "Nhập số (Đồng)"),
+                                                  "Nhập số tiền..."),
                                           keyboardType: TextInputType.number,
                                           inputFormatters: <TextInputFormatter>[
                                             FilteringTextInputFormatter
@@ -1507,10 +1587,8 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                             left: 20, right: 0),
                                         width: screenWidth * 1,
                                         child: new AnimatedContainer(
-                                          //transform: ,
                                           duration:
                                               const Duration(milliseconds: 320),
-
                                           child: Container(
                                             child: ListView(
                                               padding: EdgeInsets.all(0),
@@ -1529,7 +1607,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                         textStyleTextFieldCEP,
                                                     decoration:
                                                         inputDecorationTextFieldCEP(
-                                                            "Nhập số (Đồng)"),
+                                                            "Nhập số tiền..."),
                                                     keyboardType:
                                                         TextInputType.number,
                                                     inputFormatters: <
@@ -1544,7 +1622,6 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                           ),
                                           height: _animatedHeight1,
                                           color: Colors.white,
-
                                           width: 100.0,
                                         ),
                                       ),
@@ -1581,7 +1658,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                   style: textStyleTextFieldCEP,
                                                   decoration:
                                                       inputDecorationTextFieldCEP(
-                                                          "Nhập số (Đồng)"),
+                                                          "Nhập số tiền..."),
                                                   keyboardType:
                                                       TextInputType.number,
                                                   inputFormatters: <
@@ -1607,7 +1684,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                   style: textStyleTextFieldCEP,
                                                   decoration:
                                                       inputDecorationTextFieldCEP(
-                                                          "Nhập số (Đồng)"),
+                                                          "Nhập số tiền..."),
                                                   keyboardType:
                                                       TextInputType.number,
                                                   inputFormatters: <
@@ -1633,7 +1710,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                   style: textStyleTextFieldCEP,
                                                   decoration:
                                                       inputDecorationTextFieldCEP(
-                                                          "Nhập số (Đồng)"),
+                                                          "Nhập số tiền..."),
                                                   keyboardType:
                                                       TextInputType.number,
                                                   inputFormatters: <
@@ -1659,7 +1736,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                   style: textStyleTextFieldCEP,
                                                   decoration:
                                                       inputDecorationTextFieldCEP(
-                                                          "Nhập số (Đồng)"),
+                                                          "Nhập số tiền..."),
                                                   keyboardType:
                                                       TextInputType.number,
                                                   inputFormatters: <
@@ -1690,7 +1767,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                           style: textStyleTextFieldCEP,
                                           decoration:
                                               inputDecorationTextFieldCEP(
-                                                  "Nhập số (Đồng)"),
+                                                  "Nhập số tiền..."),
                                           keyboardType: TextInputType.number,
                                           inputFormatters: <TextInputFormatter>[
                                             FilteringTextInputFormatter
@@ -1724,7 +1801,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                           style: textStyleTextFieldCEP,
                                           decoration:
                                               inputDecorationTextFieldCEP(
-                                                  "Nhập số (Đồng)"),
+                                                  "Nhập số tiền..."),
                                           keyboardType: TextInputType.number,
                                           inputFormatters: <TextInputFormatter>[
                                             FilteringTextInputFormatter
@@ -1796,141 +1873,180 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                       ),
                                       Container(
                                         height: 40,
-                                        // child: CustomDropdown(
-                                        //   dropdownMenuItemList:
-                                        //       _maritalStatusModelDropdownList,
-                                        //   onChanged:
-                                        //       _onChangeMaritalStatusModelDropdown,
-                                        //   value: _maritalStatusModel,
-                                        //   width: screenWidth * 1,
-                                        //   isEnabled: true,
-                                        //   isUnderline: true,
-                                        // ),
-                                      ),
-                                      Divider(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        "Số tiền",
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 15,
-                                        ),
-                                      ),
-                                      Container(
-                                        height: 40,
-                                        child: TextField(
-                                          style: textStyleTextFieldCEP,
-                                          decoration:
-                                              inputDecorationTextFieldCEP(
-                                                  "Nhập số (Đồng)"),
-                                          keyboardType: TextInputType.number,
-                                          inputFormatters: <TextInputFormatter>[
-                                            FilteringTextInputFormatter
-                                                .digitsOnly
-                                          ], // Only numbers can be entered
+                                        child: CustomDropdown(
+                                          dropdownMenuItemList:
+                                              _capitalModelDropdownList,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _capital1Value = value;
+                                              if (value != "0" && value != "00")
+                                                _animatedHeightCapital1 = 280;
+                                              else
+                                                _animatedHeightCapital1 = 0;
+                                            });
+                                          },
+                                          value: _capital1Value,
+                                          width: screenWidth * 1,
+                                          isEnabled: true,
+                                          isUnderline: true,
                                         ),
                                       ),
                                       Divider(
                                         height: 10,
                                       ),
-                                      Text(
-                                        "Lý do vay",
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 15,
-                                        ),
-                                      ),
                                       Container(
-                                        height: 40,
-                                        // child: CustomDropdown(
-                                        //   dropdownMenuItemList:
-                                        //       _maritalStatusModelDropdownList,
-                                        //   onChanged:
-                                        //       _onChangeMaritalStatusModelDropdown,
-                                        //   value: _maritalStatusModel,
-                                        //   width: screenWidth * 1,
-                                        //   isEnabled: true,
-                                        //   isUnderline: true,
-                                        // ),
-                                      ),
-                                      Divider(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        "Thời điểm tất toán",
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 15,
-                                        ),
-                                      ),
-                                      Container(
-                                        height: 40,
-                                        child: InkWell(
+                                        width: screenWidth * 1,
+                                        child: new AnimatedContainer(
+                                          duration:
+                                              const Duration(milliseconds: 320),
                                           child: Container(
-                                            width: screenWidth * 1,
-                                            height: 40,
-                                            padding: EdgeInsets.only(
-                                                top: 10,
-                                                bottom: 10,
-                                                left: 10,
-                                                right: 10),
-                                            decoration: BoxDecoration(
-                                                border: Border(
-                                                    bottom: BorderSide(
-                                                        color: ColorConstants
-                                                            .cepColorBackground)),
-                                                color: Colors.white),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                            child: ListView(
+                                              physics:
+                                                  const NeverScrollableScrollPhysics(),
+                                              padding: EdgeInsets.all(10),
                                               children: [
                                                 Text(
-                                                  "${selectedDate.toLocal()}"
-                                                      .split(' ')[0],
+                                                  "Số tiền",
                                                   style: TextStyle(
-                                                      fontSize: 13,
-                                                      color: ColorConstants
-                                                          .cepColorBackground),
+                                                    color: Colors.black,
+                                                    fontSize: 15,
+                                                  ),
                                                 ),
-                                                SizedBox(
-                                                  width: 20.0,
+                                                Container(
+                                                  height: 40,
+                                                  child: TextField(
+                                                    style:
+                                                        textStyleTextFieldCEP,
+                                                    decoration:
+                                                        inputDecorationTextFieldCEP(
+                                                            "Nhập số tiền..."),
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    inputFormatters: <
+                                                        TextInputFormatter>[
+                                                      FilteringTextInputFormatter
+                                                          .digitsOnly
+                                                    ], // Only numbers can be entered
+                                                  ),
                                                 ),
-                                                Icon(
-                                                  Icons.calendar_today,
-                                                  size: 17,
-                                                  color: ColorConstants
-                                                      .cepColorBackground,
-                                                )
+                                                Divider(
+                                                  height: 10,
+                                                ),
+                                                Text(
+                                                  "Lý do vay",
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 15,
+                                                  ),
+                                                ),
+                                                Container(
+                                                  height: 40,
+                                                  child: CustomDropdown(
+                                                    dropdownMenuItemList:
+                                                        _reasonLoanModelDropdownList,
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        _reasonLoan1Value =
+                                                            value;
+                                                      });
+                                                    },
+                                                    value: _reasonLoan1Value,
+                                                    width: screenWidth * 1,
+                                                    isEnabled: true,
+                                                    isUnderline: true,
+                                                  ),
+                                                ),
+                                                Divider(
+                                                  height: 10,
+                                                ),
+                                                Text(
+                                                  "Thời điểm tất toán",
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 15,
+                                                  ),
+                                                ),
+                                                Container(
+                                                  height: 40,
+                                                  child: InkWell(
+                                                    child: Container(
+                                                      width: screenWidth * 1,
+                                                      height: 40,
+                                                      padding: EdgeInsets.only(
+                                                          top: 10,
+                                                          bottom: 10,
+                                                          left: 10,
+                                                          right: 10),
+                                                      decoration: BoxDecoration(
+                                                          border: Border(
+                                                              bottom: BorderSide(
+                                                                  color: ColorConstants
+                                                                      .cepColorBackground)),
+                                                          color: Colors.white),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Text(
+                                                            "${selectedDate.toLocal()}"
+                                                                .split(' ')[0],
+                                                            style: TextStyle(
+                                                                fontSize: 13,
+                                                                color: ColorConstants
+                                                                    .cepColorBackground),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 20.0,
+                                                          ),
+                                                          Icon(
+                                                            Icons
+                                                                .calendar_today,
+                                                            size: 17,
+                                                            color: ColorConstants
+                                                                .cepColorBackground,
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    // onTap: () => _selectDate(context),
+                                                  ),
+                                                ),
+                                                Divider(
+                                                  height: 10,
+                                                ),
+                                                Text(
+                                                  "Biện pháp thống nhất",
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 15,
+                                                  ),
+                                                ),
+                                                Container(
+                                                  height: 40,
+                                                  child: CustomDropdown(
+                                                    dropdownMenuItemList:
+                                                        _uniformMeasuresModelDropdownList,
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        _uniformMeasure1Value =
+                                                            value;
+                                                      });
+                                                    },
+                                                    value:
+                                                        _uniformMeasure1Value,
+                                                    width: screenWidth * 1,
+                                                    isEnabled: true,
+                                                    isUnderline: true,
+                                                  ),
+                                                ),
                                               ],
                                             ),
                                           ),
-                                          // onTap: () => _selectDate(context),
+                                          height: _animatedHeightCapital1,
+                                          color: Colors.white,
+                                          width: 100.0,
                                         ),
-                                      ),
-                                      Divider(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        "Biện pháp thống nhất",
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 15,
-                                        ),
-                                      ),
-                                      Container(
-                                        height: 40,
-                                        // child: CustomDropdown(
-                                        //   dropdownMenuItemList:
-                                        //       _maritalStatusModelDropdownList,
-                                        //   onChanged:
-                                        //       _onChangeMaritalStatusModelDropdown,
-                                        //   value: _maritalStatusModel,
-                                        //   width: screenWidth * 1,
-                                        //   isEnabled: true,
-                                        //   isUnderline: true,
-                                        // ),
                                       ),
                                       Divider(
                                         height: 10,
@@ -1944,141 +2060,178 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                       ),
                                       Container(
                                         height: 40,
-                                        // child: CustomDropdown(
-                                        //   dropdownMenuItemList:
-                                        //       _maritalStatusModelDropdownList,
-                                        //   onChanged:
-                                        //       _onChangeMaritalStatusModelDropdown,
-                                        //   value: _maritalStatusModel,
-                                        //   width: screenWidth * 1,
-                                        //   isEnabled: true,
-                                        //   isUnderline: true,
-                                        // ),
-                                      ),
-                                      Divider(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        "Số tiền",
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 15,
-                                        ),
-                                      ),
-                                      Container(
-                                        height: 40,
-                                        child: TextField(
-                                          style: textStyleTextFieldCEP,
-                                          decoration:
-                                              inputDecorationTextFieldCEP(
-                                                  "Nhập số (Đồng)"),
-                                          keyboardType: TextInputType.number,
-                                          inputFormatters: <TextInputFormatter>[
-                                            FilteringTextInputFormatter
-                                                .digitsOnly
-                                          ], // Only numbers can be entered
+                                        child: CustomDropdown(
+                                          dropdownMenuItemList:
+                                              _capitalModelDropdownList,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _capital2Value = value;
+                                              if (value != "0" && value != "00")
+                                                _animatedHeightCapital2 = 280;
+                                              else
+                                                _animatedHeightCapital2 = 0;
+                                            });
+                                          },
+                                          value: _capital2Value,
+                                          width: screenWidth * 1,
+                                          isEnabled: true,
+                                          isUnderline: true,
                                         ),
                                       ),
                                       Divider(
                                         height: 10,
                                       ),
-                                      Text(
-                                        "Lý do vay",
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 15,
-                                        ),
-                                      ),
                                       Container(
-                                        height: 40,
-                                        // child: CustomDropdown(
-                                        //   dropdownMenuItemList:
-                                        //       _maritalStatusModelDropdownList,
-                                        //   onChanged:
-                                        //       _onChangeMaritalStatusModelDropdown,
-                                        //   value: _maritalStatusModel,
-                                        //   width: screenWidth * 1,
-                                        //   isEnabled: true,
-                                        //   isUnderline: true,
-                                        // ),
-                                      ),
-                                      Divider(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        "Thời điểm tất toán",
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 15,
-                                        ),
-                                      ),
-                                      Container(
-                                        height: 40,
-                                        child: InkWell(
+                                        width: screenWidth * 1,
+                                        child: new AnimatedContainer(
+                                          duration:
+                                              const Duration(milliseconds: 320),
                                           child: Container(
-                                            width: screenWidth * 1,
-                                            height: 40,
-                                            padding: EdgeInsets.only(
-                                                top: 10,
-                                                bottom: 10,
-                                                left: 10,
-                                                right: 10),
-                                            decoration: BoxDecoration(
-                                                border: Border(
-                                                    bottom: BorderSide(
-                                                        color: ColorConstants
-                                                            .cepColorBackground)),
-                                                color: Colors.white),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
+                                              child: ListView(
+                                                  physics:
+                                                      const NeverScrollableScrollPhysics(),
+                                                  padding: EdgeInsets.all(10),
+                                                  children: [
                                                 Text(
-                                                  "${selectedDate.toLocal()}"
-                                                      .split(' ')[0],
+                                                  "Số tiền",
                                                   style: TextStyle(
-                                                      fontSize: 13,
-                                                      color: ColorConstants
-                                                          .cepColorBackground),
+                                                    color: Colors.black,
+                                                    fontSize: 15,
+                                                  ),
                                                 ),
-                                                SizedBox(
-                                                  width: 20.0,
+                                                Container(
+                                                  height: 40,
+                                                  child: TextField(
+                                                    style:
+                                                        textStyleTextFieldCEP,
+                                                    decoration:
+                                                        inputDecorationTextFieldCEP(
+                                                            "Nhập số tiền..."),
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    inputFormatters: <
+                                                        TextInputFormatter>[
+                                                      FilteringTextInputFormatter
+                                                          .digitsOnly
+                                                    ], // Only numbers can be entered
+                                                  ),
                                                 ),
-                                                Icon(
-                                                  Icons.calendar_today,
-                                                  size: 17,
-                                                  color: ColorConstants
-                                                      .cepColorBackground,
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                          //   onTap: () => _selectDate(context),
+                                                Divider(
+                                                  height: 10,
+                                                ),
+                                                Text(
+                                                  "Lý do vay",
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 15,
+                                                  ),
+                                                ),
+                                                Container(
+                                                  height: 40,
+                                                  child: CustomDropdown(
+                                                    dropdownMenuItemList:
+                                                        _reasonLoanModelDropdownList,
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        _reasonLoan2Value =
+                                                            value;
+                                                      });
+                                                    },
+                                                    value: _reasonLoan2Value,
+                                                    width: screenWidth * 1,
+                                                    isEnabled: true,
+                                                    isUnderline: true,
+                                                  ),
+                                                ),
+                                                Divider(
+                                                  height: 10,
+                                                ),
+                                                Text(
+                                                  "Thời điểm tất toán",
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 15,
+                                                  ),
+                                                ),
+                                                Container(
+                                                  height: 40,
+                                                  child: InkWell(
+                                                    child: Container(
+                                                      width: screenWidth * 1,
+                                                      height: 40,
+                                                      padding: EdgeInsets.only(
+                                                          top: 10,
+                                                          bottom: 10,
+                                                          left: 10,
+                                                          right: 10),
+                                                      decoration: BoxDecoration(
+                                                          border: Border(
+                                                              bottom: BorderSide(
+                                                                  color: ColorConstants
+                                                                      .cepColorBackground)),
+                                                          color: Colors.white),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Text(
+                                                            "${selectedDate.toLocal()}"
+                                                                .split(' ')[0],
+                                                            style: TextStyle(
+                                                                fontSize: 13,
+                                                                color: ColorConstants
+                                                                    .cepColorBackground),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 20.0,
+                                                          ),
+                                                          Icon(
+                                                            Icons
+                                                                .calendar_today,
+                                                            size: 17,
+                                                            color: ColorConstants
+                                                                .cepColorBackground,
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    //   onTap: () => _selectDate(context),
+                                                  ),
+                                                ),
+                                                Divider(
+                                                  height: 10,
+                                                ),
+                                                Text(
+                                                  "Biện pháp thống nhất",
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 15,
+                                                  ),
+                                                ),
+                                                Container(
+                                                  height: 40,
+                                                  child: CustomDropdown(
+                                                    dropdownMenuItemList:
+                                                        _uniformMeasuresModelDropdownList,
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        _uniformMeasure2Value =
+                                                            value;
+                                                      });
+                                                    },
+                                                    value:
+                                                        _uniformMeasure2Value,
+                                                    width: screenWidth * 1,
+                                                    isEnabled: true,
+                                                    isUnderline: true,
+                                                  ),
+                                                ),
+                                              ])),
+                                          height: _animatedHeightCapital2,
+                                          color: Colors.white,
+                                          width: 100.0,
                                         ),
-                                      ),
-                                      Divider(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        "Biện pháp thống nhất",
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 15,
-                                        ),
-                                      ),
-                                      Container(
-                                        height: 40,
-                                        // child: CustomDropdown(
-                                        //   dropdownMenuItemList:
-                                        //       _maritalStatusModelDropdownList,
-                                        //   onChanged:
-                                        //       _onChangeMaritalStatusModelDropdown,
-                                        //   value: _maritalStatusModel,
-                                        //   width: screenWidth * 1,
-                                        //   isEnabled: true,
-                                        //   isUnderline: true,
-                                        // ),
                                       ),
                                       Divider(
                                         height: 10,
@@ -2099,16 +2252,19 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                       ),
                                       Container(
                                         height: 40,
-                                        // child: CustomDropdown(
-                                        //   dropdownMenuItemList:
-                                        //       _maritalStatusModelDropdownList,
-                                        //   onChanged:
-                                        //       _onChangeMaritalStatusModelDropdown,
-                                        //   value: _maritalStatusModel,
-                                        //   width: screenWidth * 1,
-                                        //   isEnabled: true,
-                                        //   isUnderline: true,
-                                        // ),
+                                        child: CustomDropdown(
+                                          dropdownMenuItemList:
+                                              _typeMemberModelDropdownList,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _typeMemberValue = value;
+                                            });
+                                          },
+                                          value: _typeMemberValue,
+                                          width: screenWidth * 1,
+                                          isEnabled: true,
+                                          isUnderline: true,
+                                        ),
                                       ),
                                       Divider(
                                         height: 10,
@@ -2170,7 +2326,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                           style: textStyleTextFieldCEP,
                                           decoration:
                                               inputDecorationTextFieldCEP(
-                                                  "Nhập số (Đồng)"),
+                                                  "Nhập số tiền..."),
                                           keyboardType: TextInputType.number,
                                           inputFormatters: <TextInputFormatter>[
                                             FilteringTextInputFormatter
@@ -2198,7 +2354,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                           style: textStyleTextFieldCEP,
                                           decoration:
                                               inputDecorationTextFieldCEP(
-                                                  "Nhập số (Đồng)"),
+                                                  "Nhập số tiền..."),
                                           keyboardType: TextInputType.number,
                                           inputFormatters: <TextInputFormatter>[
                                             FilteringTextInputFormatter
@@ -2222,7 +2378,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                           style: textStyleTextFieldCEP,
                                           decoration:
                                               inputDecorationTextFieldCEP(
-                                                  "Nhập số (Đồng)"),
+                                                  "Nhập số tiền..."),
                                           keyboardType: TextInputType.number,
                                           inputFormatters: <TextInputFormatter>[
                                             FilteringTextInputFormatter
@@ -2246,7 +2402,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                           style: textStyleTextFieldCEP,
                                           decoration:
                                               inputDecorationTextFieldCEP(
-                                                  "Nhập số (Đồng)"),
+                                                  "Nhập số tiền..."),
                                           keyboardType: TextInputType.number,
                                           inputFormatters: <TextInputFormatter>[
                                             FilteringTextInputFormatter
@@ -2266,56 +2422,76 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                       ),
                                       Row(
                                         children: [
-                                          customRadio(listTypeArea[0], 0),
+                                          customRadioTimeOfWithdrawal(
+                                              listTimeOfWithdrawal[0], 0),
                                           VerticalDivider(
                                             width: 10,
                                           ),
-                                          customRadio(listTypeArea[1], 1),
+                                          customRadioTimeOfWithdrawal(
+                                              listTimeOfWithdrawal[1], 1),
                                         ],
                                       ),
                                       Container(
-                                        height: 40,
-                                        child: InkWell(
-                                          child: Container(
-                                            width: screenWidth * 1,
-                                            height: 40,
-                                            padding: EdgeInsets.only(
-                                                top: 10,
-                                                bottom: 10,
-                                                left: 10,
-                                                right: 10),
-                                            decoration: BoxDecoration(
-                                                border: Border(
-                                                    bottom: BorderSide(
-                                                        color: ColorConstants
-                                                            .cepColorBackground)),
-                                                color: Colors.white),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  "${selectedDate.toLocal()}"
-                                                      .split(' ')[0],
-                                                  style: TextStyle(
-                                                      fontSize: 13,
-                                                      color: ColorConstants
-                                                          .cepColorBackground),
+                                        width: screenWidth * 1,
+                                        child: new AnimatedContainer(
+                                          duration:
+                                              const Duration(milliseconds: 320),
+                                          child: ListView(
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            padding: EdgeInsets.all(10),
+                                            children: [
+                                              Container(
+                                                height: 40,
+                                                child: InkWell(
+                                                  child: Container(
+                                                    width: screenWidth * 1,
+                                                    height: 40,
+                                                    padding: EdgeInsets.only(
+                                                        top: 10,
+                                                        bottom: 10,
+                                                        left: 10,
+                                                        right: 10),
+                                                    decoration: BoxDecoration(
+                                                        border: Border(
+                                                            bottom: BorderSide(
+                                                                color: ColorConstants
+                                                                    .cepColorBackground)),
+                                                        color: Colors.white),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          "${selectedDate.toLocal()}"
+                                                              .split(' ')[0],
+                                                          style: TextStyle(
+                                                              fontSize: 13,
+                                                              color: ColorConstants
+                                                                  .cepColorBackground),
+                                                        ),
+                                                        SizedBox(
+                                                          width: 20.0,
+                                                        ),
+                                                        Icon(
+                                                          Icons.calendar_today,
+                                                          size: 17,
+                                                          color: ColorConstants
+                                                              .cepColorBackground,
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  //  onTap: () => _selectDate(context),
                                                 ),
-                                                SizedBox(
-                                                  width: 20.0,
-                                                ),
-                                                Icon(
-                                                  Icons.calendar_today,
-                                                  size: 17,
-                                                  color: ColorConstants
-                                                      .cepColorBackground,
-                                                )
-                                              ],
-                                            ),
+                                              ),
+                                            ],
                                           ),
-                                          //  onTap: () => _selectDate(context),
+                                          height:
+                                              _animatedHeightTimeOfWithdrawal,
+                                          color: Colors.white,
+                                          width: 100.0,
                                         ),
                                       ),
                                     ],
@@ -2338,7 +2514,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                           style: textStyleTextFieldCEP,
                                           decoration:
                                               inputDecorationTextFieldCEP(
-                                                  "Nhập số (Đồng)"),
+                                                  "Nhập số tiền..."),
                                           keyboardType: TextInputType.number,
                                           inputFormatters: <TextInputFormatter>[
                                             FilteringTextInputFormatter
@@ -2358,16 +2534,20 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                       ),
                                       Container(
                                         height: 40,
-                                        // child: CustomDropdown(
-                                        //   dropdownMenuItemList:
-                                        //       _maritalStatusModelDropdownList,
-                                        //   onChanged:
-                                        //       _onChangeMaritalStatusModelDropdown,
-                                        //   value: _maritalStatusModel,
-                                        //   width: screenWidth * 1,
-                                        //   isEnabled: true,
-                                        //   isUnderline: true,
-                                        // ),
+                                        child: CustomDropdown(
+                                          dropdownMenuItemList:
+                                              _additionalLoanPurposeModelDropdownList,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _additionalLoanPurposeValue =
+                                                  value;
+                                            });
+                                          },
+                                          value: _additionalLoanPurposeValue,
+                                          width: screenWidth * 1,
+                                          isEnabled: true,
+                                          isUnderline: true,
+                                        ),
                                       ),
                                       Divider(
                                         height: 10,
@@ -2521,7 +2701,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                           style: textStyleTextFieldCEP,
                                           decoration:
                                               inputDecorationTextFieldCEP(
-                                                  "Nhập số (Đồng)"),
+                                                  "Nhập số tiền..."),
                                           keyboardType: TextInputType.number,
                                           inputFormatters: <TextInputFormatter>[
                                             FilteringTextInputFormatter
@@ -2545,7 +2725,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                           style: textStyleTextFieldCEP,
                                           decoration:
                                               inputDecorationTextFieldCEP(
-                                                  "Nhập số (Đồng)"),
+                                                  "Nhập số tiền..."),
                                           keyboardType: TextInputType.number,
                                           inputFormatters: <TextInputFormatter>[
                                             FilteringTextInputFormatter
@@ -2565,16 +2745,19 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                       ),
                                       Container(
                                         height: 40,
-                                        // child: CustomDropdown(
-                                        //   dropdownMenuItemList:
-                                        //       _maritalStatusModelDropdownList,
-                                        //   onChanged:
-                                        //       _onChangeMaritalStatusModelDropdown,
-                                        //   value: _maritalStatusModel,
-                                        //   width: screenWidth * 1,
-                                        //   isEnabled: true,
-                                        //   isUnderline: true,
-                                        // ),
+                                        child: CustomDropdown(
+                                          dropdownMenuItemList:
+                                              _loanPurposeModelDropdownList,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _loanPurposeValue = value;
+                                            });
+                                          },
+                                          value: _loanPurposeValue,
+                                          width: screenWidth * 1,
+                                          isEnabled: true,
+                                          isUnderline: true,
+                                        ),
                                       ),
                                     ],
                                     title: "13. Đề xuất",
@@ -2655,6 +2838,24 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
   Widget customRadioTotalMonthly(String txt, int index) {
     return OutlineButton(
       onPressed: () => changeIndexTotalMonthlyRadioButton(index),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      borderSide: BorderSide(
+          color: selectedIndexTotalMonthly == index
+              ? ColorConstants.cepColorBackground
+              : Colors.grey),
+      child: Text(
+        txt,
+        style: TextStyle(
+            color: selectedIndexTotalMonthly == index
+                ? ColorConstants.cepColorBackground
+                : Colors.grey),
+      ),
+    );
+  }
+
+  Widget customRadioTimeOfWithdrawal(String txt, int index) {
+    return OutlineButton(
+      onPressed: () => changeIndexTimeOfWithdrawalRadioButton(index),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       borderSide: BorderSide(
           color: selectedIndexTotalMonthly == index

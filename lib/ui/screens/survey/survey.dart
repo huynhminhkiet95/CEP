@@ -59,13 +59,19 @@ class _SurveyScreenState extends State<SurveyScreen> {
       itemBuilder: (context, i) {
         return InkWell(
           onTap: () {
-            var a = Navigator.pushNamed(context, 'surveydetail', arguments: {
-              'id': listSurvey[i].id,
-              'metadata': surveyStream.listCombobox,
-              'surveydetail':listSurvey[i]
-            }).then((value) => setState(() {
-                  //   cumID = value;
-                }));
+            if (surveyStream.listCombobox.length == 0) {
+              Navigator.pushNamed(context, 'download',arguments: {
+                'selectedIndex': 4,
+              });
+            } else {
+              var a = Navigator.pushNamed(context, 'surveydetail', arguments: {
+                'id': listSurvey[i].id,
+                'metadata': surveyStream.listCombobox,
+                'surveydetail': listSurvey[i]
+              }).then((value) => setState(() {
+                    //   cumID = value;
+                  }));
+            }
           },
           child: Container(
             decoration: BoxDecoration(
@@ -346,7 +352,14 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                               width: 90,
                                               child: Center(
                                                 child: Text(
-                                                  surveyStream.listHistorySearch.length == 0 ? '' : surveyStream.listHistorySearch.first.cumID,
+                                                  surveyStream.listHistorySearch
+                                                              .length ==
+                                                          0
+                                                      ? ''
+                                                      : surveyStream
+                                                          .listHistorySearch
+                                                          .first
+                                                          .cumID,
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
@@ -391,7 +404,14 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                               width: 90,
                                               child: Center(
                                                 child: Text(
-                                                  surveyStream.listHistorySearch.length == 0 ? '' : surveyStream.listHistorySearch.first.ngayXuatDanhSach,
+                                                  surveyStream.listHistorySearch
+                                                              .length ==
+                                                          0
+                                                      ? ''
+                                                      : surveyStream
+                                                          .listHistorySearch
+                                                          .first
+                                                          .ngayXuatDanhSach,
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,

@@ -1,5 +1,6 @@
 import 'package:CEPmobile/config/numberformattter.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 class CurrencyInputFormatter extends TextInputFormatter {
   @override
@@ -11,7 +12,7 @@ class CurrencyInputFormatter extends TextInputFormatter {
       final String intStr = NumberFormatter.numberFormatter(
           double.tryParse(newValue.text.replaceAll(",", "") ?? 0));
       print(newValue);
-
+      
       return TextEditingValue(
         text: intStr,
         selection: TextSelection.collapsed(offset: intStr.length),
@@ -24,3 +25,24 @@ class CurrencyInputFormatter extends TextInputFormatter {
     }
   }
 }
+
+// class CurrencyInputFormatter1 extends TextInputFormatter {
+
+//     TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+
+//         if(newValue.selection.baseOffset == 0){
+//             print(true);
+//             return newValue;
+//         }
+
+//         double value = double.parse(newValue.text);
+
+//         final formatter = NumberFormat.simpleCurrency(locale: "pt_Br");
+
+//         String newText = formatter.format(value/100);
+
+//         return newValue.copyWith(
+//             text: newText,
+//             selection: new TextSelection.collapsed(offset: newText.length));
+//     }
+// }

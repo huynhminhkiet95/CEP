@@ -299,7 +299,7 @@ class DBProvider {
                         ${model.daDuocDuyet},
                         "${model.username}",
                         "${model.ngaycapnhat}",
-                        ${model.masoCanBoKhaoSatPss},
+                        "${model.masoCanBoKhaoSatPss}",
                         ${model.sotienVayLantruoc},
                         ${model.thoiGianTaivay},
                         ${model.songayNoquahanCaonhat},

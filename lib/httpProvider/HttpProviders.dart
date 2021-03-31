@@ -162,8 +162,7 @@ class HttpBase {
     var address = globalServer.getServerAddress;
     http.Response result;
     try {
-      
-         result = await http.post(address + url,
+      result = await http.post(address + url,
           body: json.encode(body),
           headers: {
             "Content-Type": 'application/json',
@@ -182,11 +181,10 @@ class HttpBase {
     var address = globalServer.getServerAddress;
     http.Response result;
     try {
-      result = await http.post(address + url,
-          headers: {
-            "Content-Type": 'application/json',
-            "Authorization": 'Bearer $token'
-          }).timeout(const Duration(seconds: 10));
+      result = await http.post(address + url, headers: {
+        "Content-Type": 'application/json',
+        "Authorization": 'Bearer $token'
+      }).timeout(const Duration(seconds: 10));
     } catch (e) {
       print(url + ": " + e.message);
       // result.statusCode = 4;
@@ -196,20 +194,40 @@ class HttpBase {
     return result;
   }
 
-  Future<http.Response> postRequest(String url,dynamic body) async {
+  Future<http.Response> postRequest(String url, dynamic body) async {
     var response;
     try {
       var address = globalServer.getServerApi + url;
       var jsonBody = json.encode(body);
-      response = await http.post(address,headers: {"Content-Type": "application/json"}, body: jsonBody)
-      .timeout(const Duration(seconds: 10));
+      response = await http
+          .post(address,
+              headers: {"Content-Type": "application/json"}, body: jsonBody)
+         ;
       return response;
-    }
-    catch (e) {
+    } catch (e) {
       throw Exception(e);
     }
   }
 
+  Future<http.Response> postRequestTest(String url, dynamic body) async {
+    var response;
+    var body1 = {
+    "sdt" : '0969875777',
+    "password" : '123321'
+    };
+    
+    try {
+      var address = 'https://customer-api.cep.org.vn/api/TraCuuTietKiem/Login';
+      var jsonBody = json.encode(body1);
+      response = await http
+          .post(address,
+              headers: {"Content-Type": "application/json"}, body: jsonBody)
+          .timeout(const Duration(seconds: 10));
+      return response;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 
   Future<http.Response> httpPostEncoded(String url, dynamic body) async {
     var address = globalServer.getServerApi + url;

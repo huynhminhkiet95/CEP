@@ -7,8 +7,11 @@ import 'package:CEPmobile/ui/screens/downloadData/download_metadata.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:CEPmobile/config/CustomIcons/my_flutter_app_icons.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class DownloadScreen extends StatefulWidget {
+  final int selectedIndex;
+  const DownloadScreen({Key key, this.selectedIndex}) : super(key: key);
   @override
   _DownloadScreenState createState() => _DownloadScreenState();
 }
@@ -29,6 +32,20 @@ class _DownloadScreenState extends State<DownloadScreen> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    if (widget.selectedIndex != null) {
+      _selectedIndex = widget.selectedIndex;
+      Fluttertoast.showToast(
+        msg: "Vui lòng tải dữ liệu cho Combobox !",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.grey[300].withOpacity(0.7),
+        textColor: Colors.black,
+      );
+    }
   }
 
   @override
@@ -57,17 +74,18 @@ class _DownloadScreenState extends State<DownloadScreen> {
           items: [
             TabItem(
               icon: IconsCustomize.survey_icon,
-              title: orientation == Orientation.portrait
-                  ? 'Khảo Sát'
-                  : 'Khảo Sát',
+              title:
+                  orientation == Orientation.portrait ? 'Khảo Sát' : 'Khảo Sát',
             ),
             TabItem(icon: IconsCustomize.thu_no, title: 'Thu Nợ'),
-            TabItem(icon: IconsCustomize.tu_van, title: orientation == Orientation.portrait ?'Tư Vấn T...' : 'Tư Vấn Tiết Kiệm'),
+            TabItem(
+                icon: IconsCustomize.tu_van,
+                title: orientation == Orientation.portrait
+                    ? 'Tư Vấn T...'
+                    : 'Tư Vấn Tiết Kiệm'),
             TabItem(
                 icon: IconsCustomize.phattriencongdong,
-                title: orientation == Orientation.portrait
-                    ? 'PTCĐ'
-                    : 'PTCĐ'),
+                title: orientation == Orientation.portrait ? 'PTCĐ' : 'PTCĐ'),
             TabItem(
                 icon: Icons.list,
                 title: orientation == Orientation.portrait
@@ -75,7 +93,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
                     : 'Danh Sách Chọn'),
           ],
           //curveSize: 100,
-          //initialActiveIndex: 3,
+          initialActiveIndex: _selectedIndex,
           onTap: onItemTapped,
           activeColor: Colors.white,
           backgroundColor: ColorConstants.cepColorBackground),

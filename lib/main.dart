@@ -29,21 +29,21 @@ import 'ui/screens/daytriprecord/index.dart';
 import 'ui/screens/profile/index.dart';
 import 'ui/screens/todolist/index.dart';
 
-
 // extension ExtendedString on String {
 //   bool get isValidName {
 //     return !this.contains(new RegExp(r'[0–9]'));
 //   }
 // }
 
-class MyHttpOverrides extends HttpOverrides{
+class MyHttpOverrides extends HttpOverrides {
   @override
-  HttpClient createHttpClient(SecurityContext context){
+  HttpClient createHttpClient(SecurityContext context) {
     return super.createHttpClient(context)
-      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
-    }
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
-  
+}
+
 void main() async {
   HttpOverrides.global = new MyHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
@@ -97,7 +97,6 @@ class AppState extends State<Application> {
         title: allTranslations.text('app_title'),
         debugShowCheckedModeBanner: false,
         onGenerateRoute: (RouteSettings settings) {
-          
           switch (settings.name) {
             case '/decision':
               return new MyCustomRoute(
@@ -159,12 +158,26 @@ class AppState extends State<Application> {
               return SlideLeftRoute(page: SurveyScreen());
               break;
             case 'surveydetail':
-              final  Map<String, Object> arguments = settings.arguments;
-              return SlideTopRoute(page: SurveyDetailScreen(id: arguments['id'],listCombobox: arguments['metadata'],surveyInfo: arguments['surveydetail'],));
+              final Map<String, Object> arguments = settings.arguments;
+              return SlideTopRoute(
+                  page: SurveyDetailScreen(
+                id: arguments['id'],
+                listCombobox: arguments['metadata'],
+                surveyInfo: arguments['surveydetail'],
+              ));
               break;
-              
+
             case 'download':
-              return SlideLeftRoute(page: DownloadScreen());
+              final Map<String, Object> arguments = settings.arguments;
+              if (arguments == null) {
+                return SlideLeftRoute(page: DownloadScreen());
+              } else {
+                return SlideLeftRoute(
+                    page: DownloadScreen(
+                  selectedIndex: arguments['selectedIndex'],
+                ));
+              }
+
               break;
             default:
               return new MyCustomRoute(
@@ -178,7 +191,7 @@ class AppState extends State<Application> {
         //   if (settings.name != null) {
         //     SlideLeftRoute(page: ErrorScreen());
         //   }
-          
+
         // },
         home: InitializationPage(),
       ),

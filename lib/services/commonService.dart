@@ -31,6 +31,7 @@ class CommonService {
 
   Future<Response> getToken(DataLogin datalogin) {
     return _httpBase.postRequest(ServiceName.Get_Token.toString(), datalogin.toJson());
+    //return _httpBase.postRequestTest(ServiceName.Get_Token.toString(), datalogin.toJson());
   }
 
   Future<Response> getGetUser(String userName) {
