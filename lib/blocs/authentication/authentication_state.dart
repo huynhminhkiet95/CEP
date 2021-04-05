@@ -7,7 +7,7 @@ class AuthenticationState extends BlocState {
       {@required this.isAuthenticated,
       this.isAuthenticating: false,
       this.hasFailed: false,
-      this.serverCode: "DEV",
+      this.serverCode: "DEV-VPN",
       this.isRemember: false,
       this.userName: "",
       this.password: "",

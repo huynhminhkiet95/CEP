@@ -1,3 +1,5 @@
+import 'package:CEPmobile/GlobalUser.dart';
+import 'package:CEPmobile/database/DBProvider.dart';
 import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:CEPmobile/config/constants.dart';
@@ -13,23 +15,22 @@ class SharePreferenceService {
 
   SharePreferenceService(this.share);
 
-  Future<void> saveRememberUser(RememberUser rememberUser) async {
-    globalRememberUser.setIsRemember = rememberUser.getIsRemember;
-    globalRememberUser.setPassword = rememberUser.getPassword;
-    globalRememberUser.setUserName = rememberUser.getUserName;
-
-    share.setString(KeyConstants.userName, rememberUser.getUserName);
-    share.setBool(KeyConstants.isRemember, rememberUser.getIsRemember);
-    share.setString(KeyConstants.password, rememberUser.getPassword);
+  Future<void> saveRememberUser(String userName) async {
+    share.setString(KeyConstants.userName, userName);
   }
 
-  Future<void> getRememberUser() async {
-    globalRememberUser.setIsRemember = share.getBool(KeyConstants.isRemember);
-    globalRememberUser.setPassword =
-        share.getString(KeyConstants.password.toString());
-    globalRememberUser.setUserName =
-        share.getString(KeyConstants.userName.toString());
+  Future<String> getRememberUser() async {
+    String username = share.getString(KeyConstants.userName);
+    return username;
   }
+
+  // Future<void> getRememberUser() async {
+  //   globalRememberUser.setIsRemember = share.getBool(KeyConstants.isRemember);
+  //   globalRememberUser.setPassword =
+  //       share.getString(KeyConstants.password.toString());
+  //   globalRememberUser.setUserName =
+  //       share.getString(KeyConstants.userName.toString());
+  // }
 
   Future<void> getServerInfo() async {
     globalServer.setServerAddress =
@@ -38,6 +39,29 @@ class SharePreferenceService {
         share.getString(KeyConstants.serverCode) ?? "PROD";
     globalServer.setServerNotification =
         share.getString(KeyConstants.nofificationServer) ?? "";
+  }
+
+  Future<void> saveToken(String token) async {
+    share.setString(KeyConstants.tokenUser, token);
+    globalUser.settoken = token;
+  }
+
+  Future<String> getToken() async {
+    String token = share.getString(KeyConstants.tokenUser);
+    globalUser.settoken = token;
+    return token;
+  }
+
+  Future<void> getUserInfo() async {
+    globalUser.setUserInfo = await DBProvider.db.getUserInfo();
+  }
+  
+  Future<void> getUserRole() async {
+    globalUser.setUserRoles = await DBProvider.db.getUserRole();
+  }
+
+  Future<void> getMetadata() async {
+    globalUser.setListComboboxModel = await DBProvider.db.getAllMetaDataForTBD();
   }
 
   Future<void> updateServerInfo(ServerInfo serverInfo) async {

@@ -47,12 +47,15 @@ class SurveyBloc extends BlocEventStateBase<SurveyEvent, SurveyState> {
       yield SurveyState.updateLoading(true);
       var listHistorySearch = await DBProvider.db.getAllHistorySearchKhaoSat();
       List<SurveyInfo> listSurvey = await DBProvider.db.getAllKhaoSat();
-      List<ComboboxModel> listCombobox =
-          await DBProvider.db.getAllMetaDataForTBD();
-      surveyStream.listCombobox = listCombobox;
       surveyStream.listHistorySearch = listHistorySearch;
       surveyStream.listSurvey = listSurvey;
       _getSurveyStreamController.sink.add(surveyStream);
+      yield SurveyState.updateLoading(false);
+    }
+    if (event is UpdateSurveyEvent) {
+      yield SurveyState.updateLoading(true);
+      await DBProvider.db.updateKhaoSatById(event.surveyInfo);
+
       yield SurveyState.updateLoading(false);
     }
   }

@@ -17,4 +17,5 @@ class KeyConstants {
   static const String avatar = "avatar";
   static const String serverHub = "serverHub";
   static const String serverSSO = "serverSSO";
+  static const String tokenUser = "tokenUser";
 }

@@ -16,8 +16,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:CEPmobile/blocs/download_data/download_data_event.dart';
 import 'package:CEPmobile/blocs/download_data/download_data_state.dart';
 
-class DownloadDataBloc
-    extends BlocEventStateBase<DownloadDataEvent, DownloadDataState> {
+class DownloadDataBloc extends BlocEventStateBase<DownloadDataEvent, DownloadDataState> {
   final SharePreferenceService sharePreferenceService;
   final CommonService commonService;
 
@@ -97,6 +96,7 @@ class DownloadDataBloc
               var listKhaoSat = ComboboxModel.fromJson(item);
               listCombobox.add(listKhaoSat);
             }
+            globalUser.setListComboboxModel = listCombobox;
             await DBProvider.db.newMetaDataForTBD(listCombobox);
             Fluttertoast.showToast(
               msg: allTranslations.text("DownLoadDataSuccess"),

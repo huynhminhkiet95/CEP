@@ -1,4 +1,3 @@
-
 class UserInfo {
   int chiNhanhID;
   String tenChiNhanh;
@@ -29,4 +28,14 @@ class UserInfo {
       toTinDung: json['ToTinDung'] as int,
     );
   }
+
+  factory UserInfo.fromMap(Map<String, dynamic> json) => new UserInfo(
+        chiNhanhID: json["chiNhanhID"],
+        tenChiNhanh: json["tenChiNhanh"],
+        chucVu: json["chucVu"],
+        hoTen: json["hoTen"],
+        dienThoai: json["dienThoai"],
+        masoql: json["masoql"],
+        toTinDung: json["toTinDung"],
+      );
 }

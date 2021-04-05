@@ -1,4 +1,6 @@
 import 'package:CEPmobile/config/colors.dart';
+import 'package:CEPmobile/database/DBProvider.dart';
+import 'package:CEPmobile/models/download_data/comboboxmodel.dart';
 import 'package:CEPmobile/models/download_data/historysearchsurvey.dart';
 import 'package:CEPmobile/models/historyscreen/history_screen.dart';
 import 'package:CEPmobile/models/survey/survey_result.dart';
@@ -59,14 +61,20 @@ class _SurveyScreenState extends State<SurveyScreen> {
       itemBuilder: (context, i) {
         return InkWell(
           onTap: () {
-            if (surveyStream.listCombobox.length == 0) {
-              Navigator.pushNamed(context, 'download',arguments: {
+            List<ComboboxModel> listCombobox = globalUser.getListComboboxModel;
+
+            if (listCombobox == null || listCombobox.length == 0) {
+              Navigator.pushNamed(context, 'download', arguments: {
                 'selectedIndex': 4,
-              });
+              }).then((value) => setState(() {
+                    if (true == value) {
+                      initState();
+                    }
+                  }));
             } else {
-              var a = Navigator.pushNamed(context, 'surveydetail', arguments: {
+              Navigator.pushNamed(context, 'surveydetail', arguments: {
                 'id': listSurvey[i].id,
-                'metadata': surveyStream.listCombobox,
+                'metadata': listCombobox,
                 'surveydetail': listSurvey[i]
               }).then((value) => setState(() {
                     //   cumID = value;
@@ -440,12 +448,16 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                       fillColor: Colors.grey,
                                       splashColor: Colors.green,
                                       child: Padding(
-                                        padding: EdgeInsets.all(10.0),
+                                        padding: EdgeInsets.only(
+                                            right: 15,
+                                            top: 10,
+                                            left: 10,
+                                            bottom: 10),
                                         child: Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: const <Widget>[
                                             Icon(
-                                              Icons.system_update,
+                                              Icons.upload_rounded,
                                               color: Colors.black,
                                             ),
                                             SizedBox(

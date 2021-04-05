@@ -1,3 +1,4 @@
+import 'package:CEPmobile/GlobalUser.dart';
 import 'package:CEPmobile/ui/screens/Login/loginPage.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_login_signup/src/loginPage.dart';
@@ -14,14 +15,12 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
-  
   double screenWidth, screenHeight;
 
   Widget _loginButton() {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context,'/login');
-
+        Navigator.pushNamed(context, '/login');
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -51,7 +50,8 @@ class _WelcomePageState extends State<WelcomePage> {
             SizedBox(
               height: 20,
             ),
-            Icon(Icons.fingerprint, size: screenHeight * 0.1, color: Colors.white),
+            Icon(Icons.fingerprint,
+                size: screenHeight * 0.1, color: Colors.white),
             SizedBox(
               height: 20,
             ),
@@ -91,10 +91,41 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   @override
+  void deactivate() {
+    // TODO: implement deactivate
+    print("deactivate");
+    super.deactivate();
+  }
+
+  @override
+  void setState(fn) {
+    print("setState");
+
+    // TODO: implement setState
+    super.setState(fn);
+  }
+
+  @override
+  void initState() {
+    
+    // TODO: implement initState
+    // 
+    super.initState();
+    print("initState");
+  }
+
+  /*
+    This method is called immediately after initState on the first time the widget is built.
+    */
+
+
+  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     screenHeight = size.height;
     screenWidth = size.width;
+     
+    
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(

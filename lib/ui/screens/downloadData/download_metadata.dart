@@ -2,6 +2,7 @@ import 'package:CEPmobile/bloc_widgets/bloc_state_builder.dart';
 import 'package:CEPmobile/blocs/download_data/download_data_bloc.dart';
 import 'package:CEPmobile/blocs/download_data/download_data_event.dart';
 import 'package:CEPmobile/blocs/download_data/download_data_state.dart';
+import 'package:CEPmobile/global_variables/global_download.dart';
 import 'package:CEPmobile/services/service.dart';
 import 'package:CEPmobile/ui/components/ModalProgressHUDCustomize.dart';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
@@ -51,6 +52,7 @@ class _DownloadMetaDataState extends State<DownloadMetaData> {
 
   void _onSubmit() {
     downloadDataBloc.emitEvent(DownloadDataComboBoxEvent());
+    GlobalDownload.isSubmitDownload = true;
   }
 
   @override

@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:CEPmobile/GlobalUser.dart';
 import 'package:CEPmobile/ui/navigation/slide_route.dart';
 import 'package:CEPmobile/ui/screens/Home/dashboard.dart';
 import 'package:CEPmobile/ui/screens/Login/loginPage.dart';
 import 'package:CEPmobile/ui/screens/downloadData/download_main.dart';
 import 'package:CEPmobile/ui/screens/error/error.dart';
+import 'package:CEPmobile/ui/screens/profile/user_profile.dart';
 import 'package:CEPmobile/ui/screens/survey/survey.dart';
 import 'package:CEPmobile/ui/screens/announcement/announcement_screen.dart';
 import 'package:CEPmobile/ui/screens/checklist/records.dart';
@@ -67,8 +69,10 @@ class AppState extends State<Application> {
   void initState() {
     super.initState();
     final services = Services.of(context);
+    //globalUser
     authenticationBloc = new AuthenticationBloc(
         services.commonService, services.sharePreferenceService);
+    
     //DBProvider.db.checkColumn();
   }
 
@@ -106,6 +110,8 @@ class AppState extends State<Application> {
               break;
             case '/login':
               return SlideLeftRoute(page: LoginPage());
+            case '/menudashboard':
+              return SlideLeftRoute(page: MenuDashboardPage());
             case '/welcomeLogin':
               return SlideRightRoute(page: WelcomePage());
             case '/home':
@@ -157,6 +163,10 @@ class AppState extends State<Application> {
             case 'survey':
               return SlideLeftRoute(page: SurveyScreen());
               break;
+            case 'userprofile':
+              return SlideLeftRoute(page: ProfilePageDesign());
+              break;
+              
             case 'surveydetail':
               final Map<String, Object> arguments = settings.arguments;
               return SlideTopRoute(

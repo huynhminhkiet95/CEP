@@ -7,6 +7,7 @@ import 'package:CEPmobile/bloc_helpers/bloc_sinletion.dart';
 import 'package:CEPmobile/blocs/authentication/authentication_event.dart';
 import 'package:CEPmobile/blocs/authentication/authentication_state.dart';
 import 'package:CEPmobile/config/status_code.dart';
+import 'package:CEPmobile/database/DBProvider.dart';
 import 'package:CEPmobile/dtos/datalogin.dart';
 import 'package:CEPmobile/dtos/serverInfo.dart';
 import 'package:CEPmobile/globalDriverProfile.dart';
@@ -19,6 +20,7 @@ import 'package:CEPmobile/services/commonService.dart';
 import 'package:CEPmobile/services/sharePreference.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthenticationBloc
     extends BlocEventStateBase<AuthenticationEvent, AuthenticationState> {
@@ -53,11 +55,17 @@ class AuthenticationBloc
       // the network is ready to test
       var server = new ServerInfo();
       switch (event.serverCode) {
-        case "DEV":
-          server.serverAddress = "https://staff-api.cep.org.vn/";
-          server.serverApi = "https://staff-api.cep.org.vn/";
+        case "DEV-VPN":
+          server.serverAddress = "http://10.10.0.36:8889/";
+          server.serverApi = "http://10.10.0.36:8889/";
           server.serverCode = event.serverCode;
-          server.serverNotification = "https://staff-api.cep.org.vn/";
+          server.serverNotification = "http://10.10.0.36:8889/";
+          break;
+        case "DEV":
+          server.serverAddress = "https://staffapi.cep.org.vn/";
+          server.serverApi = "https://staffapi.cep.org.vn/";
+          server.serverCode = event.serverCode;
+          server.serverNotification = "https://staffapi.cep.org.vn/";
           break;
         case "PROD":
           server.serverAddress = "http://10.10.0.36:8889/";
@@ -76,18 +84,21 @@ class AuthenticationBloc
           ._commonService
           .getToken(dataToken)
           .then((response) => response);
-      if (token != null || token.body.isEmpty != true) {
+      if (token != null) {
         if (token.statusCode == StatusCodeConstants.OK) {
           var jsonBodyToken = json.decode(token.body);
           if (jsonBodyToken["isSuccessed"] == true) {
             if (jsonBodyToken["token"] != null) {
-              globalUser.settoken = jsonBodyToken["token"];
-              globalUser.setUserName = event.userName;
+              this._sharePreferenceService.saveToken(jsonBodyToken["token"]);
+              // globalUser.settoken = jsonBodyToken["token"];
+              // globalUser.setUserName = event.userName;
               List responses = await Future.wait(
                   [getUserInfo(event.userName), getUserRoles(event.userName)]);
               if (responses != null &&
                   (responses[0] is UserInfo || responses[0] != null) &&
                   (responses[1] is UserRole || responses[1] != null)) {
+                await DBProvider.db.newUserInfo(responses[0]);
+                await DBProvider.db.newUserRole(responses[1]);
                 globalUser.setUserInfo = responses[0];
                 globalUser.setUserRoles = responses[1];
                 yield AuthenticationState.authenticated(event.isRemember,
@@ -114,11 +125,21 @@ class AuthenticationBloc
             textColor: Colors.white,
           );
         }
+      } else {
+        yield AuthenticationState.failedByUser(currentState);
+        Fluttertoast.showToast(
+          msg: allTranslations.text("ServerNotFound"),
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM, // also possible "TOP" and "CENTER"
+          backgroundColor: Colors.red[300].withOpacity(0.7),
+          textColor: Colors.white,
+        );
       }
     }
 
     if (event is AuthenticationEventLogout) {
       globalUser.settoken = "";
+      this._sharePreferenceService.saveToken("");
       if (currentState.isRemember) {
         yield AuthenticationState.notAuthenticated(currentState.userName,
             currentState.password, currentState.isRemember);

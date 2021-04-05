@@ -233,7 +233,6 @@ class CommonService {
   }
 
   Future<Response> downloadDataComboBox() {
-
     return _httpBase.httpPostTokenNotBody(ServiceName.GetComboBoxValueChoTBD.toString());
   }
 }

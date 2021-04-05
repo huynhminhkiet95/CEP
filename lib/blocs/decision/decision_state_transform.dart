@@ -1,3 +1,4 @@
+import 'package:CEPmobile/GlobalUser.dart';
 import 'package:CEPmobile/bloc_helpers/bloc_state_transform_base.dart';
 import 'package:CEPmobile/blocs/authentication/authentication_bloc.dart';
 import 'package:CEPmobile/blocs/authentication/authentication_state.dart';
@@ -21,10 +22,22 @@ class DecisionStateTransform
   //
   factory DecisionStateTransform.init(AuthenticationBloc blocIn) {
     AuthenticationState authenticationState = blocIn.lastState;
-    DecisionStateAction action =
-        authenticationState == null || !authenticationState.isAuthenticated
-            ? DecisionStateAction.routeToPage(WelcomePage())
-            : DecisionStateAction.routeToPage(MenuDashboardPage());
+    DecisionStateAction action;
+    String token = globalUser.gettoken;
+    
+    if(authenticationState == null || !authenticationState.isAuthenticated) {
+      action = DecisionStateAction.routeToPage(WelcomePage());
+    }
+    else{
+      action = DecisionStateAction.routeToPage(MenuDashboardPage());
+    }
+    if (token != null && token != "") {
+      action = DecisionStateAction.routeToPage(MenuDashboardPage());
+    } 
+
+    // authenticationState == null || !authenticationState.isAuthenticated
+    //     ? DecisionStateAction.routeToPage(MenuDashboardPage())
+    //     : DecisionStateAction.routeToPage(MenuDashboardPage());
 
     return DecisionStateTransform(
       initialAction: action,
@@ -44,12 +57,9 @@ class DecisionStateTransform
       action = DecisionStateAction.routeToPage(MenuDashboardPage());
     } else if (newState.isAuthenticating || newState.hasFailed) {
       // do nothing
-    } 
-    else if(!newState.isAuthenticating && (newState.userIsNotExit == true || newState.hasFailed == true))
-    {
-
-    }
-    else {
+    } else if (!newState.isAuthenticating &&
+        (newState.userIsNotExit == true || newState.hasFailed == true)) {
+    } else {
       action = DecisionStateAction.routeToPage(WelcomePage());
     }
     yield action;

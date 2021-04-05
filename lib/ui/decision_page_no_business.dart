@@ -1,3 +1,4 @@
+import 'package:CEPmobile/GlobalUser.dart';
 import 'package:flutter/material.dart';
 import 'package:CEPmobile/bloc_helpers/bloc_provider.dart';
 import 'package:CEPmobile/bloc_widgets/bloc_state_transform_builder.dart';
@@ -78,6 +79,16 @@ class DecisionPageState extends State<DecisionPage> {
 
       Navigator.of(context)
           .pushAndRemoveUntil(newRoute, ModalRoute.withName('/decision'));
+
+      // String token = globalUser.gettoken;
+      // if (token == "" || token == null) {
+      //   Navigator.of(context)
+      //       .pushAndRemoveUntil(newRoute, ModalRoute.withName('/decision'));
+      // } else {
+      //   Navigator.of(context).pushAndRemoveUntil(
+      //       newRoute, ModalRoute.withName('/menudashboard'));
+      //   // Navigator.pushReplacementNamed(context, '/');
+      // }
     });
   }
 }

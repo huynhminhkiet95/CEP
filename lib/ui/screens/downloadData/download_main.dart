@@ -1,4 +1,5 @@
 import 'package:CEPmobile/config/colors.dart';
+import 'package:CEPmobile/global_variables/global_download.dart';
 import 'package:CEPmobile/ui/screens/downloadData/download_survey.dart';
 import 'package:CEPmobile/ui/screens/downloadData/download_dept.dart';
 import 'package:CEPmobile/ui/screens/downloadData/download_saving.dart';
@@ -20,6 +21,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
   int _selectedIndex = 0;
   static TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.w600);
+  bool isStatusDownLoad = false;
   List<Widget> _widgetOptions = <Widget>[
     new DownloadSurvey(),
     new DownloadDept(),
@@ -60,7 +62,10 @@ class _DownloadScreenState extends State<DownloadScreen> {
             color: Colors.white,
             size: 20,
           ),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () {
+            Navigator.pop(context, GlobalDownload.isSubmitDownload);
+            //bool a = GlobalDownload.isSubmitDownload;
+          },
         ),
         backgroundColor: ColorConstants.cepColorBackground,
         elevation: 20,

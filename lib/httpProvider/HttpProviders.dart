@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:CEPmobile/services/sharePreference.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter/services.dart';
@@ -7,10 +8,12 @@ import 'package:http/http.dart' as http;
 import 'package:CEPmobile/globalServer.dart';
 import 'package:async/async.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../GlobalUser.dart';
 
 class HttpBase {
+  
   Future<http.Response> httpGet(String url) async {
     try {
       var address = globalServer.getServerAddress;
@@ -43,7 +46,6 @@ class HttpBase {
       var result = await http.get(globalServer.getServerHub + url, headers: {
         "Content-Type": 'application/json',
       }).timeout(const Duration(seconds: 10));
-
       return result;
     } catch (e) {
       return null;
@@ -55,7 +57,6 @@ class HttpBase {
       var result = await http.put(globalServer.getServerHub + url, headers: {
         "Content-Type": 'application/json',
       }).timeout(const Duration(seconds: 10));
-
       return result;
     } catch (e) {
       return null;
@@ -69,7 +70,6 @@ class HttpBase {
           headers: {
             "Content-Type": 'application/json'
           }).timeout(const Duration(seconds: 10));
-
       return result;
     } catch (e) {
       return null;
@@ -158,6 +158,7 @@ class HttpBase {
   }
 
   Future<http.Response> httpPostToken(String url, dynamic body) async {
+    //String aAAAAAAA = await _sharePreferenceService.getToken();
     String token = globalUser.gettoken;
     var address = globalServer.getServerAddress;
     http.Response result;
@@ -202,20 +203,18 @@ class HttpBase {
       response = await http
           .post(address,
               headers: {"Content-Type": "application/json"}, body: jsonBody)
-         ;
+          .timeout(const Duration(seconds: 10));
       return response;
     } catch (e) {
-      throw Exception(e);
+      //throw Exception(e);
+      return response;
     }
   }
 
   Future<http.Response> postRequestTest(String url, dynamic body) async {
     var response;
-    var body1 = {
-    "sdt" : '0969875777',
-    "password" : '123321'
-    };
-    
+    var body1 = {"sdt": '0969875777', "password": '123321'};
+
     try {
       var address = 'https://customer-api.cep.org.vn/api/TraCuuTietKiem/Login';
       var jsonBody = json.encode(body1);

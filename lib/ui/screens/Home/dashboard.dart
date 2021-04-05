@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:CEPmobile/GlobalUser.dart';
 import 'package:CEPmobile/bloc_helpers/bloc_provider.dart';
 import 'package:CEPmobile/blocs/authentication/authentication_bloc.dart';
@@ -66,19 +68,44 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
     _authenticationBloc.emitEvent(AuthenticationEventLogout());
   }
 
+  Future<bool> _onWillPop() {
+    return showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Are you sure?'),
+            content: Text('Do you want to exit an App'),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text('No'),
+              ),
+              FlatButton(
+                onPressed: () => exit(0),
+                /*Navigator.of(context).pop(true)*/
+                child: Text('Yes'),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     screenHeight = size.height;
     screenWidth = size.width;
 
-    return Scaffold(
-      backgroundColor: ColorConstants.cepColorBackground,
-      body: Stack(
-        children: <Widget>[
-          menu(context),
-          dashboard(context),
-        ],
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        backgroundColor: ColorConstants.cepColorBackground,
+        body: Stack(
+          children: <Widget>[
+            menu(context),
+            dashboard(context),
+          ],
+        ),
       ),
     );
   }
@@ -108,6 +135,9 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
                   SizedBox(
                     height: 60,
                     child: ListTile(
+                      onTap: (){
+                        Navigator.pushNamed(context, 'userprofile');
+                      },
                       title: Text(
                         globalUser.getUserInfo == null
                             ? ''
@@ -118,7 +148,9 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
                       subtitle: Row(
                         children: <Widget>[
                           Icon(Icons.verified_user, color: Colors.yellowAccent),
-                          Text(" Mã số " + globalUser.getUserInfo.masoql,
+                          Text( globalUser.getUserInfo == null
+                            ? ''
+                            : " Mã số "  + globalUser.getUserInfo.masoql,
                               style: TextStyle(color: Colors.white))
                         ],
                       ),
@@ -129,6 +161,7 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
                           color: Colors.white,
                           size: 0.099 * screenWidth,
                         ),
+                        
                       ),
                     ),
                   ),
@@ -331,7 +364,7 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
                         Text("Màn Hình Chính",
                             style:
                                 TextStyle(fontSize: 24, color: Colors.white)),
-                        Icon(Icons.settings, color: Colors.white),
+                        Icon(Icons.notifications, color: Colors.white),
                       ],
                     ),
                     

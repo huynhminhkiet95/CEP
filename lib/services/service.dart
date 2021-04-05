@@ -29,7 +29,11 @@ class Services {
     await sharePreferenceService.getRememberUser();
     await sharePreferenceService.getServerInfo();
     await sharePreferenceService.getDriverProfile();
-
+    await sharePreferenceService.getToken();
+    await sharePreferenceService.getUserInfo();
+    await sharePreferenceService.getUserRole();
+    await sharePreferenceService.getMetadata();
+  
     return Services(sharedPrefs, httpBase, commonService,
         sharePreferenceService, documentService);
   }
@@ -38,7 +42,6 @@ class Services {
     final provider = context
         .ancestorInheritedElementForWidgetOfExactType(ServicesProvider)
         .widget as ServicesProvider;
-
     return provider.services;
   }
 }
