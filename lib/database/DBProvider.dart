@@ -76,6 +76,15 @@ class DBProvider {
           "chiPhiKhac INTEGER,"
           "chiTraTienVayHangThang INTEGER,"
           "tichLuyTangThemHangThang INTEGER,"
+          "nguonVay1 TEXT,"
+          "sotienVay1 INTEGER,"
+          "lyDoVay1 TEXT,"
+          "thoiDiemTatToan1 TEXT,"
+          "bienPhapThongNhat1 TEXT,"
+          "nguonVay2 TEXT,"
+          "sotienVay2 INTEGER,"
+          "lyDoVay2 TEXT,"
+          "thoiDiemTatToan2 TEXT,"
           "bienPhapThongNhat2 TEXT,"
           "thanhVienThuocDien TEXT,"
           "maSoHoNgheo TEXT,"
@@ -232,6 +241,15 @@ class DBProvider {
                                     chiPhiKhac,
                                     chiTraTienVayHangThang,
                                     tichLuyTangThemHangThang,
+                                    nguonVay1,
+                                    sotienVay1,
+                                    lyDoVay1,
+                                    thoiDiemTatToan1,
+                                    bienPhapThongNhat1,
+                                    nguonVay2,
+                                    sotienVay2,
+                                    lyDoVay2,
+                                    thoiDiemTatToan2,
                                     bienPhapThongNhat2,
                                     thanhVienThuocDien,
                                     maSoHoNgheo,
@@ -318,6 +336,15 @@ class DBProvider {
                         ${model.chiPhiKhac},
                         ${model.chiTraTienVayHangThang},
                         ${model.tichLuyTangThemHangThang},
+                        "${model.nguonVay1}",
+                        ${model.sotienVay1},
+                        "${model.lyDoVay1}",
+                        "${model.thoiDiemTatToan1}",
+                        "${model.bienPhapThongNhat1}",
+                        "${model.nguonVay2}",
+                        ${model.sotienVay2},
+                        "${model.lyDoVay2}",
+                        "${model.thoiDiemTatToan2}",
                         "${model.bienPhapThongNhat2}",
                         "${model.thanhVienThuocDien}",
                         "${model.maSoHoNgheo}",
@@ -424,6 +451,15 @@ class DBProvider {
                                     chiPhiKhac,
                                     chiTraTienVayHangThang,
                                     tichLuyTangThemHangThang,
+                                    nguonVay1,
+                                    sotienVay1,
+                                    lyDoVay1,
+                                    thoiDiemTatToan1,
+                                    bienPhapThongNhat1,
+                                    nguonVay2,
+                                    sotienVay2,
+                                    lyDoVay2,
+                                    thoiDiemTatToan2,
                                     bienPhapThongNhat2,
                                     thanhVienThuocDien,
                                     maSoHoNgheo,
@@ -510,6 +546,15 @@ class DBProvider {
                         ${model.chiPhiKhac},
                         ${model.chiTraTienVayHangThang},
                         ${model.tichLuyTangThemHangThang},
+                        "${model.nguonVay1}",
+                        ${model.sotienVay1},
+                        "${model.lyDoVay1}",
+                        "${model.thoiDiemTatToan1}",
+                        "${model.bienPhapThongNhat1}",
+                        "${model.nguonVay2}",
+                        ${model.sotienVay2},
+                        "${model.lyDoVay2}",
+                        "${model.thoiDiemTatToan2}",
                         "${model.bienPhapThongNhat2}",
                         "${model.thanhVienThuocDien}",
                         "${model.maSoHoNgheo}",

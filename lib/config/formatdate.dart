@@ -135,12 +135,19 @@ class FormatDateConstants {
   }
 
   static DateTime convertJsonDateToDateTime(String jsonDate) {
-    if (jsonDate.isEmpty) {
+    if (jsonDate.length != 19) {
+      return null;
+    }
+    if (jsonDate == null || jsonDate.isEmpty) {
       return null;
     }
     jsonDate = jsonDate.replaceAll("T", " ");
     DateTime datetime = new DateFormat("yyyy-MM-dd hh:mm:ss").parse(jsonDate);
     return datetime;
+  }
+
+  static String convertDateTimeToStringT(DateTime dateTime) {
+     return DateFormat('yyyy-MM-ddT00:00:00').format(dateTime);
   }
 
   static String convertDateTimeToDDMMYYYY(String jsonDate) {
