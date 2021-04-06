@@ -1,5 +1,6 @@
 import 'package:CEPmobile/bloc_helpers/bloc_event_state.dart';
 import 'package:CEPmobile/models/download_data/survey_info.dart';
+import 'package:flutter/material.dart';
 
 abstract class SurveyEvent extends BlocEvent {
   SurveyEvent();
@@ -11,5 +12,6 @@ class LoadSurveyEvent extends SurveyEvent {
 
 class UpdateSurveyEvent extends SurveyEvent {
   final SurveyInfo surveyInfo;
-  UpdateSurveyEvent(this.surveyInfo) : super();
+  final BuildContext context;
+  UpdateSurveyEvent(this.surveyInfo, this.context) : super();
 }

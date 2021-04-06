@@ -147,7 +147,10 @@ class FormatDateConstants {
   }
 
   static String convertDateTimeToStringT(DateTime dateTime) {
-     return DateFormat('yyyy-MM-ddT00:00:00').format(dateTime);
+    if (dateTime == null) {
+      return "";
+    }
+    return DateFormat('yyyy-MM-ddT00:00:00').format(dateTime);
   }
 
   static String convertDateTimeToDDMMYYYY(String jsonDate) {

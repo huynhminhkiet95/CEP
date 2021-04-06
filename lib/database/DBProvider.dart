@@ -403,7 +403,7 @@ class DBProvider {
     int rs = 0;
     final db = await database;
     try {
-      await db.rawDelete('DELETE FROM KhaoSat WHERE id = ${model.id} and idHistoryKhaoSat = ${model.idHistoryKhaoSat}');
+      int rsDelete = await db.rawDelete('DELETE FROM KhaoSat WHERE id = ${model.id}');
       int checkExistsData = Sqflite.firstIntValue(await db.rawQuery(
           "SELECT COUNT(*) FROM KhaoSat WHERE id=${model.id} and idHistoryKhaoSat= ${model.idHistoryKhaoSat}"));
       if (checkExistsData == 0) {
@@ -619,7 +619,7 @@ class DBProvider {
 
   getAllKhaoSat() async {
     final db = await database;
-    var res = await db.query("KhaoSat");
+    var res = await db.query("KhaoSat",orderBy: "id ASC");
     List<SurveyInfo> list =
         res.isNotEmpty ? res.map((c) => SurveyInfo.fromMap(c)).toList() : [];
     return list;

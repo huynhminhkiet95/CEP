@@ -64,6 +64,10 @@ class SharePreferenceService {
     globalUser.setListComboboxModel = await DBProvider.db.getAllMetaDataForTBD();
   }
 
+  Future<void> getSurveyList() async {
+    globalUser.setListSurveyGlobal = await DBProvider.db.getAllKhaoSat();
+  }
+
   Future<void> updateServerInfo(ServerInfo serverInfo) async {
     share.setString(KeyConstants.serverCode, serverInfo.serverCode);
     share.setString(KeyConstants.addressServer, serverInfo.serverAddress);

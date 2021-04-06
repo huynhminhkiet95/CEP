@@ -66,6 +66,7 @@ dependencies:
   ff_navigation_bar: ^0.1.5
   convex_bottom_bar: ^2.7.1+2
   cupertino_radio_choice: 1.0.0+1
+  flutter_animated_dialog: ^1.2.0
 
 dev_dependencies:
   flutter_test:

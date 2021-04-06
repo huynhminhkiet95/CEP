@@ -1,3 +1,4 @@
+import 'package:CEPmobile/models/download_data/survey_info.dart';
 import 'package:CEPmobile/models/users/user_role.dart';
 import 'package:CEPmobile/models/historyscreen/history_screen.dart';
 
@@ -24,6 +25,7 @@ class GlobalUser {
   UserRole _userRole;
   HistoryScreen _historyScreen;
   List<ComboboxModel> _comboboxModel;
+  List<SurveyInfo> _surveyInfoGlobal;
 
   int get getId => _id;
 
@@ -91,7 +93,9 @@ class GlobalUser {
 
   List<ComboboxModel> get getListComboboxModel => _comboboxModel;
 
-  
+  set setListSurveyGlobal(List<SurveyInfo> value) => _surveyInfoGlobal = value;
+
+  List<SurveyInfo> get getListSurveyGlobal => _surveyInfoGlobal;
 
   set setUserRoles(UserRole value) => _userRole = value;
 

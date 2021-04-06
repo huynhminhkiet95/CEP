@@ -33,6 +33,7 @@ class Services {
     await sharePreferenceService.getUserInfo();
     await sharePreferenceService.getUserRole();
     await sharePreferenceService.getMetadata();
+    await sharePreferenceService.getSurveyList();
   
     return Services(sharedPrefs, httpBase, commonService,
         sharePreferenceService, documentService);

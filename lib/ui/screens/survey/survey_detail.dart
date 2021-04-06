@@ -1,7 +1,10 @@
+import 'dart:ui';
+
 import 'package:CEPmobile/bloc_widgets/bloc_state_builder.dart';
 import 'package:CEPmobile/blocs/survey/survey_state.dart';
 import 'package:CEPmobile/config/colors.dart';
 import 'package:CEPmobile/config/formatdate.dart';
+import 'package:CEPmobile/config/moneyformat.dart';
 import 'package:CEPmobile/models/download_data/comboboxmodel.dart';
 import 'package:CEPmobile/ui/components/CardCustomWidget.dart';
 import 'package:CEPmobile/ui/components/ModalProgressHUDCustomize.dart';
@@ -20,6 +23,7 @@ import 'package:CEPmobile/models/download_data/survey_info.dart';
 import 'package:CEPmobile/resources/CurrencyInputFormatter.dart';
 
 import 'package:flutter/services.dart';
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:intl/intl.dart';
 
 class SurveyDetailScreen extends StatefulWidget {
@@ -41,6 +45,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
   Services services;
   int selectedIndexKhuVuc;
   int selectedIndexTotalMonthly = 0;
+  int selectedIndexTimeOfWithdrawal = 0;
 
   ///
   List<DropdownMenuItem<String>> _surveyRespondentsModelDropdownList;
@@ -198,12 +203,31 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
   //       return buildCupertinoDatePicker(context);
   //   }
   // }
+  selectedChangeNguonVay1(String value) {
+    setState(() {
+      _capital1Value = value;
+      if (value != "0" && value != "00")
+        _animatedHeightCapital1 = 280;
+      else
+        _animatedHeightCapital1 = 0;
+    });
+  }
+
+  selectedChangeNguonVay2(String value) {
+    setState(() {
+      _capital2Value = value;
+      if (value != "0" && value != "00")
+        _animatedHeightCapital2 = 280;
+      else
+        _animatedHeightCapital2 = 0;
+    });
+  }
 
   Future<DateTime> showDateTime(DateTime selectedDate) async {
     DateTime picked = await showDatePicker(
       context: context,
       initialDate: selectedDate ?? DateTime.now(),
-      firstDate: DateTime(2000),
+      firstDate: DateTime(1900),
       lastDate: DateTime(2025),
       initialEntryMode: DatePickerEntryMode.calendar,
       initialDatePickerMode: DatePickerMode.day,
@@ -320,8 +344,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
     services = Services.of(context);
     surVeyBloc =
         new SurveyBloc(services.sharePreferenceService, services.commonService);
-    surVeyBloc.emitEvent(LoadSurveyEvent());
-    _animatedHeight1 = 60;
+    //surVeyBloc.emitEvent(LoadSurveyEvent());
     super.initState();
   }
 
@@ -329,10 +352,11 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
     SurveyInfo model = new SurveyInfo();
     model.id = widget.id;
     model.ngayXuatDanhSach = widget.surveyInfo.ngayXuatDanhSach;
-    model.ngayKhaoSat = FormatDateConstants.convertDateTimeToStringT(selectedSurveyDate);
+    model.ngayKhaoSat =
+        FormatDateConstants.convertDateTimeToStringT(selectedSurveyDate);
     model.masoCanBoKhaoSat = widget.surveyInfo.masoCanBoKhaoSat;
     model.chinhanhId = widget.surveyInfo.chinhanhId;
-    model.duanId =  widget.surveyInfo.duanId;
+    model.duanId = widget.surveyInfo.duanId;
     model.cumId = widget.surveyInfo.cumId;
     model.thanhvienId = widget.surveyInfo.thanhvienId;
     model.tinhTrangHonNhan = _maritalStatusValue;
@@ -340,33 +364,159 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
     model.khuVuc = selectedIndexKhuVuc;
     model.lanvay = widget.surveyInfo.lanvay;
     model.nguoiTraloiKhaoSat = _surveyRespondentsValue;
-    model.songuoiTrongHo = int.parse(_controllerNumberPeopleInFamily.text.isEmpty ? "0" : _controllerNumberPeopleInFamily.text);
-    model.songuoiCoviecLam = int.parse(_controllerNumberPeopleWorked.text.isEmpty ? "0" : _controllerNumberPeopleWorked.text);
+    model.songuoiTrongHo = int.parse(
+        _controllerNumberPeopleInFamily.text.isEmpty
+            ? "0"
+            : _controllerNumberPeopleInFamily.text);
+    model.songuoiCoviecLam = int.parse(
+        _controllerNumberPeopleWorked.text.isEmpty
+            ? "0"
+            : _controllerNumberPeopleWorked.text);
     model.dientichDatTrong = widget.surveyInfo.dientichDatTrong;
     model.giaTriVatNuoi = widget.surveyInfo.giaTriVatNuoi;
-    model.dungCuLaoDong = int.parse(_controllerAmountOfLaborTools.text.isEmpty ? "0" : _controllerAmountOfLaborTools.text);
-    model.phuongTienDiLai = int.parse(_controllerAmountOfVehiclesTransport.text.isEmpty ? "0" : _controllerAmountOfVehiclesTransport.text);
-    model.taiSanSinhHoat = int.parse(_controllerAmountLivingEquipment.text.isEmpty ? "0" : _controllerAmountLivingEquipment.text);
+    model.dungCuLaoDong =
+        MoneyFormat.convertCurrencyToInt(_controllerAmountOfLaborTools.text);
+    model.phuongTienDiLai = MoneyFormat.convertCurrencyToInt(
+        _controllerAmountOfVehiclesTransport.text);
+    model.taiSanSinhHoat =
+        MoneyFormat.convertCurrencyToInt(_controllerAmountLivingEquipment.text);
     model.quyenSoHuuNha = _ownershipValue;
-    model.hemTruocNha = int.parse(_controllerNumberOfAlleyNearHome.text.isEmpty ? "0" : _controllerNumberOfAlleyNearHome.text);
+    model.hemTruocNha = int.parse(_controllerNumberOfAlleyNearHome.text.isEmpty
+        ? "0"
+        : _controllerNumberOfAlleyNearHome.text);
     model.maiNha = _roofValue;
     model.tuongNha = _wallValue;
     model.nenNha = _floorValue;
-    model.dienTichNhaTinhTren1Nguoi = int.parse(_controllerAcreageOfHome.text.isEmpty ? "0" : _controllerAcreageOfHome.text);
+    model.dienTichNhaTinhTren1Nguoi = int.parse(
+        _controllerAcreageOfHome.text.isEmpty
+            ? "0"
+            : _controllerAcreageOfHome.text);
     model.dien = _powerValue;
     model.nuoc = _waterValue;
+    model.mucDichSudungVon = _controllerPurposeUseMoney.text;
+    model.soTienCanThiet = MoneyFormat.convertCurrencyToInt(
+        _controllerAmountRequiredForCapitalUsePurposes.text);
 
+    model.soTienThanhVienDaCo =
+        MoneyFormat.convertCurrencyToInt(_controllerAmountMemberHave.text);
 
-    print(model.songuoiTrongHo);
-    // model.songuoiCoviecLam = int.parse(_controllerNumberPeopleWorked.text);
-    // model.songuoiTrongHo = int.parse(_controllerNumberPeopleInFamily.text);
-    // model.songuoiTrongHo = int.parse(_controllerNumberPeopleInFamily.text);
-    // model.songuoiTrongHo = int.parse(_controllerNumberPeopleInFamily.text);
-    // model.songuoiTrongHo = int.parse(_controllerNumberPeopleInFamily.text);
-    // model.songuoiTrongHo = int.parse(_controllerNumberPeopleInFamily.text);
-    // model.songuoiTrongHo = int.parse(_controllerNumberPeopleInFamily.text);
-    //print(model.ngayKhaoSat);
-    //  surVeyBloc.emitEvent(UpdateSurveyEvent(model));
+    model.soTienCanVay =
+        MoneyFormat.convertCurrencyToInt(_controllerAmountMemberNeed.text);
+
+    model.thoiDiemSuDungVonvay = selectedTimetoUseLoanDate != null
+        ? DateFormat('MM/dd').format(selectedTimetoUseLoanDate)
+        : "";
+    model.tongVonDauTu =
+        MoneyFormat.convertCurrencyToInt(_controllerTotalAmountGetSeason.text);
+    model.thuNhapRongHangThang = MoneyFormat.convertCurrencyToInt(
+        _controllerTotalAmountMonthlyforActivityIncomeIncrease.text);
+    model.thuNhapCuaVoChong =
+        MoneyFormat.convertCurrencyToInt(_controllerIncomeOfWifeHusband.text);
+    model.thuNhapCuaCacCon =
+        MoneyFormat.convertCurrencyToInt(_controllerIncomeOfChild.text);
+
+    model.thuNhapKhac =
+        MoneyFormat.convertCurrencyToInt(_controllerIncomeOther.text);
+
+    if (selectedIndexTotalMonthly == 0) {
+      model.tongChiPhiCuaThanhvien = MoneyFormat.convertCurrencyToInt(
+          _controllerTotalMonthlyExpenses.text);
+      model.chiPhiDienNuoc = 0;
+      model.chiPhiAnUong = 0;
+      model.chiPhiHocTap = 0;
+      model.chiPhiKhac = 0;
+    } else {
+      model.tongChiPhiCuaThanhvien = 0;
+      model.chiPhiDienNuoc =
+          MoneyFormat.convertCurrencyToInt(_controllerTotalPowerAndWater.text);
+      model.chiPhiAnUong =
+          MoneyFormat.convertCurrencyToInt(_controllerTotalCharge.text);
+      model.chiPhiHocTap =
+          MoneyFormat.convertCurrencyToInt(_controllerTotalFee.text);
+      model.chiPhiKhac =
+          MoneyFormat.convertCurrencyToInt(_controllerTotalOtherCost.text);
+    }
+
+    model.chiTraTienVayHangThang = MoneyFormat.convertCurrencyToInt(
+        _controllerCostofLoanRepaymentToCEPMonthly.text);
+    model.tichLuyTangThemHangThang = MoneyFormat.convertCurrencyToInt(
+        _controllerMonthlyBalanceUseCapital.text);
+    model.nguonVay1 = _capital1Value;
+    model.sotienVay1 =
+        MoneyFormat.convertCurrencyToInt(_controllerTotalAmountCapital1.text);
+
+    model.lyDoVay1 = _reasonLoan1Value;
+    model.thoiDiemTatToan1 = selectedFinalSettlement1Date != null
+        ? DateFormat('MM/dd').format(selectedFinalSettlement1Date)
+        : "";
+    model.bienPhapThongNhat1 = _uniformMeasure1Value;
+    model.nguonVay2 = _capital2Value;
+    model.sotienVay2 =
+        MoneyFormat.convertCurrencyToInt(_controllerTotalAmountCapital2.text);
+    model.lyDoVay2 = _reasonLoan2Value;
+    model.thoiDiemTatToan2 = selectedFinalSettlement2Date != null
+        ? DateFormat('MM/dd').format(selectedFinalSettlement2Date)
+        : "";
+    model.bienPhapThongNhat2 = _uniformMeasure2Value;
+    model.thanhVienThuocDien = _typeMemberValue;
+    model.maSoHoNgheo = _controllerPoorHouseholdsCode.text;
+    model.hoTenChuHo = _controllerNameofHouseholdHead.text;
+    model.soTienGuiTietKiemMoiKy = MoneyFormat.convertCurrencyToInt(
+        _controllerSavingsDepositAmountEverytime.text);
+    model.tietKiemBatBuocXinRut =
+        MoneyFormat.convertCurrencyToInt(_controllerRequiredDeposit.text);
+    model.tietKiemTuNguyenXinRut =
+        MoneyFormat.convertCurrencyToInt(_controllerOrientationDeposit.text);
+    model.tietKiemLinhHoatXinRut =
+        MoneyFormat.convertCurrencyToInt(_controllerFlexibleDeposit.text);
+    if (selectedIndexTimeOfWithdrawal == 0) {
+      model.thoiDiemRut = "";
+    } else {
+      model.thoiDiemRut = FormatDateConstants.convertDateTimeToStringT(
+          selectedTimeOfWithdrawalDate);
+    }
+
+    model.mucVayBoSung =
+        MoneyFormat.convertCurrencyToInt(_controllerAmountAdditionalLoan.text);
+    model.mucDichVayBoSung = _additionalLoanPurposeValue;
+    model.ngayVayBoSung = FormatDateConstants.convertDateTimeToStringT(
+        selectedDateofAdditionalCapital);
+    model.ghiChu = _controllerCreditOfficerNotes.text;
+    model.soTienDuyetChovay =
+        MoneyFormat.convertCurrencyToInt(_controllerDisbursementAmount.text);
+    model.tietKiemDinhHuong = MoneyFormat.convertCurrencyToInt(
+        _controllerDisbursementAmountOrientationDeposit.text);
+    model.mucDichVay = _loanPurposeValue;
+    model.duyetChovayNgay = widget.surveyInfo.duyetChovayNgay; //??
+    model.daCapNhatVaoHoSoChovay =
+        widget.surveyInfo.daCapNhatVaoHoSoChovay; //??
+    model.tinhTrangNgheo = widget.surveyInfo.tinhTrangNgheo; //??
+    model.daDuocDuyet = widget.surveyInfo.daDuocDuyet; //??
+    model.username = widget.surveyInfo.username; //??
+    model.ngaycapnhat = widget.surveyInfo.ngaycapnhat; //??
+    model.daDuocDuyet = widget.surveyInfo.daDuocDuyet; //??
+    model.masoCanBoKhaoSatPss = widget.surveyInfo.masoCanBoKhaoSatPss; //??
+    model.sotienVayLantruoc = widget.surveyInfo.sotienVayLantruoc; //??
+    model.thoiGianTaivay = widget.surveyInfo.thoiGianTaivay; //??
+    model.songayNoquahanCaonhat = widget.surveyInfo.songayNoquahanCaonhat; //??
+    model.thoiGianKhaosatGannhat =
+        widget.surveyInfo.thoiGianKhaosatGannhat; //??
+    model.ngayTatToanDotvayTruoc =
+        widget.surveyInfo.ngayTatToanDotvayTruoc; //??
+    model.batBuocKhaosat = widget.surveyInfo.batBuocKhaosat; //??
+    model.conNo = widget.surveyInfo.conNo; //??
+    model.dichVuSgb = widget.surveyInfo.dichVuSgb; //??
+    model.moTheMoi = widget.surveyInfo.moTheMoi; //??
+    model.soTienDuyetChoVayCk = widget.surveyInfo.soTienDuyetChoVayCk; //??
+    model.gioiTinh = widget.surveyInfo.gioiTinh; //??
+    model.cmnd = widget.surveyInfo.cmnd; //??
+    model.ngaySinh = widget.surveyInfo.ngaySinh; //??
+    model.diaChi = widget.surveyInfo.diaChi; //??
+    model.thoigianthamgia = widget.surveyInfo.thoigianthamgia; //??
+    model.hoVaTen = widget.surveyInfo.hoVaTen; //??
+    model.statusCheckBox = widget.surveyInfo.statusCheckBox; //??
+    model.idHistoryKhaoSat = widget.surveyInfo.idHistoryKhaoSat; //??
+    surVeyBloc.emitEvent(UpdateSurveyEvent(model, context));
   }
 
   void loadInitData() {
@@ -495,14 +645,14 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
     _controllerNumberPeopleWorked = new TextEditingController(
         text: widget.surveyInfo.songuoiCoviecLam.toString());
 
-    _controllerAmountOfLaborTools = new TextEditingController(
-        text: widget.surveyInfo.dungCuLaoDong.toString());
+    _controllerAmountOfLaborTools.text =
+        MoneyFormat.moneyFormat(widget.surveyInfo.dungCuLaoDong.toString());
 
-    _controllerAmountOfVehiclesTransport = new TextEditingController(
-        text: widget.surveyInfo.phuongTienDiLai.toString());
+    _controllerAmountOfVehiclesTransport.text =
+        MoneyFormat.moneyFormat(widget.surveyInfo.phuongTienDiLai.toString());
 
-    _controllerAmountLivingEquipment = new TextEditingController(
-        text: widget.surveyInfo.taiSanSinhHoat.toString());
+    _controllerAmountLivingEquipment.text =
+        MoneyFormat.moneyFormat(widget.surveyInfo.taiSanSinhHoat.toString());
 
     _controllerNumberOfAlleyNearHome = new TextEditingController(
         text: widget.surveyInfo.hemTruocNha.toString());
@@ -513,54 +663,67 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
     _controllerPurposeUseMoney = new TextEditingController(
         text: widget.surveyInfo.mucDichSudungVon.toString());
 
-    _controllerAmountRequiredForCapitalUsePurposes = new TextEditingController(
-        text: widget.surveyInfo.soTienCanThiet
+    _controllerAmountRequiredForCapitalUsePurposes.text =
+        MoneyFormat.moneyFormat(widget.surveyInfo.soTienCanThiet
             .toString()); // maybe so tien can cho muc dich su dung von
 
     _controllerAmountMemberHave = new TextEditingController(
-        text: widget.surveyInfo.soTienThanhVienDaCo.toString());
+        text: MoneyFormat.moneyFormat(
+            widget.surveyInfo.soTienThanhVienDaCo.toString()));
 
     _controllerAmountMemberNeed = new TextEditingController(
-        text: widget.surveyInfo.soTienCanVay.toString());
+        text:
+            MoneyFormat.moneyFormat(widget.surveyInfo.soTienCanVay.toString()));
 
     _controllerTotalAmountGetSeason = new TextEditingController(
-        text: widget.surveyInfo.tongVonDauTu.toString());
+        text:
+            MoneyFormat.moneyFormat(widget.surveyInfo.tongVonDauTu.toString()));
 
     _controllerTotalAmountMonthlyforActivityIncomeIncrease =
         new TextEditingController(
-            text: widget.surveyInfo.thuNhapRongHangThang.toString());
+            text: MoneyFormat.moneyFormat(
+                widget.surveyInfo.thuNhapRongHangThang.toString()));
 
     _controllerIncomeOfWifeHusband = new TextEditingController(
-        text: widget.surveyInfo.thuNhapCuaVoChong.toString());
+        text: MoneyFormat.moneyFormat(
+            widget.surveyInfo.thuNhapCuaVoChong.toString()));
 
     _controllerIncomeOfChild = new TextEditingController(
-        text: widget.surveyInfo.thuNhapCuaCacCon.toString());
+        text: MoneyFormat.moneyFormat(
+            widget.surveyInfo.thuNhapCuaCacCon.toString()));
 
     _controllerIncomeOther = new TextEditingController(
-        text: widget.surveyInfo.thuNhapKhac.toString());
+        text:
+            MoneyFormat.moneyFormat(widget.surveyInfo.thuNhapKhac.toString()));
 
     _controllerTotalMonthlyExpenses = new TextEditingController(
-        text: widget.surveyInfo.tongChiPhiCuaThanhvien.toString());
+        text: MoneyFormat.moneyFormat(
+            widget.surveyInfo.tongChiPhiCuaThanhvien.toString()));
     _controllerTotalPowerAndWater = new TextEditingController(
-        text: widget.surveyInfo.chiPhiDienNuoc.toString());
+        text: MoneyFormat.moneyFormat(
+            widget.surveyInfo.chiPhiDienNuoc.toString()));
     _controllerTotalCharge = new TextEditingController(
-        text: widget.surveyInfo.chiPhiAnUong.toString());
+        text:
+            MoneyFormat.moneyFormat(widget.surveyInfo.chiPhiAnUong.toString()));
     _controllerTotalFee = new TextEditingController(
-        text: widget.surveyInfo.chiPhiHocTap.toString());
+        text:
+            MoneyFormat.moneyFormat(widget.surveyInfo.chiPhiHocTap.toString()));
     _controllerTotalOtherCost = new TextEditingController(
-        text: widget.surveyInfo.chiPhiKhac.toString());
+        text: MoneyFormat.moneyFormat(widget.surveyInfo.chiPhiKhac.toString()));
     _controllerCostofLoanRepaymentToCEPMonthly = new TextEditingController(
-        text: widget.surveyInfo.chiTraTienVayHangThang.toString());
+        text: MoneyFormat.moneyFormat(
+            widget.surveyInfo.chiTraTienVayHangThang.toString()));
     _controllerMonthlyBalanceUseCapital = new TextEditingController(
-        text: widget.surveyInfo.tichLuyTangThemHangThang.toString());
-    _controllerTotalAmountCapital1 = new TextEditingController(
-        text: widget.surveyInfo.sotienVay1 == null
-            ? ""
-            : widget.surveyInfo.sotienVay1.toString());
+        text: MoneyFormat.moneyFormat(
+            widget.surveyInfo.tichLuyTangThemHangThang.toString()));
+    _controllerTotalAmountCapital1.text =
+        MoneyFormat.moneyFormat(widget.surveyInfo.sotienVay1.toString());
+
+    // = new TextEditingController(text: widget.surveyInfo.sotienVay1 == null? "": widget.surveyInfo.sotienVay1.toString());
     _controllerTotalAmountCapital2 = new TextEditingController(
         text: widget.surveyInfo.sotienVay2 == null
             ? ""
-            : widget.surveyInfo.sotienVay2.toString());
+            : MoneyFormat.moneyFormat(widget.surveyInfo.sotienVay2.toString()));
     _controllerPoorHouseholdsCode = new TextEditingController(
         text: widget.surveyInfo.maSoHoNgheo == null
             ? ""
@@ -572,25 +735,30 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
     _controllerSavingsDepositAmountEverytime = new TextEditingController(
         text: widget.surveyInfo.soTienGuiTietKiemMoiKy == null
             ? ""
-            : widget.surveyInfo.soTienGuiTietKiemMoiKy.toString());
+            : MoneyFormat.moneyFormat(
+                widget.surveyInfo.soTienGuiTietKiemMoiKy.toString()));
     _controllerRequiredDeposit = new TextEditingController(
         text: widget.surveyInfo.tietKiemBatBuocXinRut == null
             ? ""
-            : widget.surveyInfo.tietKiemBatBuocXinRut.toString());
+            : MoneyFormat.moneyFormat(
+                widget.surveyInfo.tietKiemBatBuocXinRut.toString()));
     _controllerOrientationDeposit = new TextEditingController(
         text: widget.surveyInfo.tietKiemTuNguyenXinRut == null
             ? ""
-            : widget.surveyInfo.tietKiemTuNguyenXinRut.toString());
+            : MoneyFormat.moneyFormat(
+                widget.surveyInfo.tietKiemTuNguyenXinRut.toString()));
 
     _controllerFlexibleDeposit = new TextEditingController(
         text: widget.surveyInfo.tietKiemLinhHoatXinRut == null
             ? ""
-            : widget.surveyInfo.tietKiemLinhHoatXinRut.toString());
+            : MoneyFormat.moneyFormat(
+                widget.surveyInfo.tietKiemLinhHoatXinRut.toString()));
 
     _controllerAmountAdditionalLoan = new TextEditingController(
         text: widget.surveyInfo.mucVayBoSung == null
             ? ""
-            : widget.surveyInfo.mucVayBoSung.toString());
+            : MoneyFormat.moneyFormat(
+                widget.surveyInfo.mucVayBoSung.toString()));
 
     _controllerCreditOfficerNotes = new TextEditingController(
         text: widget.surveyInfo.ghiChu == null
@@ -600,12 +768,29 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
     _controllerDisbursementAmount = new TextEditingController(
         text: widget.surveyInfo.soTienDuyetChovay == null
             ? ""
-            : widget.surveyInfo.soTienDuyetChovay.toString());
+            : MoneyFormat.moneyFormat(
+                widget.surveyInfo.soTienDuyetChovay.toString()));
 
     _controllerDisbursementAmountOrientationDeposit = new TextEditingController(
         text: widget.surveyInfo.tietKiemDinhHuong == null
             ? ""
-            : widget.surveyInfo.tietKiemDinhHuong.toString());
+            : MoneyFormat.moneyFormat(
+                widget.surveyInfo.tietKiemDinhHuong.toString()));
+
+    if (widget.surveyInfo.tongChiPhiCuaThanhvien == 0)
+      selectedIndexTotalMonthly = 1;
+    else
+      selectedIndexTotalMonthly = 0;
+
+    if (widget.surveyInfo.thoiDiemRut == "") {
+      selectedIndexTimeOfWithdrawal = 0;
+    } else {
+      selectedIndexTimeOfWithdrawal = 1;
+    }
+    selectedChangeNguonVay1(_capital1Value);
+    selectedChangeNguonVay2(_capital2Value);
+    changeIndexTotalMonthlyRadioButton(selectedIndexTotalMonthly);
+    changeIndexTimeOfWithdrawalRadioButton(selectedIndexTimeOfWithdrawal);
   }
 
   _onChangeSurveyRespondentsModelDropdown(String surveyRespondentsModel) {
@@ -647,7 +832,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
 
   void changeIndexTimeOfWithdrawalRadioButton(int index) {
     setState(() {
-      selectedIndexTotalMonthly = index;
+      selectedIndexTimeOfWithdrawal = index;
       if (index == 1) {
         _animatedHeightTimeOfWithdrawal = 60;
       } else {
@@ -700,7 +885,36 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                           size: 25,
                         ),
                         onPressed: () {
-                          _onSubmit();
+                          showAnimatedDialog(
+                            context: context,
+                            barrierDismissible: true,
+                            builder: (BuildContext context) {
+                              return ClassicGeneralDialogWidget(
+                                positiveText: "Đồng Ý",
+                                negativeText: "Hủy",
+                                contentText:
+                                    "Bạn có muốn lưu dữ liệu khảo sát ?",
+                                negativeTextStyle:
+                                    TextStyle(color: Colors.grey, fontSize: 14),
+                                positiveTextStyle: TextStyle(
+                                    color: ColorConstants.cepColorBackground,
+                                    fontSize: 14),
+                                onPositiveClick: () {
+                                  Navigator.of(context).pop();
+
+                                  _onSubmit();
+                                },
+                                onNegativeClick: () {
+                                  Navigator.of(context).pop();
+                                },
+                              );
+                            },
+                            animationType:
+                                DialogTransitionType.slideFromTopFade,
+                            curve: Curves.fastOutSlowIn,
+                            duration: Duration(milliseconds: 500),
+                          );
+                          // _onSubmit();
                           //Navigator.pop(context, "OK-ID");
                         })
                   ],
@@ -1407,7 +1621,8 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                         textStyleTextFieldCEP,
                                                     decoration:
                                                         inputDecorationTextFieldCEP(
-                                                            "Nhập số (m2)"),
+                                                            "Nhập...",
+                                                            suffixText: "(m2)"),
                                                     keyboardType:
                                                         TextInputType.number,
                                                     inputFormatters: <
@@ -1524,7 +1739,9 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                         textStyleTextFieldCEP,
                                                     decoration:
                                                         inputDecorationTextFieldCEP(
-                                                            "Nhập số (m2/người)"),
+                                                            "Nhập số",
+                                                            suffixText:
+                                                                "(m2/người)"),
                                                     keyboardType:
                                                         TextInputType.number,
                                                     inputFormatters: <
@@ -2327,16 +2544,8 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                     dropdownMenuItemList:
                                                         _capitalModelDropdownList,
                                                     onChanged: (value) {
-                                                      setState(() {
-                                                        _capital1Value = value;
-                                                        if (value != "0" &&
-                                                            value != "00")
-                                                          _animatedHeightCapital1 =
-                                                              280;
-                                                        else
-                                                          _animatedHeightCapital1 =
-                                                              0;
-                                                      });
+                                                      selectedChangeNguonVay1(
+                                                          value);
                                                     },
                                                     value: _capital1Value,
                                                     width: screenWidth * 1,
@@ -2550,16 +2759,8 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                     dropdownMenuItemList:
                                                         _capitalModelDropdownList,
                                                     onChanged: (value) {
-                                                      setState(() {
-                                                        _capital2Value = value;
-                                                        if (value != "0" &&
-                                                            value != "00")
-                                                          _animatedHeightCapital2 =
-                                                              280;
-                                                        else
-                                                          _animatedHeightCapital2 =
-                                                              0;
-                                                      });
+                                                      selectedChangeNguonVay2(
+                                                          value);
                                                     },
                                                     value: _capital2Value,
                                                     width: screenWidth * 1,
@@ -3473,13 +3674,13 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
       onPressed: () => changeIndexTimeOfWithdrawalRadioButton(index),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       borderSide: BorderSide(
-          color: selectedIndexTotalMonthly == index
+          color: selectedIndexTimeOfWithdrawal == index
               ? ColorConstants.cepColorBackground
               : Colors.grey),
       child: Text(
         txt,
         style: TextStyle(
-            color: selectedIndexTotalMonthly == index
+            color: selectedIndexTimeOfWithdrawal == index
                 ? ColorConstants.cepColorBackground
                 : Colors.grey),
       ),

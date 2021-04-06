@@ -44,7 +44,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
   }
 
   SurveyStream surveyStream;
-  Widget getItemListView(List<SurveyInfo> listSurvey) {
+  Widget getItemListView() {
+    List<SurveyInfo> listSurvey = globalUser.getListSurveyGlobal;
     for (var item in listSurvey) {
       var findIndex = checkBoxSurvey.indexWhere((e) => e.id == item.id);
       if (findIndex == -1) {
@@ -62,7 +63,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
         return InkWell(
           onTap: () {
             List<ComboboxModel> listCombobox = globalUser.getListComboboxModel;
-
+            List<SurveyInfo> listSurveyDetail = globalUser.getListSurveyGlobal;
             if (listCombobox == null || listCombobox.length == 0) {
               Navigator.pushNamed(context, 'download', arguments: {
                 'selectedIndex': 4,
@@ -75,10 +76,21 @@ class _SurveyScreenState extends State<SurveyScreen> {
               Navigator.pushNamed(context, 'surveydetail', arguments: {
                 'id': listSurvey[i].id,
                 'metadata': listCombobox,
-                'surveydetail': listSurvey[i]
-              }).then((value) => setState(() {
-                    //   cumID = value;
-                  }));
+                'surveydetail': listSurveyDetail[i]
+              }).then((value) {
+                //String a = value;
+                if (value is List<SurveyInfo>) {
+                 
+                  setState(() {
+                     listSurvey = value;
+                  });
+                }
+                
+              });
+              // setState(() {
+              //       String a = value;
+              //    //   listSurvey = value;
+              //     }));
             }
           },
           child: Container(
@@ -126,24 +138,11 @@ class _SurveyScreenState extends State<SurveyScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Card(
-                                  elevation: 3,
-                                  color: Colors.red,
-                                  child: Container(
-                                    height: 20,
-                                    width: 80,
-                                    child: Text(
-                                      "Đã Khảo Sát",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14,
-                                          color: Colors.white),
-                                    ),
-                                  )),
-                              Card(
+                          Container(child: Builder(builder: (context) {
+                            Widget cardBatBuoc = Container();
+                            Widget cardkhaosat = Container();
+                            if (listSurvey[i].batBuocKhaosat == 1) {
+                              cardBatBuoc = Card(
                                   elevation: 3,
                                   color: Colors.red[900],
                                   child: Container(
@@ -156,9 +155,52 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                           fontSize: 14,
                                           color: Colors.white),
                                     ),
-                                  )),
-                            ],
-                          ),
+                                  ));
+                            }
+
+                            if (listSurvey[i].ghiChu.length > 0 && listSurvey[i].soTienDuyetChovay > 0) {
+                              cardkhaosat = Card(
+                                  elevation: 3,
+                                  color: Colors.red,
+                                  child: Container(
+                                    padding: EdgeInsets.only(right: 5, left: 5),
+                                    height: 20,
+                                    width: 90,
+                                    child: Text(
+                                      "Đã Khảo Sát",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                          color: Colors.white),
+                                    ),
+                                  ));
+                            } else {
+                              cardkhaosat = Card(
+                                  elevation: 3,
+                                  color: Colors.grey,
+                                  child: Container(
+                                    padding: EdgeInsets.only(
+                                        right: 5, left: 5, top: 2),
+                                    height: 20,
+                                    width: 103,
+                                    child: Text(
+                                      "Chưa Khảo Sát",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                          color: Colors.white),
+                                    ),
+                                  ));
+                            }
+
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                cardkhaosat,
+                                cardBatBuoc,
+                              ],
+                            );
+                          })),
                           Container(
                             padding: EdgeInsets.only(left: 4),
                             child: Text(
@@ -536,8 +578,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                       inAsyncCall: state?.isLoading ?? false,
                                       child: Padding(
                                           padding: const EdgeInsets.all(2.0),
-                                          child: getItemListView(
-                                              surveyStream.listSurvey)),
+                                          child: getItemListView()),
                                     ))
                               ],
                             ),
