@@ -4,4 +4,5 @@ class StatusCodeConstants {
   static const int BAD_GATEWAY = 502;
   static const int FORBIDDEN = 403;
   static const int Internal_Server_Error = 500;
+  static const int Unauthorized = 401;
 }

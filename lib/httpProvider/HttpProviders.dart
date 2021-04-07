@@ -158,7 +158,6 @@ class HttpBase {
   }
 
   Future<http.Response> httpPostToken(String url, dynamic body) async {
-    //String aAAAAAAA = await _sharePreferenceService.getToken();
     String token = globalUser.gettoken;
     var address = globalServer.getServerAddress;
     http.Response result;
@@ -216,7 +215,7 @@ class HttpBase {
     var body1 = {"sdt": '0969875777', "password": '123321'};
 
     try {
-      var address = 'https://customer-api.cep.org.vn/api/TraCuuTietKiem/Login';
+      var address = 'https://testapi.cep.org.vn/api/Users/Login';
       var jsonBody = json.encode(body1);
       response = await http
           .post(address,

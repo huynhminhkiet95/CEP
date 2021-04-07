@@ -57,7 +57,7 @@ class _DownloadSavingState extends State<DownloadSaving> {
                 children: [
                   
                   Padding(
-                    padding: const EdgeInsets.only(left: 60, right: 60),
+                    padding: const EdgeInsets.only(left: 40, right: 40),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -77,28 +77,49 @@ class _DownloadSavingState extends State<DownloadSaving> {
                               ),
                             )),
                         Container(
-                          height: 30,
-                          width: 100,
-                          child: TextField(
-                            decoration: InputDecoration(
-                              contentPadding:
-                                  EdgeInsets.fromLTRB(0.0, 15.0, 20.0, 15.0),
-                              labelStyle: new TextStyle(color: Colors.blue),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.blue),
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.red),
-                              ),
-                            ),
-                            style: TextStyle(fontSize: 14),
-                            focusNode: AlwaysDisabledFocusNode(),
-                            controller: _textDateEditingController,
-                            onTap: () {
-                              _selectDate(context);
-                            },
-                          ),
-                        ),
+                                  height: 35,
+                                  width: size.width * 0.36,
+                                  child: InkWell(
+                                    child: Container(
+                                      width: screenWidth * 1,
+                                      height: 40,
+                                      padding: EdgeInsets.only(
+                                          top: 10,
+                                          bottom: 10,
+                                          left: 10,
+                                          right: 10),
+                                      decoration: BoxDecoration(
+                                          border: Border(
+                                              bottom: BorderSide(
+                                                  color: Colors.blue)),
+                                          color: Colors.white),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            selectedDate != null
+                                                ? "${selectedDate.toLocal()}"
+                                                    .split(' ')[0]
+                                                : "",
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                color:Colors.blue),
+                                          ),
+                                          SizedBox(
+                                            width: 20.0,
+                                          ),
+                                          Icon(
+                                            Icons.calendar_today,
+                                            size: 17,
+                                            color: Colors.blue,
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    onTap: () => _selectDate(context),
+                                  ),
+                                ),
                       ],
                     ),
                   ),

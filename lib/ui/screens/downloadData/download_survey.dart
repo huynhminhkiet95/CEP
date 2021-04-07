@@ -3,6 +3,7 @@ import 'package:CEPmobile/GlobalUser.dart';
 import 'package:CEPmobile/bloc_widgets/bloc_state_builder.dart';
 import 'package:CEPmobile/blocs/download_data/download_data_event.dart';
 import 'package:CEPmobile/blocs/download_data/download_data_state.dart';
+import 'package:CEPmobile/config/colors.dart';
 import 'package:CEPmobile/ui/components/ModalProgressHUDCustomize.dart';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
@@ -56,13 +57,15 @@ class _DownloadSurveyState extends State<DownloadSurvey> {
   }
 
   void _onSubmit() {
-      downloadDataBloc.emitEvent(LoadDownloadDataEvent(
-          chiNhanhID: globalUser.getUserInfo == null ? '' : globalUser.getUserInfo.chiNhanhID,
-          //chiNhanhID: 4,
-          cumID: _textCumIDAutoComplete.text.toString(),
-          ngayxuatDS: _textDateEditingController.text.toString(),
-          //masoql: globalUser.getUserInfo == null ? '' : globalUser.getUserInfo.masoql
-          masoql: globalUser.getUserInfo.masoql.toString()));
+    downloadDataBloc.emitEvent(LoadDownloadDataEvent(
+        chiNhanhID: globalUser.getUserInfo == null
+            ? ''
+            : globalUser.getUserInfo.chiNhanhID,
+        //chiNhanhID: 4,
+        cumID: _textCumIDAutoComplete.text.toString(),
+        ngayxuatDS: _textDateEditingController.text.toString(),
+        //masoql: globalUser.getUserInfo == null ? '' : globalUser.getUserInfo.masoql
+        masoql: globalUser.getUserInfo.masoql.toString()));
   }
 
   @override
@@ -93,17 +96,15 @@ class _DownloadSurveyState extends State<DownloadSurvey> {
                       child: Column(
                         children: [
                           Padding(
-                            padding:
-                                const EdgeInsets.only(left: 60, right: 60),
+                            padding: const EdgeInsets.only(left: 40, right: 40),
                             child: Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Card(
                                     elevation: 4.0,
                                     child: Container(
                                       height: 30,
-                                      width: 90,
+                                      width: size.width * 0.2,
                                       child: Center(
                                         child: Text(
                                           "Cụm ID",
@@ -116,16 +117,18 @@ class _DownloadSurveyState extends State<DownloadSurvey> {
                                     )),
                                 Container(
                                   height: 30,
-                                  width: 150,
+                                  width: size.width * 0.55,
                                   child: Center(
                                     child: SimpleAutoCompleteTextField(
-                                        style: TextStyle(fontSize: 14),
+                                        style: TextStyle(fontSize: 14, color: Colors.blue),
                                         key: key,
                                         suggestions: [
                                           "B147",
                                           "B148",
                                           "B175",
+                                          "B067"
                                         ],
+                                        
                                         decoration: decorationTextFieldCEP,
                                         controller: _textCumIDAutoComplete,
                                         textSubmitted: (text) {
@@ -141,17 +144,15 @@ class _DownloadSurveyState extends State<DownloadSurvey> {
                             height: 10,
                           ),
                           Padding(
-                            padding:
-                                const EdgeInsets.only(left: 60, right: 60),
+                            padding: const EdgeInsets.only(left: 40, right: 40),
                             child: Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Card(
                                     elevation: 4.0,
                                     child: Container(
                                       height: 30,
-                                      width: 150,
+                                      width: size.width * 0.4,
                                       child: Center(
                                         child: Text(
                                           "Ngày Xuất Danh Sách",
@@ -163,30 +164,47 @@ class _DownloadSurveyState extends State<DownloadSurvey> {
                                       ),
                                     )),
                                 Container(
-                                  height: 30,
-                                  width: 100,
-                                  child: TextFormField(
-                                   
-                                    decoration: InputDecoration(
-                                      contentPadding: EdgeInsets.fromLTRB(
-                                          0.0, 15.0, 20.0, 15.0),
-                                      labelStyle:
-                                          new TextStyle(color: Colors.blue),
-                                      enabledBorder: UnderlineInputBorder(
-                                        borderSide:
-                                            BorderSide(color: Colors.blue),
-                                      ),
-                                      focusedBorder: UnderlineInputBorder(
-                                        borderSide:
-                                            BorderSide(color: Colors.red),
+                                  height: 35,
+                                  width: size.width * 0.36,
+                                  child: InkWell(
+                                    child: Container(
+                                      width: screenWidth * 1,
+                                      height: 40,
+                                      padding: EdgeInsets.only(
+                                          top: 10,
+                                          bottom: 10,
+                                          left: 10,
+                                          right: 10),
+                                      decoration: BoxDecoration(
+                                          border: Border(
+                                              bottom: BorderSide(
+                                                  color: Colors.blue)),
+                                          color: Colors.white),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            selectedDate != null
+                                                ? "${selectedDate.toLocal()}"
+                                                    .split(' ')[0]
+                                                : "",
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                color:Colors.blue),
+                                          ),
+                                          SizedBox(
+                                            width: 20.0,
+                                          ),
+                                          Icon(
+                                            Icons.calendar_today,
+                                            size: 17,
+                                            color: Colors.blue,
+                                          )
+                                        ],
                                       ),
                                     ),
-                                    style: TextStyle(fontSize: 14),
-                                    //focusNode: AlwaysDisabledFocusNode(),
-                                    controller: _textDateEditingController,
-                                    onTap: () {
-                                      _selectDate(context);
-                                    },
+                                    onTap: () => _selectDate(context),
                                   ),
                                 ),
                               ],

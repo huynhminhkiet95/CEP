@@ -80,7 +80,7 @@ class _DownloadCommunityDevelopmentState extends State<DownloadCommunityDevelopm
                           width: 150,
                           child: Center(
                             child: SimpleAutoCompleteTextField(
-                                style: TextStyle(fontSize: 14),
+                                style: TextStyle(fontSize: 14, color: Colors.blue),
                                 key: key,
                                 suggestions: [
                                   "B147",

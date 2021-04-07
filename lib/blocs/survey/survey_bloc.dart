@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:core';
 
 import 'package:CEPmobile/GlobalTranslations.dart';
 import 'package:CEPmobile/GlobalUser.dart';
 import 'package:CEPmobile/bloc_helpers/bloc_event_state.dart';
+import 'package:CEPmobile/config/status_code.dart';
 import 'package:CEPmobile/database/DBProvider.dart';
 import 'package:CEPmobile/models/download_data/comboboxmodel.dart';
 import 'package:CEPmobile/models/download_data/historysearchsurvey.dart';
@@ -15,6 +17,7 @@ import 'package:CEPmobile/blocs/survey/survey_event.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rxdart/rxdart.dart';
+import 'dart:convert';
 
 class SurveyBloc extends BlocEventStateBase<SurveyEvent, SurveyState> {
   final SharePreferenceService sharePreferenceService;
@@ -86,6 +89,47 @@ class SurveyBloc extends BlocEventStateBase<SurveyEvent, SurveyState> {
               fontSize: 16.0);
         }
       });
+    }
+    if (event is UpdateSurveyToServerEvent) {
+      yield SurveyState.updateLoadingSaveData(true);
+      List<SurveyInfo> listSurveyUpdate;
+      var listCheckBox = event.listCheckBox
+          .where((e) => e.status == true)
+          .map((e) => e.id)
+          .toList();
+      List<SurveyInfo> listSurvey = await DBProvider.db.getAllKhaoSat();
+      listSurveyUpdate =
+          listSurvey.where((e) => listCheckBox.contains(e.id)).toList();
+      String jsonbody = json.encode(listSurveyUpdate);
+
+      var response = await commonService.updateSurveyInfo(listSurveyUpdate);
+      if (response.statusCode == StatusCodeConstants.OK) {
+        var jsonBody = json.decode(response.body);
+        if (jsonBody["isSuccessed"]) {
+          if (jsonBody["data"] != null || !jsonBody["data"].isEmpty) {
+            Fluttertoast.showToast(
+              msg: jsonBody["message"],
+              timeInSecForIos: 10,
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM, // also possible "TOP" and "CENTER"
+              backgroundColor: Colors.green[600].withOpacity(0.9),
+              textColor: Colors.white,
+            );
+          }
+          yield SurveyState.updateLoadingSaveData(false);
+        }
+      } else {
+        yield SurveyState.updateLoadingSaveData(false);
+        Fluttertoast.showToast(
+          msg: allTranslations.text("ServerNotFound"),
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM, // also possible "TOP" and "CENTER"
+          backgroundColor: Colors.red[300].withOpacity(0.7),
+          textColor: Colors.white,
+        );
+      }
+      print(listSurvey);
+      yield SurveyState.updateLoadingSaveData(false); //
     }
   }
 }

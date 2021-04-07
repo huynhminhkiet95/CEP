@@ -84,7 +84,7 @@ class SurveyInfo {
   int batBuocKhaosat;
   int conNo;
   int dichVuSgb;
-  int moTheMoi; //bool
+  bool moTheMoi; //bool
   int soTienDuyetChoVayCk;
   int gioiTinh;
   String cmnd;
@@ -94,6 +94,7 @@ class SurveyInfo {
   String hoVaTen;
   int statusCheckBox;
   int idHistoryKhaoSat;
+  int moTheMoiBool;
 
   SurveyInfo(
       {this.id,
@@ -190,7 +191,7 @@ class SurveyInfo {
       this.thoigianthamgia,
       this.hoVaTen,
       this.statusCheckBox,
-      this.idHistoryKhaoSat});
+      this.idHistoryKhaoSat, this.moTheMoiBool});
 
   SurveyInfo.fromJson(Map<String, dynamic> json) {
     if (json["ID"] is int) this.id = json["ID"];
@@ -327,7 +328,8 @@ class SurveyInfo {
     if (json["ConNo"] is int) this.conNo = json["ConNo"];
     if (json["DichVuSGB"] is int) this.dichVuSgb = json["DichVuSGB"];
     if (json["MoTheMoi"] is bool)
-      this.moTheMoi = json["MoTheMoi"] == false ? 0 : 1;
+      this.moTheMoi = json["MoTheMoi"];
+      this.moTheMoiBool = json["MoTheMoi"] == false ? 0 : 1;
     if (json["SoTienDuyetChoVayCK"] is int)
       this.soTienDuyetChoVayCk = json["SoTienDuyetChoVayCK"];
     if (json["GioiTinh"] is int) this.gioiTinh = json["GioiTinh"];
@@ -336,109 +338,105 @@ class SurveyInfo {
     if (json["DiaChi"] is String) this.diaChi = json["DiaChi"];
     if (json["Thoigianthamgia"] is String)
       this.thoigianthamgia = json["Thoigianthamgia"];
-    if (json["HoVaTen"] is String)
-     this.hoVaTen = json["HoVaTen"];
+    if (json["HoVaTen"] is String) this.hoVaTen = json["HoVaTen"];
     this.idHistoryKhaoSat = json["idHistoryKhaoSat"];
-    
-
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data["ID"] = this.id;
-    data["NgayXuatDanhSach"] = this.ngayXuatDanhSach;
-    data["NgayKhaoSat"] = this.ngayKhaoSat;
-    data["MasoCanBoKhaoSat"] = this.masoCanBoKhaoSat;
-    data["ChinhanhID"] = this.chinhanhId;
-    data["DuanID"] = this.duanId;
-    data["CumID"] = this.cumId;
-    data["ThanhvienID"] = this.thanhvienId;
-    data["TinhTrangHonNhan"] = this.tinhTrangHonNhan;
-    data["TrinhDoHocVan"] = this.trinhDoHocVan;
-    data["KhuVuc"] = this.khuVuc;
-    data["Lanvay"] = this.lanvay;
-    data["NguoiTraloiKhaoSat"] = this.nguoiTraloiKhaoSat;
-    data["SonguoiTrongHo"] = this.songuoiTrongHo;
-    data["SonguoiCoviecLam"] = this.songuoiCoviecLam;
-    data["DientichDatTrong"] = this.dientichDatTrong;
-    data["GiaTriVatNuoi"] = this.giaTriVatNuoi;
-    data["DungCuLaoDong"] = this.dungCuLaoDong;
-    data["PhuongTienDiLai"] = this.phuongTienDiLai;
-    data["TaiSanSinhHoat"] = this.taiSanSinhHoat;
-    data["QuyenSoHuuNha"] = this.quyenSoHuuNha;
-    data["HemTruocNha"] = this.hemTruocNha;
-    data["MaiNha"] = this.maiNha;
-    data["TuongNha"] = this.tuongNha;
-    data["NenNha"] = this.nenNha;
-    data["DienTichNhaTinhTren1Nguoi"] = this.dienTichNhaTinhTren1Nguoi;
-    data["Dien"] = this.dien;
-    data["Nuoc"] = this.nuoc;
-    data["MucDichSudungVon"] = this.mucDichSudungVon;
-    data["SoTienCanThiet"] = this.soTienCanThiet;
-    data["SoTienThanhVienDaCo"] = this.soTienThanhVienDaCo;
-    data["SoTienCanVay"] = this.soTienCanVay;
-    data["ThoiDiemSuDungVonvay"] = this.thoiDiemSuDungVonvay;
-    data["TongVonDauTu"] = this.tongVonDauTu;
-    data["ThuNhapRongHangThang"] = this.thuNhapRongHangThang;
-    data["ThuNhapCuaVoChong"] = this.thuNhapCuaVoChong;
-    data["ThuNhapCuaCacCon"] = this.thuNhapCuaCacCon;
-    data["ThuNhapKhac"] = this.thuNhapKhac;
-    data["TongChiPhiCuaThanhvien"] = this.tongChiPhiCuaThanhvien;
-    data["ChiPhiDienNuoc"] = this.chiPhiDienNuoc;
-    data["ChiPhiAnUong"] = this.chiPhiAnUong;
-    data["ChiPhiHocTap"] = this.chiPhiHocTap;
-    data["ChiPhiKhac"] = this.chiPhiKhac;
-    data["ChiTraTienVayHangThang"] = this.chiTraTienVayHangThang;
-    data["TichLuyTangThemHangThang"] = this.tichLuyTangThemHangThang;
-    data["NguonVay1"] = this.nguonVay1;
-    data["SotienVay1"] = this.sotienVay1;
-    data["LyDoVay1"] = this.lyDoVay1;
-    data["ThoiDiemTatToan1"] = this.thoiDiemTatToan1;
-    data["BienPhapThongNhat1"] = this.bienPhapThongNhat1;
-    data["NguonVay2"] = this.nguonVay2;
-    data["SotienVay2"] = this.sotienVay2;
-    data["LyDoVay2"] = this.lyDoVay2;
-    data["ThoiDiemTatToan2"] = this.thoiDiemTatToan2;
-    data["BienPhapThongNhat2"] = this.bienPhapThongNhat2;
-    data["ThanhVienThuocDien"] = this.thanhVienThuocDien;
-    data["MaSoHoNgheo"] = this.maSoHoNgheo;
-    data["HoTenChuHo"] = this.hoTenChuHo;
-    data["SoTienGuiTietKiemMoiKy"] = this.soTienGuiTietKiemMoiKy;
-    data["TietKiemBatBuocXinRut"] = this.tietKiemBatBuocXinRut;
-    data["TietKiemTuNguyenXinRut"] = this.tietKiemTuNguyenXinRut;
-    data["TietKiemLinhHoatXinRut"] = this.tietKiemLinhHoatXinRut;
-    data["ThoiDiemRut"] = this.thoiDiemRut;
-    data["MucVayBoSung"] = this.mucVayBoSung;
-    data["MucDichVayBoSung"] = this.mucDichVayBoSung;
-    data["NgayVayBoSung"] = this.ngayVayBoSung;
-    data["GhiChu"] = this.ghiChu;
-    data["SoTienDuyetChovay"] = this.soTienDuyetChovay;
-    data["TietKiemDinhHuong"] = this.tietKiemDinhHuong;
-    data["MucDichVay"] = this.mucDichVay;
-    data["DuyetChovayNgay"] = this.duyetChovayNgay;
-    data["DaCapNhatVaoHoSoChovay"] = this.daCapNhatVaoHoSoChovay;
-    data["TinhTrangNgheo"] = this.tinhTrangNgheo;
-    data["DaDuocDuyet"] = this.daDuocDuyet;
-    data["Username"] = this.username;
-    data["Ngaycapnhat"] = this.ngaycapnhat;
-    data["MasoCanBoKhaoSatPSS"] = this.masoCanBoKhaoSatPss;
-    data["SotienVayLantruoc"] = this.sotienVayLantruoc;
-    data["ThoiGianTaivay"] = this.thoiGianTaivay;
-    data["SongayNoquahanCaonhat"] = this.songayNoquahanCaonhat;
-    data["ThoiGianKhaosatGannhat"] = this.thoiGianKhaosatGannhat;
-    data["NgayTatToanDotvayTruoc"] = this.ngayTatToanDotvayTruoc;
-    data["BatBuocKhaosat"] = this.batBuocKhaosat;
-    data["ConNo"] = this.conNo;
-    data["DichVuSGB"] = this.dichVuSgb;
-    data["MoTheMoi"] = this.moTheMoi;
-    data["SoTienDuyetChoVayCK"] = this.soTienDuyetChoVayCk;
-    data["GioiTinh"] = this.gioiTinh;
+    data["id"] = this.id;
+    data["ngayXuatDanhSach"] = this.ngayXuatDanhSach;
+    data["ngayKhaoSat"] = this.ngayKhaoSat;
+    data["masoCanBoKhaoSat"] = this.masoCanBoKhaoSat;
+    data["chinhanhID"] = this.chinhanhId;
+    data["duanID"] = this.duanId;
+    data["cumID"] = this.cumId;
+    data["thanhvienID"] = this.thanhvienId;
+    data["tinhTrangHonNhan"] = this.tinhTrangHonNhan;
+    data["trinhDoHocVan"] = this.trinhDoHocVan;
+    data["khuVuc"] = this.khuVuc;
+    data["lanvay"] = this.lanvay;
+    data["nguoiTraloiKhaoSat"] = this.nguoiTraloiKhaoSat;
+    data["songuoiTrongHo"] = this.songuoiTrongHo;
+    data["songuoiCoviecLam"] = this.songuoiCoviecLam;
+    data["dientichDatTrong"] = this.dientichDatTrong;
+    data["giaTriVatNuoi"] = this.giaTriVatNuoi;
+    data["dungCuLaoDong"] = this.dungCuLaoDong;
+    data["phuongTienDiLai"] = this.phuongTienDiLai;
+    data["taiSanSinhHoat"] = this.taiSanSinhHoat;
+    data["quyenSoHuuNha"] = this.quyenSoHuuNha;
+    data["hemTruocNha"] = this.hemTruocNha;
+    data["maiNha"] = this.maiNha;
+    data["tuongNha"] = this.tuongNha;
+    data["nenNha"] = this.nenNha;
+    data["dienTichNhaTinhTren1Nguoi"] = this.dienTichNhaTinhTren1Nguoi;
+    data["dien"] = this.dien;
+    data["nuoc"] = this.nuoc;
+    data["mucDichSudungVon"] = this.mucDichSudungVon;
+    data["soTienCanThiet"] = this.soTienCanThiet;
+    data["soThanhVienDaCo"] = this.soTienThanhVienDaCo;
+    data["soTienCanVay"] = this.soTienCanVay;
+    data["thoiDiemSuDungVonvay"] = this.thoiDiemSuDungVonvay;
+    data["tongVonDauTu"] = this.tongVonDauTu;
+    data["thuNhapRongHangThang"] = this.thuNhapRongHangThang;
+    data["thuNhapCuaVoChong"] = this.thuNhapCuaVoChong;
+    data["thuNhapCuaCacCon"] = this.thuNhapCuaCacCon;
+    data["thuNhapKhac"] = this.thuNhapKhac;
+    data["tongChiPhiCuaThanhvien"] = this.tongChiPhiCuaThanhvien;
+    data["chiPhiDienNuoc"] = this.chiPhiDienNuoc;
+    data["chiPhiAnUong"] = this.chiPhiAnUong;
+    data["chiPhiHocTap"] = this.chiPhiHocTap;
+    data["chiPhiKhac"] = this.chiPhiKhac;
+    data["chiTraTienVayHangThang"] = this.chiTraTienVayHangThang;
+    data["tichLuyTangThemHangThang"] = this.tichLuyTangThemHangThang;
+    data["nguonVay1"] = this.nguonVay1;
+    data["sotienVay1"] = this.sotienVay1;
+    data["lyDoVay1"] = this.lyDoVay1;
+    data["thoiDiemTatToan1"] = this.thoiDiemTatToan1;
+    data["bienPhapThongNhat1"] = this.bienPhapThongNhat1;
+    data["nguonVay2"] = this.nguonVay2;
+    data["sotienVay2"] = this.sotienVay2;
+    data["lyDoVay2"] = this.lyDoVay2;
+    data["thoiDiemTatToan2"] = this.thoiDiemTatToan2;
+    data["bienPhapThongNhat2"] = this.bienPhapThongNhat2;
+    data["thanhVienThuocDien"] = this.thanhVienThuocDien;
+    data["maSoHoNgheo"] = this.maSoHoNgheo;
+    data["hoTenChuHo"] = this.hoTenChuHo;
+    data["soTienGuiTietKiemMoiKy"] = this.soTienGuiTietKiemMoiKy;
+    data["tietKiemBatBuocXinRut"] = this.tietKiemBatBuocXinRut;
+    data["tietKiemTuNguyenXinRut"] = this.tietKiemTuNguyenXinRut;
+    data["tietKiemLinhHoatXinRut"] = this.tietKiemLinhHoatXinRut;
+    data["thoiDiemRut"] = this.thoiDiemRut;
+    data["mucVayBoSung"] = this.mucVayBoSung;
+    data["mucDichVayBoSung"] = this.mucDichVayBoSung;
+    data["ngayVayBoSung"] = this.ngayVayBoSung;
+    data["ghiChu"] = this.ghiChu;
+    data["soTienDuyetChovay"] = this.soTienDuyetChovay;
+    data["tietKiemDinhHuong"] = this.tietKiemDinhHuong;
+    data["mucDichVay"] = this.mucDichVay;
+    data["duyetChovayNgay"] = this.duyetChovayNgay;
+    data["daCapNhatVaoHoSoChovay"] = this.daCapNhatVaoHoSoChovay;
+    data["tinhTrangNgheo"] = this.tinhTrangNgheo;
+    data["daDuocDuyet"] = this.daDuocDuyet;
+    data["username"] = this.username;
+    data["ngaycapnhat"] = this.ngaycapnhat;
+    data["masoCanBoKhaoSatPSS"] = this.masoCanBoKhaoSatPss;
+    data["sotienVayLantruoc"] = this.sotienVayLantruoc;
+    data["thoiGianTaivay"] = this.thoiGianTaivay;
+    data["songayNoquahanCaonhat"] = this.songayNoquahanCaonhat;
+    data["thoiGianKhaosatGannhat"] = this.thoiGianKhaosatGannhat;
+    data["ngayTatToanDotvayTruoc"] = this.ngayTatToanDotvayTruoc;
+    data["batBuocKhaosat"] = this.batBuocKhaosat;
+    data["conNo"] = this.conNo;
+    data["dichVuSGB"] = this.dichVuSgb;
+    data["moTheMoi"] = this.moTheMoiBool == 1 ? true: false;
+    data["soTienDuyetChoVayCK"] = this.soTienDuyetChoVayCk;
+    data["gioiTinh"] = this.gioiTinh;
     data["cmnd"] = this.cmnd;
-    data["NgaySinh"] = this.ngaySinh;
-    data["DiaChi"] = this.diaChi;
-    data["Thoigianthamgia"] = this.thoigianthamgia;
-    data["HoVaTen"] = this.hoVaTen;
-    data["idHistoryKhaoSat"] = this.idHistoryKhaoSat;
+    data["ngaySinh"] = this.ngaySinh;
+    data["diaChi"] = this.diaChi;
+    data["thoigianthamgia"] = this.thoigianthamgia;
+    data["hoVaTen"] = this.hoVaTen;
     return data;
   }
 
@@ -528,7 +526,7 @@ class SurveyInfo {
         batBuocKhaosat: json["batBuocKhaosat"],
         conNo: json["conNo"],
         dichVuSgb: json["dichVuSgb"],
-        moTheMoi: json["moTheMoi"],
+        moTheMoi: json["moTheMoi"] is bool,
         soTienDuyetChoVayCk: json["soTienDuyetChoVayCk"],
         gioiTinh: json["gioiTinh"],
         cmnd: json["cmnd"],

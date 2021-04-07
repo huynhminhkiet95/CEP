@@ -10,6 +10,7 @@ import 'package:CEPmobile/dtos/datalogin.dart';
 import 'package:CEPmobile/dtos/localdistributtion/daytriprecord.dart';
 import 'package:CEPmobile/dtos/localdistributtion/triprecord.dart';
 import 'package:CEPmobile/globalServer.dart';
+import 'package:CEPmobile/models/download_data/survey_info.dart';
 import 'package:http/http.dart';
 import 'package:sprintf/sprintf.dart';
 
@@ -234,5 +235,9 @@ class CommonService {
 
   Future<Response> downloadDataComboBox() {
     return _httpBase.httpPostTokenNotBody(ServiceName.GetComboBoxValueChoTBD.toString());
+  }
+
+  Future<Response> updateSurveyInfo(List<SurveyInfo> body) {
+    return _httpBase.httpPostToken(ServiceName.UpdateSurveyInfo.toString(),body);
   }
 }

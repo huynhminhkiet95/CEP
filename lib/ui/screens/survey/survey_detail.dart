@@ -472,10 +472,10 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
     if (selectedIndexTimeOfWithdrawal == 0) {
       model.thoiDiemRut = "";
     } else {
-      model.thoiDiemRut = FormatDateConstants.convertDateTimeToStringT(
-          selectedTimeOfWithdrawalDate);
+      model.thoiDiemRut = selectedTimeOfWithdrawalDate != null
+        ? DateFormat('MM/dd').format(selectedTimeOfWithdrawalDate)
+        : "";
     }
-
     model.mucVayBoSung =
         MoneyFormat.convertCurrencyToInt(_controllerAmountAdditionalLoan.text);
     model.mucDichVayBoSung = _additionalLoanPurposeValue;
@@ -631,9 +631,14 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
               DateTime.now().year.toString());
     }
 
-    selectedTimeOfWithdrawalDate =
-        FormatDateConstants.convertJsonDateToDateTime(
-            widget.surveyInfo.thoiDiemRut);
+
+     if (widget.surveyInfo.thoiDiemRut.length > 1) {
+      selectedTimeOfWithdrawalDate = DateFormat('MM/dd/yyyy').parse(
+          widget.surveyInfo.thoiDiemRut +
+              '/' +
+              DateTime.now().year.toString());
+    }
+
 
     selectedDateofAdditionalCapital =
         FormatDateConstants.convertJsonDateToDateTime(
@@ -3451,7 +3456,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                               CardCustomizeWidget(
                                                 children: [],
                                                 title:
-                                                    "11. Phân loại hộ nghèo thành viên vay lần 1",
+                                                    "11. Loại hộ nghèo của thành viên vay lần 1",
                                                 width: screenWidth * 1,
                                               ),
                                               CardCustomizeWidget(
