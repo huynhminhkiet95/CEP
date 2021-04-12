@@ -31,7 +31,13 @@ class IconsCustomize {
   static const IconData gender = IconData(0xe806, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData thu_no = IconData(0xe807, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData tu_van = IconData(0xe808, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData phattriencongdong = IconData(0xe809, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData develop_hover = IconData(0xe809, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData phattriencongdong = IconData(0xe80a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData mainha = IconData(0xe80b, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData quatet = IconData(0xe80c, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData scholarship = IconData(0xe80d, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData insurance = IconData(0xe80e, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData ptnghe = IconData(0xe80f, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData money = IconData(0xf0d6, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData dollar_sign = IconData(0xf155, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData bank = IconData(0xf19c, fontFamily: _kFontFam, fontPackage: _kFontPkg);

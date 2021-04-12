@@ -71,8 +71,16 @@ class _DownloadScreenState extends State<DownloadScreen> {
         elevation: 20,
         title: const Text('Tải Xuống'),
       ),
-      body: Container(
-        child: _widgetOptions.elementAt(_selectedIndex),
+      body: GestureDetector(
+        onHorizontalDragUpdate: (details) {
+          int sensitivity = 8;
+          if (details.delta.dx > sensitivity) {
+            Navigator.of(context).pop();
+          }
+        },
+        child: Container(
+          child: _widgetOptions.elementAt(_selectedIndex),
+        ),
       ),
       bottomNavigationBar: ConvexAppBar(
           height: 60,

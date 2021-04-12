@@ -49,16 +49,17 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
   void _onTapMenuItem(String nameMenu) {
     switch (nameMenu) {
       case 'Khảo Sát':
-      
         Navigator.pushNamed(context, 'survey');
         break;
       case 'Tải Xuống':
         Navigator.pushNamed(context, 'download');
         break;
+      case 'Phát Triển Cộng Đồng':
+        Navigator.pushNamed(context, 'comunitydevelopment');
+        break;
       case 'Đăng Xuất':
         _loginSubmit();
         break;
-
       default:
         Navigator.pushNamed(context, 'error');
     }

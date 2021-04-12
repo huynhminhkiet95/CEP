@@ -5,6 +5,7 @@ import 'package:CEPmobile/models/download_data/historysearchsurvey.dart';
 import 'package:CEPmobile/models/historyscreen/history_screen.dart';
 import 'package:CEPmobile/models/survey/survey_result.dart';
 import 'package:CEPmobile/ui/screens/Home/styles.dart';
+import 'package:CEPmobile/ui/screens/survey/style.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:CEPmobile/config/CustomIcons/my_flutter_app_icons.dart';
@@ -64,8 +65,10 @@ class _SurveyScreenState extends State<SurveyScreen> {
         itemBuilder: (context, i) {
           return InkWell(
             onTap: () {
-              List<ComboboxModel> listCombobox = globalUser.getListComboboxModel;
-              List<SurveyInfo> listSurveyDetail = globalUser.getListSurveyGlobal;
+              List<ComboboxModel> listCombobox =
+                  globalUser.getListComboboxModel;
+              List<SurveyInfo> listSurveyDetail =
+                  globalUser.getListSurveyGlobal;
               if (listCombobox == null || listCombobox.length == 0) {
                 Navigator.pushNamed(context, 'download', arguments: {
                   'selectedIndex': 4,
@@ -78,7 +81,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
                 Navigator.pushNamed(context, 'surveydetail', arguments: {
                   'id': listSurvey[i].id,
                   'metadata': listCombobox,
-                  'surveydetail': listSurveyDetail[i]
+                  'surveydetail': listSurveyDetail[i],
+                  'surveyhistory':surveyStream.listSurveyInfoHistory,
                 }).then((value) {
                   //String a = value;
                   if (value is List<SurveyInfo>) {
@@ -100,7 +104,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                 ),
                 color: Colors.blue,
               ),
-              height: 130,
+             // height: 130,
               child: Card(
                 elevation: 10,
                 shadowColor: Colors.blue,
@@ -164,7 +168,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                     elevation: 3,
                                     color: Colors.red,
                                     child: Container(
-                                      padding: EdgeInsets.only(right: 5, left: 5),
+                                      padding:
+                                          EdgeInsets.only(right: 5, left: 5),
                                       height: 20,
                                       width: 90,
                                       child: Text(
@@ -195,7 +200,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
                               }
 
                               return Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   cardkhaosat,
                                   cardBatBuoc,
@@ -214,7 +220,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                               height: 5,
                             ),
                             Row(
-                             // crossAxisAlignment: CrossAxisAlignment.center,
+                              // crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Container(
@@ -242,13 +248,6 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                       ),
                                     ],
                                   ),
-                                  // Row(
-                                  //   children: [
-                                  //     Icon(IconsCustomize.gender),
-                                  //     Text("Nữ",
-                                  //     style:  TextStyle(fontWeight: FontWeight.bold, fontSize: 13),),
-                                  //   ],
-                                  // ),
                                 ),
                                 Container(
                                   padding: EdgeInsets.only(left: 4),
@@ -496,121 +495,144 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                 children: [
                                   Row(
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
+                                        MainAxisAlignment.spaceEvenly,
                                     children: [
-                                      RawMaterialButton(
-                                        fillColor: checkBoxSurvey.where((e) => e.status == true).length > 0 ? Colors.green : Colors.grey,
-                                        splashColor: Colors.green,
-                                        child: Padding(
-                                          padding: EdgeInsets.only(
-                                              right: 15,
-                                              top: 10,
-                                              left: 10,
-                                              bottom: 10),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: const <Widget>[
-                                              Icon(
-                                                Icons.upload_rounded,
-                                                color: Colors.white,
-                                              ),
-                                              SizedBox(
-                                                width: 10.0,
-                                              ),
-                                              Text(
-                                                "Cập Nhật Lên Server",
-                                                maxLines: 1,
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                            ],
+                                      AnimatedContainer(
+                                        height: 43,
+                                        decoration: decorationButtonAnimated(checkBoxSurvey .where((e) => e.status == true) .length > 0 ? Colors.green : Colors.grey),
+                                        // Define how long the animation should take.
+                                        duration: Duration(milliseconds: 500),
+                                        // Provide an optional curve to make the animation feel smoother.
+                                        curve: Curves.easeOut,
+                                        child: RawMaterialButton(
+                                          splashColor: Colors.green,
+                                          child: Padding(
+                                            padding: EdgeInsets.only(
+                                                right: 15,
+                                                top: 10,
+                                                left: 10,
+                                                bottom: 10),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: const <Widget>[
+                                                Icon(
+                                                  Icons.upload_rounded,
+                                                  color: Colors.white,
+                                                ),
+                                                SizedBox(
+                                                  width: 10.0,
+                                                ),
+                                                Text(
+                                                  "Cập Nhật Lên Server",
+                                                  maxLines: 1,
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        onPressed: () {
-                                          if (checkBoxSurvey
-                                                  .where(
-                                                      (e) => e.status == true)
-                                                  .length >
-                                              0) {
-                                            showAnimatedDialog(
-                                              context: context,
-                                              barrierDismissible: true,
-                                              builder: (BuildContext context) {
-                                                return ClassicGeneralDialogWidget(
-                                                  positiveText: "Đồng Ý",
-                                                  negativeText: "Hủy",
-                                                  contentText:
-                                                      "Bạn có muốn lưu dữ liệu lên server ?",
-                                                  negativeTextStyle: TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 14),
-                                                  positiveTextStyle: TextStyle(
-                                                      color: ColorConstants
-                                                          .cepColorBackground,
-                                                      fontSize: 14),
-                                                  onPositiveClick: () {
-                                                    Navigator.of(context).pop();
+                                          onPressed: () {
+                                            if (checkBoxSurvey
+                                                    .where(
+                                                        (e) => e.status == true)
+                                                    .length >
+                                                0) {
+                                              showAnimatedDialog(
+                                                context: context,
+                                                barrierDismissible: true,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return ClassicGeneralDialogWidget(
+                                                    positiveText: "Đồng Ý",
+                                                    negativeText: "Hủy",
+                                                    contentText:
+                                                        "Bạn có muốn lưu dữ liệu lên server ?",
+                                                    negativeTextStyle:
+                                                        TextStyle(
+                                                            color: Colors.grey,
+                                                            fontSize: 14),
+                                                    positiveTextStyle: TextStyle(
+                                                        color: ColorConstants
+                                                            .cepColorBackground,
+                                                        fontSize: 14),
+                                                    onPositiveClick: () {
+                                                      Navigator.of(context)
+                                                          .pop();
 
-                                                    _onSubmit();
-                                                  },
-                                                  onNegativeClick: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                );
-                                              },
-                                              animationType:
-                                                  DialogTransitionType
-                                                      .slideFromTopFade,
-                                              curve: Curves.fastOutSlowIn,
-                                              duration:
-                                                  Duration(milliseconds: 500),
-                                            );
-                                          }
-                                        },
-                                        shape: const StadiumBorder(),
-                                      ),
-                                      RawMaterialButton(
-                                        fillColor: Colors.green,
-                                        splashColor: Colors.grey,
-                                        child: Padding(
-                                          padding: EdgeInsets.all(10.0),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: <Widget>[
-                                              Icon(
-                                                this.isCheckAll == false
-                                                    ? Icons
-                                                        .check_box_outline_blank
-                                                    : Icons.check_box,
-                                                color: Colors.white,
-                                              ),
-                                              SizedBox(
-                                                width: 10.0,
-                                              ),
-                                              Text(
-                                                "Chọn Tất Cả",
-                                                maxLines: 1,
-                                                style: TextStyle(
-                                                    color: Colors.white, fontWeight: FontWeight.bold),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        onPressed: () {
-                                          isCheckAll = !isCheckAll;
-                                          setState(() {
-                                            if (isCheckAll) {
-                                              for (var item in checkBoxSurvey) {
-                                                item.status = true;
-                                              }
-                                            } else {
-                                              for (var item in checkBoxSurvey) {
-                                                item.status = false;
-                                              }
+                                                      _onSubmit();
+                                                    },
+                                                    onNegativeClick: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                  );
+                                                },
+                                                animationType:
+                                                    DialogTransitionType
+                                                        .slideFromTopFade,
+                                                curve: Curves.fastOutSlowIn,
+                                                duration:
+                                                    Duration(milliseconds: 500),
+                                              );
                                             }
-                                          });
-                                        },
-                                        shape: const StadiumBorder(),
+                                          },
+                                          shape: const StadiumBorder(),
+                                        ),
+                                      ),
+                                      AnimatedContainer(
+                                        height: 43,
+                                        width: this.isCheckAll == false ? 150 : 130,
+                                        decoration: decorationButtonAnimated( Colors.green),
+                                        // Define how long the animation should take.
+                                        duration: Duration(milliseconds: 500),
+                                        // Provide an optional curve to make the animation feel smoother.
+                                        curve: Curves.easeOut,
+                                        child: RawMaterialButton(
+                                          fillColor: Colors.green,
+                                          splashColor: Colors.grey,
+                                          child: Padding(
+                                            padding: EdgeInsets.all(10.0),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: <Widget>[
+                                                
+                                                Icon(
+                                                  this.isCheckAll == false
+                                                      ? Icons
+                                                          .check_box_outline_blank
+                                                      : Icons.check_box,
+                                                  color: Colors.white,
+                                                ),
+                                                SizedBox(
+                                                  width: 10.0,
+                                                ),
+                                                Text(
+                                                  this.isCheckAll == false ?"Chọn Tất Cả" : "Bỏ Chọn",
+                                                  maxLines: 1,
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            isCheckAll = !isCheckAll;
+                                            setState(() {
+                                              if (isCheckAll) {
+                                                for (var item in checkBoxSurvey) {
+                                                  item.status = true;
+                                                }
+                                              } else {
+                                                for (var item in checkBoxSurvey) {
+                                                  item.status = false;
+                                                }
+                                              }
+                                            });
+                                          },
+                                          shape: const StadiumBorder(),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -661,7 +683,14 @@ class _SurveyScreenState extends State<SurveyScreen> {
         elevation: 20,
         title: const Text('Khảo Sát Vay Vốn'),
       ),
-      body: Container(child: body),
+      body: GestureDetector(
+          onHorizontalDragUpdate: (details) {
+            int sensitivity = 8;
+            if (details.delta.dx > sensitivity) {
+              Navigator.of(context).pop();
+            }
+          },
+          child: Container(child: body)),
     );
   }
 }

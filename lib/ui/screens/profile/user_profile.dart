@@ -53,203 +53,216 @@ class ProfilePage extends StatelessWidget {
                 })
           ],
         ),
-        body: Stack(
-          children: [
-            CustomAppBar(),
-            Container(
-              margin: EdgeInsets.only(top: 300),
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  SizedBox(
-                    height: 16,
-                  ),
-                  //  Listile()
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.location_city,
-                        color: Colors.black,
-                        size: 20,
+        body: GestureDetector(
+          onHorizontalDragUpdate: (details) {
+            int sensitivity = 8;
+            if (details.delta.dx > sensitivity) {
+              Navigator.of(context).pop();
+            }
+          },
+          child: Stack(
+            children: [
+              CustomAppBar(),
+              Container(
+                margin: EdgeInsets.only(top: 300),
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    SizedBox(
+                      height: 16,
+                    ),
+                    //  Listile()
+                    GestureDetector(
+                      onHorizontalDragUpdate: (details) {
+                        int sensitivity = 8;
+                        if (details.delta.dx > sensitivity) {
+                          Navigator.of(context).pop();
+                        }
+                      },
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.location_city,
+                            color: Colors.black,
+                            size: 20,
+                          ),
+                          VerticalDivider(
+                            width: 30,
+                          ),
+                          Text(
+                            "Chi nhánh ID:",
+                            style: _style(),
+                          ),
+                          VerticalDivider(
+                            width: 10,
+                          ),
+                          Text(
+                            globalUser.getUserInfo == null
+                                ? ''
+                                : globalUser.getUserInfo.chiNhanhID.toString(),
+                            style: _style(),
+                          ),
+                        ],
                       ),
-                      VerticalDivider(
-                        width: 30,
-                      ),
-                      Text(
-                        "Chi nhánh ID:",
-                        style: _style(),
-                      ),
-                      VerticalDivider(
-                        width: 10,
-                      ),
-                      Text(
-                        globalUser.getUserInfo == null
-                            ? ''
-                            : globalUser.getUserInfo.chiNhanhID.toString(),
-                        style: _style(),
-                      ),
-                    ],
-                  ),
+                    ),
 
-                  SizedBox(
-                    height: 26,
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.phone,
-                        color: Colors.black,
-                        size: 20,
-                      ),
-                      VerticalDivider(
-                        width: 30,
-                      ),
-                      Text(
-                        "Điện thoại:",
-                        style: _style(),
-                      ),
-                      VerticalDivider(
-                        width: 10,
-                      ),
-                      Text(
-                        globalUser.getUserInfo == null
-                            ? ''
-                            : globalUser.getUserInfo.dienThoai.toString(),
-                        style: _style(),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 26,
-                  ),
+                    SizedBox(
+                      height: 26,
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.phone,
+                          color: Colors.black,
+                          size: 20,
+                        ),
+                        VerticalDivider(
+                          width: 30,
+                        ),
+                        Text(
+                          "Điện thoại:",
+                          style: _style(),
+                        ),
+                        VerticalDivider(
+                          width: 10,
+                        ),
+                        Text(
+                          globalUser.getUserInfo == null
+                              ? ''
+                              : globalUser.getUserInfo.dienThoai.toString(),
+                          style: _style(),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 26,
+                    ),
 
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.email,
-                        color: Colors.black,
-                        size: 20,
-                      ),
-                      VerticalDivider(
-                        width: 30,
-                      ),
-                      Text(
-                        "Email:",
-                        style: _style(),
-                      ),
-                      VerticalDivider(
-                        width: 10,
-                      ),
-                      Text(
-                        '',
-                        style: _style(),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 26,
-                  ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.email,
+                          color: Colors.black,
+                          size: 20,
+                        ),
+                        VerticalDivider(
+                          width: 30,
+                        ),
+                        Text(
+                          "Email:",
+                          style: _style(),
+                        ),
+                        VerticalDivider(
+                          width: 10,
+                        ),
+                        Text(
+                          '',
+                          style: _style(),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 26,
+                    ),
 
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.location_on,
-                        color: Colors.black,
-                        size: 20,
-                      ),
-                      VerticalDivider(
-                        width: 30,
-                      ),
-                      Text(
-                        "Địa chỉ:",
-                        style: _style(),
-                      ),
-                      VerticalDivider(
-                        width: 10,
-                      ),
-                      Text(
-                        globalUser.getUserInfo == null
-                            ? ''
-                            : globalUser.getUserInfo.dienThoai.toString(),
-                        style: _style(),
-                      ),
-                    ],
-                  ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.location_on,
+                          color: Colors.black,
+                          size: 20,
+                        ),
+                        VerticalDivider(
+                          width: 30,
+                        ),
+                        Text(
+                          "Địa chỉ:",
+                          style: _style(),
+                        ),
+                        VerticalDivider(
+                          width: 10,
+                        ),
+                        Text(
+                          globalUser.getUserInfo == null
+                              ? ''
+                              : globalUser.getUserInfo.dienThoai.toString(),
+                          style: _style(),
+                        ),
+                      ],
+                    ),
 
-                  SizedBox(
-                    height: 26,
-                  ),
+                    SizedBox(
+                      height: 26,
+                    ),
 
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.qr_code_scanner,
-                        color: Colors.black,
-                        size: 20,
-                      ),
-                      VerticalDivider(
-                        width: 30,
-                      ),
-                      Text(
-                        "Mã số quản lý:",
-                        style: _style(),
-                      ),
-                      VerticalDivider(
-                        width: 10,
-                      ),
-                      Text(
-                        globalUser.getUserInfo == null
-                            ? ''
-                            : globalUser.getUserInfo.masoql.toString(),
-                        style: _style(),
-                      ),
-                    ],
-                  ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.qr_code_scanner,
+                          color: Colors.black,
+                          size: 20,
+                        ),
+                        VerticalDivider(
+                          width: 30,
+                        ),
+                        Text(
+                          "Mã số quản lý:",
+                          style: _style(),
+                        ),
+                        VerticalDivider(
+                          width: 10,
+                        ),
+                        Text(
+                          globalUser.getUserInfo == null
+                              ? ''
+                              : globalUser.getUserInfo.masoql.toString(),
+                          style: _style(),
+                        ),
+                      ],
+                    ),
 
-                  SizedBox(
-                    height: 26,
-                  ),
+                    SizedBox(
+                      height: 26,
+                    ),
 
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.group_work,
-                        color: Colors.black,
-                        size: 20,
-                      ),
-                      VerticalDivider(
-                        width: 30,
-                      ),
-                      Text(
-                        "Tổ tín dụng",
-                        style: _style(),
-                      ),
-                      VerticalDivider(
-                        width: 10,
-                      ),
-                      Text(
-                        globalUser.getUserInfo == null
-                            ? ''
-                            : globalUser.getUserInfo.toTinDung.toString(),
-                        style: _style(),
-                      ),
-                    ],
-                  ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.group_work,
+                          color: Colors.black,
+                          size: 20,
+                        ),
+                        VerticalDivider(
+                          width: 30,
+                        ),
+                        Text(
+                          "Tổ tín dụng",
+                          style: _style(),
+                        ),
+                        VerticalDivider(
+                          width: 10,
+                        ),
+                        Text(
+                          globalUser.getUserInfo == null
+                              ? ''
+                              : globalUser.getUserInfo.toTinDung.toString(),
+                          style: _style(),
+                        ),
+                      ],
+                    ),
 
-                  Divider(
-                    color: Colors.grey,
-                  )
-                ],
+                    Divider(
+                      color: Colors.grey,
+                    )
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ));
   }
 }
-
-final String url =
-    "http://chuteirafc.cartacapital.com.br/wp-content/uploads/2018/12/15347041965884.jpg";
 
 class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
@@ -263,7 +276,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
         ClipPath(
           clipper: MyClipper(),
           child: Container(
-            width: 600,
+            width: screenSize.width * 1,
             height: screenSize.height * 0.25,
             padding: EdgeInsets.only(top: 4),
             decoration: BoxDecoration(
@@ -284,7 +297,9 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                            fit: BoxFit.cover, image: NetworkImage(url))),
+                            fit: BoxFit.cover,
+                            image:
+                                new AssetImage("assets/avatars/avatar.png"))),
                   ),
                   SizedBox(
                     height: 16,

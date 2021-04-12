@@ -4,10 +4,12 @@ import 'package:CEPmobile/GlobalTranslations.dart';
 import 'package:CEPmobile/GlobalUser.dart';
 import 'package:CEPmobile/bloc_helpers/bloc_event_state.dart';
 import 'package:CEPmobile/config/status_code.dart';
+import 'package:CEPmobile/config/toast_result_message.dart';
 import 'package:CEPmobile/database/DBProvider.dart';
 import 'package:CEPmobile/models/download_data/client.dart';
 import 'package:CEPmobile/models/download_data/comboboxmodel.dart';
 import 'package:CEPmobile/models/download_data/survey_info.dart';
+import 'package:CEPmobile/models/download_data/survey_info_history.dart';
 import 'package:CEPmobile/services/commonService.dart';
 import 'package:CEPmobile/services/sharePreference.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +18,8 @@ import 'package:rxdart/rxdart.dart';
 import 'package:CEPmobile/blocs/download_data/download_data_event.dart';
 import 'package:CEPmobile/blocs/download_data/download_data_state.dart';
 
-class DownloadDataBloc extends BlocEventStateBase<DownloadDataEvent, DownloadDataState> {
+class DownloadDataBloc
+    extends BlocEventStateBase<DownloadDataEvent, DownloadDataState> {
   final SharePreferenceService sharePreferenceService;
   final CommonService commonService;
 
@@ -40,6 +43,11 @@ class DownloadDataBloc extends BlocEventStateBase<DownloadDataEvent, DownloadDat
       yield DownloadDataState.updateLoading(true);
       var response = await commonService.downloadDataSurvey(
           event.chiNhanhID, event.cumID, event.ngayxuatDS, event.masoql);
+
+      var responseSurveyHistory =
+          await commonService.downloadDataSurveyHistoryForTBDD(
+              event.chiNhanhID, event.cumID, event.ngayxuatDS, event.masoql);
+
       if (response.statusCode == StatusCodeConstants.OK) {
         var jsonBody = json.decode(response.body);
         if (jsonBody["isSuccessed"]) {
@@ -54,35 +62,40 @@ class DownloadDataBloc extends BlocEventStateBase<DownloadDataEvent, DownloadDat
               listKhaoSat.idHistoryKhaoSat = idHistoryKhaoSat;
               await DBProvider.db.newKhaoSat(listKhaoSat);
             }
-            Fluttertoast.showToast(
-              msg: allTranslations.text("DownLoadDataSuccess"),
-              timeInSecForIos: 10,
-              toastLength: Toast.LENGTH_LONG,
-              gravity: ToastGravity.BOTTOM, // also possible "TOP" and "CENTER"
-              backgroundColor: Colors.green[600].withOpacity(0.9),
-              textColor: Colors.white,
-            );
+            ToastResultMessage.success(
+                allTranslations.text("DownLoadDataSuccess"));
           }
           yield DownloadDataState.updateLoading(false);
         } else {
-          Fluttertoast.showToast(
-            msg: allTranslations.text("ServerNotFound"),
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM, // also possible "TOP" and "CENTER"
-            backgroundColor: Colors.red[300].withOpacity(0.7),
-            textColor: Colors.white,
-          );
+          ToastResultMessage.error(allTranslations.text("ServerNotFound"));
           yield DownloadDataState.updateLoading(false);
         }
       } else {
         yield DownloadDataState.updateLoading(false);
-        Fluttertoast.showToast(
-          msg: allTranslations.text("ServerNotFound"),
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM, // also possible "TOP" and "CENTER"
-          backgroundColor: Colors.red[300].withOpacity(0.7),
-          textColor: Colors.white,
-        );
+        ToastResultMessage.error(allTranslations.text("ServerNotFound"));
+      }
+
+
+      if (responseSurveyHistory.statusCode == StatusCodeConstants.OK) {
+        var jsonBody = json.decode(responseSurveyHistory.body);
+        if (jsonBody["isSuccessed"]) {
+
+          if (jsonBody["data"] != null || !jsonBody["data"].isEmpty) {
+            for (var item in jsonBody["data"]) {
+              var listKhaoSat = SurveyInfoHistory.fromJson(item);
+              await DBProvider.db.newLichSuKhaoSat(listKhaoSat);
+            }
+            ToastResultMessage.success(
+                allTranslations.text("DownLoadDataSuccess"));
+          }
+          yield DownloadDataState.updateLoading(false);
+        } else {
+          ToastResultMessage.error(allTranslations.text("DownLoadDataSurveyHistoryFailed"));
+          yield DownloadDataState.updateLoading(false);
+        }
+      } else {
+        yield DownloadDataState.updateLoading(false);
+        ToastResultMessage.error(allTranslations.text("ServerNotFound"));
       }
     } else if (event is DownloadDataComboBoxEvent) {
       yield DownloadDataState.updateLoading(true);
@@ -98,35 +111,17 @@ class DownloadDataBloc extends BlocEventStateBase<DownloadDataEvent, DownloadDat
             }
             globalUser.setListComboboxModel = listCombobox;
             await DBProvider.db.newMetaDataForTBD(listCombobox);
-            Fluttertoast.showToast(
-              msg: allTranslations.text("DownLoadDataSuccess"),
-              timeInSecForIos: 10,
-              toastLength: Toast.LENGTH_LONG,
-              gravity: ToastGravity.BOTTOM, // also possible "TOP" and "CENTER"
-              backgroundColor: Colors.green[600].withOpacity(0.9),
-              textColor: Colors.white,
-            );
+            ToastResultMessage.success(
+                allTranslations.text("DownLoadDataSuccess"));
           }
           yield DownloadDataState.updateLoading(false);
         } else {
-          Fluttertoast.showToast(
-            msg: allTranslations.text("ServerNotFound"),
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM, // also possible "TOP" and "CENTER"
-            backgroundColor: Colors.red[300].withOpacity(0.7),
-            textColor: Colors.white,
-          );
+          ToastResultMessage.error(allTranslations.text("ServerNotFound"));
           yield DownloadDataState.updateLoading(false);
         }
       } else {
         yield DownloadDataState.updateLoading(false);
-        Fluttertoast.showToast(
-          msg: allTranslations.text("ServerNotFound"),
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM, // also possible "TOP" and "CENTER"
-          backgroundColor: Colors.red[300].withOpacity(0.7),
-          textColor: Colors.white,
-        );
+        ToastResultMessage.error(allTranslations.text("ServerNotFound"));
       }
     }
   }

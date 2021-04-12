@@ -750,19 +750,7 @@ class _TripRecordState extends State<DayTripRecordComponent> {
                                                 ),
                                                 color: Colors.green,
                                                 onPressed: () async {
-                                                  // Navigator.push(
-                                                  //   context,
-                                                  //   MaterialPageRoute(
-                                                  //       builder: (context) =>
-                                                  //           PreviewPhotoGallery()),
-                                                  // );
-
-                                                  // PreviewPhotoGallery
-                                                  // SystemChrome.setEnabledSystemUIOverlays([])
-                                                  print({"result": result});
-                                                  if (result != null) {
-                                                    listImage.add(result);
-                                                  }
+                                                 
                                                 },
                                               ),
                                               minWidth: 40,

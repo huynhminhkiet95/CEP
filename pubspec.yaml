@@ -67,6 +67,8 @@ dependencies:
   convex_bottom_bar: ^2.7.1+2
   cupertino_radio_choice: 1.0.0+1
   flutter_animated_dialog: ^1.2.0
+  easy_dialog: ^1.0.5
+  #google_fonts: ^1.1.0 
 
 dev_dependencies:
   flutter_test:
@@ -204,6 +206,7 @@ flutter:
   - assets/images/logoshipmentstatus3.png
   #avatars
   - assets/dashboard/notification.png
+  - assets/avatars/avatar.png
   - assets/dashboard/calendar.png
   - assets/dashboard/festival.png
   - assets/dashboard/food.png

@@ -4,6 +4,8 @@ import 'package:CEPmobile/GlobalUser.dart';
 import 'package:CEPmobile/ui/navigation/slide_route.dart';
 import 'package:CEPmobile/ui/screens/Home/dashboard.dart';
 import 'package:CEPmobile/ui/screens/Login/loginPage.dart';
+import 'package:CEPmobile/ui/screens/community_development/community_development.dart';
+import 'package:CEPmobile/ui/screens/community_development/community_development_detail.dart';
 import 'package:CEPmobile/ui/screens/downloadData/download_main.dart';
 import 'package:CEPmobile/ui/screens/error/error.dart';
 import 'package:CEPmobile/ui/screens/profile/user_profile.dart';
@@ -49,7 +51,6 @@ class MyHttpOverrides extends HttpOverrides {
 void main() async {
   HttpOverrides.global = new MyHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
-
   await allTranslations.init();
   final services = await Services.initialize();
   await PermissionHandler()
@@ -72,7 +73,7 @@ class AppState extends State<Application> {
     //globalUser
     authenticationBloc = new AuthenticationBloc(
         services.commonService, services.sharePreferenceService);
-    
+
     //DBProvider.db.checkColumn();
   }
 
@@ -166,7 +167,7 @@ class AppState extends State<Application> {
             case 'userprofile':
               return SlideLeftRoute(page: ProfilePageDesign());
               break;
-              
+
             case 'surveydetail':
               final Map<String, Object> arguments = settings.arguments;
               return SlideTopRoute(
@@ -174,9 +175,9 @@ class AppState extends State<Application> {
                 id: arguments['id'],
                 listCombobox: arguments['metadata'],
                 surveyInfo: arguments['surveydetail'],
+                listSurveyHistory: arguments['surveyhistory'],
               ));
               break;
-
             case 'download':
               final Map<String, Object> arguments = settings.arguments;
               if (arguments == null) {
@@ -187,8 +188,14 @@ class AppState extends State<Application> {
                   selectedIndex: arguments['selectedIndex'],
                 ));
               }
-
               break;
+            case 'comunitydevelopment':
+              return SlideLeftRoute(page: CommunityDevelopmentScreen());
+              break;
+            case 'comunitydevelopmentdetail':
+              return SlideTopRoute(page: CommunityDevelopmentDetail());
+              break;
+
             default:
               return new MyCustomRoute(
                 builder: (_) => new ErrorScreen(),

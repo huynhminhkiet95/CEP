@@ -7,9 +7,11 @@ import 'package:CEPmobile/config/formatdate.dart';
 import 'package:CEPmobile/config/moneyformat.dart';
 import 'package:CEPmobile/models/download_data/comboboxmodel.dart';
 import 'package:CEPmobile/ui/components/CardCustomWidget.dart';
+import 'package:CEPmobile/ui/components/CustomDialog.dart';
 import 'package:CEPmobile/ui/components/ModalProgressHUDCustomize.dart';
 import 'package:CEPmobile/ui/components/dropdown.dart';
 import 'package:CEPmobile/ui/screens/survey/style.dart';
+import 'package:easy_dialog/easy_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:CEPmobile/config/CustomIcons/my_flutter_app_icons.dart';
@@ -20,6 +22,7 @@ import 'package:CEPmobile/services/service.dart';
 import 'package:CEPmobile/blocs/survey/survey_bloc.dart';
 import 'package:CEPmobile/blocs/survey/survey_event.dart';
 import 'package:CEPmobile/models/download_data/survey_info.dart';
+import 'package:CEPmobile/models/download_data/survey_info_history.dart';
 import 'package:CEPmobile/resources/CurrencyInputFormatter.dart';
 
 import 'package:flutter/services.dart';
@@ -30,8 +33,13 @@ class SurveyDetailScreen extends StatefulWidget {
   final int id;
   final List<ComboboxModel> listCombobox;
   final SurveyInfo surveyInfo;
+  final List<SurveyInfoHistory> listSurveyHistory;
   const SurveyDetailScreen(
-      {Key key, this.id, this.listCombobox, this.surveyInfo})
+      {Key key,
+      this.id,
+      this.listCombobox,
+      this.surveyInfo,
+      this.listSurveyHistory})
       : super(key: key);
 
   @override
@@ -187,7 +195,8 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
   double _animatedHeightCapital1 = 0.0;
   double _animatedHeightCapital2 = 0.0;
   double _animatedHeightTimeOfWithdrawal = 0.0;
-
+  bool isDataHistory = false;
+  SurveyInfoHistory surveyInfoHistory;
   // DateTime _selectDate(BuildContext context, DateTime selectedDate) {
   //   final ThemeData theme = Theme.of(context);
   //   assert(theme.platform != null);
@@ -340,6 +349,12 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
 
   @override
   void initState() {
+    surveyInfoHistory = widget.listSurveyHistory
+        .where((e) => e.thanhvienId == widget.surveyInfo.thanhvienId)
+        .first;
+    if (surveyInfoHistory != null) {
+      this.isDataHistory = true;
+    }
     loadInitData();
     services = Services.of(context);
     surVeyBloc =
@@ -473,8 +488,8 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
       model.thoiDiemRut = "";
     } else {
       model.thoiDiemRut = selectedTimeOfWithdrawalDate != null
-        ? DateFormat('MM/dd').format(selectedTimeOfWithdrawalDate)
-        : "";
+          ? DateFormat('MM/dd').format(selectedTimeOfWithdrawalDate)
+          : "";
     }
     model.mucVayBoSung =
         MoneyFormat.convertCurrencyToInt(_controllerAmountAdditionalLoan.text);
@@ -631,14 +646,10 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
               DateTime.now().year.toString());
     }
 
-
-     if (widget.surveyInfo.thoiDiemRut.length > 1) {
+    if (widget.surveyInfo.thoiDiemRut.length > 1) {
       selectedTimeOfWithdrawalDate = DateFormat('MM/dd/yyyy').parse(
-          widget.surveyInfo.thoiDiemRut +
-              '/' +
-              DateTime.now().year.toString());
+          widget.surveyInfo.thoiDiemRut + '/' + DateTime.now().year.toString());
     }
-
 
     selectedDateofAdditionalCapital =
         FormatDateConstants.convertJsonDateToDateTime(
@@ -906,7 +917,6 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                     fontSize: 14),
                                 onPositiveClick: () {
                                   Navigator.of(context).pop();
-
                                   _onSubmit();
                                 },
                                 onNegativeClick: () {
@@ -919,8 +929,6 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                             curve: Curves.fastOutSlowIn,
                             duration: Duration(milliseconds: 500),
                           );
-                          // _onSubmit();
-                          //Navigator.pop(context, "OK-ID");
                         })
                   ],
                   backgroundColor: ColorConstants.cepColorBackground,
@@ -1860,6 +1868,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                               CrossAxisAlignment.start,
                                           children: [
                                             CardCustomizeWidget(
+                                              isShowCopyIcon: isDataHistory,
                                               children: [
                                                 Text(
                                                   "4.1 Mụch đích sử dụng vốn",
@@ -2034,11 +2043,258 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                               title:
                                                   "4. Thông tin về nhu cầu vốn",
                                               width: screenWidth * 1,
+                                              onTap: () {
+                                                dialogCustomForCEP(
+                                                    context,
+                                                    "Thông tin về nhu cầu vốn",
+                                                    _copyInfoLoanDemand,
+                                                    children: [
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Text(
+                                                            "Ngày khảo sát: ",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontFamily:
+                                                                    'Lato',
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                          Text(
+                                                            selectedSurveyDate !=
+                                                                    null
+                                                                ? "${selectedSurveyDate.toLocal()}"
+                                                                    .split(
+                                                                        ' ')[0]
+                                                                : "",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontFamily:
+                                                                    'Lato',
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                            textAlign:
+                                                                TextAlign.end,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Divider(
+                                                        height: 10,
+                                                      ),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Container(
+                                                            child: Text(
+                                                              "* Mục đích sử dụng vốn: ",
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                            child: Text(
+                                                              surveyInfoHistory
+                                                                  .mucDichSudungVon,
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                                fontStyle:
+                                                                    FontStyle
+                                                                        .italic,
+                                                                color:
+                                                                    Colors.red,
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .underline,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Container(
+                                                            child: Text(
+                                                              "* Số tiền cần cho mục đích: ",
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                            child: Text(
+                                                              MoneyFormat.moneyFormat(
+                                                                  surveyInfoHistory
+                                                                      .soTienCanThiet
+                                                                      .toString()),
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                                fontStyle:
+                                                                    FontStyle
+                                                                        .italic,
+                                                                color:
+                                                                    Colors.red,
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .underline,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Container(
+                                                            child: Text(
+                                                              "* Số tiền thành viên đã có: ",
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                            child: Text(
+                                                              MoneyFormat.moneyFormat(
+                                                                  surveyInfoHistory
+                                                                      .soTienThanhVienDaCo
+                                                                      .toString()),
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                                fontStyle:
+                                                                    FontStyle
+                                                                        .italic,
+                                                                color:
+                                                                    Colors.red,
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .underline,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Container(
+                                                            child: Text(
+                                                              "* Số tiền thành viên cần vay: ",
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                            child: Text(
+                                                              MoneyFormat.moneyFormat(
+                                                                  surveyInfoHistory
+                                                                      .soTienCanVay
+                                                                      .toString()),
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                                fontStyle:
+                                                                    FontStyle
+                                                                        .italic,
+                                                                color:
+                                                                    Colors.red,
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .underline,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Container(
+                                                            child: Text(
+                                                              "* Thời điểm sử dụng vốn vay: ",
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                            child: Text(
+                                                              surveyInfoHistory
+                                                                  .thoiDiemSuDungVonvay,
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                                fontStyle:
+                                                                    FontStyle
+                                                                        .italic,
+                                                                color:
+                                                                    Colors.red,
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .underline,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                    width: screenWidth * 0.9);
+                                              },
                                             ),
 
                                             /// 4. Thông tin về thu nhập, chi phí, tích lũy hộ gia đình thành viên
 
                                             CardCustomizeWidget(
+                                              isShowCopyIcon: isDataHistory,
                                               children: [
                                                 Text(
                                                   "5.1 Tổng số vốn đầu tư cho hoạt động tăng thu nhập/ mùa vụ",
@@ -2481,6 +2737,382 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                 ),
                                               ],
                                               width: screenWidth * 1,
+                                              onTap: () {
+                                                dialogCustomForCEP(
+                                                    context,
+                                                    "Thông tin về thu nhập, chi phí, tích lũy",
+                                                    _copyInfoIcome,
+                                                    children: [
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Text(
+                                                            "Ngày khảo sát: ",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontFamily:
+                                                                    'Lato',
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                          Text(
+                                                            selectedSurveyDate !=
+                                                                    null
+                                                                ? "${selectedSurveyDate.toLocal()}"
+                                                                    .split(
+                                                                        ' ')[0]
+                                                                : "",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontFamily:
+                                                                    'Lato',
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                            textAlign:
+                                                                TextAlign.end,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Divider(
+                                                        height: 10,
+                                                      ),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Container(
+                                                            width: screenWidth *
+                                                                0.5,
+                                                            child: Text(
+                                                              "* Tổng vốn đầu tư hoạt động tăng thu nhập/mùa vụ: ",
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                            width: screenWidth *
+                                                                0.2,
+                                                            child: Text(
+                                                              MoneyFormat.moneyFormat(
+                                                                  surveyInfoHistory
+                                                                      .tongVonDauTu
+                                                                      .toString()),
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                                fontStyle:
+                                                                    FontStyle
+                                                                        .italic,
+                                                                color:
+                                                                    Colors.red,
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .underline,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .right,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Container(
+                                                            width: screenWidth *
+                                                                0.5,
+                                                            child: Text(
+                                                              "* Tổng thu nhập hàng tháng: ",
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                            width: screenWidth *
+                                                                0.2,
+                                                            child: Text(
+                                                              MoneyFormat.moneyFormat((surveyInfoHistory.thuNhapRongHangThang +
+                                                                      surveyInfoHistory
+                                                                          .thuNhapCuaVoChong +
+                                                                      surveyInfoHistory
+                                                                          .thuNhapCuaCacCon +
+                                                                      surveyInfoHistory
+                                                                          .thuNhapKhac)
+                                                                  .toString()),
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                                fontStyle:
+                                                                    FontStyle
+                                                                        .italic,
+                                                                color:
+                                                                    Colors.red,
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .underline,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .right,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Container(
+                                                            width: screenWidth *
+                                                                0.5,
+                                                            child: Text(
+                                                              "* GDP bình quân đầu người háng tháng: ",
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                            width: screenWidth *
+                                                                0.2,
+                                                            child: Text(
+                                                              "0",
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                                fontStyle:
+                                                                    FontStyle
+                                                                        .italic,
+                                                                color:
+                                                                    Colors.red,
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .underline,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .right,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Container(
+                                                            width: screenWidth *
+                                                                0.5,
+                                                            child: Text(
+                                                              "* Tổng chi phí hàng tháng: ",
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                            width: screenWidth *
+                                                                0.2,
+                                                            child: Text(
+                                                              MoneyFormat.moneyFormat((surveyInfoHistory.tongChiPhiCuaThanhvien +
+                                                                      surveyInfoHistory
+                                                                          .chiPhiAnUong +
+                                                                      surveyInfoHistory
+                                                                          .chiPhiDienNuoc +
+                                                                      surveyInfoHistory
+                                                                          .chiPhiHocTap +
+                                                                      surveyInfoHistory
+                                                                          .chiPhiKhac)
+                                                                  .toString()),
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                                fontStyle:
+                                                                    FontStyle
+                                                                        .italic,
+                                                                color:
+                                                                    Colors.red,
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .underline,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .right,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Container(
+                                                            width: screenWidth *
+                                                                0.5,
+                                                            child: Text(
+                                                              "* Chi phí trả góp hàng tháng: ",
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                            width: screenWidth *
+                                                                0.2,
+                                                            child: Text(
+                                                              MoneyFormat.moneyFormat(
+                                                                  surveyInfoHistory
+                                                                      .chiTraTienVayHangThang
+                                                                      .toString()),
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                                fontStyle:
+                                                                    FontStyle
+                                                                        .italic,
+                                                                color:
+                                                                    Colors.red,
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .underline,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .right,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Container(
+                                                            width: screenWidth *
+                                                                0.5,
+                                                            child: Text(
+                                                              "* Tích lũy hàng tháng: ",
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                            width: screenWidth *
+                                                                0.2,
+                                                            child: Text(
+                                                              MoneyFormat.moneyFormat(
+                                                                  ((surveyInfoHistory.thuNhapRongHangThang +
+                                                                      surveyInfoHistory
+                                                                          .thuNhapCuaVoChong +
+                                                                      surveyInfoHistory
+                                                                          .thuNhapCuaCacCon +
+                                                                      surveyInfoHistory
+                                                                          .thuNhapKhac) - (surveyInfoHistory.tongChiPhiCuaThanhvien +
+                                                                      surveyInfoHistory
+                                                                          .chiPhiAnUong +
+                                                                      surveyInfoHistory
+                                                                          .chiPhiDienNuoc +
+                                                                      surveyInfoHistory
+                                                                          .chiPhiHocTap +
+                                                                      surveyInfoHistory
+                                                                          .chiPhiKhac))
+                                                                      .toString()),
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                                fontStyle:
+                                                                    FontStyle
+                                                                        .italic,
+                                                                color:
+                                                                    Colors.red,
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .underline,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .right,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Container(
+                                                            width: screenWidth *
+                                                                0.5,
+                                                            child: Text(
+                                                              "* Tích lũy hàng tháng tăng thêm khi sử dụng khoản vay: ",
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                            width: screenWidth *
+                                                                0.2,
+                                                            child: Text(
+                                                              "0",
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                                fontStyle:
+                                                                    FontStyle
+                                                                        .italic,
+                                                                color:
+                                                                    Colors.red,
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .underline,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .right,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                    width: screenWidth * 0.9);
+                                              },
                                               title:
                                                   "5. Thông tin về thu nhập, chi phí, tích lũy hộ gia đình thành viên",
                                             ),
@@ -2966,11 +3598,14 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                   height: 10,
                                                 ),
                                               ],
+                                              onTap:
+                                                  _copyMemberLoanOtherCapital,
                                               title:
                                                   "6. Thành viên có đang vay nguồn vốn khác",
                                               width: screenWidth * 1,
                                             ),
                                             CardCustomizeWidget(
+                                              isShowCopyIcon: isDataHistory,
                                               children: [
                                                 Text(
                                                   "Thành viên thuộc diện",
@@ -3047,10 +3682,179 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                   ),
                                                 ),
                                               ],
+                                              onTap: (){
+                                                dialogCustomForCEP(
+                                                    context,
+                                                    "Thành viên thuộc diện",
+                                                    _copyTypeMember,
+                                                    children: [
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Text(
+                                                            "Ngày khảo sát: ",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontFamily:
+                                                                    'Lato',
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                          Text(
+                                                            selectedSurveyDate !=
+                                                                    null
+                                                                ? "${selectedSurveyDate.toLocal()}"
+                                                                    .split(
+                                                                        ' ')[0]
+                                                                : "",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontFamily:
+                                                                    'Lato',
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                            textAlign:
+                                                                TextAlign.end,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Divider(
+                                                        height: 10,
+                                                      ),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Container(
+                                                            child: Text(
+                                                              "* Thành viên thuộc diện: ",
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                            child: Text(
+                                                              widget.listCombobox.where((e) => e.groupId == 'ThanhVienThuocDien' && e.itemId == surveyInfoHistory
+                                                                  .thanhVienThuocDien).first.itemText
+                                                              ,
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                                fontStyle:
+                                                                    FontStyle
+                                                                        .italic,
+                                                                color:
+                                                                    Colors.red,
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .underline,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Container(
+                                                            child: Text(
+                                                              "* Mã số hộ nghèo: ",
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                            child: Text(
+                                                                  surveyInfoHistory
+                                                                      .maSoHoNgheo
+                                                                      .toString(),
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                                fontStyle:
+                                                                    FontStyle
+                                                                        .italic,
+                                                                color:
+                                                                    Colors.red,
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .underline,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Container(
+                                                            child: Text(
+                                                              "* Họ tên chủ hộ: ",
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                            child: Text(
+                                                                  surveyInfoHistory
+                                                                      .hoTenChuHo,
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                                fontStyle:
+                                                                    FontStyle
+                                                                        .italic,
+                                                                color:
+                                                                    Colors.red,
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .underline,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      
+                                                    ],
+                                                    width: screenWidth * 0.9);
+                                              
+                                              },
                                               title: "7. Thành viên thuộc diện",
                                               width: screenWidth * 1,
                                             ),
                                             CardCustomizeWidget(
+                                              //isShowCopyIcon: isDataHistory,
                                               children: [
                                                 Text(
                                                   "Số tiền gửi mỗi kỳ",
@@ -3078,6 +3882,8 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                   ),
                                                 ),
                                               ],
+                                              onTap:
+                                                  _copyAmountSavingsDepositAmountEverytime,
                                               title:
                                                   "8. Thành viên có tham gia gửi tiết kiệm định hướng?",
                                               width: screenWidth * 1,
@@ -3268,6 +4074,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                   ),
                                                 ),
                                               ],
+                                              onTap: _copyMemberJoinSaving,
                                               title:
                                                   "9. Thành viên có tham gia gửi tiết kiệm định hướng?",
                                               width: screenWidth * 1,
@@ -3391,6 +4198,8 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                   ),
                                                 ),
                                               ],
+                                              onTap:
+                                                  _copyMemberRegisterAdditionalLoan,
                                               width: screenWidth * 1,
                                               title:
                                                   "10. Thành viên có đăng ký vay bổ sung",
@@ -3460,6 +4269,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                 width: screenWidth * 1,
                                               ),
                                               CardCustomizeWidget(
+                                                isShowCopyIcon: isDataHistory,
                                                 children: [
                                                   Container(
                                                     height: 100,
@@ -3485,6 +4295,79 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                     ),
                                                   ),
                                                 ],
+                                                onTap: () {
+                                                  dialogCustomForCEP(
+                                                      context,
+                                                      "Ghi chú của CBQL",
+                                                      _copyNoted,
+                                                      children: [
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Text(
+                                                              "Ngày khảo sát: ",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontFamily:
+                                                                      'Lato',
+                                                                  fontSize: 14,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                            Text(
+                                                              selectedSurveyDate !=
+                                                                      null
+                                                                  ? "${selectedSurveyDate.toLocal()}"
+                                                                      .split(
+                                                                          ' ')[0]
+                                                                  : "",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontFamily:
+                                                                      'Lato',
+                                                                  fontSize: 14,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                              textAlign:
+                                                                  TextAlign.end,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        Divider(
+                                                          height: 10,
+                                                        ),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Container(
+                                                              width:
+                                                                  screenWidth *
+                                                                      0.84,
+                                                              child: Text(
+                                                                surveyInfoHistory
+                                                                    .ghiChu,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize: 14,
+                                                                ),
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .justify,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                      width: screenWidth * 1);
+                                                },
                                                 title:
                                                     "12. Ghi chú của nhân viên tín dụng",
                                                 width: screenWidth * 1,
@@ -3690,5 +4573,146 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                 : Colors.grey),
       ),
     );
+  }
+
+  void _copyInfoLoanDemand() {
+    _controllerPurposeUseMoney.text = surveyInfoHistory.mucDichSudungVon;
+    _controllerAmountRequiredForCapitalUsePurposes.text =
+        MoneyFormat.moneyFormat(surveyInfoHistory.soTienCanThiet.toString());
+    _controllerAmountMemberHave.text = MoneyFormat.moneyFormat(
+        surveyInfoHistory.soTienThanhVienDaCo.toString());
+    _controllerAmountMemberNeed.text =
+        MoneyFormat.moneyFormat(surveyInfoHistory.soTienCanVay.toString());
+    if (surveyInfoHistory.thoiDiemSuDungVonvay.length > 1) {
+      setState(() {
+        selectedTimetoUseLoanDate = DateFormat('MM/dd/yyyy').parse(
+            surveyInfoHistory.thoiDiemSuDungVonvay +
+                '/' +
+                DateTime.now().year.toString());
+      });
+    }
+  }
+
+  void _copyInfoIcome() {
+    _controllerTotalAmountGetSeason.text =
+        MoneyFormat.moneyFormat(surveyInfoHistory.tongVonDauTu.toString());
+    _controllerTotalAmountMonthlyforActivityIncomeIncrease.text =
+        MoneyFormat.moneyFormat(
+            surveyInfoHistory.thuNhapRongHangThang.toString());
+    _controllerIncomeOfWifeHusband.text =
+        MoneyFormat.moneyFormat(surveyInfoHistory.thuNhapCuaVoChong.toString());
+    _controllerIncomeOfChild = new TextEditingController(
+        text: MoneyFormat.moneyFormat(
+            surveyInfoHistory.thuNhapCuaCacCon.toString()));
+    _controllerIncomeOther.text =
+        MoneyFormat.moneyFormat(surveyInfoHistory.thuNhapKhac.toString());
+    _controllerTotalMonthlyExpenses.text = MoneyFormat.moneyFormat(
+        surveyInfoHistory.tongChiPhiCuaThanhvien.toString());
+    _controllerTotalPowerAndWater.text =
+        MoneyFormat.moneyFormat(surveyInfoHistory.chiPhiDienNuoc.toString());
+    _controllerTotalCharge.text =
+        MoneyFormat.moneyFormat(surveyInfoHistory.chiPhiAnUong.toString());
+    _controllerTotalFee.text =
+        MoneyFormat.moneyFormat(surveyInfoHistory.chiPhiHocTap.toString());
+    _controllerTotalOtherCost.text =
+        MoneyFormat.moneyFormat(surveyInfoHistory.chiPhiKhac.toString());
+    _controllerCostofLoanRepaymentToCEPMonthly.text = MoneyFormat.moneyFormat(
+        surveyInfoHistory.chiTraTienVayHangThang.toString());
+    _controllerMonthlyBalanceUseCapital.text = MoneyFormat.moneyFormat(
+        surveyInfoHistory.tichLuyTangThemHangThang.toString());
+  }
+
+  void _copyMemberLoanOtherCapital() {
+    setState(() {
+      _capital1Value = surveyInfoHistory.nguonVay1;
+      _capital2Value = surveyInfoHistory.nguonVay2;
+      _reasonLoan1Value = surveyInfoHistory.lyDoVay1;
+      _reasonLoan2Value = surveyInfoHistory.lyDoVay2;
+      _uniformMeasure1Value = surveyInfoHistory.bienPhapThongNhat1;
+      _uniformMeasure2Value = surveyInfoHistory.bienPhapThongNhat2;
+      _controllerTotalAmountCapital1.text =
+          MoneyFormat.moneyFormat(surveyInfoHistory.sotienVay1.toString());
+      _controllerTotalAmountCapital2.text =
+          MoneyFormat.moneyFormat(surveyInfoHistory.sotienVay2.toString());
+
+      if (surveyInfoHistory.thoiDiemTatToan1.length > 1) {
+        selectedFinalSettlement1Date = DateFormat('MM/dd/yyyy').parse(
+            surveyInfoHistory.thoiDiemTatToan1 +
+                '/' +
+                DateTime.now().year.toString());
+      }
+
+      if (surveyInfoHistory.thoiDiemTatToan2.length > 1) {
+        selectedFinalSettlement2Date = DateFormat('MM/dd/yyyy').parse(
+            surveyInfoHistory.thoiDiemTatToan2 +
+                '/' +
+                DateTime.now().year.toString());
+      }
+    });
+  }
+
+  void _copyTypeMember() {
+    setState(() {
+      _typeMemberValue = surveyInfoHistory.thanhVienThuocDien;
+      _controllerPoorHouseholdsCode.text = surveyInfoHistory.maSoHoNgheo == null
+          ? ""
+          : surveyInfoHistory.maSoHoNgheo.toString();
+      _controllerNameofHouseholdHead.text = surveyInfoHistory.hoTenChuHo == null
+          ? ""
+          : surveyInfoHistory.hoTenChuHo.toString();
+    });
+  }
+
+  void _copyAmountSavingsDepositAmountEverytime() {
+    _controllerSavingsDepositAmountEverytime.text =
+        surveyInfoHistory.soTienGuiTietKiemMoiKy == null
+            ? ""
+            : MoneyFormat.moneyFormat(
+                surveyInfoHistory.soTienGuiTietKiemMoiKy.toString());
+  }
+
+  void _copyMemberJoinSaving() {
+    _controllerRequiredDeposit.text =
+        surveyInfoHistory.tietKiemBatBuocXinRut == null
+            ? ""
+            : MoneyFormat.moneyFormat(
+                surveyInfoHistory.tietKiemBatBuocXinRut.toString());
+    _controllerOrientationDeposit.text =
+        surveyInfoHistory.tietKiemTuNguyenXinRut == null
+            ? ""
+            : MoneyFormat.moneyFormat(
+                surveyInfoHistory.tietKiemTuNguyenXinRut.toString());
+
+    _controllerFlexibleDeposit.text =
+        surveyInfoHistory.tietKiemLinhHoatXinRut == null
+            ? ""
+            : MoneyFormat.moneyFormat(
+                surveyInfoHistory.tietKiemLinhHoatXinRut.toString());
+
+    if (surveyInfoHistory.thoiDiemRut.length > 1) {
+      selectedTimeOfWithdrawalDate = DateFormat('MM/dd/yyyy').parse(
+          surveyInfoHistory.thoiDiemRut + '/' + DateTime.now().year.toString());
+    }
+  }
+
+  void _copyMemberRegisterAdditionalLoan() {
+    setState(() {
+      _controllerAmountAdditionalLoan.text = surveyInfoHistory.mucVayBoSung ==
+              null
+          ? ""
+          : MoneyFormat.moneyFormat(surveyInfoHistory.mucVayBoSung.toString());
+      _additionalLoanPurposeValue = surveyInfoHistory.mucDichVayBoSung;
+
+      selectedDateofAdditionalCapital =
+          FormatDateConstants.convertJsonDateToDateTime(
+              surveyInfoHistory.ngayVayBoSung);
+      _additionalLoanPurposeValue = surveyInfoHistory.mucDichVayBoSung;
+    });
+  }
+
+  void _copyNoted() {
+    _controllerCreditOfficerNotes.text = surveyInfoHistory.ghiChu == null
+        ? ""
+        : surveyInfoHistory.ghiChu.toString();
   }
 }

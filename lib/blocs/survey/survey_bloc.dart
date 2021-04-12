@@ -9,6 +9,7 @@ import 'package:CEPmobile/database/DBProvider.dart';
 import 'package:CEPmobile/models/download_data/comboboxmodel.dart';
 import 'package:CEPmobile/models/download_data/historysearchsurvey.dart';
 import 'package:CEPmobile/models/download_data/survey_info.dart';
+import 'package:CEPmobile/models/download_data/survey_info_history.dart';
 import 'package:CEPmobile/models/survey/survey_result.dart';
 import 'package:CEPmobile/services/commonService.dart';
 import 'package:CEPmobile/services/sharePreference.dart';
@@ -56,8 +57,10 @@ class SurveyBloc extends BlocEventStateBase<SurveyEvent, SurveyState> {
       yield SurveyState.updateLoading(true);
       var listHistorySearch = await DBProvider.db.getAllHistorySearchKhaoSat();
       List<SurveyInfo> listSurvey = await DBProvider.db.getAllKhaoSat();
+      List<SurveyInfoHistory> listSurveyInfoHistory = await DBProvider.db.getAllLichSuKhaoSat();
       surveyStream.listHistorySearch = listHistorySearch;
       surveyStream.listSurvey = listSurvey;
+      surveyStream.listSurveyInfoHistory = listSurveyInfoHistory;
       globalUser.setListSurveyGlobal = listSurvey;
       _getSurveyStreamController.sink.add(surveyStream);
       yield SurveyState.updateLoading(false);
@@ -100,7 +103,7 @@ class SurveyBloc extends BlocEventStateBase<SurveyEvent, SurveyState> {
       List<SurveyInfo> listSurvey = await DBProvider.db.getAllKhaoSat();
       listSurveyUpdate =
           listSurvey.where((e) => listCheckBox.contains(e.id)).toList();
-      String jsonbody = json.encode(listSurveyUpdate);
+      //String jsonbody = json.encode(listSurveyUpdate);
 
       var response = await commonService.updateSurveyInfo(listSurveyUpdate);
       if (response.statusCode == StatusCodeConstants.OK) {
