@@ -9,3 +9,4 @@ DecorationImage tick = new DecorationImage(
   image: new ExactAssetImage('assets/logo/bg.png'),
   fit: BoxFit.fill,
 );
+

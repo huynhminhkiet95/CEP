@@ -1,4 +1,5 @@
 import 'package:CEPmobile/config/colors.dart';
+import 'package:CEPmobile/models/download_data/comboboxmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 
@@ -33,3 +34,19 @@ Decoration decorationButtonAnimated(Color color) {
     ],
   );
 }
+ List<DropdownMenuItem<String>> _buildDropdown(List<ComboboxModel> listCombobox) 
+ {
+    List<DropdownMenuItem<String>> items = List();
+    items.add(DropdownMenuItem(
+      value: '0',
+      child: Text('Chọn'),
+    ));
+
+    for (var item in listCombobox) {
+      items.add(DropdownMenuItem(
+        value: item.itemId,
+        child: Text(item.itemText),
+      ));
+    }
+    return items;
+  }

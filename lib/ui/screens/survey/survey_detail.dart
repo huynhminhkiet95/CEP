@@ -170,22 +170,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
   TextEditingController _controllerDisbursementAmountOrientationDeposit =
       new TextEditingController(text: "");
 
-  List<DropdownMenuItem<String>> _buildDropdown(
-      List<ComboboxModel> listCombobox) {
-    List<DropdownMenuItem<String>> items = List();
-    items.add(DropdownMenuItem(
-      value: '0',
-      child: Text('Chọn'),
-    ));
 
-    for (var item in listCombobox) {
-      items.add(DropdownMenuItem(
-        value: item.itemId,
-        child: Text(item.itemText),
-      ));
-    }
-    return items;
-  }
 
   TextEditingController _textDateEditingController = TextEditingController(
       text: FormatDateConstants.convertDateTimeToString(DateTime.now()));
@@ -4573,6 +4558,23 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                 : Colors.grey),
       ),
     );
+  }
+  
+ List<DropdownMenuItem<String>> _buildDropdown(List<ComboboxModel> listCombobox) 
+ {
+    List<DropdownMenuItem<String>> items = List();
+    items.add(DropdownMenuItem(
+      value: '0',
+      child: Text('Chọn'),
+    ));
+
+    for (var item in listCombobox) {
+      items.add(DropdownMenuItem(
+        value: item.itemId,
+        child: Text(item.itemText),
+      ));
+    }
+    return items;
   }
 
   void _copyInfoLoanDemand() {

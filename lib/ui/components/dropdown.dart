@@ -1,4 +1,5 @@
 import 'package:CEPmobile/config/colors.dart';
+import 'package:CEPmobile/models/download_data/comboboxmodel.dart';
 import 'package:flutter/material.dart';
 
 class CustomDropdown<T> extends StatelessWidget {
@@ -28,7 +29,7 @@ class CustomDropdown<T> extends StatelessWidget {
         color: ColorConstants.cepColorBackground,
         width: 1,
       ),
-      color: Colors.white);
+      color: Colors.white.withOpacity(0));
   @override
   Widget build(BuildContext context) {
     return IgnorePointer(
@@ -43,6 +44,7 @@ class CustomDropdown<T> extends StatelessWidget {
           child: DropdownButton(
             isExpanded: true,
             itemHeight: 50.0,
+            
             style: TextStyle(
                 color: isEnabled
                     ? ColorConstants.cepColorBackground

@@ -193,7 +193,11 @@ class AppState extends State<Application> {
               return SlideLeftRoute(page: CommunityDevelopmentScreen());
               break;
             case 'comunitydevelopmentdetail':
-              return SlideTopRoute(page: CommunityDevelopmentDetail());
+            final Map<String, Object> arguments = settings.arguments;
+              return SlideTopRoute(page: CommunityDevelopmentDetail(
+                id: arguments['id'],
+                listCombobox: arguments['metadata'],
+              ));
               break;
 
             default:

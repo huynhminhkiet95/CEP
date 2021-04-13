@@ -141,7 +141,7 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                 padding: const EdgeInsets.only(left: 40, right: 40, top: 30),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Card(
                         elevation: 4.0,
@@ -158,6 +158,9 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                             ),
                           ),
                         )),
+                    SizedBox(
+                      width: 10,
+                    ),
                     Container(
                       height: 30,
                       width: size.width * 0.55,
@@ -315,10 +318,6 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                         List<bool>.generate(4, (int index) => false);
                     isActiveForList[i] = true;
                   });
-
-                  Navigator.pushNamed(context, 'comunitydevelopmentdetail').then((value) {
-                  
-                  });
                 },
                 child: new Container(
                   padding: EdgeInsets.only(left: 10, right: 10, top: 5),
@@ -326,30 +325,87 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                     elevation: 4,
                     semanticContainer: false,
                     shadowColor: Colors.grey,
-                    // color: Colors.white,
                     borderOnForeground: true,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    child: AnimatedContainer(
-                      duration: Duration(milliseconds: 500),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
+                    child: Container(
+                      height: 120,
+                      child: Stack(
+                        children: [
+                          new AnimatedPositioned(
+                            duration: Duration(milliseconds: 500),
+                            curve: Curves.linearToEaseOut,
+                            left: isActiveForList[i] == false
+                                ? screenWidth * 1
+                                : (screenWidth * 1) - 98,
+                            width: 70,
+                            //top: 35,
+                            child: Container(
+                              height: 120,
+                              color: Colors.red,
+                              child: IconButton(
+                                  icon: Icon(
+                                    Icons.arrow_forward_ios,
+                                    color: Colors.white,
+                                  ),
+                                  onPressed: () {
+                                    List<ComboboxModel> listCombobox =
+                                        globalUser.getListComboboxModel;
+                                    if (listCombobox == null ||
+                                        listCombobox.length == 0) {
+                                      Navigator.pushNamed(context, 'download',
+                                          arguments: {
+                                            'selectedIndex': 4,
+                                          }).then((value) => setState(() {
+                                            if (true == value) {
+                                              initState();
+                                            }
+                                          }));
+                                    } else {
+                                      Navigator.pushNamed(
+                                          context, 'comunitydevelopmentdetail',
+                                          arguments: {
+                                            'id': 1,
+                                            'metadata': listCombobox,
+                                          }).then((value) {});
+                                    }
+                                  }),
+                            ),
                           ),
-                          color: isActiveForList[i] == false
-                              ? Colors.white10
-                              : Colors.lightGreen[200]),
-                      // Provide an optional curve to make the animation feel smoother.
-                      curve: Curves.fastOutSlowIn,
-
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            top: 15, bottom: 15, left: 10, right: 10),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: screenWidth * 0.86,
+                          new AnimatedPositioned(
+                            duration: Duration(milliseconds: 500),
+                            curve: Curves.linearToEaseOut,
+                            right: isActiveForList[i] == false ? 0 : 70,
+                            child: AnimatedContainer(
+                              width: screenWidth * 0.927,
+                              padding: EdgeInsets.only(
+                                top: 15,
+                                bottom: 25,
+                                left: 10,
+                                right: 10,
+                              ),
+                              // margin: EdgeInsets.only(
+                              //     right: isActiveForList[i] == false ? 0 : 60),
+                              duration: Duration(milliseconds: 500),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(
+                                          isActiveForList[i] == false ? 10 : 0),
+                                      bottomLeft: Radius.circular(10),
+                                      bottomRight: Radius.circular(
+                                          isActiveForList[i] == false
+                                              ? 10
+                                              : 0)),
+                                  // borderRadius: BorderRadius.all(
+                                  //   Radius.circular(10),
+                                  // ),
+                                  color: isActiveForList[i] == false
+                                      ? Colors.white10
+                                      : Colors.lightGreen[200]),
+                              // Provide an optional curve to make the animation feel smoother.
+                              curve: Curves.fastOutSlowIn,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -470,9 +526,9 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                                   )
                                 ],
                               ),
-                            )
-                          ],
-                        ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
