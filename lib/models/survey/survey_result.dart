@@ -7,10 +7,8 @@ class SurveyStream {
   List<SurveyInfo> listSurvey;
   List<HistorySearchSurvey> listHistorySearch;
   List<SurveyInfoHistory> listSurveyInfoHistory;
-  
-  SurveyStream({
-    this.listSurvey,
-    this.listHistorySearch,
-    this.listSurveyInfoHistory
-  });
+  String cumID;
+  String ngayXuatDS;
+  SurveyStream(
+      {this.listSurvey, this.listHistorySearch, this.listSurveyInfoHistory, this.cumID, this.ngayXuatDS});
 }

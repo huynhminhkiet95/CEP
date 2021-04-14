@@ -6,6 +6,7 @@ import 'package:CEPmobile/ui/screens/Home/dashboard.dart';
 import 'package:CEPmobile/ui/screens/Login/loginPage.dart';
 import 'package:CEPmobile/ui/screens/community_development/community_development.dart';
 import 'package:CEPmobile/ui/screens/community_development/community_development_detail.dart';
+import 'package:CEPmobile/ui/screens/delete_data/delete_data.dart';
 import 'package:CEPmobile/ui/screens/downloadData/download_main.dart';
 import 'package:CEPmobile/ui/screens/error/error.dart';
 import 'package:CEPmobile/ui/screens/profile/user_profile.dart';
@@ -164,6 +165,11 @@ class AppState extends State<Application> {
             case 'survey':
               return SlideLeftRoute(page: SurveyScreen());
               break;
+              
+            case 'deletedata':
+              return SlideLeftRoute(page: DeleteDataScreen());
+              break;
+
             case 'userprofile':
               return SlideLeftRoute(page: ProfilePageDesign());
               break;

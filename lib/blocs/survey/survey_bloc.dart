@@ -54,15 +54,71 @@ class SurveyBloc extends BlocEventStateBase<SurveyEvent, SurveyState> {
       SurveyEvent event, SurveyState state) async* {
     if (event is LoadSurveyEvent) {
       SurveyStream surveyStream = new SurveyStream();
+      HistorySearchSurvey historySearch;
       yield SurveyState.updateLoading(true);
-      var listHistorySearch = await DBProvider.db.getAllHistorySearchKhaoSat();
+      List<HistorySearchSurvey> listHistorySearch =
+          await DBProvider.db.getAllHistorySearchKhaoSat();
+
+      if (listHistorySearch.length > 0) {
+        if (globalUser.getCumId == null) {
+          historySearch = listHistorySearch.last;
+        } else {
+          historySearch = listHistorySearch
+              .where((e) => e.cumID == globalUser.getCumId)
+              .first;
+        }
+        surveyStream.cumID = globalUser.getCumId == null
+            ? listHistorySearch.last.cumID
+            : historySearch.cumID;
+        surveyStream.ngayXuatDS = globalUser.getCumId == null
+            ? listHistorySearch.last.ngayXuatDanhSach
+            : historySearch.ngayXuatDanhSach;
+      }
+
       List<SurveyInfo> listSurvey = await DBProvider.db.getAllKhaoSat();
-      List<SurveyInfoHistory> listSurveyInfoHistory = await DBProvider.db.getAllLichSuKhaoSat();
+      List<SurveyInfoHistory> listSurveyInfoHistory =
+          await DBProvider.db.getAllLichSuKhaoSat();
       surveyStream.listHistorySearch = listHistorySearch;
-      surveyStream.listSurvey = listSurvey;
+      surveyStream.listSurvey = listSurvey
+          .where((e) => e.idHistoryKhaoSat == historySearch.id ?? 0)
+          .toList();
       surveyStream.listSurveyInfoHistory = listSurveyInfoHistory;
+
       globalUser.setListSurveyGlobal = listSurvey;
       _getSurveyStreamController.sink.add(surveyStream);
+      yield SurveyState.updateLoading(false);
+    }
+    if (event is SearchSurveyEvent) {
+      SurveyStream surveyStream = new SurveyStream();
+      String date = event.ngayXuatDanhSach;
+
+      yield SurveyState.updateLoading(true);
+      List<HistorySearchSurvey> listHistorySearch =
+          await DBProvider.db.getAllHistorySearchKhaoSat();
+      if (event.ngayXuatDanhSach == null) {
+        date = listHistorySearch
+            .where((e) => e.cumID == event.cumID)
+            .first
+            .ngayXuatDanhSach;
+      }
+
+      HistorySearchSurvey historySearch = listHistorySearch
+          .where((e) => e.cumID == event.cumID && e.ngayXuatDanhSach == date)
+          .first;
+      List<SurveyInfo> listSurvey = await DBProvider.db.getAllKhaoSat();
+      List<SurveyInfoHistory> listSurveyInfoHistory =
+          await DBProvider.db.getAllLichSuKhaoSat();
+      surveyStream.listHistorySearch = listHistorySearch;
+      surveyStream.listSurvey = listSurvey
+          .where((e) => e.idHistoryKhaoSat == historySearch.id)
+          .toList();
+      surveyStream.listSurveyInfoHistory = listSurveyInfoHistory;
+      surveyStream.cumID = event.cumID;
+      surveyStream.ngayXuatDS = date;
+      globalUser.setListSurveyGlobal = listSurvey;
+      _getSurveyStreamController.sink.add(surveyStream);
+
+      this.sharePreferenceService.saveCumId(event.cumID);
       yield SurveyState.updateLoading(false);
     }
     if (event is UpdateSurveyEvent) {

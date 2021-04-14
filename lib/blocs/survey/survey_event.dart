@@ -11,6 +11,12 @@ class LoadSurveyEvent extends SurveyEvent {
   LoadSurveyEvent() : super();
 }
 
+class SearchSurveyEvent extends SurveyEvent {
+  final String cumID;
+  final String ngayXuatDanhSach;
+  SearchSurveyEvent(this.cumID, this.ngayXuatDanhSach) : super();
+}
+
 class UpdateSurveyEvent extends SurveyEvent {
   final SurveyInfo surveyInfo;
   final BuildContext context;
@@ -22,4 +28,3 @@ class UpdateSurveyToServerEvent extends SurveyEvent {
   final BuildContext context;
   UpdateSurveyToServerEvent(this.listCheckBox, this.context) : super();
 }
-

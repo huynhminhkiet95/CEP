@@ -5,6 +5,7 @@ class KeyConstants {
   static const String isRemember = "isRemember";
   static const String password = "password";
   static const String userName = "userName";
+  static const String rememberUserName = "rememberUserName";
   static const String phoneNumber = "phoneNumber";
   static const String driverName = "driverName";
   static const String equipmentNo = "equipmentNo";
@@ -18,4 +19,5 @@ class KeyConstants {
   static const String serverHub = "serverHub";
   static const String serverSSO = "serverSSO";
   static const String tokenUser = "tokenUser";
+  static const String cumId = "cumId";
 }

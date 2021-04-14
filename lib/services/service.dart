@@ -26,10 +26,13 @@ class Services {
     final documentService = new DocumentService(httpBase);
    // final googleMapService = new GoogleMapService();
 
-    await sharePreferenceService.getRememberUser();
     await sharePreferenceService.getServerInfo();
     await sharePreferenceService.getDriverProfile();
     await sharePreferenceService.getToken();
+    await sharePreferenceService.getUserName();
+    await sharePreferenceService.getCumId();
+    await sharePreferenceService.getRememberUser();
+    await sharePreferenceService.getIsRememberUser();
     await sharePreferenceService.getUserInfo();
     await sharePreferenceService.getUserRole();
     await sharePreferenceService.getMetadata();

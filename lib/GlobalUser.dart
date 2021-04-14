@@ -13,6 +13,9 @@ class GlobalUser {
   String _subsidiaryId;
   String _subsidiaryName;
   String _userName;
+  String _rememberUserName;
+  String _isRememberLogin;
+  String _cumId;
   String _userId;
   String _defaultBranch;
   String _token;
@@ -46,6 +49,18 @@ class GlobalUser {
   String get getUserName => _userName;
 
   set setUserName(String value) => _userName = value;
+
+  String get getRememberUserName => _rememberUserName;
+
+  set setRememberUserName(String value) => _rememberUserName = value;
+
+  String get getIsRememberLogin => _isRememberLogin;
+
+  set setIsRememberLogin(String value) => _isRememberLogin = value;
+
+  String get getCumId => _cumId;
+
+  set setCumId(String value) => _cumId = value;
 
   String get getDefaultCenter => _defaultCenter;
 

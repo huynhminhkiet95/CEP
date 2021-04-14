@@ -1,3 +1,4 @@
+import 'package:CEPmobile/GlobalUser.dart';
 import 'package:CEPmobile/ui/components/Widget/bezierContainer.dart';
 import 'package:CEPmobile/ui/components/Widget/customClipper.dart';
 import 'package:CEPmobile/ui/navigation/slide_route.dart';
@@ -79,7 +80,10 @@ class _LoginPageState extends State<LoginPage> {
               child: Icon(Icons.keyboard_arrow_left, color: Colors.white),
             ),
             Text('Back',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500,color: Colors.white))
+                style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white))
           ],
         ),
       ),
@@ -160,6 +164,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
+    _userNameController.text = globalUser.getRememberUserName;
+    _isRemember = globalUser.getIsRememberLogin == "1" ? true : false;
     services = Services.of(context);
     authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
     _passwordVisible = false;
@@ -270,7 +276,6 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
                     ),
-
                     Container(
                       margin: EdgeInsets.symmetric(vertical: 10),
                       child: Column(

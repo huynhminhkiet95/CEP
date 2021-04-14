@@ -90,8 +90,15 @@ class AuthenticationBloc
           if (jsonBodyToken["isSuccessed"] == true) {
             if (jsonBodyToken["token"] != null) {
               this._sharePreferenceService.saveToken(jsonBodyToken["token"]);
-              // globalUser.settoken = jsonBodyToken["token"];
-              // globalUser.setUserName = event.userName;
+              this._sharePreferenceService.saveUserName(event.userName);
+              if (event.isRemember == true) {
+                this._sharePreferenceService.saveRememberUser(event.userName);
+                this._sharePreferenceService.saveIsRemember("1");
+              }
+              else{
+                this._sharePreferenceService.saveRememberUser("");
+                this._sharePreferenceService.saveIsRemember("0");
+              }
               List responses = await Future.wait(
                   [getUserInfo(event.userName), getUserRoles(event.userName)]);
               if (responses != null &&

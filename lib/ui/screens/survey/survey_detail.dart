@@ -170,8 +170,6 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
   TextEditingController _controllerDisbursementAmountOrientationDeposit =
       new TextEditingController(text: "");
 
-
-
   TextEditingController _textDateEditingController = TextEditingController(
       text: FormatDateConstants.convertDateTimeToString(DateTime.now()));
 
@@ -335,8 +333,13 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
   @override
   void initState() {
     surveyInfoHistory = widget.listSurveyHistory
-        .where((e) => e.thanhvienId == widget.surveyInfo.thanhvienId)
-        .first;
+                .where((e) => e.thanhvienId == widget.surveyInfo.thanhvienId)
+                .length >
+            0
+        ? widget.listSurveyHistory
+            .where((e) => e.thanhvienId == widget.surveyInfo.thanhvienId)
+            .first
+        : null;
     if (surveyInfoHistory != null) {
       this.isDataHistory = true;
     }
@@ -605,7 +608,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
     ///muc dich vay von
     _loanPurposeModelDropdownList = _buildDropdown(
         widget.listCombobox.where((e) => e.groupId == 'MucDich').toList());
-    _loanPurposeValue = widget.surveyInfo.mucDichVay;
+    _loanPurposeValue = widget.surveyInfo.mucDichVay.trim();
 
     selectedSurveyDate = FormatDateConstants.convertJsonDateToDateTime(
         widget.surveyInfo.ngayKhaoSat);
@@ -2092,9 +2095,10 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                             ),
                                                           ),
                                                           Container(
+                                                            width: screenWidth * 0.4,
                                                             child: Text(
                                                               surveyInfoHistory
-                                                                  .mucDichSudungVon,
+                                                                  .mucDichSudungVon.trimRight().trimLeft(),
                                                               style: TextStyle(
                                                                 fontSize: 14,
                                                                 fontStyle:
@@ -2102,13 +2106,11 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                                         .italic,
                                                                 color:
                                                                     Colors.red,
-                                                                decoration:
-                                                                    TextDecoration
-                                                                        .underline,
+                                                               
                                                               ),
                                                               textAlign:
                                                                   TextAlign
-                                                                      .left,
+                                                                      .right,
                                                             ),
                                                           ),
                                                         ],
@@ -3018,23 +3020,23 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                             width: screenWidth *
                                                                 0.2,
                                                             child: Text(
-                                                              MoneyFormat.moneyFormat(
-                                                                  ((surveyInfoHistory.thuNhapRongHangThang +
-                                                                      surveyInfoHistory
-                                                                          .thuNhapCuaVoChong +
-                                                                      surveyInfoHistory
-                                                                          .thuNhapCuaCacCon +
-                                                                      surveyInfoHistory
-                                                                          .thuNhapKhac) - (surveyInfoHistory.tongChiPhiCuaThanhvien +
-                                                                      surveyInfoHistory
-                                                                          .chiPhiAnUong +
-                                                                      surveyInfoHistory
-                                                                          .chiPhiDienNuoc +
-                                                                      surveyInfoHistory
-                                                                          .chiPhiHocTap +
-                                                                      surveyInfoHistory
-                                                                          .chiPhiKhac))
-                                                                      .toString()),
+                                                              MoneyFormat.moneyFormat(((surveyInfoHistory.thuNhapRongHangThang +
+                                                                          surveyInfoHistory
+                                                                              .thuNhapCuaVoChong +
+                                                                          surveyInfoHistory
+                                                                              .thuNhapCuaCacCon +
+                                                                          surveyInfoHistory
+                                                                              .thuNhapKhac) -
+                                                                      (surveyInfoHistory.tongChiPhiCuaThanhvien +
+                                                                          surveyInfoHistory
+                                                                              .chiPhiAnUong +
+                                                                          surveyInfoHistory
+                                                                              .chiPhiDienNuoc +
+                                                                          surveyInfoHistory
+                                                                              .chiPhiHocTap +
+                                                                          surveyInfoHistory
+                                                                              .chiPhiKhac))
+                                                                  .toString()),
                                                               style: TextStyle(
                                                                 fontSize: 14,
                                                                 fontStyle:
@@ -3053,7 +3055,6 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                           ),
                                                         ],
                                                       ),
-
                                                       Row(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
@@ -3667,7 +3668,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                   ),
                                                 ),
                                               ],
-                                              onTap: (){
+                                              onTap: () {
                                                 dialogCustomForCEP(
                                                     context,
                                                     "Thành viên thuộc diện",
@@ -3732,9 +3733,16 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                           ),
                                                           Container(
                                                             child: Text(
-                                                              widget.listCombobox.where((e) => e.groupId == 'ThanhVienThuocDien' && e.itemId == surveyInfoHistory
-                                                                  .thanhVienThuocDien).first.itemText
-                                                              ,
+                                                              widget
+                                                                  .listCombobox
+                                                                  .where((e) =>
+                                                                      e.groupId ==
+                                                                          'ThanhVienThuocDien' &&
+                                                                      e.itemId ==
+                                                                          surveyInfoHistory
+                                                                              .thanhVienThuocDien)
+                                                                  .first
+                                                                  .itemText,
                                                               style: TextStyle(
                                                                 fontSize: 14,
                                                                 fontStyle:
@@ -3771,9 +3779,9 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                           ),
                                                           Container(
                                                             child: Text(
-                                                                  surveyInfoHistory
-                                                                      .maSoHoNgheo
-                                                                      .toString(),
+                                                              surveyInfoHistory
+                                                                  .maSoHoNgheo
+                                                                  .toString(),
                                                               style: TextStyle(
                                                                 fontSize: 14,
                                                                 fontStyle:
@@ -3810,8 +3818,8 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                           ),
                                                           Container(
                                                             child: Text(
-                                                                  surveyInfoHistory
-                                                                      .hoTenChuHo,
+                                                              surveyInfoHistory
+                                                                  .hoTenChuHo,
                                                               style: TextStyle(
                                                                 fontSize: 14,
                                                                 fontStyle:
@@ -3830,10 +3838,8 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                           ),
                                                         ],
                                                       ),
-                                                      
                                                     ],
                                                     width: screenWidth * 0.9);
-                                              
                                               },
                                               title: "7. Thành viên thuộc diện",
                                               width: screenWidth * 1,
@@ -4559,9 +4565,9 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
       ),
     );
   }
-  
- List<DropdownMenuItem<String>> _buildDropdown(List<ComboboxModel> listCombobox) 
- {
+
+  List<DropdownMenuItem<String>> _buildDropdown(
+      List<ComboboxModel> listCombobox) {
     List<DropdownMenuItem<String>> items = List();
     items.add(DropdownMenuItem(
       value: '0',

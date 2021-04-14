@@ -15,13 +15,27 @@ class SharePreferenceService {
 
   SharePreferenceService(this.share);
 
+
   Future<void> saveRememberUser(String userName) async {
-    share.setString(KeyConstants.userName, userName);
+    share.setString(KeyConstants.rememberUserName, userName);
+    globalUser.setRememberUserName = userName;
   }
 
   Future<String> getRememberUser() async {
-    String username = share.getString(KeyConstants.userName);
-    return username;
+    String rememberUserName = share.getString(KeyConstants.rememberUserName);
+    globalUser.setRememberUserName = rememberUserName;
+    return rememberUserName;
+  }
+
+  Future<void> saveIsRemember(String isRemember) async {
+    share.setString(KeyConstants.rememberUserName, isRemember);
+    globalUser.setIsRememberLogin = isRemember;
+  }
+
+  Future<String> getIsRememberUser() async {
+    String rememberUserName = share.getString(KeyConstants.rememberUserName);
+    globalUser.setIsRememberLogin = rememberUserName;
+    return rememberUserName;
   }
 
   // Future<void> getRememberUser() async {
@@ -50,6 +64,28 @@ class SharePreferenceService {
     String token = share.getString(KeyConstants.tokenUser);
     globalUser.settoken = token;
     return token;
+  }
+
+  Future<void> saveUserName(String userName) async {
+    share.setString(KeyConstants.userName, userName);
+    globalUser.setUserName = userName;
+  }
+
+  Future<String> getUserName() async {
+    String userName = share.getString(KeyConstants.userName);
+    globalUser.setUserName = userName;
+    return userName;
+  }
+
+  Future<void> saveCumId(String cumId) async {
+    share.setString(KeyConstants.cumId, cumId);
+    globalUser.setCumId = cumId;
+  }
+
+  Future<String> getCumId() async {
+    String cumId = share.getString(KeyConstants.cumId);
+    globalUser.setCumId = cumId;
+    return cumId;
   }
 
   Future<void> getUserInfo() async {

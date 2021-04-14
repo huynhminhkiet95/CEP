@@ -85,8 +85,8 @@ class DownloadDataBloc
               var listKhaoSat = SurveyInfoHistory.fromJson(item);
               await DBProvider.db.newLichSuKhaoSat(listKhaoSat);
             }
-            ToastResultMessage.success(
-                allTranslations.text("DownLoadDataSuccess"));
+            // ToastResultMessage.success(
+            //     allTranslations.text("DownLoadDataSuccess"));
           }
           yield DownloadDataState.updateLoading(false);
         } else {

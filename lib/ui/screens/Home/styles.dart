@@ -63,9 +63,10 @@ Widget customScrollViewSliverAppBarForDownload(String title,List<Widget> listChi
                 child: Text(title,
                 //  textAlign: TextAlign.center,
                   style: TextStyle(
-                      color: Color(0xff003399),
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,),
+      color: Color(0xff003399),
+      fontSize: 20,
+      fontWeight: FontWeight.w900,
+      wordSpacing: 5),
                 ),
               ),
            
@@ -83,3 +84,4 @@ Widget customScrollViewSliverAppBarForDownload(String title,List<Widget> listChi
 //   image: new ExactAssetImage('assets/avatars/avatar-7.gif'),
 //   fit: BoxFit.cover,
 // );
+

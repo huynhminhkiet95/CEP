@@ -24,12 +24,12 @@ import 'package:CEPmobile/models/download_data/survey_info.dart';
 import 'package:CEPmobile/ui/components/ModalProgressHUDCustomize.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 
-class SurveyScreen extends StatefulWidget {
+class DeleteDataScreen extends StatefulWidget {
   @override
-  _SurveyScreenState createState() => _SurveyScreenState();
+  _DeleteDataScreenState createState() => _DeleteDataScreenState();
 }
 
-class _SurveyScreenState extends State<SurveyScreen> {
+class _DeleteDataScreenState extends State<DeleteDataScreen> {
   List<String> listItemCumId;
   List<String> listItemNgayXuatDS;
   String dropdownCumIdValue;
@@ -146,72 +146,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(child: Builder(builder: (context) {
-                              Widget cardBatBuoc = Container();
-                              Widget cardkhaosat = Container();
-                              if (listSurvey[i].batBuocKhaosat == 1) {
-                                cardBatBuoc = Card(
-                                    elevation: 3,
-                                    color: Colors.red[900],
-                                    child: Container(
-                                      height: 20,
-                                      width: 120,
-                                      child: Text(
-                                        "Bắt Buộc Khảo Sát",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                            color: Colors.white),
-                                      ),
-                                    ));
-                              }
-
-                              if (listSurvey[i].ghiChu.length > 0 &&
-                                  listSurvey[i].soTienDuyetChovay > 0) {
-                                cardkhaosat = Card(
-                                    elevation: 3,
-                                    color: Colors.red,
-                                    child: Container(
-                                      padding:
-                                          EdgeInsets.only(right: 5, left: 5),
-                                      height: 20,
-                                      width: 90,
-                                      child: Text(
-                                        "Đã Khảo Sát",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                            color: Colors.white),
-                                      ),
-                                    ));
-                              } else {
-                                cardkhaosat = Card(
-                                    elevation: 3,
-                                    color: Colors.grey,
-                                    child: Container(
-                                      padding: EdgeInsets.only(
-                                          right: 5, left: 5, top: 2),
-                                      height: 20,
-                                      width: 103,
-                                      child: Text(
-                                        "Chưa Khảo Sát",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                            color: Colors.white),
-                                      ),
-                                    ));
-                              }
-
-                              return Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  cardkhaosat,
-                                  cardBatBuoc,
-                                ],
-                              );
-                            })),
+                          
                             Container(
                               padding: EdgeInsets.only(left: 4),
                               child: Text(
@@ -834,7 +769,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
             }),
         backgroundColor: ColorConstants.cepColorBackground,
         elevation: 20,
-        title: const Text('Khảo Sát Vay Vốn'),
+        title: const Text('Xóa Dữ Liệu'),
       ),
       body: GestureDetector(
           onHorizontalDragUpdate: (details) {

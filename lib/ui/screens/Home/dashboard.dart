@@ -57,6 +57,9 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
       case 'Phát Triển Cộng Đồng':
         Navigator.pushNamed(context, 'comunitydevelopment');
         break;
+      case 'Xóa Dữ Liệu':
+        Navigator.pushNamed(context, 'deletedata');
+        break;
       case 'Đăng Xuất':
         _loginSubmit();
         break;
