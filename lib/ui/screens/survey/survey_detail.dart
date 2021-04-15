@@ -889,34 +889,9 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                           size: 25,
                         ),
                         onPressed: () {
-                          showAnimatedDialog(
-                            context: context,
-                            barrierDismissible: true,
-                            builder: (BuildContext context) {
-                              return ClassicGeneralDialogWidget(
-                                positiveText: "Đồng Ý",
-                                negativeText: "Hủy",
-                                contentText:
-                                    "Bạn có muốn lưu dữ liệu khảo sát ?",
-                                negativeTextStyle:
-                                    TextStyle(color: Colors.grey, fontSize: 14),
-                                positiveTextStyle: TextStyle(
-                                    color: ColorConstants.cepColorBackground,
-                                    fontSize: 14),
-                                onPositiveClick: () {
-                                  Navigator.of(context).pop();
-                                  _onSubmit();
-                                },
-                                onNegativeClick: () {
-                                  Navigator.of(context).pop();
-                                },
-                              );
-                            },
-                            animationType:
-                                DialogTransitionType.slideFromTopFade,
-                            curve: Curves.fastOutSlowIn,
-                            duration: Duration(milliseconds: 500),
-                          );
+                          dialogCustomForCEP(context,
+                              "Bạn có muốn lưu dữ liệu khảo sát ?", _onSubmit,
+                              children: [], width: screenWidth * 0.7);
                         })
                   ],
                   backgroundColor: ColorConstants.cepColorBackground,
@@ -2095,10 +2070,13 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                             ),
                                                           ),
                                                           Container(
-                                                            width: screenWidth * 0.4,
+                                                            width: screenWidth *
+                                                                0.4,
                                                             child: Text(
                                                               surveyInfoHistory
-                                                                  .mucDichSudungVon.trimRight().trimLeft(),
+                                                                  .mucDichSudungVon
+                                                                  .trimRight()
+                                                                  .trimLeft(),
                                                               style: TextStyle(
                                                                 fontSize: 14,
                                                                 fontStyle:
@@ -2106,7 +2084,6 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                                         .italic,
                                                                 color:
                                                                     Colors.red,
-                                                               
                                                               ),
                                                               textAlign:
                                                                   TextAlign

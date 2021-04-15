@@ -4,6 +4,7 @@ import 'package:CEPmobile/models/download_data/comboboxmodel.dart';
 import 'package:CEPmobile/models/download_data/historysearchsurvey.dart';
 import 'package:CEPmobile/models/historyscreen/history_screen.dart';
 import 'package:CEPmobile/models/survey/survey_result.dart';
+import 'package:CEPmobile/ui/components/CustomDialog.dart';
 import 'package:CEPmobile/ui/screens/Home/styles.dart';
 import 'package:CEPmobile/ui/screens/survey/style.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
@@ -593,43 +594,12 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                                         (e) => e.status == true)
                                                     .length >
                                                 0) {
-                                              showAnimatedDialog(
-                                                context: context,
-                                                barrierDismissible: true,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return ClassicGeneralDialogWidget(
-                                                    positiveText: "Đồng Ý",
-                                                    negativeText: "Hủy",
-                                                    contentText:
-                                                        "Bạn có muốn lưu dữ liệu lên server ?",
-                                                    negativeTextStyle:
-                                                        TextStyle(
-                                                            color: Colors.grey,
-                                                            fontSize: 14),
-                                                    positiveTextStyle: TextStyle(
-                                                        color: ColorConstants
-                                                            .cepColorBackground,
-                                                        fontSize: 14),
-                                                    onPositiveClick: () {
-                                                      Navigator.of(context)
-                                                          .pop();
-
-                                                      _onSubmit();
-                                                    },
-                                                    onNegativeClick: () {
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
-                                                  );
-                                                },
-                                                animationType:
-                                                    DialogTransitionType
-                                                        .slideFromTopFade,
-                                                curve: Curves.fastOutSlowIn,
-                                                duration:
-                                                    Duration(milliseconds: 500),
-                                              );
+                                              dialogCustomForCEP(
+                                                  context,
+                                                  "Bạn có muốn lưu dữ liệu lên server ?",
+                                                  _onSubmit,
+                                                  children: [],
+                                                  width: screenWidth * 0.7);
                                             }
                                           },
                                           shape: const StadiumBorder(),

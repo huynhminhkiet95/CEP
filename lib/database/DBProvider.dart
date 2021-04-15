@@ -708,6 +708,33 @@ class DBProvider {
     return list;
   }
 
+  deleteKhaoSatByIdHistorySearch(int idHistorySearch) async {
+    final db = await database;
+    try {
+      await db.rawDelete('DELETE FROM KhaoSat WHERE idHistoryKhaoSat = ${idHistorySearch}');
+      await db.rawDelete('DELETE FROM historysearchkhaosat_tbl WHERE id = ${idHistorySearch}');
+     
+    } on Exception catch (ex) {
+      print(ex);
+      // only executed if error is of type Exception
+    } catch (error) {
+      // executed for errors of all types other than Exception
+    }
+  }
+
+  deleteKhaoSatById(int id) async {
+    final db = await database;
+    try {
+      await db.rawDelete('DELETE FROM KhaoSat WHERE id = ${id}');
+     
+    } on Exception catch (ex) {
+      print(ex);
+      // only executed if error is of type Exception
+    } catch (error) {
+      // executed for errors of all types other than Exception
+    }
+  }
+
   newLichSuKhaoSat(SurveyInfoHistory model) async {
     int rs = 0;
     final db = await database;

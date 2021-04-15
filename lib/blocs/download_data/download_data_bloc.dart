@@ -51,12 +51,13 @@ class DownloadDataBloc
       if (response.statusCode == StatusCodeConstants.OK) {
         var jsonBody = json.decode(response.body);
         if (jsonBody["isSuccessed"]) {
-          int idHistoryKhaoSat = await DBProvider.db.newHistorySearchKhaoSat(
+          
+          if (jsonBody["data"] != null && jsonBody["data"].length > 0) {
+            int idHistoryKhaoSat = await DBProvider.db.newHistorySearchKhaoSat(
               event.cumID,
               event.ngayxuatDS,
               globalUser.getUserName,
               event.masoql);
-          if (jsonBody["data"] != null || !jsonBody["data"].isEmpty) {
             for (var item in jsonBody["data"]) {
               var listKhaoSat = SurveyInfo.fromJson(item);
               listKhaoSat.idHistoryKhaoSat = idHistoryKhaoSat;
@@ -64,6 +65,9 @@ class DownloadDataBloc
             }
             ToastResultMessage.success(
                 allTranslations.text("DownLoadDataSuccess"));
+          }
+          else{
+            ToastResultMessage.info("Không có dữ liệu để download !");
           }
           yield DownloadDataState.updateLoading(false);
         } else {

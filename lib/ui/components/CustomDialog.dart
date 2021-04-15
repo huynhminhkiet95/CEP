@@ -4,6 +4,9 @@ dialogCustomForCEP(BuildContext context, String title, onPressed(),
     {double width = 150,
     List<Widget> children,
     String titleOnpress = "Đồng Ý"}) {
+      Size size = MediaQuery.of(context).size;
+    double screenHeight = size.height;
+    double screenWidth = size.width;
   showGeneralDialog(
       barrierColor: Colors.black.withOpacity(0.5),
       transitionBuilder: (context, a1, a2, widget) {
@@ -26,13 +29,16 @@ dialogCustomForCEP(BuildContext context, String title, onPressed(),
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'Lato',
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold),
+                  Container(
+                    width: children.length == 0 ? screenWidth * 0.6 : screenWidth * 0.8 ,
+                    child: Text(
+                      title,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'Lato',
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
                   InkWell(
                     onTap: () => Navigator.of(context).pop(),
@@ -52,7 +58,8 @@ dialogCustomForCEP(BuildContext context, String title, onPressed(),
               ),
               content: Container(
                 padding: const EdgeInsets.only(left: 20, right: 20, top: 50),
-                width: width,
+                width: width ,
+                height: children.length == 0 ? 0 : null,
                 child: Column(
                   children: children,
                 ),

@@ -29,7 +29,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   String userName = '';
   String password = '';
-  String _server = 'DEV-VPN';
+  String _server = 'DEV';
   bool _isRemember = false;
   TextEditingController _userNameController =
       new TextEditingController(text: "");

@@ -39,6 +39,7 @@
     "DownLoadDataSurveyHistoryFailed":"Tải dữ liệu lịch sử khảo sát không thành công . Vui lòng chờ trong giây lát !",
     "DownLoadDataSuccess":"Download Dữ liệu thành công !",
     "UpdateSurveyInfoSuccessfully":"Cập nhật thông tin khảo sát thành công !",
+    "RemoveSurveyInfoSuccessfully":"Xóa dữ liệu Khảo Sát thành công !",
     "SimpleUpdate":"Cập nhật đơn hàng",
     "SavePosition":"Cập nhật vị trí",
     "CompletedTrip":"Hoàn thành",
