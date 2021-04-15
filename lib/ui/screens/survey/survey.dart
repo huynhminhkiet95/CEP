@@ -375,12 +375,12 @@ class _SurveyScreenState extends State<SurveyScreen> {
                     dropdownCumIdValue = surveyStream.cumID;
                     dropdownNgayXuatDanhSachValue = surveyStream.ngayXuatDS;
                     listItemCumId = surveyStream.listHistorySearch
-                        .map((e) => e.cumID)
+                        .map((e) => e.cumID).toSet()
                         .toList();
 
                     listItemNgayXuatDS = surveyStream.listHistorySearch
                         .where((e) => e.cumID == dropdownCumIdValue)
-                        .map((e) => e.ngayXuatDanhSach)
+                        .map((e) => e.ngayXuatDanhSach).toSet()
                         .toList();
 
                     return ModalProgressHUDCustomize(

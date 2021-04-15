@@ -52,218 +52,166 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> {
 
   SurveyStream surveyStream;
   Widget getItemListView(List<SurveyInfo> listSurvey) {
-    for (var item in listSurvey) {
-      var findIndex = checkBoxSurvey.indexWhere((e) => e.id == item.id);
-      if (findIndex == -1) {
-        var model = new CheckBoxSurvey();
-        model.id = item.id;
-        model.status = false;
-        checkBoxSurvey.add(model);
-      }
-    }
-
     int count = listSurvey != null ? listSurvey.length : 0;
     return Container(
       child: ListView.builder(
         itemCount: count,
         itemBuilder: (context, i) {
           return InkWell(
-            onTap: () {
-              List<ComboboxModel> listCombobox =
-                  globalUser.getListComboboxModel;
-              List<SurveyInfo> listSurveyDetail =
-                  globalUser.getListSurveyGlobal;
-              if (listCombobox == null || listCombobox.length == 0) {
-                Navigator.pushNamed(context, 'download', arguments: {
-                  'selectedIndex': 4,
-                }).then((value) => setState(() {
-                      if (true == value) {
-                        initState();
-                      }
-                    }));
-              } else {
-                Navigator.pushNamed(context, 'surveydetail', arguments: {
-                  'id': listSurvey[i].id,
-                  'metadata': listCombobox,
-                  'surveydetail': listSurveyDetail[i],
-                  'surveyhistory': surveyStream.listSurveyInfoHistory,
-                }).then((value) {
-                  //String a = value;
-                  if (value is List<SurveyInfo>) {
-                    setState(() {
-                      listSurvey = value;
-                    });
-                  }
-                });
-                // setState(() {
-                //       String a = value;
-                //    //   listSurvey = value;
-                //     }));
-              }
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(13),
-                ),
-                color: Colors.blue,
+            onTap: () {},
+            child: Card(
+              elevation: 10,
+              shadowColor: Colors.grey,
+              color: Colors.white,
+              borderOnForeground: true,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
               ),
-              // height: 130,
-              child: Card(
-                elevation: 10,
-                shadowColor: Colors.blue,
-                color: Colors.white,
-                borderOnForeground: true,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 2, bottom: 8),
-                  child: Row(
-                    children: [
-                      Checkbox(
-                        checkColor: Colors.white,
-                        activeColor: Colors.blue,
-                        value: checkBoxSurvey[i].status,
-                        onChanged: (bool value) {
-                          setState(() {
-                            this.checkBoxSurvey[i].status = value;
-                            int totalCheck = this
-                                .checkBoxSurvey
-                                .where((e) => e.status == true)
-                                .length;
-                            if (totalCheck == this.checkBoxSurvey.length) {
-                              this.isCheckAll = true;
-                            } else {
-                              this.isCheckAll = false;
-                            }
-                          });
-                        },
-                      ),
-                      Container(
-                        width: 290,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                          
-                            Container(
-                              padding: EdgeInsets.only(left: 4),
-                              child: Text(
-                                "${listSurvey[i].thanhvienId} - ${listSurvey[i].hoVaTen}",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 13),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 2, bottom: 8),
+                child: Row(
+                  children: [
+                    Checkbox(
+                      checkColor: Colors.white,
+                      activeColor: Colors.blue,
+                      value: checkBoxSurvey[i].status,
+                      onChanged: (bool value) {
+                        setState(() {
+                          this.checkBoxSurvey[i].status = value;
+                          int totalCheck = this
+                              .checkBoxSurvey
+                              .where((e) => e.status == true)
+                              .length;
+                          if (totalCheck == this.checkBoxSurvey.length) {
+                            this.isCheckAll = true;
+                          } else {
+                            this.isCheckAll = false;
+                          }
+                        });
+                      },
+                    ),
+                    Container(
+                      width: 290,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.only(left: 4),
+                            child: Text(
+                              "${listSurvey[i].thanhvienId} - ${listSurvey[i].hoVaTen}",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 13),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Row(
+                            // crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.only(left: 4),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      IconsCustomize.gender,
+                                      size: 20,
+                                      color: Colors.blue,
+                                    ),
+                                    VerticalDivider(
+                                      width: 10,
+                                    ),
+                                    Container(
+                                      width: 30,
+                                      child: Text(
+                                        listSurvey[i].gioiTinh == 0
+                                            ? "Nữ"
+                                            : "Nam",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 13),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Row(
-                              // crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.only(left: 4),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        IconsCustomize.gender,
-                                        size: 20,
-                                        color: Colors.blue,
-                                      ),
-                                      VerticalDivider(
-                                        width: 10,
-                                      ),
-                                      Container(
-                                        width: 30,
-                                        child: Text(
-                                          listSurvey[i].gioiTinh == 0
-                                              ? "Nữ"
-                                              : "Nam",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 13),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.only(left: 4),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        IconsCustomize.birth_date,
-                                        size: 20,
-                                        color: Colors.red,
-                                      ),
-                                      VerticalDivider(
-                                        width: 10,
-                                      ),
-                                      VerticalDivider(
-                                        width: 1,
-                                      ),
-                                      Text(
-                                        listSurvey[i].ngaySinh.substring(0, 4),
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 13),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.only(left: 4),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        IconsCustomize.id_card,
-                                        color: Colors.orange,
-                                        size: 20,
-                                      ),
-                                      VerticalDivider(
-                                        width: 15,
-                                      ),
-                                      Text(
-                                        listSurvey[i].cmnd,
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 13),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(top: 5),
-                              padding: EdgeInsets.only(left: 6),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.location_on,
-                                    color: Colors.blue,
-                                  ),
-                                  VerticalDivider(
-                                    width: 1,
-                                  ),
-                                  Container(
-                                    width: 230,
-                                    child: Text(
-                                      listSurvey[i].diaChi,
+                              Container(
+                                padding: EdgeInsets.only(left: 4),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      IconsCustomize.birth_date,
+                                      size: 20,
+                                      color: Colors.red,
+                                    ),
+                                    VerticalDivider(
+                                      width: 10,
+                                    ),
+                                    VerticalDivider(
+                                      width: 1,
+                                    ),
+                                    Text(
+                                      listSurvey[i].ngaySinh.substring(0, 4),
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 13),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
+                              Container(
+                                padding: EdgeInsets.only(left: 4),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      IconsCustomize.id_card,
+                                      color: Colors.orange,
+                                      size: 20,
+                                    ),
+                                    VerticalDivider(
+                                      width: 15,
+                                    ),
+                                    Text(
+                                      listSurvey[i].cmnd,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 5),
+                            padding: EdgeInsets.only(left: 6),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.location_on,
+                                  color: Colors.blue,
+                                ),
+                                VerticalDivider(
+                                  width: 1,
+                                ),
+                                Container(
+                                  width: 230,
+                                  child: Text(
+                                    listSurvey[i].diaChi,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
                 ),
               ),
             ),
@@ -307,15 +255,42 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> {
                     AsyncSnapshot<SurveyStream> snapshot) {
                   if (snapshot.data != null) {
                     surveyStream = snapshot.data;
+                    if (dropdownCumIdValue != surveyStream.cumID) {
+                      checkBoxSurvey = new List<CheckBoxSurvey>();
+                      for (var item in surveyStream.listSurvey) {
+                        var findIndex =
+                            checkBoxSurvey.indexWhere((e) => e.id == item.id);
+                        if (findIndex == -1) {
+                          var model = new CheckBoxSurvey();
+                          model.id = item.id;
+                          model.status = false;
+                          checkBoxSurvey.add(model);
+                        }
+                      }
+                    } else {
+                      for (var item in surveyStream.listSurvey) {
+                        var findIndex =
+                            checkBoxSurvey.indexWhere((e) => e.id == item.id);
+                        if (findIndex == -1) {
+                          var model = new CheckBoxSurvey();
+                          model.id = item.id;
+                          model.status = false;
+                          checkBoxSurvey.add(model);
+                        }
+                      }
+                    }
+
                     dropdownCumIdValue = surveyStream.cumID;
                     dropdownNgayXuatDanhSachValue = surveyStream.ngayXuatDS;
                     listItemCumId = surveyStream.listHistorySearch
                         .map((e) => e.cumID)
+                        .toSet()
                         .toList();
 
                     listItemNgayXuatDS = surveyStream.listHistorySearch
                         .where((e) => e.cumID == dropdownCumIdValue)
                         .map((e) => e.ngayXuatDanhSach)
+                        .toSet()
                         .toList();
 
                     return ModalProgressHUDCustomize(
@@ -349,7 +324,7 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> {
                                                 width: 90,
                                                 child: Center(
                                                   child: Text(
-                                                    "Cụm ID (10)",
+                                                    "Cụm ID (${listItemCumId.length})",
                                                     style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.bold,
@@ -379,8 +354,8 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> {
                                                     ),
                                                     onChanged:
                                                         (String newValue) {
-                                                      _onSearchSurvey(newValue,
-                                                          null);
+                                                      _onSearchSurvey(
+                                                          newValue, null);
                                                     },
                                                     items: listItemCumId.map<
                                                             DropdownMenuItem<
@@ -470,9 +445,7 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> {
                                   ],
                                 )),
                             Container(
-                              height: orientation == Orientation.portrait
-                                  ? screenHeight * 0.6
-                                  : screenHeight * 0.654,
+                              padding: EdgeInsets.all(8),
                               color: Colors.blue,
                               child: Column(
                                 children: [
@@ -506,7 +479,7 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> {
                                               mainAxisSize: MainAxisSize.min,
                                               children: const <Widget>[
                                                 Icon(
-                                                  Icons.upload_rounded,
+                                                  Icons.delete_outline,
                                                   color: Colors.white,
                                                   size: 19,
                                                 ),
@@ -514,10 +487,11 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> {
                                                   width: 10.0,
                                                 ),
                                                 Text(
-                                                  "Cập Nhật Lên Server",
+                                                  "Xóa Dữ Liệu",
                                                   maxLines: 1,
                                                   style: TextStyle(
-                                                      color: Colors.white, fontSize: 14),
+                                                      color: Colors.white,
+                                                      fontSize: 14),
                                                 ),
                                               ],
                                             ),
@@ -570,96 +544,9 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> {
                                           shape: const StadiumBorder(),
                                         ),
                                       ),
-
-                                      // AnimatedContainer(
-                                      //   height: 35,
-                                      //   width: 50,
-                                      //   decoration: decorationButtonAnimated(
-                                      //       checkBoxSurvey
-                                      //                   .where((e) =>
-                                      //                       e.status == true)
-                                      //                   .length >
-                                      //               0
-                                      //           ? Colors.green
-                                      //           : Colors.grey),
-                                      //   // Define how long the animation should take.
-                                      //   duration: Duration(milliseconds: 500),
-                                      //   // Provide an optional curve to make the animation feel smoother.
-                                      //   curve: Curves.easeOut,
-                                      //   child: RawMaterialButton(
-                                      //     padding: EdgeInsets.all(0),
-                                      //     splashColor: Colors.green,
-                                      //     child: Row(
-                                      //       mainAxisSize: MainAxisSize.min,
-                                      //       children: const <Widget>[
-                                      //         // Icon(
-                                      //         //   Icons.upload_rounded,
-                                      //         //   color: Colors.white,
-                                      //         //   size: 19,
-                                      //         // ),
-                                      //         // SizedBox(
-                                      //         //   width: 3.0,
-                                      //         // ),
-                                      //         Text(
-                                      //           "Xóa",
-                                      //           maxLines: 1,
-                                      //           style: TextStyle(
-                                      //               color: Colors.white, fontSize: 14),
-                                      //         ),
-                                      //       ],
-                                      //     ),
-                                      //     onPressed: () {
-                                      //       if (checkBoxSurvey
-                                      //               .where(
-                                      //                   (e) => e.status == true)
-                                      //               .length >
-                                      //           0) {
-                                      //         showAnimatedDialog(
-                                      //           context: context,
-                                      //           barrierDismissible: true,
-                                      //           builder:
-                                      //               (BuildContext context) {
-                                      //             return ClassicGeneralDialogWidget(
-                                      //               positiveText: "Đồng Ý",
-                                      //               negativeText: "Hủy",
-                                      //               contentText:
-                                      //                   "Bạn có muốn lưu dữ liệu lên server ?",
-                                      //               negativeTextStyle:
-                                      //                   TextStyle(
-                                      //                       color: Colors.grey,
-                                      //                       fontSize: 14),
-                                      //               positiveTextStyle: TextStyle(
-                                      //                   color: ColorConstants
-                                      //                       .cepColorBackground,
-                                      //                   fontSize: 14),
-                                      //               onPositiveClick: () {
-                                      //                 Navigator.of(context)
-                                      //                     .pop();
-
-                                      //                 _onSubmit();
-                                      //               },
-                                      //               onNegativeClick: () {
-                                      //                 Navigator.of(context)
-                                      //                     .pop();
-                                      //               },
-                                      //             );
-                                      //           },
-                                      //           animationType:
-                                      //               DialogTransitionType
-                                      //                   .slideFromTopFade,
-                                      //           curve: Curves.fastOutSlowIn,
-                                      //           duration:
-                                      //               Duration(milliseconds: 500),
-                                      //         );
-                                      //       }
-                                      //     },
-                                      //     shape: const StadiumBorder(),
-                                      //   ),
-                                      // ),
-                                      
                                       AnimatedContainer(
                                         height: 35,
-                                        
+
                                         width: this.isCheckAll == false
                                             ? 150
                                             : 130,
@@ -722,26 +609,14 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> {
                                       ),
                                     ],
                                   ),
-                                  
                                   Container(
                                       margin: EdgeInsets.only(top: 10),
                                       height:
                                           orientation == Orientation.portrait
-                                              ? screenHeight * 0.52
+                                              ? screenHeight * 0.56
                                               : screenHeight * 0.5,
-                                      width: screenWidth * 0.9,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(15),
-                                          ),
-                                          color: Colors.white),
-                                      child: ModalProgressHUDCustomize(
-                                        inAsyncCall: state?.isLoading ?? false,
-                                        child: Padding(
-                                            padding: const EdgeInsets.all(2.0),
-                                            child: getItemListView(
-                                                surveyStream.listSurvey)),
-                                      ))
+                                      child: getItemListView(
+                                          surveyStream.listSurvey))
                                 ],
                               ),
                             ),
@@ -779,7 +654,6 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> {
             }
           },
           child: Container(child: body)),
-    
     );
   }
 }
