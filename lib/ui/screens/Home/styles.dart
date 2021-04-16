@@ -50,7 +50,8 @@ InputDecoration decorationTextFieldCEP = InputDecoration(
   ),
 );
 
-Widget customScrollViewSliverAppBarForDownload(String title,List<Widget> listChildren,BuildContext context) {
+Widget customScrollViewSliverAppBarForDownload(
+    String title, List<Widget> listChildren, BuildContext context) {
   Size size = MediaQuery.of(context).size;
   return CustomScrollView(
     slivers: <Widget>[
@@ -58,18 +59,17 @@ Widget customScrollViewSliverAppBarForDownload(String title,List<Widget> listChi
           automaticallyImplyLeading: false,
           expandedHeight: size.height * 0.07,
           flexibleSpace: Container(
-            child: 
-              Center(
-                child: Text(title,
+            child: Center(
+              child: Text(
+                title,
                 //  textAlign: TextAlign.center,
-                  style: TextStyle(
-      color: Color(0xff003399),
-      fontSize: 20,
-      fontWeight: FontWeight.w900,
-      wordSpacing: 5),
-                ),
+                style: TextStyle(
+                    color: Color(0xff003399),
+                    fontSize: 20,
+                    fontWeight: FontWeight.w900,
+                    wordSpacing: 5),
               ),
-           
+            ),
           ),
           backgroundColor: Colors.white),
       SliverList(
@@ -84,4 +84,3 @@ Widget customScrollViewSliverAppBarForDownload(String title,List<Widget> listChi
 //   image: new ExactAssetImage('assets/avatars/avatar-7.gif'),
 //   fit: BoxFit.cover,
 // );
-

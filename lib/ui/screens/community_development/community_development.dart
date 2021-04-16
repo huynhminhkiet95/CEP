@@ -330,7 +330,9 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     child: Container(
-                      height: 120,
+                      height: 110,
+                      color: isActiveForList[i] == false ? Colors.white10
+                                      : Colors.lightGreen[200],
                       child: Stack(
                         children: [
                           new AnimatedPositioned(
@@ -342,7 +344,7 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                             width: 70,
                             //top: 35,
                             child: Container(
-                              height: 120,
+                              height: 110,
                               color: Colors.red,
                               child: IconButton(
                                   icon: Icon(
@@ -379,11 +381,9 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                             right: isActiveForList[i] == false ? 0 : 70,
                             child: AnimatedContainer(
                               width: screenWidth * 0.927,
-                              padding: EdgeInsets.only(
-                                top: 15,
-                                bottom: 25,
-                                left: 10,
-                                right: 10,
+                              height: 110,
+                              padding: EdgeInsets.all(
+                                8
                               ),
                               // margin: EdgeInsets.only(
                               //     right: isActiveForList[i] == false ? 0 : 60),

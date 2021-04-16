@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-Text titleHeader = Text(
-  "Thông Tin Thành Viên",
+Text titleHeader(String title) =>  Text(
+  title,
   style: TextStyle(
       color: Color(0xff003399),
       fontSize: 20,

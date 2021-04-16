@@ -321,9 +321,9 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> {
                                 decoration: BoxDecoration(
                                   borderRadius: new BorderRadius.only(
                                       bottomLeft: Radius.elliptical(260, 100)),
+                               
                                   color: Colors.white,
                                 ),
-                                //color: Colors.white,
                                 child: Column(
                                   children: [
                                     Padding(
@@ -607,10 +607,12 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> {
                                           ),
                                           color: Colors.white),
                                       child: getItemListView(
-                                          surveyStream.listSurvey))
+                                          surveyStream.listSurvey)
+                                          )
                                 ],
                               ),
                             ),
+                         
                           ],
                           context),
                     );

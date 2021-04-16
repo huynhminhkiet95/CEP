@@ -53,16 +53,6 @@ class _SurveyScreenState extends State<SurveyScreen> {
 
   SurveyStream surveyStream;
   Widget getItemListView(List<SurveyInfo> listSurvey) {
-    for (var item in listSurvey) {
-      var findIndex = checkBoxSurvey.indexWhere((e) => e.id == item.id);
-      if (findIndex == -1) {
-        var model = new CheckBoxSurvey();
-        model.id = item.id;
-        model.status = false;
-        checkBoxSurvey.add(model);
-      }
-    }
-
     int count = listSurvey != null ? listSurvey.length : 0;
     return Container(
       child: ListView.builder(
@@ -373,6 +363,34 @@ class _SurveyScreenState extends State<SurveyScreen> {
                     AsyncSnapshot<SurveyStream> snapshot) {
                   if (snapshot.data != null) {
                     surveyStream = snapshot.data;
+
+
+                    if (dropdownCumIdValue != surveyStream.cumID) {
+                      this.isCheckAll = false;
+                      checkBoxSurvey = new List<CheckBoxSurvey>();
+                      for (var item in surveyStream.listSurvey) {
+                        var findIndex =
+                            checkBoxSurvey.indexWhere((e) => e.id == item.id);
+                        if (findIndex == -1) {
+                          var model = new CheckBoxSurvey();
+                          model.id = item.id;
+                          model.status = false;
+                          checkBoxSurvey.add(model);
+                        }
+                      }
+                    } else {
+                      for (var item in surveyStream.listSurvey) {
+                        var findIndex =
+                            checkBoxSurvey.indexWhere((e) => e.id == item.id);
+                        if (findIndex == -1) {
+                          var model = new CheckBoxSurvey();
+                          model.id = item.id;
+                          model.status = false;
+                          checkBoxSurvey.add(model);
+                        }
+                      }
+                    }
+
                     dropdownCumIdValue = surveyStream.cumID;
                     dropdownNgayXuatDanhSachValue = surveyStream.ngayXuatDS;
                     listItemCumId = surveyStream.listHistorySearch
@@ -415,7 +433,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                                 width: 90,
                                                 child: Center(
                                                   child: Text(
-                                                    "Cụm ID (10)",
+                                                    "Cụm ID (${listItemCumId.length})",
                                                     style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.bold,
@@ -605,93 +623,6 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                           shape: const StadiumBorder(),
                                         ),
                                       ),
-
-                                      // AnimatedContainer(
-                                      //   height: 35,
-                                      //   width: 50,
-                                      //   decoration: decorationButtonAnimated(
-                                      //       checkBoxSurvey
-                                      //                   .where((e) =>
-                                      //                       e.status == true)
-                                      //                   .length >
-                                      //               0
-                                      //           ? Colors.green
-                                      //           : Colors.grey),
-                                      //   // Define how long the animation should take.
-                                      //   duration: Duration(milliseconds: 500),
-                                      //   // Provide an optional curve to make the animation feel smoother.
-                                      //   curve: Curves.easeOut,
-                                      //   child: RawMaterialButton(
-                                      //     padding: EdgeInsets.all(0),
-                                      //     splashColor: Colors.green,
-                                      //     child: Row(
-                                      //       mainAxisSize: MainAxisSize.min,
-                                      //       children: const <Widget>[
-                                      //         // Icon(
-                                      //         //   Icons.upload_rounded,
-                                      //         //   color: Colors.white,
-                                      //         //   size: 19,
-                                      //         // ),
-                                      //         // SizedBox(
-                                      //         //   width: 3.0,
-                                      //         // ),
-                                      //         Text(
-                                      //           "Xóa",
-                                      //           maxLines: 1,
-                                      //           style: TextStyle(
-                                      //               color: Colors.white, fontSize: 14),
-                                      //         ),
-                                      //       ],
-                                      //     ),
-                                      //     onPressed: () {
-                                      //       if (checkBoxSurvey
-                                      //               .where(
-                                      //                   (e) => e.status == true)
-                                      //               .length >
-                                      //           0) {
-                                      //         showAnimatedDialog(
-                                      //           context: context,
-                                      //           barrierDismissible: true,
-                                      //           builder:
-                                      //               (BuildContext context) {
-                                      //             return ClassicGeneralDialogWidget(
-                                      //               positiveText: "Đồng Ý",
-                                      //               negativeText: "Hủy",
-                                      //               contentText:
-                                      //                   "Bạn có muốn lưu dữ liệu lên server ?",
-                                      //               negativeTextStyle:
-                                      //                   TextStyle(
-                                      //                       color: Colors.grey,
-                                      //                       fontSize: 14),
-                                      //               positiveTextStyle: TextStyle(
-                                      //                   color: ColorConstants
-                                      //                       .cepColorBackground,
-                                      //                   fontSize: 14),
-                                      //               onPositiveClick: () {
-                                      //                 Navigator.of(context)
-                                      //                     .pop();
-
-                                      //                 _onSubmit();
-                                      //               },
-                                      //               onNegativeClick: () {
-                                      //                 Navigator.of(context)
-                                      //                     .pop();
-                                      //               },
-                                      //             );
-                                      //           },
-                                      //           animationType:
-                                      //               DialogTransitionType
-                                      //                   .slideFromTopFade,
-                                      //           curve: Curves.fastOutSlowIn,
-                                      //           duration:
-                                      //               Duration(milliseconds: 500),
-                                      //         );
-                                      //       }
-                                      //     },
-                                      //     shape: const StadiumBorder(),
-                                      //   ),
-                                      // ),
-                                      
                                       AnimatedContainer(
                                         height: 35,
                                         

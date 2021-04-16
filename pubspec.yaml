@@ -68,6 +68,7 @@ dependencies:
   cupertino_radio_choice: 1.0.0+1
   flutter_animated_dialog: ^1.2.0
   easy_dialog: ^1.0.5
+  flutter_rounded_date_picker: ^1.0.5
   #google_fonts: ^1.1.0 
 
 dev_dependencies:
