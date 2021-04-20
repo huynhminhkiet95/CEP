@@ -28,14 +28,14 @@ class SharePreferenceService {
   }
 
   Future<void> saveIsRemember(String isRemember) async {
-    share.setString(KeyConstants.rememberUserName, isRemember);
+    share.setString(KeyConstants.isRemember, isRemember);
     globalUser.setIsRememberLogin = isRemember;
   }
 
-  Future<String> getIsRememberUser() async {
-    String rememberUserName = share.getString(KeyConstants.rememberUserName);
-    globalUser.setIsRememberLogin = rememberUserName;
-    return rememberUserName;
+  Future<String> getIsRemember() async {
+    String isRemember = share.getString(KeyConstants.isRemember);
+    globalUser.setIsRememberLogin = isRemember;
+    return isRemember;
   }
 
   // Future<void> getRememberUser() async {

@@ -309,6 +309,8 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
         color: Colors.grey[300],
         // margin: EdgeInsets.only(top: 10),
         child: ListView.builder(
+            physics:
+                AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
             itemCount: 4,
             itemBuilder: (context, i) {
               return InkWell(
@@ -331,8 +333,9 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                     ),
                     child: Container(
                       height: 110,
-                      color: isActiveForList[i] == false ? Colors.white10
-                                      : Colors.lightGreen[200],
+                      color: isActiveForList[i] == false
+                          ? Colors.white10
+                          : Colors.lightGreen[200],
                       child: Stack(
                         children: [
                           new AnimatedPositioned(
@@ -382,9 +385,7 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                             child: AnimatedContainer(
                               width: screenWidth * 0.927,
                               height: 110,
-                              padding: EdgeInsets.all(
-                                8
-                              ),
+                              padding: EdgeInsets.all(8),
                               // margin: EdgeInsets.only(
                               //     right: isActiveForList[i] == false ? 0 : 60),
                               duration: Duration(milliseconds: 500),

@@ -63,6 +63,7 @@ class DownloadDataBloc
               listKhaoSat.idHistoryKhaoSat = idHistoryKhaoSat;
               await DBProvider.db.newKhaoSat(listKhaoSat);
             }
+            this.sharePreferenceService.saveCumId(event.cumID);
             ToastResultMessage.success(
                 allTranslations.text("DownLoadDataSuccess"));
           }

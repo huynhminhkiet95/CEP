@@ -1,6 +1,7 @@
 import 'package:CEPmobile/GlobalUser.dart';
 import 'package:CEPmobile/ui/components/Widget/bezierContainer.dart';
 import 'package:CEPmobile/ui/components/Widget/customClipper.dart';
+import 'package:CEPmobile/ui/css/style.css.dart';
 import 'package:CEPmobile/ui/navigation/slide_route.dart';
 import 'package:CEPmobile/ui/screens/Login/signup.dart';
 import 'package:CEPmobile/ui/screens/Login/welcomePage.dart';
@@ -29,7 +30,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   String userName = '';
   String password = '';
-  String _server = 'DEV';
+  String _server = 'DEV-VPN';
   bool _isRemember = false;
   TextEditingController _userNameController =
       new TextEditingController(text: "");
@@ -210,6 +211,7 @@ class _LoginPageState extends State<LoginPage> {
                   ))),
             ],
           ),
+
           Container(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: SingleChildScrollView(
@@ -224,7 +226,7 @@ class _LoginPageState extends State<LoginPage> {
                     Container(child: _backButton()),
                     SizedBox(height: height * .02),
                     _title(),
-                    SizedBox(height: 50),
+                    SizedBox(height: 100),
                     Container(
                       margin: EdgeInsets.symmetric(vertical: 10),
                       child: Column(

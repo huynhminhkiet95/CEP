@@ -6,6 +6,7 @@ import 'package:CEPmobile/config/colors.dart';
 import 'package:CEPmobile/config/formatdate.dart';
 import 'package:CEPmobile/config/moneyformat.dart';
 import 'package:CEPmobile/models/download_data/comboboxmodel.dart';
+import 'package:CEPmobile/services/helper.dart';
 import 'package:CEPmobile/ui/components/CardCustomWidget.dart';
 import 'package:CEPmobile/ui/components/CustomDialog.dart';
 import 'package:CEPmobile/ui/components/ModalProgressHUDCustomize.dart';
@@ -527,86 +528,86 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
     selectedIndexKhuVuc = widget.surveyInfo.khuVuc;
 
     /// nguoi tra loi khao sat
-    _surveyRespondentsModelDropdownList = _buildDropdown(widget.listCombobox
+    _surveyRespondentsModelDropdownList = Helper.buildDropdownFromMetaData(widget.listCombobox
         .where((e) => e.groupId == 'NguoiTraloiKhaosat')
         .toList());
     _surveyRespondentsValue = widget.surveyInfo.nguoiTraloiKhaoSat;
 
     /// tinh trang hon nhan
-    _maritalStatusModelDropdownList = _buildDropdown(widget.listCombobox
+    _maritalStatusModelDropdownList = Helper.buildDropdownFromMetaData(widget.listCombobox
         .where((e) => e.groupId == 'TinhTrangHonNhan')
         .toList());
     _maritalStatusValue = widget.surveyInfo.tinhTrangHonNhan;
 
     ///trinh do hoc van
-    _educationLevelModelDropdownList = _buildDropdown(widget.listCombobox
+    _educationLevelModelDropdownList = Helper.buildDropdownFromMetaData(widget.listCombobox
         .where((e) => e.groupId == 'TrinhDoHocVan')
         .toList());
     _educationLevelValue = widget.surveyInfo.trinhDoHocVan;
 
     /// quyen so huu
-    _ownershipModelDropdownList = _buildDropdown(widget.listCombobox
+    _ownershipModelDropdownList = Helper.buildDropdownFromMetaData(widget.listCombobox
         .where((e) => e.groupId == 'QuyenSoHuuNha')
         .toList());
     _ownershipValue = widget.surveyInfo.quyenSoHuuNha;
 
     ///mai nha
-    _roofModelDropdownList = _buildDropdown(
+    _roofModelDropdownList = Helper.buildDropdownFromMetaData(
         widget.listCombobox.where((e) => e.groupId == 'MaiNha').toList());
     _roofValue = widget.surveyInfo.maiNha;
 
     ///tuong nha
-    _wallModelDropdownList = _buildDropdown(
+    _wallModelDropdownList = Helper.buildDropdownFromMetaData(
         widget.listCombobox.where((e) => e.groupId == 'TuongNha').toList());
     _wallValue = widget.surveyInfo.tuongNha;
 
     ///nen nha
-    _floorModelDropdownList = _buildDropdown(
+    _floorModelDropdownList = Helper.buildDropdownFromMetaData(
         widget.listCombobox.where((e) => e.groupId == 'NenNha').toList());
     _floorValue = widget.surveyInfo.nenNha;
 
     ///dien
-    _powerModelDropdownList = _buildDropdown(
+    _powerModelDropdownList = Helper.buildDropdownFromMetaData(
         widget.listCombobox.where((e) => e.groupId == 'Dien').toList());
     _powerValue = widget.surveyInfo.dien;
 
     ///nuoc
-    _waterModelDropdownList = _buildDropdown(
+    _waterModelDropdownList = Helper.buildDropdownFromMetaData(
         widget.listCombobox.where((e) => e.groupId == 'Nuoc').toList());
     _waterValue = widget.surveyInfo.nuoc;
 
     ///nguon vay 1
-    _capitalModelDropdownList = _buildDropdown(
+    _capitalModelDropdownList = Helper.buildDropdownFromMetaData(
         widget.listCombobox.where((e) => e.groupId == 'NguonVay').toList());
     _capital1Value = widget.surveyInfo.nguonVay1;
     _capital2Value = widget.surveyInfo.nguonVay2;
 
     ///ly do vay
-    _reasonLoanModelDropdownList = _buildDropdown(
+    _reasonLoanModelDropdownList = Helper.buildDropdownFromMetaData(
         widget.listCombobox.where((e) => e.groupId == 'LyDoVay').toList());
     _reasonLoan1Value = widget.surveyInfo.lyDoVay1;
     _reasonLoan2Value = widget.surveyInfo.lyDoVay2;
 
     ///bien phap thong nhat
-    _uniformMeasuresModelDropdownList = _buildDropdown(widget.listCombobox
+    _uniformMeasuresModelDropdownList = Helper.buildDropdownFromMetaData(widget.listCombobox
         .where((e) => e.groupId == 'BienPhapThongNhat')
         .toList());
     _uniformMeasure1Value = widget.surveyInfo.bienPhapThongNhat1;
     _uniformMeasure2Value = widget.surveyInfo.bienPhapThongNhat2;
 
     //thanh vien thuoc dien
-    _typeMemberModelDropdownList = _buildDropdown(widget.listCombobox
+    _typeMemberModelDropdownList = Helper.buildDropdownFromMetaData(widget.listCombobox
         .where((e) => e.groupId == 'ThanhVienThuocDien')
         .toList());
     _typeMemberValue = widget.surveyInfo.thanhVienThuocDien;
 
     ///muc dich vay von bo sung
-    _additionalLoanPurposeModelDropdownList = _buildDropdown(
+    _additionalLoanPurposeModelDropdownList = Helper.buildDropdownFromMetaData(
         widget.listCombobox.where((e) => e.groupId == 'MucDich').toList());
     _additionalLoanPurposeValue = widget.surveyInfo.mucDichVayBoSung;
 
     ///muc dich vay von
-    _loanPurposeModelDropdownList = _buildDropdown(
+    _loanPurposeModelDropdownList = Helper.buildDropdownFromMetaData(
         widget.listCombobox.where((e) => e.groupId == 'MucDich').toList());
     _loanPurposeValue = widget.surveyInfo.mucDichVay.trim();
 
@@ -4541,23 +4542,6 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                 : Colors.grey),
       ),
     );
-  }
-
-  List<DropdownMenuItem<String>> _buildDropdown(
-      List<ComboboxModel> listCombobox) {
-    List<DropdownMenuItem<String>> items = List();
-    items.add(DropdownMenuItem(
-      value: '0',
-      child: Text('Chọn'),
-    ));
-
-    for (var item in listCombobox) {
-      items.add(DropdownMenuItem(
-        value: item.itemId,
-        child: Text(item.itemText),
-      ));
-    }
-    return items;
   }
 
   void _copyInfoLoanDemand() {

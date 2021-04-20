@@ -29,7 +29,7 @@ class DBProvider {
 
   initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, "CEP4dbo.db");
+    String path = join(documentsDirectory.path, "CEP5dbo.db");
     return await openDatabase(
       path,
       version: 1,

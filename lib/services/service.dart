@@ -32,7 +32,7 @@ class Services {
     await sharePreferenceService.getUserName();
     await sharePreferenceService.getCumId();
     await sharePreferenceService.getRememberUser();
-    await sharePreferenceService.getIsRememberUser();
+    await sharePreferenceService.getIsRemember();
     await sharePreferenceService.getUserInfo();
     await sharePreferenceService.getUserRole();
     await sharePreferenceService.getMetadata();
