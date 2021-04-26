@@ -56,7 +56,7 @@ class _DownloadCommunityDevelopmentState extends State<DownloadCommunityDevelopm
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 60, right: 60),
+                    padding:  EdgeInsets.only(left: screenWidth * 0.1, right: screenWidth * 0.1),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -122,7 +122,7 @@ class _DownloadCommunityDevelopmentState extends State<DownloadCommunityDevelopm
                         children: const <Widget>[
                           Icon(
                             Icons.system_update,
-                            color: Colors.black,
+                            color: Colors.white,
                           ),
                           SizedBox(
                             width: 10.0,

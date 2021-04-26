@@ -57,7 +57,7 @@ class _DownloadSavingState extends State<DownloadSaving> {
                 children: [
                   
                   Padding(
-                    padding: const EdgeInsets.only(left: 40, right: 40),
+                    padding:  EdgeInsets.only(left: screenWidth * 0.1, right: screenWidth * 0.1),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -143,7 +143,7 @@ class _DownloadSavingState extends State<DownloadSaving> {
                         children: const <Widget>[
                           Icon(
                             Icons.system_update,
-                            color: Colors.black,
+                            color: Colors.white,
                           ),
                           SizedBox(
                             width: 10.0,

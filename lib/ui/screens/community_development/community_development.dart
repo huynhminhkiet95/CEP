@@ -33,7 +33,8 @@ class CommunityDevelopmentScreen extends StatefulWidget {
 }
 
 class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
+  AnimationController animationController;
   double screenWidth, screenHeight;
   TabController _tabController;
   GlobalKey<AutoCompleteTextFieldState<String>> key = new GlobalKey();
@@ -44,12 +45,21 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
   @override
   void initState() {
     _tabController = new TabController(length: 6, vsync: this);
+    animationController = AnimationController(
+        duration: const Duration(milliseconds: 2000), vsync: this);
+
     isActiveForList = List<bool>.generate(4, (int index) => false);
     services = Services.of(context);
     surVeyBloc =
         new SurveyBloc(services.sharePreferenceService, services.commonService);
     surVeyBloc.emitEvent(LoadSurveyEvent());
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    animationController?.dispose();
+    super.dispose();
   }
 
   @override
@@ -111,7 +121,8 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
         ),
         backgroundColor: ColorConstants.cepColorBackground,
         elevation: 20,
-        title: const Text('Phát triển Cộng Đồng'),
+        title: const Text('Phát triển Cộng Đồng',
+            style: TextStyle(fontWeight: FontWeight.w600)),
         actions: [
           IconButton(
               icon: Icon(
@@ -141,7 +152,7 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                 padding: const EdgeInsets.only(left: 40, right: 40, top: 30),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Card(
                         elevation: 4.0,
@@ -158,9 +169,7 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                             ),
                           ),
                         )),
-                    SizedBox(
-                      width: 10,
-                    ),
+                   
                     Container(
                       height: 30,
                       width: size.width * 0.55,
@@ -313,228 +322,266 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                 AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
             itemCount: 4,
             itemBuilder: (context, i) {
-              return InkWell(
-                onTap: () {
-                  setState(() {
-                    isActiveForList =
-                        List<bool>.generate(4, (int index) => false);
-                    isActiveForList[i] = true;
-                  });
-                },
-                child: new Container(
-                  padding: EdgeInsets.only(left: 10, right: 10, top: 5),
-                  child: Card(
-                    elevation: 4,
-                    semanticContainer: false,
-                    shadowColor: Colors.grey,
-                    borderOnForeground: true,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: Container(
-                      height: 110,
-                      color: isActiveForList[i] == false
-                          ? Colors.white10
-                          : Colors.lightGreen[200],
-                      child: Stack(
-                        children: [
-                          new AnimatedPositioned(
-                            duration: Duration(milliseconds: 500),
-                            curve: Curves.linearToEaseOut,
-                            left: isActiveForList[i] == false
-                                ? screenWidth * 1
-                                : (screenWidth * 1) - 98,
-                            width: 70,
-                            //top: 35,
-                            child: Container(
-                              height: 110,
-                              color: Colors.red,
-                              child: IconButton(
-                                  icon: Icon(
-                                    Icons.arrow_forward_ios,
-                                    color: Colors.white,
-                                  ),
-                                  onPressed: () {
-                                    List<ComboboxModel> listCombobox =
-                                        globalUser.getListComboboxModel;
-                                    if (listCombobox == null ||
-                                        listCombobox.length == 0) {
-                                      Navigator.pushNamed(context, 'download',
-                                          arguments: {
-                                            'selectedIndex': 4,
-                                          }).then((value) => setState(() {
-                                            if (true == value) {
-                                              initState();
-                                            }
-                                          }));
-                                    } else {
-                                      Navigator.pushNamed(
-                                          context, 'comunitydevelopmentdetail',
-                                          arguments: {
-                                            'id': 1,
-                                            'metadata': listCombobox,
-                                          }).then((value) {});
-                                    }
-                                  }),
-                            ),
-                          ),
-                          new AnimatedPositioned(
-                            duration: Duration(milliseconds: 500),
-                            curve: Curves.linearToEaseOut,
-                            right: isActiveForList[i] == false ? 0 : 70,
-                            child: AnimatedContainer(
-                              width: screenWidth * 0.927,
-                              height: 110,
-                              padding: EdgeInsets.all(8),
-                              // margin: EdgeInsets.only(
-                              //     right: isActiveForList[i] == false ? 0 : 60),
-                              duration: Duration(milliseconds: 500),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(10),
-                                      topRight: Radius.circular(
-                                          isActiveForList[i] == false ? 10 : 0),
-                                      bottomLeft: Radius.circular(10),
-                                      bottomRight: Radius.circular(
-                                          isActiveForList[i] == false
-                                              ? 10
-                                              : 0)),
-                                  // borderRadius: BorderRadius.all(
-                                  //   Radius.circular(10),
-                                  // ),
-                                  color: isActiveForList[i] == false
-                                      ? Colors.white10
-                                      : Colors.lightGreen[200]),
-                              // Provide an optional curve to make the animation feel smoother.
-                              curve: Curves.fastOutSlowIn,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    padding:
-                                        EdgeInsets.only(left: 4, bottom: 5),
-                                    child: Text(
-                                      "KIET365 - Huynh Minh Kiet",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 13),
+              final int count = 4 ;
+              final Animation<double> animation =
+                  Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+                      parent: animationController,
+                      curve: Interval((1 / count) * i, 1.0,
+                          curve: Curves.fastOutSlowIn)));
+              animationController.forward();
+
+              return AnimatedBuilder(
+                  animation: animationController,
+                  builder: (BuildContext context, Widget child) {
+                    return FadeTransition(
+                      opacity: animation,
+                      child: Transform(
+                        transform: Matrix4.translationValues(
+                            0.0,50 * (1.0 - animation.value), 0.0 ),
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              isActiveForList =
+                                  List<bool>.generate(4, (int index) => false);
+                              isActiveForList[i] = true;
+                            });
+                          },
+                          child: new Container(
+                            padding:
+                                EdgeInsets.only(left: 10, right: 10, top: 5),
+                            child: Card(
+                              elevation: 4,
+                              semanticContainer: false,
+                              shadowColor: Colors.grey,
+                              borderOnForeground: true,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: Container(
+                                height: 110,
+                                color: isActiveForList[i] == false
+                                    ? Colors.white10
+                                    : Colors.lightGreen[200],
+                                child: Stack(
+                                  children: [
+                                    new AnimatedPositioned(
+                                      duration: Duration(milliseconds: 500),
+                                      curve: Curves.linearToEaseOut,
+                                      left: isActiveForList[i] == false
+                                          ? screenWidth * 1
+                                          : (screenWidth * 1) - 98,
+                                      width: 70,
+                                      //top: 35,
+                                      child: Container(
+                                        height: 110,
+                                        color: Colors.red,
+                                        child: IconButton(
+                                            icon: Icon(
+                                              Icons.arrow_forward_ios,
+                                              color: Colors.white,
+                                            ),
+                                            onPressed: () {
+                                              List<ComboboxModel> listCombobox =
+                                                  globalUser
+                                                      .getListComboboxModel;
+                                              if (listCombobox == null ||
+                                                  listCombobox.length == 0) {
+                                                Navigator.pushNamed(
+                                                    context, 'download',
+                                                    arguments: {
+                                                      'selectedIndex': 4,
+                                                    }).then(
+                                                    (value) => setState(() {
+                                                          if (true == value) {
+                                                            initState();
+                                                          }
+                                                        }));
+                                              } else {
+                                                Navigator.pushNamed(context,
+                                                    'comunitydevelopmentdetail',
+                                                    arguments: {
+                                                      'id': 1,
+                                                      'metadata': listCombobox,
+                                                    }).then((value) {});
+                                              }
+                                            }),
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.only(left: 4),
-                                        child: Row(
+                                    new AnimatedPositioned(
+                                      duration: Duration(milliseconds: 500),
+                                      curve: Curves.linearToEaseOut,
+                                      right:
+                                          isActiveForList[i] == false ? 0 : 70,
+                                      child: AnimatedContainer(
+                                        width: screenWidth * 0.927,
+                                        height: 110,
+                                        padding: EdgeInsets.all(8),
+                                        // margin: EdgeInsets.only(
+                                        //     right: isActiveForList[i] == false ? 0 : 60),
+                                        duration: Duration(milliseconds: 500),
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(10),
+                                                topRight: Radius.circular(
+                                                    isActiveForList[i] == false
+                                                        ? 10
+                                                        : 0),
+                                                bottomLeft: Radius.circular(10),
+                                                bottomRight: Radius.circular(
+                                                    isActiveForList[i] == false
+                                                        ? 10
+                                                        : 0)),
+                                            // borderRadius: BorderRadius.all(
+                                            //   Radius.circular(10),
+                                            // ),
+                                            color: isActiveForList[i] == false
+                                                ? Colors.white10
+                                                : Colors.lightGreen[200]),
+                                        // Provide an optional curve to make the animation feel smoother.
+                                        curve: Curves.fastOutSlowIn,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
                                           children: [
-                                            Icon(
-                                              IconsCustomize.gender,
-                                              size: 20,
-                                              color: Colors.blue,
-                                            ),
-                                            VerticalDivider(
-                                              width: 10,
-                                            ),
                                             Container(
-                                              width: 30,
+                                              padding: EdgeInsets.only(
+                                                  left: 4, bottom: 5),
                                               child: Text(
-                                                "Nam",
+                                                "KIET365 - Huynh Minh Kiet",
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 13),
                                               ),
                                             ),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Container(
+                                                  padding:
+                                                      EdgeInsets.only(left: 4),
+                                                  child: Row(
+                                                    children: [
+                                                      Icon(
+                                                        IconsCustomize.gender,
+                                                        size: 20,
+                                                        color: Colors.blue,
+                                                      ),
+                                                      VerticalDivider(
+                                                        width: 10,
+                                                      ),
+                                                      Container(
+                                                        width: 30,
+                                                        child: Text(
+                                                          "Nam",
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize: 13),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Container(
+                                                  padding:
+                                                      EdgeInsets.only(left: 4),
+                                                  child: Row(
+                                                    children: [
+                                                      Icon(
+                                                        IconsCustomize
+                                                            .birth_date,
+                                                        size: 20,
+                                                        color: Colors.red,
+                                                      ),
+                                                      VerticalDivider(
+                                                        width: 10,
+                                                      ),
+                                                      VerticalDivider(
+                                                        width: 1,
+                                                      ),
+                                                      Text(
+                                                        "1980",
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 13),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Container(
+                                                  padding:
+                                                      EdgeInsets.only(left: 4),
+                                                  child: Row(
+                                                    children: [
+                                                      Icon(
+                                                        IconsCustomize.id_card,
+                                                        color: Colors.orange,
+                                                        size: 20,
+                                                      ),
+                                                      VerticalDivider(
+                                                        width: 15,
+                                                      ),
+                                                      Text(
+                                                        "212275568",
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 13),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Container(
+                                              margin: EdgeInsets.only(top: 5),
+                                              padding: EdgeInsets.only(left: 6),
+                                              child: Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.location_on,
+                                                    color: Colors.blue,
+                                                  ),
+                                                  VerticalDivider(
+                                                    width: 1,
+                                                  ),
+                                                  Container(
+                                                    width: 230,
+                                                    child: Text(
+                                                      "102 Quang Trung, P. Hiệp Phú, Quận 9, TP Thủ Đức",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 13),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
                                           ],
                                         ),
                                       ),
-                                      Container(
-                                        padding: EdgeInsets.only(left: 4),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              IconsCustomize.birth_date,
-                                              size: 20,
-                                              color: Colors.red,
-                                            ),
-                                            VerticalDivider(
-                                              width: 10,
-                                            ),
-                                            VerticalDivider(
-                                              width: 1,
-                                            ),
-                                            Text(
-                                              "1980",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 13),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.only(left: 4),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              IconsCustomize.id_card,
-                                              color: Colors.orange,
-                                              size: 20,
-                                            ),
-                                            VerticalDivider(
-                                              width: 15,
-                                            ),
-                                            Text(
-                                              "212275568",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 13),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(top: 5),
-                                    padding: EdgeInsets.only(left: 6),
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.location_on,
-                                          color: Colors.blue,
-                                        ),
-                                        VerticalDivider(
-                                          width: 1,
-                                        ),
-                                        Container(
-                                          width: 230,
-                                          child: Text(
-                                            "102 Quang Trung, P. Hiệp Phú, Quận 9, TP Thủ Đức",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 13),
-                                          ),
-                                        ),
-                                      ],
                                     ),
-                                  )
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-              );
+                    );
+                  });
             }));
   }
 }

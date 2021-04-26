@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:CEPmobile/GlobalUser.dart';
+import 'package:CEPmobile/config/CustomIcons/my_flutter_app_icons.dart';
 import 'package:CEPmobile/ui/components/Widget/bezierContainer.dart';
 import 'package:CEPmobile/ui/components/Widget/customClipper.dart';
 import 'package:CEPmobile/ui/css/style.css.dart';
@@ -14,6 +17,9 @@ import 'package:CEPmobile/services/service.dart';
 import 'package:CEPmobile/bloc_helpers/bloc_provider.dart';
 import 'package:CEPmobile/ui/components/ModalProgressHUDCustomize.dart';
 import 'package:CEPmobile/bloc_widgets/bloc_state_builder.dart';
+import 'package:flutter/services.dart';
+import 'package:local_auth/local_auth.dart';
+import 'dart:math' as math;
 
 // import 'package:flutter_login_signup/src/signup.dart';
 // import 'package:google_fonts/google_fonts.dart';
@@ -27,11 +33,33 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   String userName = '';
   String password = '';
-  String _server = 'DEV-VPN';
+  String _server = 'DEV';
   bool _isRemember = false;
+
+  AnimationController _animationController;
+  Animation<double> _animation;
+
+  AnimationController _animationController1;
+  Animation<double> _animation1;
+
+  AnimationController _animationController2;
+  Animation<double> _animation2;
+
+  AnimationController _animationController3;
+  Animation<double> _animation3;
+
+  AnimationController _animationController4;
+  Animation<double> _animation4;
+
+  AnimationController _animationControllerFingerPrint;
+  Animation<double> _animationFingerPrint;
+
+  double opacityAnimation = 0.5;
+  double opacityAnimationHeader = 0.1;
+
   TextEditingController _userNameController =
       new TextEditingController(text: "");
   TextEditingController _passwordController =
@@ -43,6 +71,10 @@ class _LoginPageState extends State<LoginPage> {
   //#region BLOC
   AuthenticationBloc authenticationBloc;
   Services services;
+  final LocalAuthentication localAuth = LocalAuthentication();
+  bool _cancheckBiometric = false;
+  bool _isFaceID = false;
+
   //#endregion
   void _loginSubmit() {
     if (formkey.currentState.validate()) {
@@ -92,49 +124,108 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _submitButton() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      // padding: EdgeInsets.symmetric(vertical: 15),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(20)),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-                color: Colors.grey.shade300,
-                offset: Offset(2, 4),
-                blurRadius: 5,
-                spreadRadius: 2)
-          ],
-          gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: [Colors.green, Color(0xff223f92)])),
-      child: Material(
-        color: Colors.red.withOpacity(0),
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-        child: InkWell(
-          onTap: () {
-            _loginSubmit();
-            // if (formkey.currentState.validate()) {
-            //   print("Validated");
-            // } else {
-            //   print("Not Validated");
-            // }
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-            ),
-            width: MediaQuery.of(context).size.width,
-            height: 45,
-            alignment: Alignment.center,
-            child: Text(
-              allTranslations.text("sign_in"),
-              style: TextStyle(fontSize: 20, color: Colors.white),
+    return Row(
+      children: [
+        SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(5, 25),
+            end: Offset.zero,
+          ).animate(_animation2),
+          child: AnimatedOpacity(
+            duration: Duration(milliseconds: 1000),
+            opacity: opacityAnimation,
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.7,
+              // padding: EdgeInsets.symmetric(vertical: 15),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                        color: Colors.grey.shade300,
+                        offset: Offset(2, 4),
+                        blurRadius: 5,
+                        spreadRadius: 2)
+                  ],
+                  gradient: LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: [
+                        Colors.lightBlue,
+                        Color(0xff223f92),
+                        Colors.lightBlue,
+                      ])),
+              child: Material(
+                color: Colors.red.withOpacity(0),
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+                child: InkWell(
+                  onTap: () {
+                    _loginSubmit();
+                    // if (formkey.currentState.validate()) {
+                    //   print("Validated");
+                    // } else {
+                    //   print("Not Validated");
+                    // }
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                    ),
+                    width: MediaQuery.of(context).size.width,
+                    height: 45,
+                    alignment: Alignment.center,
+                    child: Text(
+                      allTranslations.text("sign_in"),
+                      style: TextStyle(fontSize: 20, color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
         ),
-      ),
+        Expanded(
+          child: Container(
+            padding: EdgeInsets.only(left: 30),
+            child: AnimatedOpacity(
+              duration: Duration(
+                milliseconds: 1000,
+              ),
+              opacity: opacityAnimationHeader,
+              child: RotatedBox(
+                quarterTurns: 3,
+                child: Stack(
+                  children: [
+                    RotatedBox(
+                        quarterTurns: 1,
+                        child: Icon(
+                          !_isFaceID
+                              ? Icons.fingerprint
+                              : IconsCustomize.face_id_v2,
+                          color: !_isFaceID ? Colors.grey : Colors.blue,
+                          size: 50,
+                        )),
+                    SizeTransition(
+                      sizeFactor: _animationFingerPrint,
+                      axis: Axis.horizontal,
+                      axisAlignment: -1,
+                      child: RotatedBox(
+                          quarterTurns: 1,
+                          child: Icon(
+                            !_isFaceID
+                                ? Icons.fingerprint
+                                : IconsCustomize.face_id_v2,
+                            color: !_isFaceID ? Colors.red : Colors.blue,
+                            size: 50,
+                          )),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        )
+      ],
     );
   }
 
@@ -144,7 +235,7 @@ class _LoginPageState extends State<LoginPage> {
       text: TextSpan(
           text: 'PHẦN MỀM KHẢO SÁT CHO',
           style: TextStyle(
-            fontFamily: 'Hind',
+            //  fontFamily: 'Hind',
             fontSize: 25,
             fontWeight: FontWeight.w700,
           ),
@@ -166,11 +257,102 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     _userNameController.text = globalUser.getRememberUserName;
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 700),
+      vsync: this,
+    );
+
+    _animation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeOutSine,
+    );
+
+    _animationController.forward().then((value) => setState(() {
+          opacityAnimation = 1;
+          opacityAnimationHeader = 1;
+        }));
+
+    _animationController1 = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+    );
+
+    _animation1 = CurvedAnimation(
+      parent: _animationController1,
+      curve: Curves.easeOutSine,
+    );
+
+    _animationController1.forward();
+
+    _animationController2 = AnimationController(
+      duration: const Duration(milliseconds: 1900),
+      vsync: this,
+    );
+
+    _animation2 = CurvedAnimation(
+      parent: _animationController2,
+      curve: Curves.easeInSine,
+    );
+
+    _animationController2.forward();
+
+    _animationController3 = AnimationController(
+      duration: const Duration(milliseconds: 1300),
+      vsync: this,
+    );
+
+    _animation3 = CurvedAnimation(
+      parent: _animationController3,
+      curve: Curves.easeInSine,
+    );
+
+    _animationController3.forward();
+
+    _animationController4 = AnimationController(
+      duration: const Duration(milliseconds: 1600),
+      vsync: this,
+    );
+
+    _animation4 = CurvedAnimation(
+      parent: _animationController4,
+      curve: Curves.easeInSine,
+    );
+
+    _animationController4.forward();
+
+    _animationControllerFingerPrint = AnimationController(
+      duration: const Duration(milliseconds: 3600),
+      vsync: this,
+    )..repeat();
+
+    _animationFingerPrint = CurvedAnimation(
+      parent: _animationControllerFingerPrint,
+      curve: Curves.easeInSine,
+    );
+
     _isRemember = globalUser.getIsRememberLogin == "1" ? true : false;
     services = Services.of(context);
     authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
     _passwordVisible = false;
+    checkBiometric();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+
+    _animationController1.dispose();
+
+    _animationController2.dispose();
+
+    _animationController3.dispose();
+
+    _animationController4.dispose();
+
+    _animationControllerFingerPrint.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -211,7 +393,6 @@ class _LoginPageState extends State<LoginPage> {
                   ))),
             ],
           ),
-
           Container(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: SingleChildScrollView(
@@ -225,144 +406,206 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(height: height * .06),
                     Container(child: _backButton()),
                     SizedBox(height: height * .02),
-                    _title(),
+                    AnimatedOpacity(
+                        duration: Duration(
+                          milliseconds: 1000,
+                        ),
+                        opacity: opacityAnimationHeader,
+                        child: _title()),
                     SizedBox(height: 100),
-                    Container(
-                      margin: EdgeInsets.symmetric(vertical: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          SizedBox(
-                            height: 10,
+                    SlideTransition(
+                      position: Tween<Offset>(
+                        begin: const Offset(5, 25),
+                        end: Offset.zero,
+                      ).animate(_animation),
+                      child: AnimatedOpacity(
+                        duration: Duration(milliseconds: 1000),
+                        opacity: opacityAnimation,
+                        child: Container(
+                          margin: EdgeInsets.symmetric(vertical: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              SizedBox(
+                                height: 10,
+                              ),
+                              TextFormField(
+                                  controller: _userNameController,
+                                  style: TextStyle(color: Colors.blue),
+                                  validator: (String str) {
+                                    if (str.length < 1)
+                                      return allTranslations
+                                          .text("UserNameValidation");
+                                    else
+                                      return null;
+                                  },
+                                  onSaved: (String val) {
+                                    userName = val;
+                                  },
+                                  decoration: InputDecoration(
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(20.0)),
+                                        borderSide:
+                                            BorderSide(color: Colors.blue),
+                                      ),
+                                      fillColor: Colors.red,
+                                      border: OutlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: Colors.red),
+                                          borderRadius:
+                                              BorderRadius.circular(20.0)),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(20.0)),
+                                        borderSide:
+                                            BorderSide(color: Colors.red),
+                                      ),
+                                      contentPadding: EdgeInsets.fromLTRB(
+                                          20.0, 15.0, 20.0, 15.0),
+                                      hintText:
+                                          allTranslations.text("user_name"),
+                                      prefixIcon: Padding(
+                                        padding: EdgeInsets.all(0.0),
+                                        child: Icon(
+                                          Icons.account_circle,
+                                          color: Colors.blue,
+                                        ),
+                                      ),
+                                      suffixStyle:
+                                          TextStyle(color: Colors.red)))
+                            ],
                           ),
-                          TextFormField(
-                              controller: _userNameController,
-                              style: TextStyle(color: Colors.blue),
-                              validator: (String str) {
-                                if (str.length < 1)
-                                  return allTranslations
-                                      .text("UserNameValidation");
-                                else
-                                  return null;
-                              },
-                              onSaved: (String val) {
-                                userName = val;
-                              },
-                              decoration: InputDecoration(
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20.0)),
-                                    borderSide: BorderSide(color: Colors.blue),
-                                  ),
-                                  fillColor: Colors.red,
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.red),
-                                      borderRadius:
-                                          BorderRadius.circular(20.0)),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20.0)),
-                                    borderSide: BorderSide(color: Colors.red),
-                                  ),
-                                  contentPadding: EdgeInsets.fromLTRB(
-                                      20.0, 15.0, 20.0, 15.0),
-                                  hintText: allTranslations.text("user_name"),
-                                  prefixIcon: Padding(
-                                    padding: EdgeInsets.all(0.0),
-                                    child: Icon(
-                                      Icons.account_circle,
-                                      color: Colors.blue,
-                                    ),
-                                  ),
-                                  suffixStyle: TextStyle(color: Colors.red)))
-                        ],
+                        ),
                       ),
                     ),
-                    Container(
-                      margin: EdgeInsets.symmetric(vertical: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          SizedBox(
-                            height: 10,
+                    SlideTransition(
+                      position: Tween<Offset>(
+                        begin: const Offset(5, 25),
+                        end: Offset.zero,
+                      ).animate(_animation1),
+                      child: AnimatedOpacity(
+                        duration: Duration(milliseconds: 1000),
+                        opacity: opacityAnimation,
+                        child: Container(
+                          margin: EdgeInsets.symmetric(vertical: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              SizedBox(
+                                height: 10,
+                              ),
+                              TextFormField(
+                                controller: _passwordController,
+                                obscureText: !_passwordVisible,
+                                style: TextStyle(color: Colors.blue),
+                                validator: (String str) {
+                                  if (str.length < 1)
+                                    return allTranslations
+                                        .text("PasswordValidation");
+                                  else
+                                    return null;
+                                },
+                                decoration: InputDecoration(
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(20.0)),
+                                      borderSide:
+                                          BorderSide(color: Colors.blue),
+                                    ),
+                                    fillColor: Colors.red,
+                                    border: OutlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.red),
+                                        borderRadius:
+                                            BorderRadius.circular(20.0)),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(20.0)),
+                                      borderSide: BorderSide(color: Colors.red),
+                                    ),
+                                    contentPadding: EdgeInsets.fromLTRB(
+                                        20.0, 15.0, 20.0, 15.0),
+                                    hintText: allTranslations.text("password"),
+                                    prefixIcon: Padding(
+                                      padding: EdgeInsets.all(0.0),
+                                      child: Icon(
+                                        Icons.lock_open,
+                                        color: Colors.blue,
+                                      ),
+                                    ),
+                                    suffixStyle: TextStyle(color: Colors.red),
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        _passwordVisible
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
+                                        color:
+                                            Theme.of(context).primaryColorDark,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _passwordVisible = !_passwordVisible;
+                                        });
+                                      },
+                                    )),
+                              )
+                            ],
                           ),
-                          TextFormField(
-                            controller: _passwordController,
-                            obscureText: !_passwordVisible,
-                            style: TextStyle(color: Colors.blue),
-                            validator: (String str) {
-                              if (str.length < 1)
-                                return allTranslations
-                                    .text("PasswordValidation");
-                              else
-                                return null;
-                            },
-                            decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20.0)),
-                                  borderSide: BorderSide(color: Colors.blue),
-                                ),
-                                fillColor: Colors.red,
-                                border: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.red),
-                                    borderRadius: BorderRadius.circular(20.0)),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20.0)),
-                                  borderSide: BorderSide(color: Colors.red),
-                                ),
-                                contentPadding:
-                                    EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                                hintText: allTranslations.text("password"),
-                                prefixIcon: Padding(
-                                  padding: EdgeInsets.all(0.0),
-                                  child: Icon(
-                                    Icons.lock_open,
-                                    color: Colors.blue,
-                                  ),
-                                ),
-                                suffixStyle: TextStyle(color: Colors.red),
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                    _passwordVisible
-                                        ? Icons.visibility
-                                        : Icons.visibility_off,
-                                    color: Theme.of(context).primaryColorDark,
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      _passwordVisible = !_passwordVisible;
-                                    });
-                                  },
-                                )),
-                          )
-                        ],
+                        ),
                       ),
                     ),
                     new Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        new Switch(
-                            value: _isRemember,
-                            onChanged: _updateRemember,
-                            activeColor: Colors.blue),
-                        new Text(
-                          allTranslations.text("Rememberme"),
-                          style: TextStyle(color: Colors.black87),
-                        )
+                        SlideTransition(
+                          position: Tween<Offset>(
+                            begin: const Offset(5, 25),
+                            end: Offset.zero,
+                          ).animate(_animation3),
+                          child: AnimatedOpacity(
+                            duration: Duration(milliseconds: 1000),
+                            opacity: opacityAnimation,
+                            child: Row(
+                              children: [
+                                new Switch(
+                                    value: _isRemember,
+                                    onChanged: _updateRemember,
+                                    activeColor: Colors.blue),
+                                new Text(
+                                  allTranslations.text("Rememberme"),
+                                  style: TextStyle(color: Colors.black87),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SlideTransition(
+                          position: Tween<Offset>(
+                            begin: const Offset(5, 25),
+                            end: Offset.zero,
+                          ).animate(_animation4),
+                          child: AnimatedOpacity(
+                            duration: Duration(milliseconds: 1000),
+                            opacity: opacityAnimation,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                  allTranslations.text("forgotpassword"),
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500)),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
-                    SizedBox(height: 20),
+                    //  SizedBox(height: 10),
+
                     _submitButton(),
-                    Container(
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      alignment: Alignment.centerRight,
-                      child: Text(allTranslations.text("forgotpassword"),
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.w500)),
-                    ),
+
                     SizedBox(height: height * .055),
                   ],
                 ),
@@ -605,5 +848,50 @@ class _LoginPageState extends State<LoginPage> {
                 allTranslations.setNewLanguage(language, true);
               })),
     );
+  }
+
+  Future<void> checkBiometric() async {
+    try {
+      bool canCheckBiometrics = await localAuth.canCheckBiometrics;
+      if (!mounted) return;
+      setState(() {
+        _cancheckBiometric = canCheckBiometrics;
+      });
+
+      if (canCheckBiometrics) {
+        _getAvailableBiometrics();
+      }
+    } on PlatformException catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> _getAvailableBiometrics() async {
+    List<BiometricType> availableBiometrics;
+    try {
+      availableBiometrics = await localAuth.getAvailableBiometrics();
+      if (Platform.isIOS) {
+        if (availableBiometrics.contains(BiometricType.face)) {
+          // Face ID.
+          setState(() {
+            _isFaceID = true;
+          });
+        } else if (availableBiometrics.contains(BiometricType.fingerprint)) {
+          // Touch ID.
+          _isFaceID = false;
+        }
+      } else {
+        if (availableBiometrics.contains(BiometricType.fingerprint)) {
+          _isFaceID = false;
+        }
+      }
+    } on PlatformException catch (e) {
+      print(e);
+    }
+    if (!mounted) return;
+
+    // setState(() {
+    //   _biometricTypes = availableBiometrics;
+    // });
   }
 }

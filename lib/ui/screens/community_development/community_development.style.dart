@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 
 Text titleHeader(String title) =>  Text(
   title,
+  textAlign: TextAlign.center,
   style: TextStyle(
       color: Color(0xff003399),
       fontSize: 20,
       fontWeight: FontWeight.w900,
-      wordSpacing: 5),
+      wordSpacing: 5,
+      ),
 );
 
 

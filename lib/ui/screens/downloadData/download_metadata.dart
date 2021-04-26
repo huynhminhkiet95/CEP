@@ -101,7 +101,7 @@ class _DownloadMetaDataState extends State<DownloadMetaData> {
                                 children: const <Widget>[
                                   Icon(
                                     Icons.system_update,
-                                    color: Colors.black,
+                                    color: Colors.white,
                                   ),
                                   SizedBox(
                                     width: 10.0,

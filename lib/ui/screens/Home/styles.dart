@@ -53,7 +53,9 @@ InputDecoration decorationTextFieldCEP = InputDecoration(
 Widget customScrollViewSliverAppBarForDownload(
     String title, List<Widget> listChildren, BuildContext context) {
   Size size = MediaQuery.of(context).size;
+   
   return CustomScrollView(
+    physics: MediaQuery.of(context).orientation == Orientation.portrait ? NeverScrollableScrollPhysics() : null,
     slivers: <Widget>[
       SliverAppBar(
           automaticallyImplyLeading: false,
@@ -67,7 +69,8 @@ Widget customScrollViewSliverAppBarForDownload(
                     color: Color(0xff003399),
                     fontSize: 20,
                     fontWeight: FontWeight.w900,
-                    wordSpacing: 5),
+                    wordSpacing: 5
+                    ),
               ),
             ),
           ),

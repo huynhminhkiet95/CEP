@@ -79,12 +79,14 @@ class SurveyBloc extends BlocEventStateBase<SurveyEvent, SurveyState> {
       List<SurveyInfoHistory> listSurveyInfoHistory =
           await DBProvider.db.getAllLichSuKhaoSat();
       surveyStream.listHistorySearch = listHistorySearch;
-      surveyStream.listSurvey = listSurvey
+      if (surveyStream.listHistorySearch.length > 0) {
+         surveyStream.listSurvey = listSurvey
           .where((e) => e.idHistoryKhaoSat == historySearch.id ?? 0)
           .toList();
-      surveyStream.listSurveyInfoHistory = listSurveyInfoHistory;
+          globalUser.setListSurveyGlobal = listSurvey;
+      }
 
-      globalUser.setListSurveyGlobal = listSurvey;
+      surveyStream.listSurveyInfoHistory = listSurveyInfoHistory;
       _getSurveyStreamController.sink.add(surveyStream);
       yield SurveyState.updateLoading(false);
     }

@@ -69,7 +69,8 @@ class _DownloadScreenState extends State<DownloadScreen> {
         ),
         backgroundColor: ColorConstants.cepColorBackground,
         elevation: 20,
-        title: const Text('Tải Xuống'),
+        title:  Text('Tải Xuống', textAlign: TextAlign.center,
+          style: TextStyle(fontWeight: FontWeight.w600),),
       ),
       body: GestureDetector(
         onHorizontalDragUpdate: (details) {

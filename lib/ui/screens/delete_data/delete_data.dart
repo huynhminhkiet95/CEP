@@ -29,7 +29,8 @@ class DeleteDataScreen extends StatefulWidget {
   _DeleteDataScreenState createState() => _DeleteDataScreenState();
 }
 
-class _DeleteDataScreenState extends State<DeleteDataScreen> {
+class _DeleteDataScreenState extends State<DeleteDataScreen> with TickerProviderStateMixin{
+  AnimationController animationController;
   List<String> listItemCumIdForSurvey;
   List<String> listItemNgayXuatDSForSurvey;
   List<String> listItemNgayThuNoForSurvey;
@@ -57,177 +58,198 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> {
     int count = listSurvey != null ? listSurvey.length : 0;
     return Container(
       child: ListView.builder(
+        physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
         itemCount: count,
         itemBuilder: (context, i) {
-          return InkWell(
-            onTap: () {
-              setState(() {
-                this.checkBoxSurvey[i].status = !this.checkBoxSurvey[i].status;
-                int totalCheck =
-                    this.checkBoxSurvey.where((e) => e.status == true).length;
-                if (totalCheck == this.checkBoxSurvey.length) {
-                  this.isCheckAll = true;
-                } else {
-                  this.isCheckAll = false;
-                }
-              });
-            },
-            child: Card(
-              elevation: 10,
-              shadowColor: Colors.grey,
-              color: Colors.white,
-              borderOnForeground: true,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(top: 8, bottom: 8),
-                child: Row(
-                  children: [
-                    Checkbox(
-                      checkColor: Colors.white,
-                      activeColor: Colors.blue,
-                      value: checkBoxSurvey[i].status,
-                      onChanged: (bool value) {
-                        setState(() {
-                          this.checkBoxSurvey[i].status = value;
-                          int totalCheck = this
-                              .checkBoxSurvey
-                              .where((e) => e.status == true)
-                              .length;
-                          if (totalCheck == this.checkBoxSurvey.length) {
-                            this.isCheckAll = true;
-                          } else {
-                            this.isCheckAll = false;
-                          }
-                        });
-                      },
-                    ),
-                    Container(
-                      width: 290,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            padding: EdgeInsets.only(left: 4),
-                            child: Text(
-                              "${listSurvey[i].thanhvienId} - ${listSurvey[i].hoVaTen}",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 13),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Row(
-                            // crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: EdgeInsets.only(left: 4),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      IconsCustomize.gender,
-                                      size: 20,
-                                      color: Colors.blue,
-                                    ),
-                                    VerticalDivider(
-                                      width: 10,
-                                    ),
-                                    Container(
-                                      width: 30,
-                                      child: Text(
-                                        listSurvey[i].gioiTinh == 0
-                                            ? "Nữ"
-                                            : "Nam",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 13),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.only(left: 4),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      IconsCustomize.birth_date,
-                                      size: 20,
-                                      color: Colors.red,
-                                    ),
-                                    VerticalDivider(
-                                      width: 10,
-                                    ),
-                                    VerticalDivider(
-                                      width: 1,
-                                    ),
-                                    Text(
-                                      listSurvey[i].ngaySinh.substring(0, 4),
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 13),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.only(left: 4),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      IconsCustomize.id_card,
-                                      color: Colors.orange,
-                                      size: 20,
-                                    ),
-                                    VerticalDivider(
-                                      width: 15,
-                                    ),
-                                    Text(
-                                      listSurvey[i].cmnd,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 13),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(top: 5),
-                            padding: EdgeInsets.only(left: 6),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.location_on,
-                                  color: Colors.blue,
-                                ),
-                                VerticalDivider(
-                                  width: 1,
-                                ),
-                                Container(
-                                  width: 230,
-                                  child: Text(
-                                    listSurvey[i].diaChi,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 13),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
+          final int count = 4;
+          final Animation<double> animation =
+              Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+                  parent: animationController,
+                  curve: Interval((1 / count) * i, 1.0,
+                      curve: Curves.fastOutSlowIn)));
+          animationController.forward();
+
+          return AnimatedBuilder(
+              animation: animationController,
+              builder: (BuildContext context, Widget child) {
+              return FadeTransition(
+                      opacity: animation,
+                child: Transform(
+                          transform: Matrix4.translationValues(
+                               50 * (1.0 - animation.value),0.0, 0.0),
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        this.checkBoxSurvey[i].status = !this.checkBoxSurvey[i].status;
+                        int totalCheck =
+                            this.checkBoxSurvey.where((e) => e.status == true).length;
+                        if (totalCheck == this.checkBoxSurvey.length) {
+                          this.isCheckAll = true;
+                        } else {
+                          this.isCheckAll = false;
+                        }
+                      });
+                    },
+                    child: Card(
+                      elevation: 10,
+                      shadowColor: Colors.grey,
+                      color: Colors.white,
+                      borderOnForeground: true,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
                       ),
-                    )
-                  ],
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 8, bottom: 8),
+                        child: Row(
+                          children: [
+                            Checkbox(
+                              checkColor: Colors.white,
+                              activeColor: Colors.blue,
+                              value: checkBoxSurvey[i].status,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  this.checkBoxSurvey[i].status = value;
+                                  int totalCheck = this
+                                      .checkBoxSurvey
+                                      .where((e) => e.status == true)
+                                      .length;
+                                  if (totalCheck == this.checkBoxSurvey.length) {
+                                    this.isCheckAll = true;
+                                  } else {
+                                    this.isCheckAll = false;
+                                  }
+                                });
+                              },
+                            ),
+                            Container(
+                              width: 290,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.only(left: 4),
+                                    child: Text(
+                                      "${listSurvey[i].thanhvienId} - ${listSurvey[i].hoVaTen}",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold, fontSize: 13),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Row(
+                                    // crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.only(left: 4),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              IconsCustomize.gender,
+                                              size: 20,
+                                              color: Colors.blue,
+                                            ),
+                                            VerticalDivider(
+                                              width: 10,
+                                            ),
+                                            Container(
+                                              width: 30,
+                                              child: Text(
+                                                listSurvey[i].gioiTinh == 0
+                                                    ? "Nữ"
+                                                    : "Nam",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 13),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.only(left: 4),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              IconsCustomize.birth_date,
+                                              size: 20,
+                                              color: Colors.red,
+                                            ),
+                                            VerticalDivider(
+                                              width: 10,
+                                            ),
+                                            VerticalDivider(
+                                              width: 1,
+                                            ),
+                                            Text(
+                                              listSurvey[i].ngaySinh.substring(0, 4),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 13),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.only(left: 4),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              IconsCustomize.id_card,
+                                              color: Colors.orange,
+                                              size: 20,
+                                            ),
+                                            VerticalDivider(
+                                              width: 15,
+                                            ),
+                                            Text(
+                                              listSurvey[i].cmnd,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 13),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(top: 5),
+                                    padding: EdgeInsets.only(left: 6),
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.location_on,
+                                          color: Colors.blue,
+                                        ),
+                                        VerticalDivider(
+                                          width: 1,
+                                        ),
+                                        Container(
+                                          width: 230,
+                                          child: Text(
+                                            listSurvey[i].diaChi,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 13),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
+              );
+            }
           );
         },
       ),
@@ -236,11 +258,18 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> {
 
   @override
   void initState() {
+    animationController = AnimationController(
+        duration: const Duration(milliseconds: 2000), vsync: this);
     services = Services.of(context);
     deleteDataBloc = new DeleteDataBloc(
         services.sharePreferenceService, services.commonService);
     deleteDataBloc.emitEvent(LoadSurveyEvent());
     super.initState();
+  }
+  @override
+  void dispose() {
+    animationController?.dispose();
+    super.dispose();
   }
 
   void _onSubmit() {
@@ -271,6 +300,7 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> {
                   if (snapshot.data != null) {
                     surveyStream = snapshot.data;
                     if (dropdownCumIdValue != surveyStream.cumID) {
+                      animationController.reset();
                       this.isCheckAll = false;
                       checkBoxSurvey = new List<CheckBoxSurvey>();
                       for (var item in surveyStream.listSurvey) {
@@ -327,8 +357,8 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> {
                                 child: Column(
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 60, right: 60),
+                                      padding:  EdgeInsets.only(
+                                          left: screenWidth * 0.1, right: screenWidth * 0.1),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -394,8 +424,8 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> {
                                       height: 10,
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 60, right: 60),
+                                      padding:  EdgeInsets.only(
+                                          left: screenWidth * 0.1, right: screenWidth * 0.1),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -471,7 +501,7 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> {
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
                                       AnimatedContainer(
-                                        height: 35,
+                                        height: 40,
                                         decoration: decorationButtonAnimated(
                                             checkBoxSurvey
                                                         .where((e) =>
@@ -531,11 +561,11 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> {
                                         ),
                                       ),
                                       AnimatedContainer(
-                                        height: 35,
+                                        height: 40,
 
                                         width: this.isCheckAll == false
-                                            ? 150
-                                            : 130,
+                                            ? 160
+                                            : 140,
                                         decoration: decorationButtonAnimated(
                                             Colors.green),
                                         // Define how long the animation should take.
@@ -595,20 +625,22 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> {
                                       ),
                                     ],
                                   ),
-                                  Container(
-                                      margin: EdgeInsets.only(top: 10),
-                                      height:
-                                          orientation == Orientation.portrait
-                                              ? screenHeight * 0.48785
-                                              : screenHeight * 0.5,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(15),
-                                          ),
-                                          color: Colors.white),
-                                      child: getItemListView(
-                                          surveyStream.listSurvey)
-                                          )
+                                  Expanded(
+                                    child: Container(
+                                        margin: EdgeInsets.only(top: 10),
+                                        // height:
+                                        //     orientation == Orientation.portrait
+                                        //         ? screenHeight * 0.45785
+                                        //         : screenHeight * 0.5,
+                                        // decoration: BoxDecoration(
+                                        //     borderRadius: BorderRadius.all(
+                                        //       Radius.circular(15),
+                                        //     ),
+                                        //     color: Colors.white),
+                                        child: getItemListView(
+                                            surveyStream.listSurvey)
+                                            ),
+                                  )
                                 ],
                               ),
                             ),
@@ -690,7 +722,7 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> {
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
                                       AnimatedContainer(
-                                        height: 35,
+                                        height: 40,
                                         decoration: decorationButtonAnimated(
                                             checkBoxSurvey
                                                         .where((e) =>
@@ -737,7 +769,7 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> {
                                         ),
                                       ),
                                       AnimatedContainer(
-                                        height: 35,
+                                        height: 40,
 
                                         width: this.isCheckAll == false
                                             ? 150
@@ -857,7 +889,7 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> {
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
                                       AnimatedContainer(
-                                        height: 35,
+                                        height: 40,
                                         decoration: decorationButtonAnimated(
                                             checkBoxSurvey
                                                         .where((e) =>
@@ -904,7 +936,7 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> {
                                         ),
                                       ),
                                       AnimatedContainer(
-                                        height: 35,
+                                        height: 40,
 
                                         width: this.isCheckAll == false
                                             ? 150
@@ -1009,7 +1041,7 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> {
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
                                       AnimatedContainer(
-                                        height: 35,
+                                        height: 40,
                                         decoration: decorationButtonAnimated(
                                             checkBoxSurvey
                                                         .where((e) =>
@@ -1056,7 +1088,7 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> {
                                         ),
                                       ),
                                       AnimatedContainer(
-                                        height: 35,
+                                        height:40,
 
                                         width: this.isCheckAll == false
                                             ? 150
@@ -1135,7 +1167,8 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> {
               }),
           backgroundColor: ColorConstants.cepColorBackground,
           elevation: 20,
-          title: const Text('Xóa Dữ Liệu'),
+          title: const Text('Xóa Dữ Liệu',textAlign: TextAlign.center,
+          style: TextStyle(fontWeight: FontWeight.w600),),
           bottom: PreferredSize(
               child: TabBar(
                   isScrollable: true,

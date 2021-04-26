@@ -30,6 +30,9 @@ class CommunityDevelopmentDetail extends StatefulWidget {
 class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
     with TickerProviderStateMixin {
   double screenWidth, screenHeight;
+  bool _showBackToTopButton = false;
+
+  ScrollController _scrollController;
   AnimationController _controllerFadeTransitionScholarship;
   Animation<double> _animationFadeTransitionScholarship;
 
@@ -42,19 +45,23 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
   AnimationController _controllerFadeTransitionCareerDevelopment;
   Animation<double> _animationFadeTransitionCareerDevelopment;
 
+  AnimationController _controllerFadeTransitionInsurance;
+  Animation<double> _animationFadeTransitionInsurance;
+
   int selectedIndexKhuVuc;
 
   AnimationController _controllerRotateIconScholarship;
   AnimationController _controllerRotateIconGiftTET;
   AnimationController _controllerRotateIconHomeCEP;
   AnimationController _controllerRotateIconCareerDevelopment;
-  
+  AnimationController _controllerRotateIconInsurance;
 
   TabController _tabController;
   bool isCollapseScholarship = false;
   bool isCollapseGiftTET = false;
   bool isCollapseHomeCEP = false;
   bool isCollapseCareerDevelopment = false;
+  bool isCollapseInsurance = false;
 
   bool isShowContainerScholarshipAndGift = false;
   //region Propertu
@@ -80,6 +87,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
   List<DropdownMenuItem<String>> _assetsModelDropdownList;
   List<DropdownMenuItem<String>> _homeOwnershipModelDropdownList;
   List<DropdownMenuItem<String>> _customerBuildSuggestionsModelDropdownList;
+  List<DropdownMenuItem<String>> _relationsWithCustomersJobDevelopModelDropdownList;
 
   TextStyle textStyleTextFieldCEP =
       TextStyle(color: ColorConstants.cepColorBackground, fontSize: 14);
@@ -93,11 +101,13 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
   String _assetsValue;
   String _homeOwnershipValue;
   String _customerBuildSuggestionsValue;
+  String _relationsWithCustomersJobDevelop;
 
   bool isScholarship = false;
   bool isGiftTET = false;
   bool isHomeCEP = false;
   bool isCareerDevelopment = false;
+  bool isInsurance = false;
   int selectedIndexScholarshipAndGift;
   int selectedIndexGetScholarshipSomeYearAgo;
 
@@ -137,6 +147,11 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
   List<MetaDataCheckbox> listHousingConditionsOfCustomers;
   List<MetaDataCheckbox> listAttachmentForHomeCEP;
   List<MetaDataCheckbox> listJoinReason;
+  List<MetaDataCheckbox> listSightseeingOccupationModel;
+  List<MetaDataCheckbox> listEngineerSupportSeminar;
+  List<MetaDataCheckbox> listSCC;
+  List<MetaDataCheckbox> listIECD;
+  List<MetaDataCheckbox> listREACH;
 
   SurveyBloc surVeyBloc;
   Services services;
@@ -230,6 +245,15 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
         .where((e) => e.groupId == 'QuyenSoHuuNha')
         .toList());
     _homeOwnershipValue = "0";
+
+    // quan he voi khach hang phat trien nghe
+    _relationsWithCustomersJobDevelopModelDropdownList = Helper.buildDropdownFromMetaData(widget
+        .listCombobox
+        .where((e) => e.groupId == 'QuanHeKhachHang')
+        .toList());
+    _relationsWithCustomersJobDevelop = "0";
+
+    
     // dieu kien nha o cua khach hang
     listHousingConditionsOfCustomers = widget.listCombobox
         .where((e) => e.groupId == 'Dieukiennhao')
@@ -252,7 +276,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
             itemID: int.parse(e.itemId),
             value: Helper.checkFlag(4, int.parse(e.itemId))))
         .toList();
-    // ly do tham gia chuong trinh
+    // ly do tham gia
     listJoinReason = widget.listCombobox
         .where((e) => e.groupId == 'LyDo')
         .map((e) => MetaDataCheckbox(
@@ -261,14 +285,67 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
             value: Helper.checkFlag(4, int.parse(e.itemId))))
         .toList();
 
-        
-    
+    // tham quan mo hinh nghe nghiep
+    listSightseeingOccupationModel = widget.listCombobox
+        .where((e) => e.groupId == 'Nguyenvongthamgia')
+        .map((e) => MetaDataCheckbox(
+            groupText: e.itemText,
+            itemID: int.parse(e.itemId),
+            value: Helper.checkFlag(4, int.parse(e.itemId))))
+        .toList();
+    // hoi thao ho tro ky thuat
+    listEngineerSupportSeminar = widget.listCombobox
+        .where((e) => e.groupId == 'Nguyenvonghoithao')
+        .map((e) => MetaDataCheckbox(
+            groupText: e.itemText,
+            itemID: int.parse(e.itemId),
+            value: Helper.checkFlag(4, int.parse(e.itemId))))
+        .toList();
+    // SCC
+    listSCC = widget.listCombobox
+        .where((e) => e.groupId == 'SCCnguyenvong')
+        .map((e) => MetaDataCheckbox(
+            groupText: e.itemText,
+            itemID: int.parse(e.itemId),
+            value: Helper.checkFlag(4, int.parse(e.itemId))))
+        .toList();
+    // IECD
+    listIECD = widget.listCombobox
+        .where((e) => e.groupId == 'IECDnguyenvong')
+        .map((e) => MetaDataCheckbox(
+            groupText: e.itemText,
+            itemID: int.parse(e.itemId),
+            value: Helper.checkFlag(1, int.parse(e.itemId))))
+        .toList();
+    // REACH
+    listREACH = widget.listCombobox
+        .where((e) => e.groupId == 'REACHnguyenvong')
+        .map((e) => MetaDataCheckbox(
+            groupText: e.itemText,
+            itemID: int.parse(e.itemId),
+            value: Helper.checkFlag(4, int.parse(e.itemId))))
+        .toList();
   }
 
   @override
   void initState() {
     loadInitData();
     //services = Services.of(context);
+    // _scrollController = ScrollController()
+    //   ..addListener(() {
+    //     setState(() {
+    //       if (_scrollController.offset >= 400) {
+    //         _showBackToTopButton = true; // show the back-to-top button
+    //       } else {
+    //         _showBackToTopButton = false; // hide the back-to-top button
+    //       }
+    //     });
+    //   });
+
+    _scrollController = ScrollController(initialScrollOffset: 50.0);
+
+
+
     _controllerRotateIconScholarship =
         AnimationController(vsync: this, duration: Duration(milliseconds: 400));
     _controllerRotateIconGiftTET =
@@ -276,6 +353,8 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
     _controllerRotateIconHomeCEP =
         AnimationController(vsync: this, duration: Duration(milliseconds: 400));
     _controllerRotateIconCareerDevelopment =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 400));
+    _controllerRotateIconInsurance =
         AnimationController(vsync: this, duration: Duration(milliseconds: 400));
 
     // surVeyBloc =
@@ -300,7 +379,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
     );
 
     _controllerFadeTransitionHomeCEP = AnimationController(
-      duration: Duration(milliseconds: 500),
+      duration: Duration(milliseconds: 1500),
       vsync: this,
     );
     _animationFadeTransitionHomeCEP = CurvedAnimation(
@@ -309,14 +388,44 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
     );
 
     _controllerFadeTransitionCareerDevelopment = AnimationController(
-      duration: Duration(milliseconds: 500),
+      duration: Duration(milliseconds: 1500),
       vsync: this,
     );
     _animationFadeTransitionCareerDevelopment = CurvedAnimation(
       parent: _controllerFadeTransitionCareerDevelopment,
       curve: Curves.easeIn,
     );
+
+    _controllerFadeTransitionInsurance = AnimationController(
+      duration: Duration(milliseconds: 1500),
+      vsync: this,
+    );
+    _animationFadeTransitionInsurance = CurvedAnimation(
+      parent: _controllerFadeTransitionInsurance,
+      curve: Curves.easeIn,
+    );
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    _controllerFadeTransitionScholarship.dispose();
+    _controllerFadeTransitionGiftTET.dispose();
+    _controllerFadeTransitionHomeCEP.dispose();
+    _controllerFadeTransitionCareerDevelopment.dispose();
+    _controllerFadeTransitionInsurance.dispose();
+    _controllerRotateIconScholarship.dispose();
+    _controllerRotateIconGiftTET.dispose();
+    _controllerRotateIconHomeCEP.dispose();
+    _controllerRotateIconCareerDevelopment.dispose();
+    _controllerRotateIconInsurance.dispose();
+    super.dispose();
+  }
+
+  void _scrollToTop() {
+    _scrollController.animateTo(0,
+        duration: Duration(seconds: 1), curve: Curves.linear);
   }
 
   _onChangeOccupationOfCustomerModelDropdown(String value) {
@@ -344,67 +453,66 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
     screenHeight = size.height;
     screenWidth = size.width;
     return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-              icon: Icon(
-                Icons.close,
-                color: Colors.white,
-                size: 25,
+      appBar: AppBar(
+        leading: IconButton(
+            icon: Icon(
+              Icons.close,
+              color: Colors.white,
+              size: 25,
+            ),
+            onPressed: () {
+              Navigator.pop(context, false);
+            }),
+        backgroundColor: ColorConstants.cepColorBackground,
+        elevation: 20,
+        title: const Text('Chi Tiết Phát triển Cộng Đồng'),
+        bottom: TabBar(
+          isScrollable: true,
+          unselectedLabelColor: Colors.blueGrey.shade300,
+          indicatorColor: Colors.red,
+          labelColor: Colors.white,
+          tabs: [
+            Tab(
+              child: Column(
+                children: [
+                  Center(
+                    child: Icon(Icons.list),
+                  ),
+                  Center(
+                      child: Text(
+                    'Thông Tin Thành Viên',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  )),
+                ],
               ),
-              onPressed: () {
-                Navigator.pop(context, false);
-              }),
-          backgroundColor: ColorConstants.cepColorBackground,
-          elevation: 20,
-          title: const Text('Chi Tiết Phát triển Cộng Đồng'),
-          bottom: TabBar(
-            isScrollable: true,
-            unselectedLabelColor: Colors.blueGrey.shade300,
-            indicatorColor: Colors.red,
-            labelColor: Colors.white,
-            tabs: [
-              Tab(
-                child: Column(
-                  children: [
-                    Center(
-                      child: Icon(Icons.list),
-                    ),
-                    Center(
-                        child: Text(
-                      'Thông Tin Thành Viên',
-                      style:
-                          TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                    )),
-                  ],
-                ),
+            ),
+            Tab(
+              child: Column(
+                children: [
+                  Center(
+                    child: Icon(IconsCustomize.insurance),
+                  ),
+                  Center(
+                      child: Text(
+                    'Chương Trình PT Cộng Đồng',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  )),
+                ],
               ),
-              Tab(
-                child: Column(
-                  children: [
-                    Center(
-                      child: Icon(IconsCustomize.insurance),
-                    ),
-                    Center(
-                        child: Text(
-                      'Chương Trình PT Cộng Đồng',
-                      style:
-                          TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                    )),
-                  ],
-                ),
-              ),
-            ],
-            controller: _tabController,
-            indicatorSize: TabBarIndicatorSize.tab,
-          ),
-        ),
-        body: TabBarView(
-          children: [
-            tabbarContent1(),
-            tabbarContent2(),
+            ),
           ],
           controller: _tabController,
-        ));
+          indicatorSize: TabBarIndicatorSize.tab,
+        ),
+      ),
+      body: TabBarView(
+        children: [
+          tabbarContent1(),
+          tabbarContent2(),
+        ],
+        controller: _tabController,
+      ),
+    );
   }
 
   Widget tabbarContent1() => Container(
@@ -488,7 +596,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                     ),
                     divider15,
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Icon(
                           Icons.location_on,
@@ -496,7 +604,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                         ),
                         cardVerticalDivider,
                         SizedBox(
-                          width: screenWidth * 0.80,
+                          width: screenWidth * 0.77,
                           child: Text(
                             "102 Quang Trung,P.Hiệp Phú, Quận 9, TP Thủ Đức",
                             style: TextStyle(
@@ -740,1877 +848,2433 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
   Widget tabbarContent2() => Container(
         padding: EdgeInsets.only(top: 20, right: 10, left: 10, bottom: 20),
         color: Colors.grey[200],
-        child: ListView(
-          physics:
-              AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-          children: [
-            Center(child: titleHeader("Chương Trình Phát Triển Cộng Đồng")),
-            divider15,
-            Card(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  AnimatedContainer(
-                    duration: Duration(milliseconds: 500),
-                    // Provide an optional curve to make the animation feel smoother.
-                    curve: Curves.easeOut,
-                    height: 40,
-                    padding: EdgeInsets.only(right: 10),
-                    child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          if (isScholarship) {
-                            isCollapseScholarship = !isCollapseScholarship;
-                            if (isCollapseScholarship == true) {
-                              isShowContainerScholarshipAndGift =
-                                  selectedIndexScholarshipAndGift == 1
-                                      ? true
-                                      : false;
-                              _controllerRotateIconScholarship.forward();
-                              _controllerFadeTransitionScholarship.forward();
-                            } else {
-                              isShowContainerScholarshipAndGift = false;
-                              _controllerRotateIconScholarship.reverse();
-                              _controllerFadeTransitionScholarship.reverse();
-                            }
-                          }
-                        });
-                      },
-                      child: Container(
+        child: Scaffold(
+          backgroundColor: Colors.grey[200],
+          body: SingleChildScrollView(
+            controller: _scrollController,
+            physics:
+                AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+            child: Column(
+              children: [
+                Center(child: titleHeader("Chương Trình Phát Triển Cộng Đồng")),
+                divider15,
+                Card(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      AnimatedContainer(
+                        duration: Duration(milliseconds: 500),
+                        // Provide an optional curve to make the animation feel smoother.
+                        curve: Curves.easeOut,
                         height: 40,
-                        color: Colors.white,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              child: Row(
-                                children: [
-                                  InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        if (!isScholarship) {
-                                          _controllerRotateIconScholarship
-                                              .reset();
-                                          _controllerFadeTransitionScholarship
-                                              .forward();
-                                        } else {
-                                          isCollapseScholarship = false;
-                                          isShowContainerScholarshipAndGift =
-                                              false;
-                                          _controllerFadeTransitionScholarship
-                                              .reverse();
-                                        }
-                                        isScholarship = !isScholarship;
-                                      });
-                                    },
-                                    child: Container(
-                                      width: 80,
-                                      margin: EdgeInsets.only(bottom: 30),
-                                      child: CheckboxListTile(
-                                        value: isScholarship,
-                                        onChanged: (newValue) {},
-                                        controlAffinity: ListTileControlAffinity
-                                            .leading, //  <-- leading Checkbox
+                        padding: EdgeInsets.only(right: 10),
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              if (isScholarship) {
+                                isCollapseScholarship = !isCollapseScholarship;
+                                if (isCollapseScholarship == true) {
+                                  isShowContainerScholarshipAndGift =
+                                      selectedIndexScholarshipAndGift == 1
+                                          ? true
+                                          : false;
+                                  _controllerRotateIconScholarship.forward();
+                                  _controllerFadeTransitionScholarship
+                                      .forward();
+                                } else {
+                                  isShowContainerScholarshipAndGift = false;
+                                  _controllerRotateIconScholarship.reverse();
+                                  _controllerFadeTransitionScholarship
+                                      .reverse();
+                                }
+                              }
+                            });
+                          },
+                          child: Container(
+                            height: 40,
+                            color: Colors.white,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  child: Row(
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            if (!isScholarship) {
+                                              _controllerRotateIconScholarship
+                                                  .reset();
+                                              _controllerFadeTransitionScholarship
+                                                  .forward();
+                                            } else {
+                                              isCollapseScholarship = false;
+                                              isShowContainerScholarshipAndGift =
+                                                  false;
+                                              _controllerFadeTransitionScholarship
+                                                  .reverse();
+                                            }
+                                            isScholarship = !isScholarship;
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 80,
+                                          margin: EdgeInsets.only(bottom: 30),
+                                          child: CheckboxListTile(
+                                            value: isScholarship,
+                                            onChanged: (newValue) {},
+                                            controlAffinity: ListTileControlAffinity
+                                                .leading, //  <-- leading Checkbox
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                  Center(
-                                    child: AnimatedDefaultTextStyle(
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          color: isScholarship
-                                              ? Colors.red
-                                              : Colors.blue,
-                                          fontWeight: FontWeight.bold),
+                                      Center(
+                                        child: AnimatedDefaultTextStyle(
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: isScholarship
+                                                  ? Colors.red
+                                                  : Colors.blue,
+                                              fontWeight: FontWeight.bold),
 
-                                      duration: Duration(milliseconds: 500),
-                                      // Provide an optional curve to make the animation feel smoother.
-                                      curve: Curves.easeOut,
-                                      child: Text(
-                                        "Học Bổng CEP",
+                                          duration: Duration(milliseconds: 500),
+                                          // Provide an optional curve to make the animation feel smoother.
+                                          curve: Curves.easeOut,
+                                          child: Text(
+                                            "Học Bổng CEP",
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ),
-                            AnimatedOpacity(
-                              duration: Duration(milliseconds: 500),
-                              // Provide an optional curve to make the animation feel smoother.
-                              curve: Curves.easeOut,
-                              opacity: !isScholarship ? 0 : 1,
-                              child: AnimatedBuilder(
-                                animation: _controllerRotateIconScholarship,
-                                builder: (_, child) {
-                                  return Transform.rotate(
-                                    angle:
-                                        _controllerRotateIconScholarship.value *
+                                ),
+                                AnimatedOpacity(
+                                  duration: Duration(milliseconds: 500),
+                                  // Provide an optional curve to make the animation feel smoother.
+                                  curve: Curves.easeOut,
+                                  opacity: !isScholarship ? 0 : 1,
+                                  child: AnimatedBuilder(
+                                    animation: _controllerRotateIconScholarship,
+                                    builder: (_, child) {
+                                      return Transform.rotate(
+                                        angle: _controllerRotateIconScholarship
+                                                .value *
                                             1 *
                                             math.pi,
-                                    child: child,
-                                  );
-                                },
-                                child: Icon(
-                                  Icons.arrow_drop_up,
-                                  size: 25,
+                                        child: child,
+                                      );
+                                    },
+                                    child: Icon(
+                                      Icons.arrow_drop_up,
+                                      size: 25,
+                                    ),
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  // AnimatedContainer(
-                  //   duration: Duration(milliseconds: 100),
-                  //   // Provide an optional curve to make the animation feel smoother.
-                  //   curve: Curves.easeOut,
-                  //   color: Colors.blue,
-                  //   // padding: EdgeInsets.all(10),
-                  //   child: AnimatedContainer(
-                  //     duration: Duration(milliseconds: 500),
-                  //     // Provide an optional curve to make the animation feel smoother.
-                  //     curve: Curves.easeOut,
-                  //     height: isCollapseScholarship == true ? 300 : 0,
-                  //     color: Colors.white,
-                  //     padding: EdgeInsets.only(left: 10, right: 10),
-                  //     child: ListView(
-                  //       physics: BouncingScrollPhysics(),
-                  //       children: [
-                  //         Row(
-                  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //           crossAxisAlignment: CrossAxisAlignment.end,
-                  //           children: [
-                  //             SizedBox(
-                  //               width: screenWidth * 0.38,
-                  //               child: Text(
-                  //                 "Họ & tên học sinh",
-                  //                 style: TextStyle(
-                  //                   color: Colors.black38,
-                  //                   fontSize: 14,
-                  //                 ),
-                  //               ),
-                  //             ),
-                  //             Expanded(
-                  //               child: Container(
-                  //                 height: 40,
-                  //                 child: TextField(
-                  //                   controller: _controllerCareerSpecific,
-                  //                   style: textStyleTextFieldCEP,
-                  //                   decoration:
-                  //                       inputDecorationTextFieldCEP("Nhập..."),
-                  //                   keyboardType: TextInputType.text,
-                  //                   // Only numbers can be entered
-                  //                 ),
-                  //               ),
-                  //             ),
-                  //           ],
-                  //         ),
-                  //         divider5,
-                  //         Container(
-                  //           child: Row(
-                  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //             crossAxisAlignment: CrossAxisAlignment.end,
-                  //             children: [
-                  //               SizedBox(
-                  //                 width: screenWidth * 0.38,
-                  //                 child: Text(
-                  //                   "Năm sinh",
-                  //                   style: TextStyle(
-                  //                     color: Colors.black38,
-                  //                     fontSize: 14,
-                  //                   ),
-                  //                 ),
-                  //               ),
-                  //               Expanded(
-                  //                 child: Container(
-                  //                   height: 40,
-                  //                   child: CustomDropdown(
-                  //                     dropdownMenuItemList:
-                  //                         _birthOfYearModelDropdownList,
-                  //                     onChanged:
-                  //                         _onChangeBirthOfYearModelDropdown,
-                  //                     value: _birthOfYearValue,
-                  //                     width: screenWidth * 1,
-                  //                     isEnabled: true,
-                  //                     isUnderline: true,
-                  //                   ),
-                  //                 ),
-                  //               ),
-                  //             ],
-                  //           ),
-                  //         ),
-                  //         divider5,
-                  //         Container(
-                  //           child: Row(
-                  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //             crossAxisAlignment: CrossAxisAlignment.end,
-                  //             children: [
-                  //               SizedBox(
-                  //                 width: screenWidth * 0.38,
-                  //                 child: Text(
-                  //                   "Quan hệ với KH",
-                  //                   style: TextStyle(
-                  //                     color: Colors.black38,
-                  //                     fontSize: 14,
-                  //                   ),
-                  //                 ),
-                  //               ),
-                  //               Expanded(
-                  //                 child: Container(
-                  //                   height: 40,
-                  //                   child: CustomDropdown(
-                  //                     dropdownMenuItemList:
-                  //                         _relationsWithCustomersModelDropdownList,
-                  //                     onChanged:
-                  //                         _onChangeRelationsWithCustomersModelDropdown,
-                  //                     value: _relationsWithCustomersValue,
-                  //                     width: screenWidth * 1,
-                  //                     isEnabled: true,
-                  //                     isUnderline: true,
-                  //                   ),
-                  //                 ),
-                  //               ),
-                  //             ],
-                  //           ),
-                  //         ),
-                  //         divider5,
-                  //         Container(
-                  //           child: Row(
-                  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //             crossAxisAlignment: CrossAxisAlignment.end,
-                  //             children: [
-                  //               SizedBox(
-                  //                 width: screenWidth * 0.38,
-                  //                 child: Text(
-                  //                   "Trường",
-                  //                   style: TextStyle(
-                  //                     color: Colors.black38,
-                  //                     fontSize: 14,
-                  //                   ),
-                  //                 ),
-                  //               ),
-                  //               Expanded(
-                  //                 child: Container(
-                  //                   height: 40,
-                  //                   child: TextField(
-                  //                     controller: _controllerCareerSpecific,
-                  //                     style: textStyleTextFieldCEP,
-                  //                     decoration: inputDecorationTextFieldCEP(
-                  //                         "Nhập..."),
-                  //                     keyboardType: TextInputType.text,
-                  //                     // Only numbers can be entered
-                  //                   ),
-                  //                 ),
-                  //               ),
-                  //             ],
-                  //           ),
-                  //         ),
-                  //         divider5,
-                  //         Container(
-                  //           child: Row(
-                  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //             crossAxisAlignment: CrossAxisAlignment.end,
-                  //             children: [
-                  //               SizedBox(
-                  //                 width: screenWidth * 0.38,
-                  //                 child: Text(
-                  //                   "Lớp",
-                  //                   style: TextStyle(
-                  //                     color: Colors.black38,
-                  //                     fontSize: 14,
-                  //                   ),
-                  //                 ),
-                  //               ),
-                  //               Expanded(
-                  //                 child: Container(
-                  //                   height: 40,
-                  //                   child: TextField(
-                  //                     controller: _controllerCareerSpecific,
-                  //                     style: textStyleTextFieldCEP,
-                  //                     decoration: inputDecorationTextFieldCEP(
-                  //                         "Nhập..."),
-                  //                     keyboardType: TextInputType.text,
-                  //                     // Only numbers can be entered
-                  //                   ),
-                  //                 ),
-                  //               ),
-                  //             ],
-                  //           ),
-                  //         ),
-                  //         divider5,
-                  //         Container(
-                  //           child: Row(
-                  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //             crossAxisAlignment: CrossAxisAlignment.end,
-                  //             children: [
-                  //               SizedBox(
-                  //                 width: screenWidth * 0.38,
-                  //                 child: Text(
-                  //                   "Hoàn cảnh gia đình",
-                  //                   style: TextStyle(
-                  //                     color: Colors.black38,
-                  //                     fontSize: 14,
-                  //                   ),
-                  //                 ),
-                  //               ),
-                  //               Expanded(
-                  //                 child: Container(
-                  //                   height: 40,
-                  //                   child: TextField(
-                  //                     controller: _controllerCareerSpecific,
-                  //                     style: textStyleTextFieldCEP,
-                  //                     decoration: inputDecorationTextFieldCEP(
-                  //                         "Nhập..."),
-                  //                     keyboardType: TextInputType.text,
-                  //                     // Only numbers can be entered
-                  //                   ),
-                  //                 ),
-                  //               ),
-                  //             ],
-                  //           ),
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
-                  // Text("data"),
+                      // AnimatedContainer(
+                      //   duration: Duration(milliseconds: 100),
+                      //   // Provide an optional curve to make the animation feel smoother.
+                      //   curve: Curves.easeOut,
+                      //   color: Colors.blue,
+                      //   // padding: EdgeInsets.all(10),
+                      //   child: AnimatedContainer(
+                      //     duration: Duration(milliseconds: 500),
+                      //     // Provide an optional curve to make the animation feel smoother.
+                      //     curve: Curves.easeOut,
+                      //     height: isCollapseScholarship == true ? 300 : 0,
+                      //     color: Colors.white,
+                      //     padding: EdgeInsets.only(left: 10, right: 10),
+                      //     child: ListView(
+                      //       physics: BouncingScrollPhysics(),
+                      //       children: [
+                      //         Row(
+                      //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //           crossAxisAlignment: CrossAxisAlignment.end,
+                      //           children: [
+                      //             SizedBox(
+                      //               width: screenWidth * 0.38,
+                      //               child: Text(
+                      //                 "Họ & tên học sinh",
+                      //                 style: TextStyle(
+                      //                   color: Colors.black38,
+                      //                   fontSize: 14,
+                      //                 ),
+                      //               ),
+                      //             ),
+                      //             Expanded(
+                      //               child: Container(
+                      //                 height: 40,
+                      //                 child: TextField(
+                      //                   controller: _controllerCareerSpecific,
+                      //                   style: textStyleTextFieldCEP,
+                      //                   decoration:
+                      //                       inputDecorationTextFieldCEP("Nhập..."),
+                      //                   keyboardType: TextInputType.text,
+                      //                   // Only numbers can be entered
+                      //                 ),
+                      //               ),
+                      //             ),
+                      //           ],
+                      //         ),
+                      //         divider5,
+                      //         Container(
+                      //           child: Row(
+                      //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //             crossAxisAlignment: CrossAxisAlignment.end,
+                      //             children: [
+                      //               SizedBox(
+                      //                 width: screenWidth * 0.38,
+                      //                 child: Text(
+                      //                   "Năm sinh",
+                      //                   style: TextStyle(
+                      //                     color: Colors.black38,
+                      //                     fontSize: 14,
+                      //                   ),
+                      //                 ),
+                      //               ),
+                      //               Expanded(
+                      //                 child: Container(
+                      //                   height: 40,
+                      //                   child: CustomDropdown(
+                      //                     dropdownMenuItemList:
+                      //                         _birthOfYearModelDropdownList,
+                      //                     onChanged:
+                      //                         _onChangeBirthOfYearModelDropdown,
+                      //                     value: _birthOfYearValue,
+                      //                     width: screenWidth * 1,
+                      //                     isEnabled: true,
+                      //                     isUnderline: true,
+                      //                   ),
+                      //                 ),
+                      //               ),
+                      //             ],
+                      //           ),
+                      //         ),
+                      //         divider5,
+                      //         Container(
+                      //           child: Row(
+                      //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //             crossAxisAlignment: CrossAxisAlignment.end,
+                      //             children: [
+                      //               SizedBox(
+                      //                 width: screenWidth * 0.38,
+                      //                 child: Text(
+                      //                   "Quan hệ với KH",
+                      //                   style: TextStyle(
+                      //                     color: Colors.black38,
+                      //                     fontSize: 14,
+                      //                   ),
+                      //                 ),
+                      //               ),
+                      //               Expanded(
+                      //                 child: Container(
+                      //                   height: 40,
+                      //                   child: CustomDropdown(
+                      //                     dropdownMenuItemList:
+                      //                         _relationsWithCustomersModelDropdownList,
+                      //                     onChanged:
+                      //                         _onChangeRelationsWithCustomersModelDropdown,
+                      //                     value: _relationsWithCustomersValue,
+                      //                     width: screenWidth * 1,
+                      //                     isEnabled: true,
+                      //                     isUnderline: true,
+                      //                   ),
+                      //                 ),
+                      //               ),
+                      //             ],
+                      //           ),
+                      //         ),
+                      //         divider5,
+                      //         Container(
+                      //           child: Row(
+                      //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //             crossAxisAlignment: CrossAxisAlignment.end,
+                      //             children: [
+                      //               SizedBox(
+                      //                 width: screenWidth * 0.38,
+                      //                 child: Text(
+                      //                   "Trường",
+                      //                   style: TextStyle(
+                      //                     color: Colors.black38,
+                      //                     fontSize: 14,
+                      //                   ),
+                      //                 ),
+                      //               ),
+                      //               Expanded(
+                      //                 child: Container(
+                      //                   height: 40,
+                      //                   child: TextField(
+                      //                     controller: _controllerCareerSpecific,
+                      //                     style: textStyleTextFieldCEP,
+                      //                     decoration: inputDecorationTextFieldCEP(
+                      //                         "Nhập..."),
+                      //                     keyboardType: TextInputType.text,
+                      //                     // Only numbers can be entered
+                      //                   ),
+                      //                 ),
+                      //               ),
+                      //             ],
+                      //           ),
+                      //         ),
+                      //         divider5,
+                      //         Container(
+                      //           child: Row(
+                      //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //             crossAxisAlignment: CrossAxisAlignment.end,
+                      //             children: [
+                      //               SizedBox(
+                      //                 width: screenWidth * 0.38,
+                      //                 child: Text(
+                      //                   "Lớp",
+                      //                   style: TextStyle(
+                      //                     color: Colors.black38,
+                      //                     fontSize: 14,
+                      //                   ),
+                      //                 ),
+                      //               ),
+                      //               Expanded(
+                      //                 child: Container(
+                      //                   height: 40,
+                      //                   child: TextField(
+                      //                     controller: _controllerCareerSpecific,
+                      //                     style: textStyleTextFieldCEP,
+                      //                     decoration: inputDecorationTextFieldCEP(
+                      //                         "Nhập..."),
+                      //                     keyboardType: TextInputType.text,
+                      //                     // Only numbers can be entered
+                      //                   ),
+                      //                 ),
+                      //               ),
+                      //             ],
+                      //           ),
+                      //         ),
+                      //         divider5,
+                      //         Container(
+                      //           child: Row(
+                      //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //             crossAxisAlignment: CrossAxisAlignment.end,
+                      //             children: [
+                      //               SizedBox(
+                      //                 width: screenWidth * 0.38,
+                      //                 child: Text(
+                      //                   "Hoàn cảnh gia đình",
+                      //                   style: TextStyle(
+                      //                     color: Colors.black38,
+                      //                     fontSize: 14,
+                      //                   ),
+                      //                 ),
+                      //               ),
+                      //               Expanded(
+                      //                 child: Container(
+                      //                   height: 40,
+                      //                   child: TextField(
+                      //                     controller: _controllerCareerSpecific,
+                      //                     style: textStyleTextFieldCEP,
+                      //                     decoration: inputDecorationTextFieldCEP(
+                      //                         "Nhập..."),
+                      //                     keyboardType: TextInputType.text,
+                      //                     // Only numbers can be entered
+                      //                   ),
+                      //                 ),
+                      //               ),
+                      //             ],
+                      //           ),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
+                      // Text("data"),
 
-                  AnimatedSize(
-                    vsync: this,
-                    duration: Duration(milliseconds: 1500),
-                    curve: Curves.fastLinearToSlowEaseIn,
-                    child: FadeTransition(
-                      opacity: _animationFadeTransitionScholarship,
-                      child: Column(
-                        children: [
-                          AnimatedContainer(
-                            duration: Duration(milliseconds: 1500),
-                            curve: Curves.fastOutSlowIn,
-                            height: isCollapseScholarship == true ? 420 : 0,
-                            color: Colors.white,
-                            padding: EdgeInsets.only(left: 10, right: 10),
-                            child: ListView(
-                              physics: const NeverScrollableScrollPhysics(),
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
+                      AnimatedSize(
+                        vsync: this,
+                        duration: Duration(milliseconds: 1500),
+                        curve: Curves.fastLinearToSlowEaseIn,
+                        child: FadeTransition(
+                          opacity: _animationFadeTransitionScholarship,
+                          child: Column(
+                            children: [
+                              AnimatedContainer(
+                                duration: Duration(milliseconds: 1500),
+                                curve: Curves.fastOutSlowIn,
+                                height: isCollapseScholarship == true ? 420 : 0,
+                                color: Colors.white,
+                                padding: EdgeInsets.only(left: 10, right: 10),
+                                child: ListView(
+                                  physics: const NeverScrollableScrollPhysics(),
                                   children: [
-                                    SizedBox(
-                                      width: screenWidth * 0.38,
-                                      child: Text(
-                                        "Họ & tên học sinh",
-                                        style: TextStyle(
-                                          color: Colors.black38,
-                                          fontSize: 14,
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        SizedBox(
+                                          width: screenWidth * 0.38,
+                                          child: Text(
+                                            "Họ & tên học sinh",
+                                            style: TextStyle(
+                                              color: Colors.black38,
+                                              fontSize: 14,
+                                            ),
+                                          ),
                                         ),
+                                        Expanded(
+                                          child: Container(
+                                            height: 40,
+                                            child: TextField(
+                                              controller:
+                                                  _controllerCareerSpecific,
+                                              style: textStyleTextFieldCEP,
+                                              decoration:
+                                                  inputDecorationTextFieldCEP(
+                                                      "Nhập..."),
+                                              keyboardType: TextInputType.text,
+                                              // Only numbers can be entered
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    divider5,
+                                    Container(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          SizedBox(
+                                            width: screenWidth * 0.38,
+                                            child: Text(
+                                              "Năm sinh",
+                                              style: TextStyle(
+                                                color: Colors.black38,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Container(
+                                              height: 40,
+                                              child: CustomDropdown(
+                                                dropdownMenuItemList:
+                                                    _birthOfYearModelDropdownList,
+                                                onChanged:
+                                                    _onChangeBirthOfYearModelDropdown,
+                                                value: _birthOfYearValue,
+                                                width: screenWidth * 1,
+                                                isEnabled: true,
+                                                isUnderline: true,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    Expanded(
-                                      child: Container(
-                                        height: 40,
-                                        child: TextField(
-                                          controller: _controllerCareerSpecific,
-                                          style: textStyleTextFieldCEP,
-                                          decoration:
-                                              inputDecorationTextFieldCEP(
-                                                  "Nhập..."),
-                                          keyboardType: TextInputType.text,
-                                          // Only numbers can be entered
-                                        ),
+                                    divider5,
+                                    Container(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          SizedBox(
+                                            width: screenWidth * 0.38,
+                                            child: Text(
+                                              "Quan hệ với KH",
+                                              style: TextStyle(
+                                                color: Colors.black38,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Container(
+                                              height: 40,
+                                              child: CustomDropdown(
+                                                dropdownMenuItemList:
+                                                    _relationsWithCustomersModelDropdownList,
+                                                onChanged:
+                                                    _onChangeRelationsWithCustomersModelDropdown,
+                                                value:
+                                                    _relationsWithCustomersValue,
+                                                width: screenWidth * 1,
+                                                isEnabled: true,
+                                                isUnderline: true,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    divider5,
+                                    Container(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          SizedBox(
+                                            width: screenWidth * 0.38,
+                                            child: Text(
+                                              "Trường",
+                                              style: TextStyle(
+                                                color: Colors.black38,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Container(
+                                              height: 40,
+                                              child: TextField(
+                                                controller:
+                                                    _controllerSchoolName,
+                                                style: textStyleTextFieldCEP,
+                                                decoration:
+                                                    inputDecorationTextFieldCEP(
+                                                        "Nhập..."),
+                                                keyboardType:
+                                                    TextInputType.text,
+                                                // Only numbers can be entered
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    divider5,
+                                    Container(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          SizedBox(
+                                            width: screenWidth * 0.38,
+                                            child: Text(
+                                              "Lớp",
+                                              style: TextStyle(
+                                                color: Colors.black38,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Container(
+                                              height: 40,
+                                              child: TextField(
+                                                controller:
+                                                    _controllerClassName,
+                                                style: textStyleTextFieldCEP,
+                                                decoration:
+                                                    inputDecorationTextFieldCEP(
+                                                        "Nhập..."),
+                                                keyboardType:
+                                                    TextInputType.text,
+                                                // Only numbers can be entered
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    divider5,
+                                    Container(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          SizedBox(
+                                            width: screenWidth * 0.38,
+                                            child: Text(
+                                              "Học lực",
+                                              style: TextStyle(
+                                                color: Colors.black38,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Container(
+                                              height: 40,
+                                              child: CustomDropdown(
+                                                dropdownMenuItemList:
+                                                    _capacityModelDropdownList,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    _capacityValue = value;
+                                                  });
+                                                },
+                                                value: _capacityValue,
+                                                width: screenWidth * 1,
+                                                isEnabled: true,
+                                                isUnderline: true,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    divider15,
+                                    Container(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            child: Text(
+                                              "Hoàn cảnh gia đình",
+                                              style: TextStyle(
+                                                color: Colors.black38,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 40,
+                                            child: TextField(
+                                              controller:
+                                                  _controllerFamilyCircumstances,
+                                              style: textStyleTextFieldCEP,
+                                              decoration:
+                                                  inputDecorationTextFieldCEP(
+                                                      "Nhập..."),
+                                              keyboardType: TextInputType.text,
+                                              // Only numbers can be entered
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    divider15,
+                                    Container(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            width: screenWidth * 0.5,
+                                            child: Text(
+                                              "Trao Học Bổng & Quà Học Tập",
+                                              style: TextStyle(
+                                                color: Colors.black38,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              customRadioScholarshipAndGift(
+                                                  listTypeScholarship[0], 1),
+                                              VerticalDivider(
+                                                width: 10,
+                                              ),
+                                              customRadioScholarshipAndGift(
+                                                  listTypeScholarship[1], 0),
+                                            ],
+                                          )
+                                        ],
                                       ),
                                     ),
                                   ],
                                 ),
-                                divider5,
-                                Container(
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      SizedBox(
-                                        width: screenWidth * 0.38,
-                                        child: Text(
-                                          "Năm sinh",
-                                          style: TextStyle(
-                                            color: Colors.black38,
-                                            fontSize: 14,
+                              ),
+                              AnimatedContainer(
+                                duration: Duration(milliseconds: 1500),
+                                curve: Curves.fastOutSlowIn,
+                                height:
+                                    isShowContainerScholarshipAndGift == true
+                                        ? 1080
+                                        : 0,
+                                color: Colors.white,
+                                padding: EdgeInsets.all(8),
+                                child: ListView(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  children: [
+                                    CardWithMultipleCheckbox(
+                                      title: "Mục đích sử dụng học bổng",
+                                      height: 180,
+                                      children: listUsePurpose.map((item) {
+                                        return new CheckboxListTile(
+                                          title: new Text(
+                                            item.groupText,
+                                            style: TextStyle(
+                                                color: Colors.black87,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold),
                                           ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          height: 40,
-                                          child: CustomDropdown(
-                                            dropdownMenuItemList:
-                                                _birthOfYearModelDropdownList,
-                                            onChanged:
-                                                _onChangeBirthOfYearModelDropdown,
-                                            value: _birthOfYearValue,
-                                            width: screenWidth * 1,
-                                            isEnabled: true,
-                                            isUnderline: true,
+                                          value: item.value,
+                                          activeColor:
+                                              ColorConstants.cepColorBackground,
+                                          checkColor: Colors.white,
+                                          onChanged: (bool value) {
+                                            setState(() {
+                                              item.value = value;
+                                            });
+                                          },
+                                        );
+                                      }).toList(),
+                                    ),
+                                    Container(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          SizedBox(
+                                            width: screenWidth * 0.38,
+                                            child: Text(
+                                              "Mục đích cụ thể",
+                                              style: TextStyle(
+                                                color: Colors.black38,
+                                                fontSize: 14,
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                divider5,
-                                Container(
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      SizedBox(
-                                        width: screenWidth * 0.38,
-                                        child: Text(
-                                          "Quan hệ với KH",
-                                          style: TextStyle(
-                                            color: Colors.black38,
-                                            fontSize: 14,
+                                          Expanded(
+                                            child: Container(
+                                              height: 40,
+                                              child: TextField(
+                                                controller:
+                                                    _controllerClassName,
+                                                style: textStyleTextFieldCEP,
+                                                decoration:
+                                                    inputDecorationTextFieldCEP(
+                                                        "Nhập..."),
+                                                keyboardType:
+                                                    TextInputType.text,
+                                                // Only numbers can be entered
+                                              ),
+                                            ),
                                           ),
-                                        ),
+                                        ],
                                       ),
-                                      Expanded(
-                                        child: Container(
-                                          height: 40,
-                                          child: CustomDropdown(
-                                            dropdownMenuItemList:
-                                                _relationsWithCustomersModelDropdownList,
-                                            onChanged:
-                                                _onChangeRelationsWithCustomersModelDropdown,
-                                            value: _relationsWithCustomersValue,
-                                            width: screenWidth * 1,
-                                            isEnabled: true,
-                                            isUnderline: true,
+                                    ),
+                                    divider15,
+                                    Container(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          SizedBox(
+                                            width: screenWidth * 0.38,
+                                            child: Text(
+                                              "Giá trị học bổng",
+                                              style: TextStyle(
+                                                color: Colors.black38,
+                                                fontSize: 14,
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                divider5,
-                                Container(
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      SizedBox(
-                                        width: screenWidth * 0.38,
-                                        child: Text(
-                                          "Trường",
-                                          style: TextStyle(
-                                            color: Colors.black38,
-                                            fontSize: 14,
+                                          Expanded(
+                                            child: Container(
+                                              height: 40,
+                                              child: TextField(
+                                                controller:
+                                                    _controllerClassName,
+                                                style: textStyleTextFieldCEP,
+                                                decoration:
+                                                    inputDecorationTextFieldCEP(
+                                                        "Nhập..."),
+                                                keyboardType:
+                                                    TextInputType.text,
+                                                // Only numbers can be entered
+                                              ),
+                                            ),
                                           ),
-                                        ),
+                                        ],
                                       ),
-                                      Expanded(
-                                        child: Container(
-                                          height: 40,
-                                          child: TextField(
-                                            controller: _controllerSchoolName,
-                                            style: textStyleTextFieldCEP,
-                                            decoration:
-                                                inputDecorationTextFieldCEP(
-                                                    "Nhập..."),
-                                            keyboardType: TextInputType.text,
-                                            // Only numbers can be entered
+                                    ),
+                                    divider15,
+                                    CardWithMultipleCheckbox(
+                                      title: "Hồ sơ đính kèm",
+                                      height: 380,
+                                      children: listAttachment.map((item) {
+                                        return new CheckboxListTile(
+                                          title: new Text(
+                                            item.groupText,
+                                            style: TextStyle(
+                                                color: Colors.black87,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold),
                                           ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                divider5,
-                                Container(
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      SizedBox(
-                                        width: screenWidth * 0.38,
-                                        child: Text(
-                                          "Lớp",
-                                          style: TextStyle(
-                                            color: Colors.black38,
-                                            fontSize: 14,
+                                          value: item.value,
+                                          activeColor:
+                                              ColorConstants.cepColorBackground,
+                                          checkColor: Colors.white,
+                                          onChanged: (bool value) {
+                                            setState(() {
+                                              item.value = value;
+                                            });
+                                          },
+                                        );
+                                      }).toList(),
+                                    ),
+                                    divider15,
+                                    CardWithMultipleCheckbox(
+                                      title: "Hoàn cảnh của học sinh",
+                                      height: 180,
+                                      children:
+                                          listStudentSituation.map((item) {
+                                        return new CheckboxListTile(
+                                          title: new Text(
+                                            item.groupText,
+                                            style: TextStyle(
+                                                color: Colors.black87,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold),
                                           ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          height: 40,
-                                          child: TextField(
-                                            controller: _controllerClassName,
-                                            style: textStyleTextFieldCEP,
-                                            decoration:
-                                                inputDecorationTextFieldCEP(
-                                                    "Nhập..."),
-                                            keyboardType: TextInputType.text,
-                                            // Only numbers can be entered
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                divider5,
-                                Container(
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      SizedBox(
-                                        width: screenWidth * 0.38,
-                                        child: Text(
-                                          "Học lực",
-                                          style: TextStyle(
-                                            color: Colors.black38,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          height: 40,
-                                          child: CustomDropdown(
-                                            dropdownMenuItemList:
-                                                _capacityModelDropdownList,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                _capacityValue = value;
-                                              });
-                                            },
-                                            value: _capacityValue,
-                                            width: screenWidth * 1,
-                                            isEnabled: true,
-                                            isUnderline: true,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                divider15,
-                                Container(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        child: Text(
-                                          "Hoàn cảnh gia đình",
-                                          style: TextStyle(
-                                            color: Colors.black38,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        height: 40,
-                                        child: TextField(
-                                          controller:
-                                              _controllerFamilyCircumstances,
-                                          style: textStyleTextFieldCEP,
-                                          decoration:
-                                              inputDecorationTextFieldCEP(
-                                                  "Nhập..."),
-                                          keyboardType: TextInputType.text,
-                                          // Only numbers can be entered
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                divider15,
-                                Container(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width: screenWidth * 0.5,
-                                        child: Text(
-                                          "Trao Học Bổng & Quà Học Tập",
-                                          style: TextStyle(
-                                            color: Colors.black38,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ),
-                                      Row(
+                                          value: item.value,
+                                          activeColor:
+                                              ColorConstants.cepColorBackground,
+                                          checkColor: Colors.white,
+                                          onChanged: (bool value) {
+                                            setState(() {
+                                              item.value = value;
+                                            });
+                                          },
+                                        );
+                                      }).toList(),
+                                    ),
+                                    divider15,
+                                    Container(
+                                      child: Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          customRadioScholarshipAndGift(
-                                              listTypeScholarship[0], 1),
-                                          VerticalDivider(
-                                            width: 10,
+                                          SizedBox(
+                                            width: screenWidth * 0.7,
+                                            child: Text(
+                                              "Đã nhận học bổng những năm trước",
+                                              style: TextStyle(
+                                                color: Colors.black38,
+                                                fontSize: 14,
+                                              ),
+                                            ),
                                           ),
-                                          customRadioScholarshipAndGift(
-                                              listTypeScholarship[1], 0),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              customRadioGetScholarshipSomeYearAgo(
+                                                  listTypeGetScholarship[0], 1),
+                                              VerticalDivider(
+                                                width: 10,
+                                              ),
+                                              customRadioGetScholarshipSomeYearAgo(
+                                                  listTypeGetScholarship[1], 0),
+                                            ],
+                                          )
                                         ],
-                                      )
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                divider15,
+                Card(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      AnimatedContainer(
+                        duration: Duration(milliseconds: 500),
+                        // Provide an optional curve to make the animation feel smoother.
+                        curve: Curves.easeOut,
+                        height: 40,
+                        padding: EdgeInsets.only(right: 10),
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              if (isGiftTET) {
+                                isCollapseGiftTET = !isCollapseGiftTET;
+                                if (isCollapseGiftTET == true) {
+                                  //isShowContainerScholarshipAndGift = selectedIndexScholarshipAndGift == 1 ? true :false;
+                                  _controllerRotateIconGiftTET.forward();
+                                  _controllerFadeTransitionGiftTET.forward();
+                                } else {
+                                  _controllerRotateIconGiftTET.reverse();
+                                  _controllerFadeTransitionGiftTET.reverse();
+                                }
+                              }
+                            });
+                          },
+                          child: Container(
+                            height: 40,
+                            color: Colors.white,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  child: Row(
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            if (!isGiftTET) {
+                                              _controllerRotateIconGiftTET
+                                                  .reset();
+                                              _controllerFadeTransitionGiftTET
+                                                  .forward();
+                                            } else {
+                                              isCollapseGiftTET = false;
+                                              isShowContainerScholarshipAndGift =
+                                                  false;
+                                              _controllerFadeTransitionGiftTET
+                                                  .reverse();
+                                            }
+                                            isGiftTET = !isGiftTET;
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 80,
+                                          margin: EdgeInsets.only(bottom: 30),
+                                          child: CheckboxListTile(
+                                            value: isGiftTET,
+                                            onChanged: (newValue) {},
+                                            controlAffinity: ListTileControlAffinity
+                                                .leading, //  <-- leading Checkbox
+                                          ),
+                                        ),
+                                      ),
+                                      Center(
+                                        child: AnimatedDefaultTextStyle(
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: isGiftTET
+                                                  ? Colors.red
+                                                  : Colors.blue,
+                                              fontWeight: FontWeight.bold),
+
+                                          duration: Duration(milliseconds: 500),
+                                          // Provide an optional curve to make the animation feel smoother.
+                                          curve: Curves.easeOut,
+                                          child: Text(
+                                            "Nhận Quà Tết",
+                                          ),
+                                        ),
+                                      ),
                                     ],
+                                  ),
+                                ),
+                                AnimatedOpacity(
+                                  duration: Duration(milliseconds: 500),
+                                  // Provide an optional curve to make the animation feel smoother.
+                                  curve: Curves.easeOut,
+                                  opacity: !isGiftTET ? 0 : 1,
+                                  child: AnimatedBuilder(
+                                    animation: _controllerRotateIconGiftTET,
+                                    builder: (_, child) {
+                                      return Transform.rotate(
+                                        angle:
+                                            _controllerRotateIconGiftTET.value *
+                                                1 *
+                                                math.pi,
+                                        child: child,
+                                      );
+                                    },
+                                    child: Icon(
+                                      Icons.arrow_drop_up,
+                                      size: 25,
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                          AnimatedContainer(
-                            duration: Duration(milliseconds: 1500),
-                            curve: Curves.fastOutSlowIn,
-                            height: isShowContainerScholarshipAndGift == true
-                                ? 1080
-                                : 0,
-                            color: Colors.white,
-                            padding: EdgeInsets.all(8),
-                            child: ListView(
-                              physics: const NeverScrollableScrollPhysics(),
-                              children: [
-                                CardWithMultipleCheckbox(
-                                  title: "Mục đích sử dụng học bổng",
-                                  height: 180,
-                                  children: listUsePurpose.map((item) {
-                                    return new CheckboxListTile(
-                                      title: new Text(
-                                        item.groupText,
-                                        style: TextStyle(
-                                            color: Colors.black87,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      value: item.value,
-                                      activeColor:
-                                          ColorConstants.cepColorBackground,
-                                      checkColor: Colors.white,
-                                      onChanged: (bool value) {
-                                        setState(() {
-                                          item.value = value;
-                                        });
-                                      },
-                                    );
-                                  }).toList(),
-                                ),
-                                Container(
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      SizedBox(
-                                        width: screenWidth * 0.38,
-                                        child: Text(
-                                          "Mục đích cụ thể",
-                                          style: TextStyle(
-                                            color: Colors.black38,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          height: 40,
-                                          child: TextField(
-                                            controller: _controllerClassName,
-                                            style: textStyleTextFieldCEP,
-                                            decoration:
-                                                inputDecorationTextFieldCEP(
-                                                    "Nhập..."),
-                                            keyboardType: TextInputType.text,
-                                            // Only numbers can be entered
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                divider15,
-                                Container(
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      SizedBox(
-                                        width: screenWidth * 0.38,
-                                        child: Text(
-                                          "Giá trị học bổng",
-                                          style: TextStyle(
-                                            color: Colors.black38,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          height: 40,
-                                          child: TextField(
-                                            controller: _controllerClassName,
-                                            style: textStyleTextFieldCEP,
-                                            decoration:
-                                                inputDecorationTextFieldCEP(
-                                                    "Nhập..."),
-                                            keyboardType: TextInputType.text,
-                                            // Only numbers can be entered
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                divider15,
-                                CardWithMultipleCheckbox(
-                                  title: "Hồ sơ đính kèm",
-                                  height: 380,
-                                  children: listAttachment.map((item) {
-                                    return new CheckboxListTile(
-                                      title: new Text(
-                                        item.groupText,
-                                        style: TextStyle(
-                                            color: Colors.black87,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      value: item.value,
-                                      activeColor:
-                                          ColorConstants.cepColorBackground,
-                                      checkColor: Colors.white,
-                                      onChanged: (bool value) {
-                                        setState(() {
-                                          item.value = value;
-                                        });
-                                      },
-                                    );
-                                  }).toList(),
-                                ),
-                                divider15,
-                                CardWithMultipleCheckbox(
-                                  title: "Hoàn cảnh của học sinh",
-                                  height: 180,
-                                  children: listStudentSituation.map((item) {
-                                    return new CheckboxListTile(
-                                      title: new Text(
-                                        item.groupText,
-                                        style: TextStyle(
-                                            color: Colors.black87,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      value: item.value,
-                                      activeColor:
-                                          ColorConstants.cepColorBackground,
-                                      checkColor: Colors.white,
-                                      onChanged: (bool value) {
-                                        setState(() {
-                                          item.value = value;
-                                        });
-                                      },
-                                    );
-                                  }).toList(),
-                                ),
-                                divider15,
-                                Container(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width: screenWidth * 0.7,
-                                        child: Text(
-                                          "Đã nhận học bổng những năm trước",
-                                          style: TextStyle(
-                                            color: Colors.black38,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ),
-                                      Row(
+                        ),
+                      ),
+                      AnimatedSize(
+                        vsync: this,
+                        duration: Duration(milliseconds: 1500),
+                        curve: Curves.fastLinearToSlowEaseIn,
+                        child: FadeTransition(
+                          opacity: _animationFadeTransitionGiftTET,
+                          child: Column(
+                            children: [
+                              AnimatedContainer(
+                                duration: Duration(milliseconds: 1500),
+                                curve: Curves.fastOutSlowIn,
+                                height: isCollapseGiftTET == true ? 70 : 0,
+                                color: Colors.white,
+                                padding: EdgeInsets.only(left: 10, right: 10),
+                                child: ListView(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  children: [
+                                    Container(
+                                      child: Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          customRadioGetScholarshipSomeYearAgo(
-                                              listTypeGetScholarship[0], 1),
-                                          VerticalDivider(
-                                            width: 10,
+                                          SizedBox(
+                                            child: Text(
+                                              "Khách hàng thuộc hộ",
+                                              style: TextStyle(
+                                                color: Colors.black38,
+                                                fontSize: 14,
+                                              ),
+                                            ),
                                           ),
-                                          customRadioGetScholarshipSomeYearAgo(
-                                              listTypeGetScholarship[1], 0),
+                                          Container(
+                                            height: 40,
+                                            child: CustomDropdown(
+                                              dropdownMenuItemList:
+                                                  _typeCustomerModelDropdownList,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  _typeCustomerValue = value;
+                                                });
+                                              },
+                                              value: _typeCustomerValue,
+                                              width: screenWidth * 1,
+                                              isEnabled: true,
+                                              isUnderline: true,
+                                            ),
+                                          ),
                                         ],
-                                      )
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                divider15,
+                Card(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      AnimatedContainer(
+                        duration: Duration(milliseconds: 1500),
+                        // Provide an optional curve to make the animation feel smoother.
+                        curve: Curves.easeOut,
+                        height: 40,
+                        padding: EdgeInsets.only(right: 10),
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              if (isHomeCEP) {
+                                isCollapseHomeCEP = !isCollapseHomeCEP;
+                                if (isCollapseHomeCEP == true) {
+                                  //isShowContainerScholarshipAndGift = selectedIndexScholarshipAndGift == 1 ? true :false;
+                                  _controllerRotateIconHomeCEP.forward();
+                                  _controllerFadeTransitionHomeCEP.forward();
+                                } else {
+                                  _controllerRotateIconHomeCEP.reverse();
+                                  _controllerFadeTransitionHomeCEP.reverse();
+                                }
+                              }
+                            });
+                          },
+                          child: Container(
+                            height: 40,
+                            color: Colors.white,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  child: Row(
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            if (!isHomeCEP) {
+                                              _controllerRotateIconHomeCEP
+                                                  .reset();
+                                              _controllerFadeTransitionHomeCEP
+                                                  .forward();
+                                            } else {
+                                              isCollapseHomeCEP = false;
+                                              isShowContainerScholarshipAndGift =
+                                                  false;
+                                              _controllerFadeTransitionHomeCEP
+                                                  .reverse();
+                                            }
+                                            isHomeCEP = !isHomeCEP;
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 80,
+                                          margin: EdgeInsets.only(bottom: 30),
+                                          child: CheckboxListTile(
+                                            value: isHomeCEP,
+                                            onChanged: (newValue) {},
+                                            controlAffinity: ListTileControlAffinity
+                                                .leading, //  <-- leading Checkbox
+                                          ),
+                                        ),
+                                      ),
+                                      Center(
+                                        child: AnimatedDefaultTextStyle(
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: isHomeCEP
+                                                  ? Colors.red
+                                                  : Colors.blue,
+                                              fontWeight: FontWeight.bold),
+
+                                          duration: Duration(milliseconds: 500),
+                                          // Provide an optional curve to make the animation feel smoother.
+                                          curve: Curves.easeOut,
+                                          child: Text(
+                                            "Mái Nhà CEP",
+                                          ),
+                                        ),
+                                      ),
                                     ],
+                                  ),
+                                ),
+                                AnimatedOpacity(
+                                  duration: Duration(milliseconds: 500),
+                                  // Provide an optional curve to make the animation feel smoother.
+                                  curve: Curves.easeOut,
+                                  opacity: !isHomeCEP ? 0 : 1,
+                                  child: AnimatedBuilder(
+                                    animation: _controllerRotateIconHomeCEP,
+                                    builder: (_, child) {
+                                      return Transform.rotate(
+                                        angle:
+                                            _controllerRotateIconHomeCEP.value *
+                                                1 *
+                                                math.pi,
+                                        child: child,
+                                      );
+                                    },
+                                    child: Icon(
+                                      Icons.arrow_drop_up,
+                                      size: 25,
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            divider15,
-            Card(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  AnimatedContainer(
-                    duration: Duration(milliseconds: 500),
-                    // Provide an optional curve to make the animation feel smoother.
-                    curve: Curves.easeOut,
-                    height: 40,
-                    padding: EdgeInsets.only(right: 10),
-                    child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          if (isGiftTET) {
-                            isCollapseGiftTET = !isCollapseGiftTET;
-                            if (isCollapseGiftTET == true) {
-                              //isShowContainerScholarshipAndGift = selectedIndexScholarshipAndGift == 1 ? true :false;
-                              _controllerRotateIconGiftTET.forward();
-                              _controllerFadeTransitionGiftTET.forward();
-                            } else {
-                              _controllerRotateIconGiftTET.reverse();
-                              _controllerFadeTransitionGiftTET.reverse();
-                            }
-                          }
-                        });
-                      },
-                      child: Container(
-                        height: 40,
-                        color: Colors.white,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              child: Row(
-                                children: [
-                                  InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        if (!isGiftTET) {
-                                          _controllerRotateIconGiftTET.reset();
-                                          _controllerFadeTransitionGiftTET
-                                              .forward();
-                                        } else {
-                                          isCollapseGiftTET = false;
-                                          isShowContainerScholarshipAndGift =
-                                              false;
-                                          _controllerFadeTransitionGiftTET
-                                              .reverse();
-                                        }
-                                        isGiftTET = !isGiftTET;
-                                      });
-                                    },
-                                    child: Container(
-                                      width: 80,
-                                      margin: EdgeInsets.only(bottom: 30),
-                                      child: CheckboxListTile(
-                                        value: isGiftTET,
-                                        onChanged: (newValue) {},
-                                        controlAffinity: ListTileControlAffinity
-                                            .leading, //  <-- leading Checkbox
-                                      ),
-                                    ),
-                                  ),
-                                  Center(
-                                    child: AnimatedDefaultTextStyle(
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          color: isGiftTET
-                                              ? Colors.red
-                                              : Colors.blue,
-                                          fontWeight: FontWeight.bold),
-
-                                      duration: Duration(milliseconds: 500),
-                                      // Provide an optional curve to make the animation feel smoother.
-                                      curve: Curves.easeOut,
-                                      child: Text(
-                                        "Nhận Quà Tết",
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            AnimatedOpacity(
-                              duration: Duration(milliseconds: 500),
-                              // Provide an optional curve to make the animation feel smoother.
-                              curve: Curves.easeOut,
-                              opacity: !isGiftTET ? 0 : 1,
-                              child: AnimatedBuilder(
-                                animation: _controllerRotateIconGiftTET,
-                                builder: (_, child) {
-                                  return Transform.rotate(
-                                    angle: _controllerRotateIconGiftTET.value *
-                                        1 *
-                                        math.pi,
-                                    child: child,
-                                  );
-                                },
-                                child: Icon(
-                                  Icons.arrow_drop_up,
-                                  size: 25,
-                                ),
-                              ),
-                            ),
-                          ],
                         ),
                       ),
-                    ),
-                  ),
-                  AnimatedSize(
-                    vsync: this,
-                    duration: Duration(milliseconds: 1500),
-                    curve: Curves.fastLinearToSlowEaseIn,
-                    child: FadeTransition(
-                      opacity: _animationFadeTransitionGiftTET,
-                      child: Column(
-                        children: [
-                          AnimatedContainer(
-                            duration: Duration(milliseconds: 1500),
-                            curve: Curves.fastOutSlowIn,
-                            height: isCollapseGiftTET == true ? 70 : 0,
-                            color: Colors.white,
-                            padding: EdgeInsets.only(left: 10, right: 10),
-                            child: ListView(
-                              physics: const NeverScrollableScrollPhysics(),
-                              children: [
-                                Container(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        child: Text(
-                                          "Khách hàng thuộc hộ",
-                                          style: TextStyle(
-                                            color: Colors.black38,
-                                            fontSize: 14,
+                      AnimatedSize(
+                        vsync: this,
+                        duration: Duration(milliseconds: 1500),
+                        curve: Curves.fastLinearToSlowEaseIn,
+                        child: FadeTransition(
+                          opacity: _animationFadeTransitionHomeCEP,
+                          child: Column(
+                            children: [
+                              AnimatedContainer(
+                                duration: Duration(milliseconds: 1500),
+                                curve: Curves.fastOutSlowIn,
+                                height: isCollapseHomeCEP == true ? 1540 : 0,
+                                color: Colors.white,
+                                padding: EdgeInsets.only(left: 10, right: 10),
+                                child: ListView(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  children: [
+                                    Container(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          SizedBox(
+                                            width: screenWidth * 0.38,
+                                            child: Text(
+                                              "Tỷ lệ phụ thuộc",
+                                              style: TextStyle(
+                                                color: Colors.black38,
+                                                fontSize: 14,
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                                      Container(
-                                        height: 40,
-                                        child: CustomDropdown(
-                                          dropdownMenuItemList:
-                                              _typeCustomerModelDropdownList,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _typeCustomerValue = value;
-                                            });
-                                          },
-                                          value: _typeCustomerValue,
-                                          width: screenWidth * 1,
-                                          isEnabled: true,
-                                          isUnderline: true,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            divider15,
-            Card(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  AnimatedContainer(
-                    duration: Duration(milliseconds: 500),
-                    // Provide an optional curve to make the animation feel smoother.
-                    curve: Curves.easeOut,
-                    height: 40,
-                    padding: EdgeInsets.only(right: 10),
-                    child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          if (isHomeCEP) {
-                            isCollapseHomeCEP = !isCollapseHomeCEP;
-                            if (isCollapseHomeCEP == true) {
-                              //isShowContainerScholarshipAndGift = selectedIndexScholarshipAndGift == 1 ? true :false;
-                              _controllerRotateIconHomeCEP.forward();
-                              _controllerFadeTransitionHomeCEP.forward();
-                            } else {
-                              _controllerRotateIconHomeCEP.reverse();
-                              _controllerFadeTransitionHomeCEP.reverse();
-                            }
-                          }
-                        });
-                      },
-                      child: Container(
-                        height: 40,
-                        color: Colors.white,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              child: Row(
-                                children: [
-                                  InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        if (!isHomeCEP) {
-                                          _controllerRotateIconHomeCEP.reset();
-                                          _controllerFadeTransitionHomeCEP
-                                              .forward();
-                                        } else {
-                                          isCollapseHomeCEP = false;
-                                          isShowContainerScholarshipAndGift =
-                                              false;
-                                          _controllerFadeTransitionHomeCEP
-                                              .reverse();
-                                        }
-                                        isHomeCEP = !isHomeCEP;
-                                      });
-                                    },
-                                    child: Container(
-                                      width: 80,
-                                      margin: EdgeInsets.only(bottom: 30),
-                                      child: CheckboxListTile(
-                                        value: isHomeCEP,
-                                        onChanged: (newValue) {},
-                                        controlAffinity: ListTileControlAffinity
-                                            .leading, //  <-- leading Checkbox
+                                          Expanded(
+                                            child: Container(
+                                              height: 40,
+                                              child: CustomDropdown(
+                                                dropdownMenuItemList:
+                                                    _depenRatioModelDropdownList,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    _depenRatioCustomerValue =
+                                                        value;
+                                                  });
+                                                },
+                                                value: _depenRatioCustomerValue,
+                                                width: screenWidth * 1,
+                                                isEnabled: true,
+                                                isUnderline: true,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ),
-                                  Center(
-                                    child: AnimatedDefaultTextStyle(
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          color: isHomeCEP
-                                              ? Colors.red
-                                              : Colors.blue,
-                                          fontWeight: FontWeight.bold),
-
-                                      duration: Duration(milliseconds: 500),
-                                      // Provide an optional curve to make the animation feel smoother.
-                                      curve: Curves.easeOut,
-                                      child: Text(
-                                        "Mái Nhà CEP",
+                                    divider5,
+                                    Container(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          SizedBox(
+                                            width: screenWidth * 0.38,
+                                            child: Text(
+                                              "Thu nhập",
+                                              style: TextStyle(
+                                                color: Colors.black38,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Container(
+                                              height: 40,
+                                              child: CustomDropdown(
+                                                dropdownMenuItemList:
+                                                    _incomeModelDropdownList,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    _incomeValue = value;
+                                                  });
+                                                },
+                                                value: _incomeValue,
+                                                width: screenWidth * 1,
+                                                isEnabled: true,
+                                                isUnderline: true,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            AnimatedOpacity(
-                              duration: Duration(milliseconds: 500),
-                              // Provide an optional curve to make the animation feel smoother.
-                              curve: Curves.easeOut,
-                              opacity: !isHomeCEP ? 0 : 1,
-                              child: AnimatedBuilder(
-                                animation: _controllerRotateIconHomeCEP,
-                                builder: (_, child) {
-                                  return Transform.rotate(
-                                    angle: _controllerRotateIconHomeCEP.value *
-                                        1 *
-                                        math.pi,
-                                    child: child,
-                                  );
-                                },
-                                child: Icon(
-                                  Icons.arrow_drop_up,
-                                  size: 25,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  AnimatedSize(
-                    vsync: this,
-                    duration: Duration(milliseconds: 1500),
-                    curve: Curves.fastLinearToSlowEaseIn,
-                    child: FadeTransition(
-                      opacity: _animationFadeTransitionHomeCEP,
-                      child: Column(
-                        children: [
-                          AnimatedContainer(
-                            duration: Duration(milliseconds: 1500),
-                            curve: Curves.fastOutSlowIn,
-                            height: isCollapseHomeCEP == true ? 1540 : 0,
-                            color: Colors.white,
-                            padding: EdgeInsets.only(left: 10, right: 10),
-                            child: ListView(
-                              physics: const NeverScrollableScrollPhysics(),
-                              children: [
-                                Container(
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      SizedBox(
-                                        width: screenWidth * 0.38,
-                                        child: Text(
-                                          "Tỷ lệ phụ thuộc",
-                                          style: TextStyle(
-                                            color: Colors.black38,
-                                            fontSize: 14,
+                                    divider5,
+                                    Container(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          SizedBox(
+                                            width: screenWidth * 0.38,
+                                            child: Text(
+                                              "Tài sản",
+                                              style: TextStyle(
+                                                color: Colors.black38,
+                                                fontSize: 14,
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          height: 40,
-                                          child: CustomDropdown(
-                                            dropdownMenuItemList:
-                                                _depenRatioModelDropdownList,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                _depenRatioCustomerValue =
-                                                    value;
-                                              });
-                                            },
-                                            value: _depenRatioCustomerValue,
-                                            width: screenWidth * 1,
-                                            isEnabled: true,
-                                            isUnderline: true,
+                                          Expanded(
+                                            child: Container(
+                                              height: 40,
+                                              child: CustomDropdown(
+                                                dropdownMenuItemList:
+                                                    _assetsModelDropdownList,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    _assetsValue = value;
+                                                  });
+                                                },
+                                                value: _assetsValue,
+                                                width: screenWidth * 1,
+                                                isEnabled: true,
+                                                isUnderline: true,
+                                              ),
+                                            ),
                                           ),
-                                        ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                ),
-                                divider5,
-                                Container(
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      SizedBox(
-                                        width: screenWidth * 0.38,
-                                        child: Text(
-                                          "Thu nhập",
-                                          style: TextStyle(
-                                            color: Colors.black38,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          height: 40,
-                                          child: CustomDropdown(
-                                            dropdownMenuItemList:
-                                                _incomeModelDropdownList,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                _incomeValue = value;
-                                              });
-                                            },
-                                            value: _incomeValue,
-                                            width: screenWidth * 1,
-                                            isEnabled: true,
-                                            isUnderline: true,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                divider5,
-                                Container(
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      SizedBox(
-                                        width: screenWidth * 0.38,
-                                        child: Text(
-                                          "Tài sản",
-                                          style: TextStyle(
-                                            color: Colors.black38,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          height: 40,
-                                          child: CustomDropdown(
-                                            dropdownMenuItemList:
-                                                _assetsModelDropdownList,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                _assetsValue = value;
-                                              });
-                                            },
-                                            value: _assetsValue,
-                                            width: screenWidth * 1,
-                                            isEnabled: true,
-                                            isUnderline: true,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                divider15,
-                                Container(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width: screenWidth * 0.6,
-                                        child: Text(
-                                          "Quyền sở hữu nhà đề xuất xây/sửa",
-                                          style: TextStyle(
-                                            color: Colors.black38,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        height: 40,
-                                        child: CustomDropdown(
-                                          dropdownMenuItemList:
-                                              _homeOwnershipModelDropdownList,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _homeOwnershipValue = value;
-                                            });
-                                          },
-                                          value: _homeOwnershipValue,
-                                          width: screenWidth * 1,
-                                          isEnabled: true,
-                                          isUnderline: true,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                divider15,
-                                CardWithMultipleCheckbox(
-                                  title: "Điều kiện nhà ở của khách hàng",
-                                  height: 320,
-                                  children: listHousingConditionsOfCustomers
-                                      .map((item) {
-                                    return new CheckboxListTile(
-                                      title: new Text(
-                                        item.groupText,
-                                        style: TextStyle(
-                                            color: Colors.black87,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      value: item.value,
-                                      activeColor:
-                                          ColorConstants.cepColorBackground,
-                                      checkColor: Colors.white,
-                                      onChanged: (bool value) {
-                                        setState(() {
-                                          item.value = value;
-                                        });
-                                      },
-                                    );
-                                  }).toList(),
-                                ),
-                                divider15,
-                                Container(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width: screenWidth * 0.6,
-                                        child: Text(
-                                          "Đề xuất xây/sửa của khách hàng",
-                                          style: TextStyle(
-                                            color: Colors.black38,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        height: 40,
-                                        child: CustomDropdown(
-                                          dropdownMenuItemList:
-                                              _customerBuildSuggestionsModelDropdownList,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _customerBuildSuggestionsValue =
-                                                  value;
-                                            });
-                                          },
-                                          value: _customerBuildSuggestionsValue,
-                                          width: screenWidth * 1,
-                                          isEnabled: true,
-                                          isUnderline: true,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                divider15,
-                                Container(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width: screenWidth * 0.6,
-                                        child: Text(
-                                          "Đề xuất CEP hỗ trợ",
-                                          style: TextStyle(
-                                            color: Colors.black38,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        height: 40,
-                                        child: TextField(
-                                          style: textStyleTextFieldCEP,
-                                          controller:
-                                              _controllerAmountOfLaborTools,
-                                          decoration:
-                                              inputDecorationTextFieldCEP(
-                                                  "Nhập số tiền...",
-                                                  suffixText: "VNĐ"),
-                                          keyboardType: TextInputType.number,
-                                          inputFormatters: [
-                                            CurrencyInputFormatter(),
-                                          ], // Only numbers can be entered
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                divider15,
-                                Container(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width: screenWidth * 0.6,
-                                        child: Text(
-                                          "Gia đình hỗ trợ",
-                                          style: TextStyle(
-                                            color: Colors.black38,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        height: 40,
-                                        child: TextField(
-                                          style: textStyleTextFieldCEP,
-                                          controller:
-                                              _controllerAmountOfLaborTools,
-                                          decoration:
-                                              inputDecorationTextFieldCEP(
-                                                  "Nhập số tiền...",
-                                                  suffixText: "VNĐ"),
-                                          keyboardType: TextInputType.number,
-                                          inputFormatters: [
-                                            CurrencyInputFormatter(),
-                                          ], // Only numbers can be entered
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                divider15,
-                                Container(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width: screenWidth * 0.6,
-                                        child: Text(
-                                          "Tiết kiệm",
-                                          style: TextStyle(
-                                            color: Colors.black38,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        height: 40,
-                                        child: TextField(
-                                          style: textStyleTextFieldCEP,
-                                          controller:
-                                              _controllerAmountOfLaborTools,
-                                          decoration:
-                                              inputDecorationTextFieldCEP(
-                                                  "Nhập số tiền...",
-                                                  suffixText: "VNĐ"),
-                                          keyboardType: TextInputType.number,
-                                          inputFormatters: [
-                                            CurrencyInputFormatter(),
-                                          ], // Only numbers can be entered
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                divider15,
-                                Container(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width: screenWidth * 0.6,
-                                        child: Text(
-                                          "Tiền vay",
-                                          style: TextStyle(
-                                            color: Colors.black38,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        height: 40,
-                                        child: TextField(
-                                          style: textStyleTextFieldCEP,
-                                          controller:
-                                              _controllerAmountOfLaborTools,
-                                          decoration:
-                                              inputDecorationTextFieldCEP(
-                                                  "Nhập số tiền...",
-                                                  suffixText: "VNĐ"),
-                                          keyboardType: TextInputType.number,
-                                          inputFormatters: [
-                                            CurrencyInputFormatter(),
-                                          ], // Only numbers can be entered
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                divider15,
-                                Container(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                   
-                                    children: [
-                                      SizedBox(
-                                        width: screenWidth * 0.5,
-                                        child: Text(
-                                          "Dự trù kinh phí",
-                                          style: TextStyle(
-                                            color: Colors.black38,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: screenWidth * 0.3,
-                                        child: Text(
-                                          "123,000,000 vnđ",
-                                          style: TextStyle(
-                                            color: Colors.black38,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                divider15,
-                                CardWithMultipleCheckbox(
-                                  title: "Hồ sơ đính kèm",
-                                  height: 350,
-                                  children: listAttachmentForHomeCEP
-                                      .map((item) {
-                                    return new CheckboxListTile(
-                                      title: new Text(
-                                        item.groupText,
-                                        style: TextStyle(
-                                            color: Colors.black87,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      value: item.value,
-                                      activeColor:
-                                          ColorConstants.cepColorBackground,
-                                      checkColor: Colors.white,
-                                      onChanged: (bool value) {
-                                        setState(() {
-                                          item.value = value;
-                                        });
-                                      },
-                                    );
-                                  }).toList(),
-                                ),
-                                divider15,
-                                Container(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        child: Text(
-                                          "Ghi chú về hoàn cảnh",
-                                          style: TextStyle(
-                                            color: Colors.black38,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        height: 40,
-                                        child: TextField(
-                                          controller:
-                                              _controllerFamilyCircumstances,
-                                          style: textStyleTextFieldCEP,
-                                          decoration:
-                                              inputDecorationTextFieldCEP(
-                                                  "Nhập..."),
-                                          keyboardType: TextInputType.text,
-                                          // Only numbers can be entered
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                divider15,
-                                Container(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width: screenWidth * 0.7,
-                                        child: Text(
-                                          "Gia đình có đồng ý xây/sửa",
-                                          style: TextStyle(
-                                            color: Colors.black38,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ),
-                                      Row(
+                                    ),
+                                    divider15,
+                                    Container(
+                                      child: Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          customRadioGetScholarshipSomeYearAgo(
-                                              listFamilyConfirmToBuild[0], 1),
-                                          VerticalDivider(
-                                            width: 10,
+                                          SizedBox(
+                                            width: screenWidth * 0.6,
+                                            child: Text(
+                                              "Quyền sở hữu nhà đề xuất xây/sửa",
+                                              style: TextStyle(
+                                                color: Colors.black38,
+                                                fontSize: 14,
+                                              ),
+                                            ),
                                           ),
-                                          customRadioGetScholarshipSomeYearAgo(
-                                              listFamilyConfirmToBuild[1], 0),
+                                          Container(
+                                            height: 40,
+                                            child: CustomDropdown(
+                                              dropdownMenuItemList:
+                                                  _homeOwnershipModelDropdownList,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  _homeOwnershipValue = value;
+                                                });
+                                              },
+                                              value: _homeOwnershipValue,
+                                              width: screenWidth * 1,
+                                              isEnabled: true,
+                                              isUnderline: true,
+                                            ),
+                                          ),
                                         ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          
-            divider15,
-            Card(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  AnimatedContainer(
-                    duration: Duration(milliseconds: 500),
-                    // Provide an optional curve to make the animation feel smoother.
-                    curve: Curves.easeOut,
-                    height: 40,
-                    padding: EdgeInsets.only(right: 10),
-                    child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          if (isCareerDevelopment) {
-                            isCollapseCareerDevelopment = !isCollapseCareerDevelopment;
-                            if (isCollapseCareerDevelopment == true) {
-                              //isShowContainerScholarshipAndGift = selectedIndexScholarshipAndGift == 1 ? true :false;
-                              _controllerRotateIconCareerDevelopment.forward();
-                              _controllerFadeTransitionCareerDevelopment.forward();
-                            } else {
-                              _controllerRotateIconCareerDevelopment.reverse();
-                              _controllerFadeTransitionCareerDevelopment.reverse();
-                            }
-                          }
-                        });
-                      },
-                      child: Container(
-                        height: 40,
-                        color: Colors.white,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              child: Row(
-                                children: [
-                                  InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        if (!isCareerDevelopment) {
-                                          _controllerRotateIconCareerDevelopment.reset();
-                                          _controllerFadeTransitionCareerDevelopment
-                                              .forward();
-                                        } else {
-                                          isCollapseCareerDevelopment = false;
-                                          isShowContainerScholarshipAndGift =
-                                              false;
-                                          _controllerFadeTransitionCareerDevelopment
-                                              .reverse();
-                                        }
-                                        isCareerDevelopment = !isCareerDevelopment;
-                                      });
-                                    },
-                                    child: Container(
-                                      width: 80,
-                                      margin: EdgeInsets.only(bottom: 30),
-                                      child: CheckboxListTile(
-                                        value: isCareerDevelopment,
-                                        onChanged: (newValue) {},
-                                        controlAffinity: ListTileControlAffinity
-                                            .leading, //  <-- leading Checkbox
                                       ),
                                     ),
-                                  ),
-                                  Center(
-                                    child: AnimatedDefaultTextStyle(
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          color: isCareerDevelopment
-                                              ? Colors.red
-                                              : Colors.blue,
-                                          fontWeight: FontWeight.bold),
-
-                                      duration: Duration(milliseconds: 500),
-                                      // Provide an optional curve to make the animation feel smoother.
-                                      curve: Curves.easeOut,
-                                      child: Text(
-                                        "Phát Triển Nghề",
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            AnimatedOpacity(
-                              duration: Duration(milliseconds: 500),
-                              // Provide an optional curve to make the animation feel smoother.
-                              curve: Curves.easeOut,
-                              opacity: !isCareerDevelopment ? 0 : 1,
-                              child: AnimatedBuilder(
-                                animation: _controllerRotateIconCareerDevelopment,
-                                builder: (_, child) {
-                                  return Transform.rotate(
-                                    angle: _controllerRotateIconCareerDevelopment.value *
-                                        1 *
-                                        math.pi,
-                                    child: child,
-                                  );
-                                },
-                                child: Icon(
-                                  Icons.arrow_drop_up,
-                                  size: 25,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  AnimatedSize(
-                    vsync: this,
-                    duration: Duration(milliseconds: 1500),
-                    curve: Curves.fastLinearToSlowEaseIn,
-                    child: FadeTransition(
-                      opacity: _animationFadeTransitionCareerDevelopment,
-                      child: Column(
-                        children: [
-                          AnimatedContainer(
-                            duration: Duration(milliseconds: 1500),
-                            curve: Curves.fastOutSlowIn,
-                            height: isCollapseCareerDevelopment == true ? 1070 : 0,
-                            color: Colors.white,
-                            padding: EdgeInsets.only(left: 10, right: 10),
-                            child: ListView(
-                              physics: const NeverScrollableScrollPhysics(),
-                              children: [
-                                Container(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        child: Text(
-                                          "Họ và tên người thân",
-                                          style: TextStyle(
-                                            color: Colors.black38,
-                                            fontSize: 14,
+                                    divider15,
+                                    CardWithMultipleCheckbox(
+                                      title: "Điều kiện nhà ở của khách hàng",
+                                      height: 320,
+                                      children: listHousingConditionsOfCustomers
+                                          .map((item) {
+                                        return new CheckboxListTile(
+                                          title: new Text(
+                                            item.groupText,
+                                            style: TextStyle(
+                                                color: Colors.black87,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold),
                                           ),
-                                        ),
-                                      ),
-                                       Container(
-                                        height: 40,
-                                        child: TextField(
-                                          controller:
-                                              _controllerFamilyCircumstances,
-                                          style: textStyleTextFieldCEP,
-                                          decoration:
-                                              inputDecorationTextFieldCEP(
-                                                  "Nhập..."),
-                                          keyboardType: TextInputType.text,
-                                          // Only numbers can be entered
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                divider15,
-                                Container(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        child: Text(
-                                          "Quan hệ với khách hàng",
-                                          style: TextStyle(
-                                            color: Colors.black38,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        height: 40,
-                                        child: CustomDropdown(
-                                          dropdownMenuItemList:
-                                              _typeCustomerModelDropdownList,
-                                          onChanged: (value) {
+                                          value: item.value,
+                                          activeColor:
+                                              ColorConstants.cepColorBackground,
+                                          checkColor: Colors.white,
+                                          onChanged: (bool value) {
                                             setState(() {
-                                              _typeCustomerValue = value;
+                                              item.value = value;
                                             });
                                           },
-                                          value: _typeCustomerValue,
-                                          width: screenWidth * 1,
-                                          isEnabled: true,
-                                          isUnderline: true,
-                                        ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                    divider15,
+                                    Container(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            width: screenWidth * 0.6,
+                                            child: Text(
+                                              "Đề xuất xây/sửa của khách hàng",
+                                              style: TextStyle(
+                                                color: Colors.black38,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 40,
+                                            child: CustomDropdown(
+                                              dropdownMenuItemList:
+                                                  _customerBuildSuggestionsModelDropdownList,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  _customerBuildSuggestionsValue =
+                                                      value;
+                                                });
+                                              },
+                                              value:
+                                                  _customerBuildSuggestionsValue,
+                                              width: screenWidth * 1,
+                                              isEnabled: true,
+                                              isUnderline: true,
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                    divider15,
+                                    Container(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            width: screenWidth * 0.6,
+                                            child: Text(
+                                              "Đề xuất CEP hỗ trợ",
+                                              style: TextStyle(
+                                                color: Colors.black38,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 40,
+                                            child: TextField(
+                                              style: textStyleTextFieldCEP,
+                                              controller:
+                                                  _controllerAmountOfLaborTools,
+                                              decoration:
+                                                  inputDecorationTextFieldCEP(
+                                                      "Nhập số tiền...",
+                                                      suffixText: "VNĐ"),
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              inputFormatters: [
+                                                CurrencyInputFormatter(),
+                                              ], // Only numbers can be entered
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    divider15,
+                                    Container(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            width: screenWidth * 0.6,
+                                            child: Text(
+                                              "Gia đình hỗ trợ",
+                                              style: TextStyle(
+                                                color: Colors.black38,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 40,
+                                            child: TextField(
+                                              style: textStyleTextFieldCEP,
+                                              controller:
+                                                  _controllerAmountOfLaborTools,
+                                              decoration:
+                                                  inputDecorationTextFieldCEP(
+                                                      "Nhập số tiền...",
+                                                      suffixText: "VNĐ"),
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              inputFormatters: [
+                                                CurrencyInputFormatter(),
+                                              ], // Only numbers can be entered
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    divider15,
+                                    Container(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            width: screenWidth * 0.6,
+                                            child: Text(
+                                              "Tiết kiệm",
+                                              style: TextStyle(
+                                                color: Colors.black38,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 40,
+                                            child: TextField(
+                                              style: textStyleTextFieldCEP,
+                                              controller:
+                                                  _controllerAmountOfLaborTools,
+                                              decoration:
+                                                  inputDecorationTextFieldCEP(
+                                                      "Nhập số tiền...",
+                                                      suffixText: "VNĐ"),
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              inputFormatters: [
+                                                CurrencyInputFormatter(),
+                                              ], // Only numbers can be entered
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    divider15,
+                                    Container(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            width: screenWidth * 0.6,
+                                            child: Text(
+                                              "Tiền vay",
+                                              style: TextStyle(
+                                                color: Colors.black38,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 40,
+                                            child: TextField(
+                                              style: textStyleTextFieldCEP,
+                                              controller:
+                                                  _controllerAmountOfLaborTools,
+                                              decoration:
+                                                  inputDecorationTextFieldCEP(
+                                                      "Nhập số tiền...",
+                                                      suffixText: "VNĐ"),
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              inputFormatters: [
+                                                CurrencyInputFormatter(),
+                                              ], // Only numbers can be entered
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    divider15,
+                                    Container(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          SizedBox(
+                                            width: screenWidth * 0.5,
+                                            child: Text(
+                                              "Dự trù kinh phí",
+                                              style: TextStyle(
+                                                color: Colors.black38,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: screenWidth * 0.3,
+                                            child: Text(
+                                              "123,000,000 vnđ",
+                                              style: TextStyle(
+                                                color: Colors.black38,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    divider15,
+                                    CardWithMultipleCheckbox(
+                                      title: "Hồ sơ đính kèm",
+                                      height: 350,
+                                      children:
+                                          listAttachmentForHomeCEP.map((item) {
+                                        return new CheckboxListTile(
+                                          title: new Text(
+                                            item.groupText,
+                                            style: TextStyle(
+                                                color: Colors.black87,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          value: item.value,
+                                          activeColor:
+                                              ColorConstants.cepColorBackground,
+                                          checkColor: Colors.white,
+                                          onChanged: (bool value) {
+                                            setState(() {
+                                              item.value = value;
+                                            });
+                                          },
+                                        );
+                                      }).toList(),
+                                    ),
+                                    divider15,
+                                    Container(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            child: Text(
+                                              "Ghi chú về hoàn cảnh",
+                                              style: TextStyle(
+                                                color: Colors.black38,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 40,
+                                            child: TextField(
+                                              controller:
+                                                  _controllerFamilyCircumstances,
+                                              style: textStyleTextFieldCEP,
+                                              decoration:
+                                                  inputDecorationTextFieldCEP(
+                                                      "Nhập..."),
+                                              keyboardType: TextInputType.text,
+                                              // Only numbers can be entered
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    divider15,
+                                    Container(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            width: screenWidth * 0.7,
+                                            child: Text(
+                                              "Gia đình có đồng ý xây/sửa",
+                                              style: TextStyle(
+                                                color: Colors.black38,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              customRadioGetScholarshipSomeYearAgo(
+                                                  listFamilyConfirmToBuild[0],
+                                                  1),
+                                              VerticalDivider(
+                                                width: 10,
+                                              ),
+                                              customRadioGetScholarshipSomeYearAgo(
+                                                  listFamilyConfirmToBuild[1],
+                                                  0),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                divider15,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                divider15,
+                Card(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      AnimatedContainer(
+                        duration: Duration(milliseconds: 500),
+                        // Provide an optional curve to make the animation feel smoother.
+                        curve: Curves.easeOut,
+                        height: 40,
+                        padding: EdgeInsets.only(right: 10),
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              if (isCareerDevelopment) {
+                                isCollapseCareerDevelopment =
+                                    !isCollapseCareerDevelopment;
+                                if (isCollapseCareerDevelopment == true) {
+                                  //isShowContainerScholarshipAndGift = selectedIndexScholarshipAndGift == 1 ? true :false;
+                                  _controllerRotateIconCareerDevelopment
+                                      .forward();
+                                  _controllerFadeTransitionCareerDevelopment
+                                      .forward();
+                                } else {
+                                  _controllerRotateIconCareerDevelopment
+                                      .reverse();
+                                  _controllerFadeTransitionCareerDevelopment
+                                      .reverse();
+                                }
+                              }
+                            });
+                          },
+                          child: Container(
+                            height: 40,
+                            color: Colors.white,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
                                 Container(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  child: Row(
                                     children: [
-                                      SizedBox(
-                                        child: Text(
-                                          "Hoàn cảnh gia đình",
-                                          style: TextStyle(
-                                            color: Colors.black38,
-                                            fontSize: 14,
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            if (!isCareerDevelopment) {
+                                              _controllerRotateIconCareerDevelopment
+                                                  .reset();
+                                              _controllerFadeTransitionCareerDevelopment
+                                                  .forward();
+                                            } else {
+                                              isCollapseCareerDevelopment =
+                                                  false;
+                                              isShowContainerScholarshipAndGift =
+                                                  false;
+                                              _controllerFadeTransitionCareerDevelopment
+                                                  .reverse();
+                                            }
+                                            isCareerDevelopment =
+                                                !isCareerDevelopment;
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 80,
+                                          margin: EdgeInsets.only(bottom: 30),
+                                          child: CheckboxListTile(
+                                            value: isCareerDevelopment,
+                                            onChanged: (newValue) {},
+                                            controlAffinity: ListTileControlAffinity
+                                                .leading, //  <-- leading Checkbox
                                           ),
                                         ),
                                       ),
-                                      Container(
-                                        height: 40,
-                                        child: TextField(
-                                          controller:
-                                              _controllerFamilyCircumstances,
-                                          style: textStyleTextFieldCEP,
-                                          decoration:
-                                              inputDecorationTextFieldCEP(
-                                                  "Nhập..."),
-                                          keyboardType: TextInputType.text,
-                                          // Only numbers can be entered
+                                      Center(
+                                        child: AnimatedDefaultTextStyle(
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: isCareerDevelopment
+                                                  ? Colors.red
+                                                  : Colors.blue,
+                                              fontWeight: FontWeight.bold),
+
+                                          duration: Duration(milliseconds: 500),
+                                          // Provide an optional curve to make the animation feel smoother.
+                                          curve: Curves.easeOut,
+                                          child: Text(
+                                            "Phát Triển Nghề",
+                                          ),
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
-                                divider15,
-                                CardWithMultipleCheckbox(
-                                  title: "Lý do tham gia chương trình",
-                                  height: 180,
-                                  children: listJoinReason.map((item) {
-                                    return new CheckboxListTile(
-                                      title: new Text(
-                                        item.groupText,
-                                        style: TextStyle(
-                                            color: Colors.black87,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      value: item.value,
-                                      activeColor:
-                                          ColorConstants.cepColorBackground,
-                                      checkColor: Colors.white,
-                                      onChanged: (bool value) {
-                                        setState(() {
-                                          item.value = value;
-                                        });
-                                      },
-                                    );
-                                  }).toList(),
+                                AnimatedOpacity(
+                                  duration: Duration(milliseconds: 500),
+                                  // Provide an optional curve to make the animation feel smoother.
+                                  curve: Curves.easeOut,
+                                  opacity: !isCareerDevelopment ? 0 : 1,
+                                  child: AnimatedBuilder(
+                                    animation:
+                                        _controllerRotateIconCareerDevelopment,
+                                    builder: (_, child) {
+                                      return Transform.rotate(
+                                        angle:
+                                            _controllerRotateIconCareerDevelopment
+                                                    .value *
+                                                1 *
+                                                math.pi,
+                                        child: child,
+                                      );
+                                    },
+                                    child: Icon(
+                                      Icons.arrow_drop_up,
+                                      size: 25,
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
                           ),
-                        ],
+                        ),
                       ),
-                    ),
+                      AnimatedSize(
+                        vsync: this,
+                        duration: Duration(milliseconds: 1500),
+                        curve: Curves.fastLinearToSlowEaseIn,
+                        child: FadeTransition(
+                          opacity: _animationFadeTransitionCareerDevelopment,
+                          child: Column(
+                            children: [
+                              AnimatedContainer(
+                                duration: Duration(milliseconds: 1500),
+                                curve: Curves.fastOutSlowIn,
+                                height: isCollapseCareerDevelopment == true
+                                    ? 1970
+                                    : 0,
+                                color: Colors.white,
+                                padding: EdgeInsets.only(left: 10, right: 10),
+                                child: ListView(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  children: [
+                                    Container(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            child: Text(
+                                              "Họ và tên người thân",
+                                              style: TextStyle(
+                                                color: Colors.black38,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 40,
+                                            child: TextField(
+                                              controller:
+                                                  _controllerFamilyCircumstances,
+                                              style: textStyleTextFieldCEP,
+                                              decoration:
+                                                  inputDecorationTextFieldCEP(
+                                                      "Nhập..."),
+                                              keyboardType: TextInputType.text,
+                                              // Only numbers can be entered
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    divider15,
+                                    Container(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            child: Text(
+                                              "Quan hệ với khách hàng",
+                                              style: TextStyle(
+                                                color: Colors.black38,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 40,
+                                            child: CustomDropdown(
+                                              dropdownMenuItemList:
+                                                  _relationsWithCustomersJobDevelopModelDropdownList,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  _relationsWithCustomersJobDevelop = value;
+                                                });
+                                              },
+                                              value: _relationsWithCustomersJobDevelop,
+                                              width: screenWidth * 1,
+                                              isEnabled: true,
+                                              isUnderline: true,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    divider15,
+                                    Container(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            child: Text(
+                                              "Hoàn cảnh gia đình",
+                                              style: TextStyle(
+                                                color: Colors.black38,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 40,
+                                            child: TextField(
+                                              controller:
+                                                  _controllerFamilyCircumstances,
+                                              style: textStyleTextFieldCEP,
+                                              decoration:
+                                                  inputDecorationTextFieldCEP(
+                                                      "Nhập..."),
+                                              keyboardType: TextInputType.text,
+                                              // Only numbers can be entered
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    divider15,
+                                    CardWithMultipleCheckbox(
+                                      title: "Lý do tham gia chương trình",
+                                      height: 180,
+                                      children: listJoinReason.map((item) {
+                                        return new CheckboxListTile(
+                                          title: new Text(
+                                            item.groupText,
+                                            style: TextStyle(
+                                                color: Colors.black87,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          value: item.value,
+                                          activeColor:
+                                              ColorConstants.cepColorBackground,
+                                          checkColor: Colors.white,
+                                          onChanged: (bool value) {
+                                            setState(() {
+                                              item.value = value;
+                                            });
+                                          },
+                                        );
+                                      }).toList(),
+                                    ),
+                                    divider15,
+                                    CardWithMultipleCheckbox(
+                                      title: "Tham quan mô hình nghề hiệu quả",
+                                      height: 480,
+                                      children: listSightseeingOccupationModel
+                                          .map((item) {
+                                        return new CheckboxListTile(
+                                          title: new Text(
+                                            item.groupText,
+                                            style: TextStyle(
+                                                color: Colors.black87,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          value: item.value,
+                                          activeColor:
+                                              ColorConstants.cepColorBackground,
+                                          checkColor: Colors.white,
+                                          onChanged: (bool value) {
+                                            setState(() {
+                                              item.value = value;
+                                            });
+                                          },
+                                        );
+                                      }).toList(),
+                                    ),
+                                    divider15,
+                                    CardWithMultipleCheckbox(
+                                      title: "Hội thảo hỗ trợ kỹ thuật",
+                                      height: 280,
+                                      children: listEngineerSupportSeminar
+                                          .map((item) {
+                                        return new CheckboxListTile(
+                                          title: new Text(
+                                            item.groupText,
+                                            style: TextStyle(
+                                                color: Colors.black87,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          value: item.value,
+                                          activeColor:
+                                              ColorConstants.cepColorBackground,
+                                          checkColor: Colors.white,
+                                          onChanged: (bool value) {
+                                            setState(() {
+                                              item.value = value;
+                                            });
+                                          },
+                                        );
+                                      }).toList(),
+                                    ),
+                                    divider15,
+                                    CardWithMultipleCheckbox(
+                                      title: "SCC",
+                                      height: 280,
+                                      children: listSCC.map((item) {
+                                        return new CheckboxListTile(
+                                          title: new Text(
+                                            item.groupText,
+                                            style: TextStyle(
+                                                color: Colors.black87,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          value: item.value,
+                                          activeColor:
+                                              ColorConstants.cepColorBackground,
+                                          checkColor: Colors.white,
+                                          onChanged: (bool value) {
+                                            setState(() {
+                                              item.value = value;
+                                            });
+                                          },
+                                        );
+                                      }).toList(),
+                                    ),
+                                    divider15,
+                                    CardWithMultipleCheckbox(
+                                      title: "IECD",
+                                      height: 80,
+                                      children: listIECD.map((item) {
+                                        return new CheckboxListTile(
+                                          title: new Text(
+                                            item.groupText,
+                                            style: TextStyle(
+                                                color: Colors.black87,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          value: item.value,
+                                          activeColor:
+                                              ColorConstants.cepColorBackground,
+                                          checkColor: Colors.white,
+                                          onChanged: (bool value) {
+                                            setState(() {
+                                              item.value = value;
+                                            });
+                                          },
+                                        );
+                                      }).toList(),
+                                    ),
+                                    divider15,
+                                    CardWithMultipleCheckbox(
+                                      title: "REACH",
+                                      height: 140,
+                                      children: listREACH.map((item) {
+                                        return new CheckboxListTile(
+                                          title: new Text(
+                                            item.groupText,
+                                            style: TextStyle(
+                                                color: Colors.black87,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          value: item.value,
+                                          activeColor:
+                                              ColorConstants.cepColorBackground,
+                                          checkColor: Colors.white,
+                                          onChanged: (bool value) {
+                                            setState(() {
+                                              item.value = value;
+                                            });
+                                          },
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                divider15,
+                Card(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      AnimatedContainer(
+                        duration: Duration(milliseconds: 500),
+                        // Provide an optional curve to make the animation feel smoother.
+                        curve: Curves.easeOut,
+                        height: 40,
+                        padding: EdgeInsets.only(right: 10),
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              if (isInsurance) {
+                                isCollapseInsurance = !isCollapseInsurance;
+                                if (isCollapseInsurance == true) {
+                                  //isShowContainerScholarshipAndGift = selectedIndexScholarshipAndGift == 1 ? true :false;
+                                  _controllerRotateIconInsurance.forward();
+                                  _controllerFadeTransitionInsurance.forward();
+                                } else {
+                                  _controllerRotateIconInsurance.reverse();
+                                  _controllerFadeTransitionInsurance.reverse();
+                                }
+                              }
+                            });
+                          },
+                          child: Container(
+                            height: 40,
+                            color: Colors.white,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  child: Row(
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            if (!isInsurance) {
+                                              _controllerRotateIconInsurance
+                                                  .reset();
+                                              _controllerFadeTransitionInsurance
+                                                  .forward();
+                                            } else {
+                                              isCollapseInsurance = false;
+                                              isShowContainerScholarshipAndGift =
+                                                  false;
+                                              _controllerFadeTransitionInsurance
+                                                  .reverse();
+                                            }
+                                            isInsurance = !isInsurance;
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 80,
+                                          margin: EdgeInsets.only(bottom: 30),
+                                          child: CheckboxListTile(
+                                            value: isInsurance,
+                                            onChanged: (newValue) {},
+                                            controlAffinity: ListTileControlAffinity
+                                                .leading, //  <-- leading Checkbox
+                                          ),
+                                        ),
+                                      ),
+                                      Center(
+                                        child: AnimatedDefaultTextStyle(
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: isInsurance
+                                                  ? Colors.red
+                                                  : Colors.blue,
+                                              fontWeight: FontWeight.bold),
+
+                                          duration: Duration(milliseconds: 500),
+                                          // Provide an optional curve to make the animation feel smoother.
+                                          curve: Curves.easeOut,
+                                          child: Text(
+                                            "Bảo Hiểm Y Tế",
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                AnimatedOpacity(
+                                  duration: Duration(milliseconds: 500),
+                                  // Provide an optional curve to make the animation feel smoother.
+                                  curve: Curves.easeOut,
+                                  opacity: !isInsurance ? 0 : 1,
+                                  child: AnimatedBuilder(
+                                    animation: _controllerRotateIconInsurance,
+                                    builder: (_, child) {
+                                      return Transform.rotate(
+                                        angle:
+                                            _controllerRotateIconInsurance.value *
+                                                1 *
+                                                math.pi,
+                                        child: child,
+                                      );
+                                    },
+                                    child: Icon(
+                                      Icons.arrow_drop_up,
+                                      size: 25,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      AnimatedSize(
+                        vsync: this,
+                        duration: Duration(milliseconds: 1500),
+                        curve: Curves.fastLinearToSlowEaseIn,
+                        child: FadeTransition(
+                          opacity: _animationFadeTransitionInsurance,
+                          child: Column(
+                            children: [
+                              AnimatedContainer(
+                                duration: Duration(milliseconds: 1500),
+                                curve: Curves.fastOutSlowIn,
+                                height: isCollapseInsurance == true ? 430 : 0,
+                                color: Colors.white,
+                                padding: EdgeInsets.only(left: 10, right: 10),
+                                child: ListView(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  children: [
+                                    Container(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            width: screenWidth * 0.6,
+                                            child: Text(
+                                              "Mức phí bảo hiểm",
+                                              style: TextStyle(
+                                                color: Colors.black38,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 40,
+                                            child: TextField(
+                                              style: textStyleTextFieldCEP,
+                                              controller:
+                                                  _controllerAmountOfLaborTools,
+                                              decoration:
+                                                  inputDecorationTextFieldCEP(
+                                                      "Nhập số tiền...",
+                                                      suffixText: "VNĐ"),
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              inputFormatters: [
+                                                CurrencyInputFormatter(),
+                                              ], // Only numbers can be entered
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    divider15,
+                                    Container(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            child: Text(
+                                              "Điều kiện tiếp cận dịch vụ BHYT",
+                                              style: TextStyle(
+                                                color: Colors.black38,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 40,
+                                            child: CustomDropdown(
+                                              dropdownMenuItemList:
+                                                  _typeCustomerModelDropdownList,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  _typeCustomerValue = value;
+                                                });
+                                              },
+                                              value: _typeCustomerValue,
+                                              width: screenWidth * 1,
+                                              isEnabled: true,
+                                              isUnderline: true,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    divider15,
+                                    Container(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            child: Text(
+                                              "Tình trạng sức khỏe của khách hàng và người thân",
+                                              style: TextStyle(
+                                                color: Colors.black38,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 40,
+                                            child: CustomDropdown(
+                                              dropdownMenuItemList:
+                                                  _typeCustomerModelDropdownList,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  _typeCustomerValue = value;
+                                                });
+                                              },
+                                              value: _typeCustomerValue,
+                                              width: screenWidth * 1,
+                                              isEnabled: true,
+                                              isUnderline: true,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    divider15,
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        SizedBox(
+                                          width: screenWidth * 0.38,
+                                          child: Text(
+                                            "Họ & tên người thân",
+                                            style: TextStyle(
+                                              color: Colors.black38,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Container(
+                                            height: 40,
+                                            child: TextField(
+                                              controller:
+                                                  _controllerCareerSpecific,
+                                              style: textStyleTextFieldCEP,
+                                              decoration:
+                                                  inputDecorationTextFieldCEP(
+                                                      "Nhập..."),
+                                              keyboardType: TextInputType.text,
+                                              // Only numbers can be entered
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    divider15,
+                                    Container(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            child: Text(
+                                              "Quan hệ với khách hàng",
+                                              style: TextStyle(
+                                                color: Colors.black38,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 40,
+                                            child: CustomDropdown(
+                                              dropdownMenuItemList:
+                                                  _relationsWithCustomersJobDevelopModelDropdownList,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  _relationsWithCustomersJobDevelop = value;
+                                                });
+                                              },
+                                              value: _relationsWithCustomersJobDevelop,
+                                              width: screenWidth * 1,
+                                              isEnabled: true,
+                                              isUnderline: true,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                 divider15,
+                                    Container(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          SizedBox(
+                                            width: screenWidth * 0.38,
+                                            child: Text(
+                                              "Năm sinh",
+                                              style: TextStyle(
+                                                color: Colors.black38,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Container(
+                                              height: 40,
+                                              child: CustomDropdown(
+                                                dropdownMenuItemList:
+                                                    _birthOfYearModelDropdownList,
+                                                onChanged:
+                                                    _onChangeBirthOfYearModelDropdown,
+                                                value: _birthOfYearValue,
+                                                width: screenWidth * 1,
+                                                isEnabled: true,
+                                                isUnderline: true,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                
+              
+              ],
             ),
-            
-          ],
+          ),
+          floatingActionButton: FloatingActionButton(
+            mini: true,
+            onPressed: _scrollToTop,
+            child: Icon(Icons.arrow_upward),
+          ),
         ),
       );
 

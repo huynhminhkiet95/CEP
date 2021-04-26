@@ -6,7 +6,7 @@ class CardWithMultipleCheckbox extends StatelessWidget {
   final List<Widget> children;
 
   CardWithMultipleCheckbox({this.title, this.height, this.children});
-
+  final ScrollController _scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
     double screenWidth;
@@ -42,8 +42,11 @@ class CardWithMultipleCheckbox extends StatelessWidget {
           Container(
             height: height,
             padding: EdgeInsets.all(8),
-            child: ListView(
-                 children: children),
+            child: Scrollbar(
+              isAlwaysShown: true,
+              controller: _scrollController,
+              child: ListView(children: children),
+            ),
           )
         ],
       ),

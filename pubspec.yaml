@@ -69,6 +69,7 @@ dependencies:
   flutter_animated_dialog: ^1.2.0
   easy_dialog: ^1.0.5
   flutter_rounded_date_picker: ^1.0.5
+  settings_ui: ^0.4.0
   #google_fonts: ^1.1.0 
 
 dev_dependencies:
@@ -77,7 +78,7 @@ dev_dependencies:
     
 flutter_icons:
   ios: true
-  android: true
+  android: "launcher_icon"
   image_path_ios: "assets/logo/cep-large-icon-logo-intro.png"
   image_path_android: "assets/logo/cep-large-icon-logo-intro.png"
   # adaptive_icon_background: "assets/launcher/background.png"
@@ -258,6 +259,42 @@ flutter:
     - family: AppIcons
       fonts:
         - asset: assets/fonts/AppIcons.ttf
+        
+    - family: WorkSans
+      fonts:
+        - asset: assets/fonts/WorkSans-Regular.ttf
+        - asset: assets/fonts/WorkSans-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/WorkSans-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/WorkSans-Bold.ttf
+          weight: 700
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-Bold.ttf
+        - asset: assets/fonts/Roboto-Regular.ttf
+        - asset: assets/fonts/Roboto-Medium.ttf
+          weight: 400
+    - family: ConcertOne
+      fonts:
+        - asset: assets/fonts/ConcertOne-Regular.ttf
+          weight: 400
+
+    - family: SourceSansPro
+      fonts:
+        - asset: assets/fonts/SourceSansPro-Black.ttf
+        - asset: assets/fonts/SourceSansPro-BlackItalic.ttf
+        - asset: assets/fonts/SourceSansPro-Bold.ttf
+        - asset: assets/fonts/SourceSansPro-BoldItalic.ttf
+        - asset: assets/fonts/SourceSansPro-ExtraLight.ttf
+        - asset: assets/fonts/SourceSansPro-ExtraLightItalic.ttf
+        - asset: assets/fonts/SourceSansPro-Italic.ttf
+        - asset: assets/fonts/SourceSansPro-Light.ttf
+        - asset: assets/fonts/SourceSansPro-LightItalic.ttf
+        - asset: assets/fonts/SourceSansPro-Regular.ttf
+        - asset: assets/fonts/SourceSansPro-SemiBold.ttf
+        - asset: assets/fonts/SourceSansPro-SemiBoldItalic.ttf
+          weight: 400
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.io/custom-fonts/#from-packages

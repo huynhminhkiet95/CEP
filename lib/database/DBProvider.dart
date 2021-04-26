@@ -921,7 +921,7 @@ class DBProvider {
         await db.rawInsert(queryString);
       }
       List<Map> list = await db.query("historysearchkhaosat_tbl",
-          columns: ["id"], where: "cumID = ?", whereArgs: [cumID], limit: 1);
+          columns: ["id"], where: "cumID = ? and username = ?", whereArgs: [cumID,username], limit: 1);
       var a = list.first;
       id = a["id"];
       return id;

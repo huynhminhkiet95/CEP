@@ -22,8 +22,13 @@ class _ProfilePageDesignState extends State<ProfilePageDesign> {
 
 class ProfilePage extends StatelessWidget {
   TextStyle _style() {
-    return TextStyle(fontWeight: FontWeight.bold, fontSize: 16);
+    return TextStyle( fontSize: 14, color: Colors.grey);
   }
+
+  TextStyle _styleValue() {
+    return TextStyle( fontSize: 14, color: Colors.grey[600]);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +45,8 @@ class ProfilePage extends StatelessWidget {
           backgroundColor: Colors.blue,
           elevation: 0.0,
           bottomOpacity: 0.0,
-          title: const Text('Hồ Sơ Cá Nhân'),
+          title: const Text('Hồ Sơ Cá Nhân',textAlign: TextAlign.center,
+          style: TextStyle(fontWeight: FontWeight.w600),),
           actions: [
             IconButton(
                 icon: Icon(
@@ -64,7 +70,7 @@ class ProfilePage extends StatelessWidget {
             children: [
               CustomAppBar(),
               Container(
-                margin: EdgeInsets.only(top: 300),
+                margin: EdgeInsets.only(top: 275),
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,7 +90,7 @@ class ProfilePage extends StatelessWidget {
                         children: [
                           Icon(
                             Icons.location_city,
-                            color: Colors.black,
+                            color: Colors.grey,
                             size: 20,
                           ),
                           VerticalDivider(
@@ -101,7 +107,7 @@ class ProfilePage extends StatelessWidget {
                             globalUser.getUserInfo == null
                                 ? ''
                                 : globalUser.getUserInfo.chiNhanhID.toString(),
-                            style: _style(),
+                            style: _styleValue(),
                           ),
                         ],
                       ),
@@ -114,7 +120,7 @@ class ProfilePage extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.phone,
-                          color: Colors.black,
+                          color: Colors.grey,
                           size: 20,
                         ),
                         VerticalDivider(
@@ -131,7 +137,7 @@ class ProfilePage extends StatelessWidget {
                           globalUser.getUserInfo == null
                               ? ''
                               : globalUser.getUserInfo.dienThoai.toString(),
-                          style: _style(),
+                          style: _styleValue(),
                         ),
                       ],
                     ),
@@ -143,7 +149,7 @@ class ProfilePage extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.email,
-                          color: Colors.black,
+                          color: Colors.grey,
                           size: 20,
                         ),
                         VerticalDivider(
@@ -158,7 +164,7 @@ class ProfilePage extends StatelessWidget {
                         ),
                         Text(
                           '',
-                          style: _style(),
+                          style: _styleValue(),
                         ),
                       ],
                     ),
@@ -170,7 +176,7 @@ class ProfilePage extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.location_on,
-                          color: Colors.black,
+                          color: Colors.grey,
                           size: 20,
                         ),
                         VerticalDivider(
@@ -187,7 +193,7 @@ class ProfilePage extends StatelessWidget {
                           globalUser.getUserInfo == null
                               ? ''
                               : globalUser.getUserInfo.dienThoai.toString(),
-                          style: _style(),
+                          style: _styleValue(),
                         ),
                       ],
                     ),
@@ -200,7 +206,7 @@ class ProfilePage extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.qr_code_scanner,
-                          color: Colors.black,
+                          color: Colors.grey,
                           size: 20,
                         ),
                         VerticalDivider(
@@ -217,7 +223,7 @@ class ProfilePage extends StatelessWidget {
                           globalUser.getUserInfo == null
                               ? ''
                               : globalUser.getUserInfo.masoql.toString(),
-                          style: _style(),
+                          style: _styleValue(),
                         ),
                       ],
                     ),
@@ -230,7 +236,7 @@ class ProfilePage extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.group_work,
-                          color: Colors.black,
+                          color: Colors.grey,
                           size: 20,
                         ),
                         VerticalDivider(
@@ -247,7 +253,7 @@ class ProfilePage extends StatelessWidget {
                           globalUser.getUserInfo == null
                               ? ''
                               : globalUser.getUserInfo.toTinDung.toString(),
-                          style: _style(),
+                          style: _styleValue(),
                         ),
                       ],
                     ),

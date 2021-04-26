@@ -47,4 +47,6 @@ class IconsCustomize {
   static const IconData comments_dollar = IconData(0xf653, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData funnel_dollar = IconData(0xf662, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData search_dollar = IconData(0xf688, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData face_id_v2 = IconData(0xe810, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+
 }

@@ -896,7 +896,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                         })
                   ],
                   backgroundColor: ColorConstants.cepColorBackground,
-                  title: new Text("Cập Nhật Thông Tin Khảo Sát"),
+                  title: new Text("Cập Nhật Thông Tin Khảo Sát" ,style: TextStyle(fontWeight: FontWeight.w600)),
                   bottom: PreferredSize(
                       child: TabBar(
                           isScrollable: true,
@@ -1168,7 +1168,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                       Row(
                                         children: [
                                           SizedBox(
-                                            width: screenWidth * 0.42,
+                                            width: screenWidth * 0.40,
                                             child: Text(
                                               "Khu vực",
                                               style: TextStyle(

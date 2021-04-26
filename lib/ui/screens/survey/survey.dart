@@ -30,7 +30,10 @@ class SurveyScreen extends StatefulWidget {
   _SurveyScreenState createState() => _SurveyScreenState();
 }
 
-class _SurveyScreenState extends State<SurveyScreen> {
+class _SurveyScreenState extends State<SurveyScreen>
+    with TickerProviderStateMixin {
+  AnimationController animationController;
+  double opacity = 0.0;
   List<String> listItemCumId;
   List<String> listItemNgayXuatDS;
   String dropdownCumIdValue;
@@ -52,290 +55,30 @@ class _SurveyScreenState extends State<SurveyScreen> {
   }
 
   SurveyStream surveyStream;
-  Widget getItemListView(List<SurveyInfo> listSurvey) {
-    int count = listSurvey != null ? listSurvey.length : 0;
-    return Container(
-      child: ListView.builder(
-        itemCount: count,
-        itemBuilder: (context, i) {
-          return InkWell(
-            onTap: () {
-              List<ComboboxModel> listCombobox =
-                  globalUser.getListComboboxModel;
-              List<SurveyInfo> listSurveyDetail =
-                  globalUser.getListSurveyGlobal;
-              if (listCombobox == null || listCombobox.length == 0) {
-                Navigator.pushNamed(context, 'download', arguments: {
-                  'selectedIndex': 4,
-                }).then((value) => setState(() {
-                      if (true == value) {
-                        initState();
-                      }
-                    }));
-              } else {
-                Navigator.pushNamed(context, 'surveydetail', arguments: {
-                  'id': listSurvey[i].id,
-                  'metadata': listCombobox,
-                  'surveydetail': listSurveyDetail[i],
-                  'surveyhistory': surveyStream.listSurveyInfoHistory,
-                }).then((value) {
-                  //String a = value;
-                  if (value is List<SurveyInfo>) {
-                    setState(() {
-                      listSurvey = value;
-                    });
-                  }
-                });
-                // setState(() {
-                //       String a = value;
-                //    //   listSurvey = value;
-                //     }));
-              }
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(13),
-                ),
-                color: Colors.blue,
-              ),
-              // height: 130,
-              child: Card(
-                elevation: 10,
-                shadowColor: Colors.blue,
-                color: Colors.white,
-                borderOnForeground: true,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 2, bottom: 8),
-                  child: Row(
-                    children: [
-                      Checkbox(
-                        checkColor: Colors.white,
-                        activeColor: Colors.blue,
-                        value: checkBoxSurvey[i].status,
-                        onChanged: (bool value) {
-                          setState(() {
-                            this.checkBoxSurvey[i].status = value;
-                            int totalCheck = this
-                                .checkBoxSurvey
-                                .where((e) => e.status == true)
-                                .length;
-                            if (totalCheck == this.checkBoxSurvey.length) {
-                              this.isCheckAll = true;
-                            } else {
-                              this.isCheckAll = false;
-                            }
-                          });
-                        },
-                      ),
-                      Container(
-                        width: 290,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(child: Builder(builder: (context) {
-                              Widget cardBatBuoc = Container();
-                              Widget cardkhaosat = Container();
-                              if (listSurvey[i].batBuocKhaosat == 1) {
-                                cardBatBuoc = Card(
-                                    elevation: 3,
-                                    color: Colors.red[900],
-                                    child: Container(
-                                      height: 20,
-                                      width: 120,
-                                      child: Text(
-                                        "Bắt Buộc Khảo Sát",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                            color: Colors.white),
-                                      ),
-                                    ));
-                              }
-
-                              if (listSurvey[i].ghiChu.length > 0 &&
-                                  listSurvey[i].soTienDuyetChovay > 0) {
-                                cardkhaosat = Card(
-                                    elevation: 3,
-                                    color: Colors.red,
-                                    child: Container(
-                                      padding:
-                                          EdgeInsets.only(right: 5, left: 5),
-                                      height: 20,
-                                      width: 90,
-                                      child: Text(
-                                        "Đã Khảo Sát",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                            color: Colors.white),
-                                      ),
-                                    ));
-                              } else {
-                                cardkhaosat = Card(
-                                    elevation: 3,
-                                    color: Colors.grey,
-                                    child: Container(
-                                      padding: EdgeInsets.only(
-                                          right: 5, left: 5, top: 2),
-                                      height: 20,
-                                      width: 103,
-                                      child: Text(
-                                        "Chưa Khảo Sát",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                            color: Colors.white),
-                                      ),
-                                    ));
-                              }
-
-                              return Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  cardkhaosat,
-                                  cardBatBuoc,
-                                ],
-                              );
-                            })),
-                            Container(
-                              padding: EdgeInsets.only(left: 4),
-                              child: Text(
-                                "${listSurvey[i].thanhvienId} - ${listSurvey[i].hoVaTen}",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 13),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Row(
-                              // crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.only(left: 4),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        IconsCustomize.gender,
-                                        size: 20,
-                                        color: Colors.blue,
-                                      ),
-                                      VerticalDivider(
-                                        width: 10,
-                                      ),
-                                      Container(
-                                        width: 30,
-                                        child: Text(
-                                          listSurvey[i].gioiTinh == 0
-                                              ? "Nữ"
-                                              : "Nam",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 13),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.only(left: 4),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        IconsCustomize.birth_date,
-                                        size: 20,
-                                        color: Colors.red,
-                                      ),
-                                      VerticalDivider(
-                                        width: 10,
-                                      ),
-                                      VerticalDivider(
-                                        width: 1,
-                                      ),
-                                      Text(
-                                        listSurvey[i].ngaySinh.substring(0, 4),
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 13),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.only(left: 4),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        IconsCustomize.id_card,
-                                        color: Colors.orange,
-                                        size: 20,
-                                      ),
-                                      VerticalDivider(
-                                        width: 15,
-                                      ),
-                                      Text(
-                                        listSurvey[i].cmnd,
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 13),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(top: 5),
-                              padding: EdgeInsets.only(left: 6),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.location_on,
-                                    color: Colors.blue,
-                                  ),
-                                  VerticalDivider(
-                                    width: 1,
-                                  ),
-                                  Container(
-                                    width: 230,
-                                    child: Text(
-                                      listSurvey[i].diaChi,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 13),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
 
   @override
   void initState() {
+    animationController = AnimationController(
+        duration: const Duration(milliseconds: 2000), vsync: this);
     services = Services.of(context);
     surVeyBloc =
         new SurveyBloc(services.sharePreferenceService, services.commonService);
     surVeyBloc.emitEvent(LoadSurveyEvent());
+    setData();
     super.initState();
+  }
+
+  Future<void> setData() async {
+    await Future<dynamic>.delayed(const Duration(milliseconds: 200));
+    setState(() {
+      opacity = 1.0;
+    });
+  }
+
+  @override
+  void dispose() {
+    animationController?.dispose();
+    super.dispose();
   }
 
   void _onSubmit() {
@@ -364,8 +107,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
                   if (snapshot.data != null) {
                     surveyStream = snapshot.data;
 
-
                     if (dropdownCumIdValue != surveyStream.cumID) {
+                      animationController.reset();
                       this.isCheckAll = false;
                       checkBoxSurvey = new List<CheckBoxSurvey>();
                       for (var item in surveyStream.listSurvey) {
@@ -379,14 +122,17 @@ class _SurveyScreenState extends State<SurveyScreen> {
                         }
                       }
                     } else {
-                      for (var item in surveyStream.listSurvey) {
-                        var findIndex =
-                            checkBoxSurvey.indexWhere((e) => e.id == item.id);
-                        if (findIndex == -1) {
-                          var model = new CheckBoxSurvey();
-                          model.id = item.id;
-                          model.status = false;
-                          checkBoxSurvey.add(model);
+                      //  animationController.reset();
+                      if (surveyStream.listSurvey != null) {
+                        for (var item in surveyStream.listSurvey) {
+                          var findIndex =
+                              checkBoxSurvey.indexWhere((e) => e.id == item.id);
+                          if (findIndex == -1) {
+                            var model = new CheckBoxSurvey();
+                            model.id = item.id;
+                            model.status = false;
+                            checkBoxSurvey.add(model);
+                          }
                         }
                       }
                     }
@@ -394,12 +140,14 @@ class _SurveyScreenState extends State<SurveyScreen> {
                     dropdownCumIdValue = surveyStream.cumID;
                     dropdownNgayXuatDanhSachValue = surveyStream.ngayXuatDS;
                     listItemCumId = surveyStream.listHistorySearch
-                        .map((e) => e.cumID).toSet()
+                        .map((e) => e.cumID)
+                        .toSet()
                         .toList();
 
                     listItemNgayXuatDS = surveyStream.listHistorySearch
                         .where((e) => e.cumID == dropdownCumIdValue)
-                        .map((e) => e.ngayXuatDanhSach).toSet()
+                        .map((e) => e.ngayXuatDanhSach)
+                        .toSet()
                         .toList();
 
                     return ModalProgressHUDCustomize(
@@ -420,65 +168,77 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                 child: Column(
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 60, right: 60),
+                                      padding: EdgeInsets.only(
+                                          left: screenWidth * 0.1,
+                                          right: screenWidth * 0.1),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Card(
-                                              elevation: 4.0,
-                                              child: Container(
-                                                height: 30,
-                                                width: 90,
-                                                child: Center(
-                                                  child: Text(
-                                                    "Cụm ID (${listItemCumId.length})",
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 14,
-                                                        color:
-                                                            Color(0xff9596ab)),
-                                                  ),
-                                                ),
-                                              )),
-                                          Card(
-                                              elevation: 4.0,
-                                              child: Container(
-                                                height: 30,
-                                                width: 90,
-                                                child: Center(
-                                                  child: DropdownButton<String>(
-                                                    value: dropdownCumIdValue,
-                                                    elevation: 16,
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontSize: 14,
-                                                        color: Colors.black),
-                                                    underline: Container(
-                                                      height: 0,
-                                                      color: Colors.blue,
+                                          AnimatedOpacity(
+                                            duration: const Duration(
+                                                milliseconds: 1000),
+                                            opacity: opacity,
+                                            child: Card(
+                                                elevation: 4.0,
+                                                child: Container(
+                                                  height: 30,
+                                                  width: 90,
+                                                  child: Center(
+                                                    child: Text(
+                                                      "Cụm ID (${listItemCumId.length})",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14,
+                                                          color: Color(
+                                                              0xff9596ab)),
                                                     ),
-                                                    onChanged:
-                                                        (String newValue) {
-                                                      _onSearchSurvey(newValue,
-                                                          null);
-                                                    },
-                                                    items: listItemCumId.map<
-                                                            DropdownMenuItem<
-                                                                String>>(
-                                                        (String value) {
-                                                      return DropdownMenuItem<
-                                                          String>(
-                                                        value: value,
-                                                        child: Text(value),
-                                                      );
-                                                    }).toList(),
                                                   ),
-                                                ),
-                                              )),
+                                                )),
+                                          ),
+                                          AnimatedOpacity(
+                                            duration: const Duration(
+                                                milliseconds: 1000),
+                                            opacity: opacity,
+                                            child: Card(
+                                                elevation: 4.0,
+                                                child: Container(
+                                                  height: 30,
+                                                  width: 90,
+                                                  child: Center(
+                                                    child:
+                                                        DropdownButton<String>(
+                                                      value: dropdownCumIdValue,
+                                                      elevation: 16,
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontSize: 14,
+                                                          color: Colors.black),
+                                                      underline: Container(
+                                                        height: 0,
+                                                        color: Colors.blue,
+                                                      ),
+                                                      onChanged:
+                                                          (String newValue) {
+                                                        _onSearchSurvey(
+                                                            newValue, null);
+                                                      },
+                                                      items: listItemCumId.map<
+                                                              DropdownMenuItem<
+                                                                  String>>(
+                                                          (String value) {
+                                                        return DropdownMenuItem<
+                                                            String>(
+                                                          value: value,
+                                                          child: Text(value),
+                                                        );
+                                                      }).toList(),
+                                                    ),
+                                                  ),
+                                                )),
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -486,68 +246,80 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                       height: 10,
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 60, right: 60),
+                                      padding: EdgeInsets.only(
+                                          left: screenWidth * 0.1,
+                                          right: screenWidth * 0.1),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Card(
-                                              elevation: 4.0,
-                                              child: Container(
-                                                height: 30,
-                                                width: 150,
-                                                child: Center(
-                                                  child: Text(
-                                                    "Ngày Xuất Danh Sách",
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 14,
-                                                        color:
-                                                            Color(0xff9596ab)),
-                                                  ),
-                                                ),
-                                              )),
-                                          Card(
-                                              elevation: 4.0,
-                                              child: Container(
-                                                height: 30,
-                                                width: 100,
-                                                child: Center(
-                                                  child: DropdownButton<String>(
-                                                    value:
-                                                        dropdownNgayXuatDanhSachValue,
-                                                    elevation: 16,
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontSize: 14,
-                                                        color: Colors.black),
-                                                    underline: Container(
-                                                      height: 0,
-                                                      color: Colors.blue,
+                                          AnimatedOpacity(
+                                            duration: const Duration(
+                                                milliseconds: 1000),
+                                            opacity: opacity,
+                                            child: Card(
+                                                elevation: 4.0,
+                                                child: Container(
+                                                  height: 30,
+                                                  width: 150,
+                                                  child: Center(
+                                                    child: Text(
+                                                      "Ngày Xuất Danh Sách",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14,
+                                                          color: Color(
+                                                              0xff9596ab)),
                                                     ),
-                                                    onChanged:
-                                                        (String newValue) {
-                                                      _onSearchSurvey(
-                                                          dropdownCumIdValue,
-                                                          newValue);
-                                                    },
-                                                    items: listItemNgayXuatDS
-                                                        .map<
-                                                            DropdownMenuItem<
-                                                                String>>((String
-                                                            value) {
-                                                      return DropdownMenuItem<
-                                                          String>(
-                                                        value: value,
-                                                        child: Text(value),
-                                                      );
-                                                    }).toList(),
                                                   ),
-                                                ),
-                                              )),
+                                                )),
+                                          ),
+                                          AnimatedOpacity(
+                                            duration: const Duration(
+                                                milliseconds: 1000),
+                                            opacity: opacity,
+                                            child: Card(
+                                                elevation: 4.0,
+                                                child: Container(
+                                                  height: 30,
+                                                  width: 100,
+                                                  child: Center(
+                                                    child:
+                                                        DropdownButton<String>(
+                                                      value:
+                                                          dropdownNgayXuatDanhSachValue,
+                                                      elevation: 16,
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontSize: 14,
+                                                          color: Colors.black),
+                                                      underline: Container(
+                                                        height: 0,
+                                                        color: Colors.blue,
+                                                      ),
+                                                      onChanged:
+                                                          (String newValue) {
+                                                        _onSearchSurvey(
+                                                            dropdownCumIdValue,
+                                                            newValue);
+                                                      },
+                                                      items: listItemNgayXuatDS
+                                                          .map<
+                                                              DropdownMenuItem<
+                                                                  String>>((String
+                                                              value) {
+                                                        return DropdownMenuItem<
+                                                            String>(
+                                                          value: value,
+                                                          child: Text(value),
+                                                        );
+                                                      }).toList(),
+                                                    ),
+                                                  ),
+                                                )),
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -564,150 +336,161 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
-                                      AnimatedContainer(
-                                        height: 35,
-                                        decoration: decorationButtonAnimated(
-                                            checkBoxSurvey
-                                                        .where((e) =>
-                                                            e.status == true)
-                                                        .length >
-                                                    0
-                                                ? Colors.green
-                                                : Colors.grey),
-                                        // Define how long the animation should take.
-                                        duration: Duration(milliseconds: 500),
-                                        // Provide an optional curve to make the animation feel smoother.
-                                        curve: Curves.easeOut,
-                                        child: RawMaterialButton(
-                                          splashColor: Colors.green,
-                                          child: Padding(
-                                            padding: EdgeInsets.only(
-                                                right: 15,
-                                                top: 10,
-                                                left: 10,
-                                                bottom: 10),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: const <Widget>[
-                                                Icon(
-                                                  Icons.upload_rounded,
-                                                  color: Colors.white,
-                                                  size: 19,
-                                                ),
-                                                SizedBox(
-                                                  width: 10.0,
-                                                ),
-                                                Text(
-                                                  "Cập Nhật Lên Server",
-                                                  maxLines: 1,
-                                                  style: TextStyle(
-                                                      color: Colors.white, fontSize: 14),
-                                                ),
-                                              ],
+                                      AnimatedOpacity(
+                                        duration:
+                                            const Duration(milliseconds: 1000),
+                                        opacity: opacity,
+                                        child: AnimatedContainer(
+                                          height: 40,
+                                          decoration: decorationButtonAnimated(
+                                              checkBoxSurvey
+                                                          .where((e) =>
+                                                              e.status == true)
+                                                          .length >
+                                                      0
+                                                  ? Colors.green
+                                                  : Colors.grey),
+                                          // Define how long the animation should take.
+                                          duration: Duration(milliseconds: 500),
+                                          // Provide an optional curve to make the animation feel smoother.
+                                          curve: Curves.easeOut,
+                                          child: RawMaterialButton(
+                                            splashColor: Colors.green,
+                                            child: Padding(
+                                              padding: EdgeInsets.only(
+                                                  right: 15,
+                                                  top: 10,
+                                                  left: 10,
+                                                  bottom: 10),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: const <Widget>[
+                                                  Icon(
+                                                    Icons.upload_rounded,
+                                                    color: Colors.white,
+                                                    size: 19,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 10.0,
+                                                  ),
+                                                  Text(
+                                                    "Cập Nhật Lên Server",
+                                                    maxLines: 1,
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
+                                            onPressed: () {
+                                              if (checkBoxSurvey
+                                                      .where((e) =>
+                                                          e.status == true)
+                                                      .length >
+                                                  0) {
+                                                dialogCustomForCEP(
+                                                    context,
+                                                    "Bạn có muốn lưu dữ liệu lên server ?",
+                                                    _onSubmit,
+                                                    children: [],
+                                                    width: screenWidth * 0.7);
+                                              }
+                                            },
+                                            shape: const StadiumBorder(),
                                           ),
-                                          onPressed: () {
-                                            if (checkBoxSurvey
-                                                    .where(
-                                                        (e) => e.status == true)
-                                                    .length >
-                                                0) {
-                                              dialogCustomForCEP(
-                                                  context,
-                                                  "Bạn có muốn lưu dữ liệu lên server ?",
-                                                  _onSubmit,
-                                                  children: [],
-                                                  width: screenWidth * 0.7);
-                                            }
-                                          },
-                                          shape: const StadiumBorder(),
                                         ),
                                       ),
-                                      AnimatedContainer(
-                                        height: 35,
-                                        
-                                        width: this.isCheckAll == false
-                                            ? 150
-                                            : 130,
-                                        decoration: decorationButtonAnimated(
-                                            Colors.green),
-                                        // Define how long the animation should take.
-                                        duration: Duration(milliseconds: 500),
-                                        // Provide an optional curve to make the animation feel smoother.
-                                        curve: Curves.easeOut,
-                                        child: RawMaterialButton(
-                                          fillColor: Colors.green,
-                                          splashColor: Colors.grey,
-                                          child: Padding(
-                                            padding: EdgeInsets.all(10.0),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: <Widget>[
-                                                Icon(
-                                                  this.isCheckAll == false
-                                                      ? Icons
-                                                          .check_box_outline_blank
-                                                      : Icons.check_box,
-                                                  color: Colors.white,
-                                                  size: 19,
-                                                ),
-                                                SizedBox(
-                                                  width: 10.0,
-                                                ),
-                                                Text(
-                                                  this.isCheckAll == false
-                                                      ? "Chọn Tất Cả"
-                                                      : "Bỏ Chọn",
-                                                  maxLines: 1,
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                              ],
+                                      AnimatedOpacity(
+                                        duration:
+                                            const Duration(milliseconds: 1000),
+                                        opacity: opacity,
+                                        child: AnimatedContainer(
+                                          height: 40,
+                                          width: this.isCheckAll == false
+                                              ? 160
+                                              : 140,
+                                          decoration: decorationButtonAnimated(
+                                              Colors.green),
+                                          // Define how long the animation should take.
+                                          duration: Duration(milliseconds: 500),
+                                          // Provide an optional curve to make the animation feel smoother.
+                                          curve: Curves.easeOut,
+                                          child: RawMaterialButton(
+                                            fillColor: Colors.green,
+                                            splashColor: Colors.grey,
+                                            child: Padding(
+                                              padding: EdgeInsets.all(10.0),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                                  Icon(
+                                                    this.isCheckAll == false
+                                                        ? Icons
+                                                            .check_box_outline_blank
+                                                        : Icons.check_box,
+                                                    color: Colors.white,
+                                                    size: 19,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 10.0,
+                                                  ),
+                                                  Text(
+                                                    this.isCheckAll == false
+                                                        ? "Chọn Tất Cả"
+                                                        : "Bỏ Chọn",
+                                                    maxLines: 1,
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
+                                            onPressed: () {
+                                              isCheckAll = !isCheckAll;
+                                              setState(() {
+                                                if (isCheckAll) {
+                                                  for (var item
+                                                      in checkBoxSurvey) {
+                                                    item.status = true;
+                                                  }
+                                                } else {
+                                                  for (var item
+                                                      in checkBoxSurvey) {
+                                                    item.status = false;
+                                                  }
+                                                }
+                                              });
+                                            },
+                                            shape: const StadiumBorder(),
                                           ),
-                                          onPressed: () {
-                                            isCheckAll = !isCheckAll;
-                                            setState(() {
-                                              if (isCheckAll) {
-                                                for (var item
-                                                    in checkBoxSurvey) {
-                                                  item.status = true;
-                                                }
-                                              } else {
-                                                for (var item
-                                                    in checkBoxSurvey) {
-                                                  item.status = false;
-                                                }
-                                              }
-                                            });
-                                          },
-                                          shape: const StadiumBorder(),
                                         ),
                                       ),
                                     ],
                                   ),
-                                  
-                                  Container(
-                                      margin: EdgeInsets.only(top: 10),
-                                      height:
-                                          orientation == Orientation.portrait
-                                              ? screenHeight * 0.52
-                                              : screenHeight * 0.5,
-                                      width: screenWidth * 0.9,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(15),
-                                          ),
-                                          color: Colors.white),
-                                      child: ModalProgressHUDCustomize(
-                                        inAsyncCall: state?.isLoading ?? false,
-                                        child: Padding(
-                                            padding: const EdgeInsets.all(2.0),
-                                            child: getItemListView(
-                                                surveyStream.listSurvey)),
-                                      ))
+                                  Expanded(
+                                    child: Container(
+                                        margin: EdgeInsets.only(top: 10),
+                                        //  width: screenWidth * 0.95,
+                                        // decoration: BoxDecoration(
+                                        //     borderRadius: BorderRadius.all(
+                                        //       Radius.circular(15),
+                                        //     ),
+                                        //    ),
+                                        child: ModalProgressHUDCustomize(
+                                          inAsyncCall:
+                                              state?.isLoading ?? false,
+                                          child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(2.0),
+                                              child: getItemListView(
+                                                  surveyStream.listSurvey)),
+                                        )),
+                                  )
                                 ],
                               ),
                             ),
@@ -735,7 +518,11 @@ class _SurveyScreenState extends State<SurveyScreen> {
             }),
         backgroundColor: ColorConstants.cepColorBackground,
         elevation: 20,
-        title: const Text('Khảo Sát Vay Vốn'),
+        title: Text(
+          'Khảo Sát Vay Vốn',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontWeight: FontWeight.w600),
+        ),
       ),
       body: GestureDetector(
           onHorizontalDragUpdate: (details) {
@@ -745,7 +532,323 @@ class _SurveyScreenState extends State<SurveyScreen> {
             }
           },
           child: Container(child: body)),
-    
+    );
+  }
+
+  Widget getItemListView(List<SurveyInfo> listSurvey) {
+    int count = listSurvey != null ? listSurvey.length : 0;
+    return Container(
+      child: ListView.builder(
+        physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+        itemCount: count,
+        itemBuilder: (context, i) {
+          final int count = 4;
+          final Animation<double> animation =
+              Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+                  parent: animationController,
+                  curve: Interval((1 / count) * i, 1.0,
+                      curve: Curves.fastOutSlowIn)));
+          animationController.forward();
+
+          return AnimatedBuilder(
+              animation: animationController,
+              builder: (BuildContext context, Widget child) {
+                return FadeTransition(
+                  opacity: animation,
+                  child: Transform(
+                    transform: Matrix4.translationValues(
+                        0.0, 50 * (1.0 - animation.value), 0.0),
+                    child: InkWell(
+                      onTap: () {
+                        List<ComboboxModel> listCombobox =
+                            globalUser.getListComboboxModel;
+                        List<SurveyInfo> listSurveyDetail =
+                            globalUser.getListSurveyGlobal;
+                        if (listCombobox == null || listCombobox.length == 0) {
+                          Navigator.pushNamed(context, 'download', arguments: {
+                            'selectedIndex': 4,
+                          }).then((value) => setState(() {
+                                if (true == value) {
+                                  initState();
+                                }
+                              }));
+                        } else {
+                          Navigator.pushNamed(context, 'surveydetail',
+                              arguments: {
+                                'id': listSurvey[i].id,
+                                'metadata': listCombobox,
+                                'surveydetail': listSurveyDetail[i],
+                                'surveyhistory':
+                                    surveyStream.listSurveyInfoHistory,
+                              }).then((value) {
+                            //String a = value;
+                            if (value is List<SurveyInfo>) {
+                              setState(() {
+                                listSurvey = value;
+                              });
+                            }
+                          });
+                          // setState(() {
+                          //       String a = value;
+                          //    //   listSurvey = value;
+                          //     }));
+                        }
+                      },
+                      child: Container(
+                        // decoration: BoxDecoration(
+                        //   borderRadius: BorderRadius.all(
+                        //     Radius.circular(13),
+                        //   ),
+                        //   color: Colors.blue,
+                        // ),
+                        // height: 130,
+                        child: Card(
+                          elevation: 10,
+                          shadowColor: Colors.grey,
+                          color: Colors.white,
+                          borderOnForeground: true,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 2, bottom: 8),
+                            child: Row(
+                              children: [
+                                Checkbox(
+                                  checkColor: Colors.white,
+                                  activeColor: Colors.blue,
+                                  value: checkBoxSurvey[i].status,
+                                  onChanged: (bool value) {
+                                    setState(() {
+                                      this.checkBoxSurvey[i].status = value;
+                                      int totalCheck = this
+                                          .checkBoxSurvey
+                                          .where((e) => e.status == true)
+                                          .length;
+                                      if (totalCheck ==
+                                          this.checkBoxSurvey.length) {
+                                        this.isCheckAll = true;
+                                      } else {
+                                        this.isCheckAll = false;
+                                      }
+                                    });
+                                  },
+                                ),
+                                Container(
+                                  width: 290,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                          child: Builder(builder: (context) {
+                                        Widget cardBatBuoc = Container();
+                                        Widget cardkhaosat = Container();
+                                        if (listSurvey[i].batBuocKhaosat == 1) {
+                                          cardBatBuoc = Card(
+                                              elevation: 3,
+                                              color: Colors.red[900],
+                                              child: Container(
+                                                height: 20,
+                                                width: 140,
+                                                child: Center(
+                                                  child: Text(
+                                                    "Bắt Buộc Khảo Sát",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 14,
+                                                        color: Colors.white),
+                                                  ),
+                                                ),
+                                              ));
+                                        }
+
+                                        if (listSurvey[i].ghiChu.length > 0 &&
+                                            listSurvey[i].soTienDuyetChovay >
+                                                0) {
+                                          cardkhaosat = Card(
+                                              elevation: 3,
+                                              color: Colors.red,
+                                              child: Container(
+                                                padding: EdgeInsets.only(
+                                                    right: 5, left: 5),
+                                                height: 20,
+                                                width: 100,
+                                                child: Center(
+                                                  child: Text(
+                                                    "Đã Khảo Sát",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 14,
+                                                        color: Colors.white),
+                                                  ),
+                                                ),
+                                              ));
+                                        } else {
+                                          cardkhaosat = Card(
+                                              elevation: 3,
+                                              color: Colors.grey,
+                                              child: Container(
+                                                padding: EdgeInsets.only(
+                                                    right: 5, left: 5, top: 2),
+                                                height: 20,
+                                                width: 103,
+                                                child: Text(
+                                                  "Chưa Khảo Sát",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 14,
+                                                      color: Colors.white),
+                                                ),
+                                              ));
+                                        }
+
+                                        return Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            cardkhaosat,
+                                            cardBatBuoc,
+                                          ],
+                                        );
+                                      })),
+                                      Container(
+                                        padding: EdgeInsets.only(left: 4),
+                                        child: Text(
+                                          "${listSurvey[i].thanhvienId} - ${listSurvey[i].hoVaTen}",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 13),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Row(
+                                        // crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.only(left: 4),
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  IconsCustomize.gender,
+                                                  size: 20,
+                                                  color: Colors.blue,
+                                                ),
+                                                VerticalDivider(
+                                                  width: 10,
+                                                ),
+                                                Container(
+                                                  width: 30,
+                                                  child: Text(
+                                                    listSurvey[i].gioiTinh == 0
+                                                        ? "Nữ"
+                                                        : "Nam",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 13),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Container(
+                                            padding: EdgeInsets.only(left: 4),
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  IconsCustomize.birth_date,
+                                                  size: 20,
+                                                  color: Colors.red,
+                                                ),
+                                                VerticalDivider(
+                                                  width: 10,
+                                                ),
+                                                VerticalDivider(
+                                                  width: 1,
+                                                ),
+                                                Text(
+                                                  listSurvey[i]
+                                                      .ngaySinh
+                                                      .substring(0, 4),
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 13),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Container(
+                                            padding: EdgeInsets.only(left: 4),
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  IconsCustomize.id_card,
+                                                  color: Colors.orange,
+                                                  size: 20,
+                                                ),
+                                                VerticalDivider(
+                                                  width: 15,
+                                                ),
+                                                Text(
+                                                  listSurvey[i].cmnd,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 13),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.only(top: 5),
+                                        padding: EdgeInsets.only(left: 6),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.location_on,
+                                              color: Colors.blue,
+                                            ),
+                                            VerticalDivider(
+                                              width: 1,
+                                            ),
+                                            Container(
+                                              width: 230,
+                                              child: Text(
+                                                listSurvey[i].diaChi,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 13),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              });
+        },
+      ),
     );
   }
 }

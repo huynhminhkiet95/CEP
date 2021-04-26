@@ -31,6 +31,8 @@ class ItemDashBoard {
     list.add(new ItemDashBoard(
         title: "Xóa Dữ Liệu", img: "", icon : Icons.delete_forever_rounded ));
     list.add(new ItemDashBoard(
+        title: "Settings", img: "assets/dashboard/credit-hover.png" , icon : Icons.settings));
+    list.add(new ItemDashBoard(
         title: "Đăng Xuất", img: "assets/dashboard/credit-hover.png" , icon : Icons.logout));
    
     return list;

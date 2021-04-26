@@ -3,12 +3,14 @@ import 'dart:io';
 import 'package:CEPmobile/GlobalUser.dart';
 import 'package:CEPmobile/ui/navigation/slide_route.dart';
 import 'package:CEPmobile/ui/screens/Home/dashboard.dart';
+import 'package:CEPmobile/ui/screens/Login/index.dart';
 import 'package:CEPmobile/ui/screens/Login/loginPage.dart';
 import 'package:CEPmobile/ui/screens/community_development/community_development.dart';
 import 'package:CEPmobile/ui/screens/community_development/community_development_detail.dart';
 import 'package:CEPmobile/ui/screens/delete_data/delete_data.dart';
 import 'package:CEPmobile/ui/screens/downloadData/download_main.dart';
 import 'package:CEPmobile/ui/screens/error/error.dart';
+import 'package:CEPmobile/ui/screens/profile/setting.dart';
 import 'package:CEPmobile/ui/screens/profile/user_profile.dart';
 import 'package:CEPmobile/ui/screens/survey/survey.dart';
 import 'package:CEPmobile/ui/screens/announcement/announcement_screen.dart';
@@ -94,7 +96,7 @@ class AppState extends State<Application> {
     return BlocProvider<AuthenticationBloc>(
       bloc: authenticationBloc,
       child: MaterialApp(
-        theme: ThemeData(fontFamily: 'Lato'),
+        theme: ThemeData(fontFamily: 'SourceSansPro'),
         localizationsDelegates: [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
@@ -197,7 +199,7 @@ class AppState extends State<Application> {
               break;
             case 'comunitydevelopment':
               return SlideLeftRoute(page: CommunityDevelopmentScreen());
-              // ExpandExample
+             
               break;
             case 'comunitydevelopmentdetail':
             final Map<String, Object> arguments = settings.arguments;
@@ -206,6 +208,8 @@ class AppState extends State<Application> {
                 listCombobox: arguments['metadata'],
               ));
               break;
+            case 'setting':
+              return SlideLeftRoute(page: SettingsScreen());
 
             default:
               return new MyCustomRoute(

@@ -19,9 +19,11 @@ class MenuDashboardPage extends StatefulWidget {
 }
 
 class _MenuDashboardPageState extends State<MenuDashboardPage>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
+  AnimationController _animationControllerItemMenu;
   bool isCollapsed = true;
   double screenWidth, screenHeight;
+  AnimationController _animationController;
   final Duration duration = const Duration(milliseconds: 400);
   AnimationController _controller;
   Animation<double> _scaleAnimation;
@@ -31,12 +33,16 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
   @override
   void initState() {
     super.initState();
+    _animationControllerItemMenu = AnimationController(
+        duration: const Duration(milliseconds: 2000), vsync: this);
     _controller = AnimationController(vsync: this, duration: duration);
     _scaleAnimation = Tween<double>(begin: 1.0, end: 0.8).animate(_controller);
     _menuScaleAnimation =
         Tween<double>(begin: 0.5, end: 1).animate(_controller);
     _slideAnimation = Tween<Offset>(begin: Offset(-1, 0), end: Offset(0, 0))
         .animate(_controller);
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 400));
     _authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
   }
 
@@ -44,6 +50,8 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
   void dispose() {
     _controller.dispose();
     super.dispose();
+    _animationControllerItemMenu?.dispose();
+    _animationController.dispose();
   }
 
   void _onTapMenuItem(String nameMenu) {
@@ -59,6 +67,9 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
         break;
       case 'Xóa Dữ Liệu':
         Navigator.pushNamed(context, 'deletedata');
+        break;
+      case 'Settings':
+        Navigator.pushNamed(context, 'setting');
         break;
       case 'Đăng Xuất':
         _loginSubmit();
@@ -139,7 +150,7 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
                   SizedBox(
                     height: 60,
                     child: ListTile(
-                      onTap: (){
+                      onTap: () {
                         Navigator.pushNamed(context, 'userprofile');
                       },
                       title: Text(
@@ -152,9 +163,10 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
                       subtitle: Row(
                         children: <Widget>[
                           Icon(Icons.verified_user, color: Colors.yellowAccent),
-                          Text( globalUser.getUserInfo == null
-                            ? ''
-                            : " Mã số "  + globalUser.getUserInfo.masoql,
+                          Text(
+                              globalUser.getUserInfo == null
+                                  ? ''
+                                  : " Mã số " + globalUser.getUserInfo.masoql,
                               style: TextStyle(color: Colors.white))
                         ],
                       ),
@@ -165,7 +177,6 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
                           color: Colors.white,
                           size: 0.099 * screenWidth,
                         ),
-                        
                       ),
                     ),
                   ),
@@ -331,6 +342,7 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
                     if (isCollapsed) {
                       isCollapsed = !isCollapsed;
                       _controller.forward();
+                      _animationController.forward();
                     }
                   });
                 } else if (details.delta.dx < -sensitivity) {
@@ -339,6 +351,7 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
                     if (!isCollapsed) {
                       isCollapsed = !isCollapsed;
                       _controller.reverse();
+                      _animationController.reverse();
                     }
                   });
                 }
@@ -353,25 +366,35 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         InkWell(
-                          child: menuIcon,
+                          //  child: menuIcon,
+                          child: AnimatedIcon(
+                            icon: AnimatedIcons.menu_close,
+                            color: Colors.white,
+                            progress: _animationController,
+                          ),
                           onTap: () {
                             setState(() {
-                              if (isCollapsed)
+                              if (isCollapsed) {
                                 _controller.forward();
-                              else
+                                _animationController.forward();
+                              } else {
                                 _controller.reverse();
+                                _animationController.reverse();
+                              }
 
                               isCollapsed = !isCollapsed;
                             });
                           },
                         ),
                         Text("Màn Hình Chính",
-                            style:
-                                TextStyle(fontSize: 24, color: Colors.white)),
+                            style: TextStyle(
+                              fontSize: 22,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            )),
                         Icon(Icons.notifications, color: Colors.white),
                       ],
                     ),
-                    
                     Container(
                       height: screenHeight * 0.8,
                       width: screenWidth * 1,
@@ -379,56 +402,85 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
                       child: GridView.count(
                           childAspectRatio:
                               orientation == Orientation.portrait ? 1.0 : 1.3,
-                          padding: EdgeInsets.only(left: 16, right: 16, bottom: 10, top :10),
+                          padding: EdgeInsets.only(
+                              left: 16, right: 16, bottom: 10, top: 10),
                           crossAxisCount:
                               orientation == Orientation.portrait ? 3 : 4,
                           crossAxisSpacing:
                               orientation == Orientation.portrait ? 10 : 30,
                           mainAxisSpacing:
                               orientation == Orientation.portrait ? 10 : 30,
-                          children: listDashboard.map((data) {
-                            return InkWell(
-                              onTap: () {
-                                _onTapMenuItem(data.title);
-                              },
-                              child: Container(
-                                height: 20,
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        width: 3.0, color: Colors.white),
-                                    color: color,
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Image.asset(
-                                      data.img,
-                                      width: screenWidth * 0.07,
-                                    ),
-                                    SizedBox(
-                                      height: 14,
-                                    ),
-                                    Flexible(
-                                      child: Text(
-                                        data.title,
-                                        textAlign: TextAlign.center,
-                                        // overflow: TextOverflow.fade,
-                                        //maxLines: 1,
-                                        // softWrap: false,
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
+                          children: new List<Widget>.generate(listDashboard.length,(index){
+                          
+                          
+                          // listDashboard.map((data) {
+                            final int count = listDashboard.length;
+                            final Animation<double> animation =
+                                Tween<double>(begin: 0.0, end: 1.0).animate(
+                              CurvedAnimation(
+                                parent: _animationControllerItemMenu,
+                                curve: Interval((1 / count) * index, 1.0,
+                                    curve: Curves.fastOutSlowIn),
+                              ),
+                            );
+                            _animationControllerItemMenu.forward();
+
+                            return AnimatedBuilder(
+                                animation: _animationControllerItemMenu,
+                                builder: (BuildContext context, Widget child) {
+                                  return FadeTransition(
+                                    opacity: animation,
+                                    child: Transform(
+                                      transform: Matrix4.translationValues(50 * (1.0 - animation.value),0.0,
+                                           0.0),
+                                      child: InkWell(
+                                        onTap: () {
+                                          _onTapMenuItem(listDashboard[index].title);
+                                        },
+                                        child: Container(
+                                          height: 20,
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  width: 3.0,
+                                                  color: Colors.white),
+                                              color: color,
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              Image.asset(
+                                                listDashboard[index].img,
+                                                width: screenWidth * 0.07,
+                                              ),
+                                              SizedBox(
+                                                height: 14,
+                                              ),
+                                              Flexible(
+                                                child: Text(
+                                                  listDashboard[index].title,
+                                                  textAlign: TextAlign.center,
+                                                  // overflow: TextOverflow.fade,
+                                                  //maxLines: 1,
+                                                  // softWrap: false,
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 8,
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
-                                    SizedBox(
-                                      height: 8,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
+                                  );
+                                });
                           }).toList()),
                     )
                   ],
