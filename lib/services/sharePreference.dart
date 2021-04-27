@@ -38,6 +38,17 @@ class SharePreferenceService {
     return isRemember;
   }
 
+  Future<void> saveAuthenLocal(bool isAuthenLocal) async {
+    share.setBool(KeyConstants.isAuthenLocal, isAuthenLocal);
+    globalUser.setAuthenLocal = isAuthenLocal;
+  }
+
+  Future<bool> getAuthenLocal() async {
+    bool isAuthenLocal = share.getBool(KeyConstants.isAuthenLocal);
+    globalUser.setAuthenLocal = isAuthenLocal ?? false;
+    return isAuthenLocal;
+  }
+
   // Future<void> getRememberUser() async {
   //   globalRememberUser.setIsRemember = share.getBool(KeyConstants.isRemember);
   //   globalRememberUser.setPassword =
@@ -75,6 +86,18 @@ class SharePreferenceService {
     String userName = share.getString(KeyConstants.userName);
     globalUser.setUserName = userName;
     return userName;
+  }
+
+
+  Future<void> savePassword(String password) async {
+    share.setString(KeyConstants.password, password);
+    globalUser.setPassword = password;
+  }
+
+  Future<String> getPassword() async {
+    String password = share.getString(KeyConstants.password);
+    globalUser.setPassword = password;
+    return password;
   }
 
   Future<void> saveCumId(String cumId) async {

@@ -5,6 +5,7 @@ import 'package:CEPmobile/ui/navigation/slide_route.dart';
 import 'package:CEPmobile/ui/screens/Home/dashboard.dart';
 import 'package:CEPmobile/ui/screens/Login/index.dart';
 import 'package:CEPmobile/ui/screens/Login/loginPage.dart';
+import 'package:CEPmobile/ui/screens/Login/testbiometric.dart';
 import 'package:CEPmobile/ui/screens/community_development/community_development.dart';
 import 'package:CEPmobile/ui/screens/community_development/community_development_detail.dart';
 import 'package:CEPmobile/ui/screens/delete_data/delete_data.dart';
@@ -16,7 +17,7 @@ import 'package:CEPmobile/ui/screens/survey/survey.dart';
 import 'package:CEPmobile/ui/screens/announcement/announcement_screen.dart';
 import 'package:CEPmobile/ui/screens/checklist/records.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+//import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:CEPmobile/GlobalTranslations.dart';
 import 'package:CEPmobile/bloc_helpers/bloc_provider.dart';
 import 'package:CEPmobile/blocs/authentication/authentication_bloc.dart';
@@ -45,8 +46,7 @@ import 'ui/screens/todolist/index.dart';
 class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext context) {
-    return super.createHttpClient(context)
-      ..badCertificateCallback =
+    return super.createHttpClient(context)..badCertificateCallback =
           (X509Certificate cert, String host, int port) => true;
   }
 }
@@ -97,10 +97,10 @@ class AppState extends State<Application> {
       bloc: authenticationBloc,
       child: MaterialApp(
         theme: ThemeData(fontFamily: 'SourceSansPro'),
-        localizationsDelegates: [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-        ],
+        // localizationsDelegates: [
+        //   GlobalMaterialLocalizations.delegate,
+        //   GlobalWidgetsLocalizations.delegate,
+        // ],
         supportedLocales: allTranslations.supportedLocales(),
         title: allTranslations.text('app_title'),
         debugShowCheckedModeBanner: false,

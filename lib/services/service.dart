@@ -30,6 +30,8 @@ class Services {
     await sharePreferenceService.getDriverProfile();
     await sharePreferenceService.getToken();
     await sharePreferenceService.getUserName();
+    await sharePreferenceService.getPassword();
+    await sharePreferenceService.getAuthenLocal();
     await sharePreferenceService.getCumId();
     await sharePreferenceService.getRememberUser();
     await sharePreferenceService.getIsRemember();

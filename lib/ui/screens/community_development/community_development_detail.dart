@@ -331,20 +331,16 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
   void initState() {
     loadInitData();
     //services = Services.of(context);
-    // _scrollController = ScrollController()
-    //   ..addListener(() {
-    //     setState(() {
-    //       if (_scrollController.offset >= 400) {
-    //         _showBackToTopButton = true; // show the back-to-top button
-    //       } else {
-    //         _showBackToTopButton = false; // hide the back-to-top button
-    //       }
-    //     });
-    //   });
-
-    _scrollController = ScrollController(initialScrollOffset: 50.0);
-
-
+    _scrollController = ScrollController()
+      ..addListener(() {
+        setState(() {
+          if (_scrollController.offset >= 400) {
+            _showBackToTopButton = true; // show the back-to-top button
+          } else {
+            _showBackToTopButton = false; // hide the back-to-top button
+          }
+        });
+      });
 
     _controllerRotateIconScholarship =
         AnimationController(vsync: this, duration: Duration(milliseconds: 400));
@@ -975,220 +971,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                           ),
                         ),
                       ),
-                      // AnimatedContainer(
-                      //   duration: Duration(milliseconds: 100),
-                      //   // Provide an optional curve to make the animation feel smoother.
-                      //   curve: Curves.easeOut,
-                      //   color: Colors.blue,
-                      //   // padding: EdgeInsets.all(10),
-                      //   child: AnimatedContainer(
-                      //     duration: Duration(milliseconds: 500),
-                      //     // Provide an optional curve to make the animation feel smoother.
-                      //     curve: Curves.easeOut,
-                      //     height: isCollapseScholarship == true ? 300 : 0,
-                      //     color: Colors.white,
-                      //     padding: EdgeInsets.only(left: 10, right: 10),
-                      //     child: ListView(
-                      //       physics: BouncingScrollPhysics(),
-                      //       children: [
-                      //         Row(
-                      //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //           crossAxisAlignment: CrossAxisAlignment.end,
-                      //           children: [
-                      //             SizedBox(
-                      //               width: screenWidth * 0.38,
-                      //               child: Text(
-                      //                 "Họ & tên học sinh",
-                      //                 style: TextStyle(
-                      //                   color: Colors.black38,
-                      //                   fontSize: 14,
-                      //                 ),
-                      //               ),
-                      //             ),
-                      //             Expanded(
-                      //               child: Container(
-                      //                 height: 40,
-                      //                 child: TextField(
-                      //                   controller: _controllerCareerSpecific,
-                      //                   style: textStyleTextFieldCEP,
-                      //                   decoration:
-                      //                       inputDecorationTextFieldCEP("Nhập..."),
-                      //                   keyboardType: TextInputType.text,
-                      //                   // Only numbers can be entered
-                      //                 ),
-                      //               ),
-                      //             ),
-                      //           ],
-                      //         ),
-                      //         divider5,
-                      //         Container(
-                      //           child: Row(
-                      //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //             crossAxisAlignment: CrossAxisAlignment.end,
-                      //             children: [
-                      //               SizedBox(
-                      //                 width: screenWidth * 0.38,
-                      //                 child: Text(
-                      //                   "Năm sinh",
-                      //                   style: TextStyle(
-                      //                     color: Colors.black38,
-                      //                     fontSize: 14,
-                      //                   ),
-                      //                 ),
-                      //               ),
-                      //               Expanded(
-                      //                 child: Container(
-                      //                   height: 40,
-                      //                   child: CustomDropdown(
-                      //                     dropdownMenuItemList:
-                      //                         _birthOfYearModelDropdownList,
-                      //                     onChanged:
-                      //                         _onChangeBirthOfYearModelDropdown,
-                      //                     value: _birthOfYearValue,
-                      //                     width: screenWidth * 1,
-                      //                     isEnabled: true,
-                      //                     isUnderline: true,
-                      //                   ),
-                      //                 ),
-                      //               ),
-                      //             ],
-                      //           ),
-                      //         ),
-                      //         divider5,
-                      //         Container(
-                      //           child: Row(
-                      //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //             crossAxisAlignment: CrossAxisAlignment.end,
-                      //             children: [
-                      //               SizedBox(
-                      //                 width: screenWidth * 0.38,
-                      //                 child: Text(
-                      //                   "Quan hệ với KH",
-                      //                   style: TextStyle(
-                      //                     color: Colors.black38,
-                      //                     fontSize: 14,
-                      //                   ),
-                      //                 ),
-                      //               ),
-                      //               Expanded(
-                      //                 child: Container(
-                      //                   height: 40,
-                      //                   child: CustomDropdown(
-                      //                     dropdownMenuItemList:
-                      //                         _relationsWithCustomersModelDropdownList,
-                      //                     onChanged:
-                      //                         _onChangeRelationsWithCustomersModelDropdown,
-                      //                     value: _relationsWithCustomersValue,
-                      //                     width: screenWidth * 1,
-                      //                     isEnabled: true,
-                      //                     isUnderline: true,
-                      //                   ),
-                      //                 ),
-                      //               ),
-                      //             ],
-                      //           ),
-                      //         ),
-                      //         divider5,
-                      //         Container(
-                      //           child: Row(
-                      //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //             crossAxisAlignment: CrossAxisAlignment.end,
-                      //             children: [
-                      //               SizedBox(
-                      //                 width: screenWidth * 0.38,
-                      //                 child: Text(
-                      //                   "Trường",
-                      //                   style: TextStyle(
-                      //                     color: Colors.black38,
-                      //                     fontSize: 14,
-                      //                   ),
-                      //                 ),
-                      //               ),
-                      //               Expanded(
-                      //                 child: Container(
-                      //                   height: 40,
-                      //                   child: TextField(
-                      //                     controller: _controllerCareerSpecific,
-                      //                     style: textStyleTextFieldCEP,
-                      //                     decoration: inputDecorationTextFieldCEP(
-                      //                         "Nhập..."),
-                      //                     keyboardType: TextInputType.text,
-                      //                     // Only numbers can be entered
-                      //                   ),
-                      //                 ),
-                      //               ),
-                      //             ],
-                      //           ),
-                      //         ),
-                      //         divider5,
-                      //         Container(
-                      //           child: Row(
-                      //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //             crossAxisAlignment: CrossAxisAlignment.end,
-                      //             children: [
-                      //               SizedBox(
-                      //                 width: screenWidth * 0.38,
-                      //                 child: Text(
-                      //                   "Lớp",
-                      //                   style: TextStyle(
-                      //                     color: Colors.black38,
-                      //                     fontSize: 14,
-                      //                   ),
-                      //                 ),
-                      //               ),
-                      //               Expanded(
-                      //                 child: Container(
-                      //                   height: 40,
-                      //                   child: TextField(
-                      //                     controller: _controllerCareerSpecific,
-                      //                     style: textStyleTextFieldCEP,
-                      //                     decoration: inputDecorationTextFieldCEP(
-                      //                         "Nhập..."),
-                      //                     keyboardType: TextInputType.text,
-                      //                     // Only numbers can be entered
-                      //                   ),
-                      //                 ),
-                      //               ),
-                      //             ],
-                      //           ),
-                      //         ),
-                      //         divider5,
-                      //         Container(
-                      //           child: Row(
-                      //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //             crossAxisAlignment: CrossAxisAlignment.end,
-                      //             children: [
-                      //               SizedBox(
-                      //                 width: screenWidth * 0.38,
-                      //                 child: Text(
-                      //                   "Hoàn cảnh gia đình",
-                      //                   style: TextStyle(
-                      //                     color: Colors.black38,
-                      //                     fontSize: 14,
-                      //                   ),
-                      //                 ),
-                      //               ),
-                      //               Expanded(
-                      //                 child: Container(
-                      //                   height: 40,
-                      //                   child: TextField(
-                      //                     controller: _controllerCareerSpecific,
-                      //                     style: textStyleTextFieldCEP,
-                      //                     decoration: inputDecorationTextFieldCEP(
-                      //                         "Nhập..."),
-                      //                     keyboardType: TextInputType.text,
-                      //                     // Only numbers can be entered
-                      //                   ),
-                      //                 ),
-                      //               ),
-                      //             ],
-                      //           ),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // ),
-                      // Text("data"),
+                    
 
                       AnimatedSize(
                         vsync: this,
@@ -1690,7 +1473,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                         ],
                                       ),
                                     ),
-                                  ],
+                                   ],
                                 ),
                               ),
                             ],

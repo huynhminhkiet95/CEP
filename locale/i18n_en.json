@@ -47,6 +47,10 @@
     "Fail":"Fail",
     "FailReason":"Fail Reason",
     "UserIsNotExist":"This user or password is not correct !",
+    "PassNotCorrect":"The password is not correct !",
+    "AuthenSuccess":"Fingerprint authentication is successful !",
+    "UnAuthenSuccess":"Remove Fingerprint authentication is successful !",
+    
     "ServerNotFound":"Server is not found, please waiting a few minutes !",
     "DownLoadDataSurveyHistoryFailed":"Downloading list of survey history was unsuccessful. Please waiting a few minutes !",
     "DownLoadDataSuccess":"Download the data successfully !",

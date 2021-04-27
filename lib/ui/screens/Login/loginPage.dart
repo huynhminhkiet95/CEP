@@ -18,6 +18,7 @@ import 'package:CEPmobile/bloc_helpers/bloc_provider.dart';
 import 'package:CEPmobile/ui/components/ModalProgressHUDCustomize.dart';
 import 'package:CEPmobile/bloc_widgets/bloc_state_builder.dart';
 import 'package:flutter/services.dart';
+import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
 import 'dart:math' as math;
 
@@ -73,7 +74,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   Services services;
   final LocalAuthentication localAuth = LocalAuthentication();
   bool _cancheckBiometric = false;
-  bool _isFaceID = false;
+  int _isAuthenType = 0;
 
   //#endregion
   void _loginSubmit() {
@@ -91,6 +92,16 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         _autoValidate = true;
       });
     }
+  }
+
+  void _loginSubmitWithAuthenLocal() {
+    userName = _userNameController.text.toString();
+    password = globalUser.getPassword.toString();
+    authenticationBloc.emitEvent(AuthenticationEventLogin(
+        userName: _userNameController.text.toString(),
+        password: password,
+        serverCode: _server,
+        isRemember: _isRemember));
   }
 
   void _updateRemember(bool value) => {
@@ -128,7 +139,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       children: [
         SlideTransition(
           position: Tween<Offset>(
-            begin: const Offset(5, 25),
+            begin: const Offset(0.2, 0.1),
             end: Offset.zero,
           ).animate(_animation2),
           child: AnimatedOpacity(
@@ -136,7 +147,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             opacity: opacityAnimation,
             child: Container(
               width: MediaQuery.of(context).size.width * 0.7,
-              // padding: EdgeInsets.symmetric(vertical: 15),
               alignment: Alignment.center,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -192,36 +202,51 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                 milliseconds: 1000,
               ),
               opacity: opacityAnimationHeader,
-              child: RotatedBox(
-                quarterTurns: 3,
-                child: Stack(
-                  children: [
-                    RotatedBox(
-                        quarterTurns: 1,
-                        child: Icon(
-                          !_isFaceID
-                              ? Icons.fingerprint
-                              : IconsCustomize.face_id_v2,
-                          color: !_isFaceID ? Colors.grey : Colors.blue,
-                          size: 50,
-                        )),
-                    SizeTransition(
-                      sizeFactor: _animationFingerPrint,
-                      axis: Axis.horizontal,
-                      axisAlignment: -1,
-                      child: RotatedBox(
+              child:globalUser.getAuthenLocal ? InkWell(
+                onTap: () => showAuthenPopup(),
+                child: RotatedBox(
+                  quarterTurns: 3,
+                  child: Stack(
+                    children: [
+                      RotatedBox(
                           quarterTurns: 1,
-                          child: Icon(
-                            !_isFaceID
-                                ? Icons.fingerprint
-                                : IconsCustomize.face_id_v2,
-                            color: !_isFaceID ? Colors.red : Colors.blue,
-                            size: 50,
-                          )),
-                    ),
-                  ],
+                          child: _isAuthenType == 1
+                              ? Icon(
+                                  IconsCustomize.face_id_v2,
+                                  color: Colors.blue,
+                                  size: 50,
+                                )
+                              : _isAuthenType == 2
+                                  ? Icon(
+                                      Icons.fingerprint,
+                                      color: Colors.grey,
+                                      size: 50,
+                                    )
+                                  : null),
+                      SizeTransition(
+                        sizeFactor: _animationFingerPrint,
+                        axis: Axis.horizontal,
+                        axisAlignment: -1,
+                        child: RotatedBox(
+                            quarterTurns: 1,
+                            child: _isAuthenType == 1
+                                ? Icon(
+                                    IconsCustomize.face_id_v2,
+                                    color: Colors.blue,
+                                    size: 50,
+                                  )
+                                : _isAuthenType == 2
+                                    ? Icon(
+                                        Icons.fingerprint,
+                                        color: Colors.red,
+                                        size: 50,
+                                      )
+                                    : null),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+              ) : Container(),
             ),
           ),
         )
@@ -285,7 +310,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     _animationController1.forward();
 
     _animationController2 = AnimationController(
-      duration: const Duration(milliseconds: 1900),
+      duration: const Duration(milliseconds: 1000),
       vsync: this,
     );
 
@@ -335,6 +360,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
     _passwordVisible = false;
     checkBiometric();
+    if (globalUser.getAuthenLocal) {
+      showAuthenPopup();
+    }
     super.initState();
   }
 
@@ -415,7 +443,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                     SizedBox(height: 100),
                     SlideTransition(
                       position: Tween<Offset>(
-                        begin: const Offset(5, 25),
+                        begin: const Offset(0.2, 0.1),
                         end: Offset.zero,
                       ).animate(_animation),
                       child: AnimatedOpacity(
@@ -481,7 +509,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                     ),
                     SlideTransition(
                       position: Tween<Offset>(
-                        begin: const Offset(5, 25),
+                        begin: const Offset(0.2, 0.1),
                         end: Offset.zero,
                       ).animate(_animation1),
                       child: AnimatedOpacity(
@@ -561,7 +589,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                       children: <Widget>[
                         SlideTransition(
                           position: Tween<Offset>(
-                            begin: const Offset(5, 25),
+                            begin: const Offset(0.2, 0.1),
                             end: Offset.zero,
                           ).animate(_animation3),
                           child: AnimatedOpacity(
@@ -583,7 +611,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                         ),
                         SlideTransition(
                           position: Tween<Offset>(
-                            begin: const Offset(5, 25),
+                            begin: const Offset(0.2, 0.1),
                             end: Offset.zero,
                           ).animate(_animation4),
                           child: AnimatedOpacity(
@@ -874,15 +902,15 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         if (availableBiometrics.contains(BiometricType.face)) {
           // Face ID.
           setState(() {
-            _isFaceID = true;
+            _isAuthenType = 1;
           });
         } else if (availableBiometrics.contains(BiometricType.fingerprint)) {
           // Touch ID.
-          _isFaceID = false;
+          _isAuthenType = 2;
         }
       } else {
         if (availableBiometrics.contains(BiometricType.fingerprint)) {
-          _isFaceID = false;
+          _isAuthenType = 2;
         }
       }
     } on PlatformException catch (e) {
@@ -894,4 +922,31 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     //   _biometricTypes = availableBiometrics;
     // });
   }
+
+  showAuthenPopup() async {
+    var localAuth = LocalAuthentication();
+    try {
+      const androidStrings = const AndroidAuthMessages(
+          cancelButton: "Hủy",
+          goToSettingsButton: "Cài Đặt",
+          goToSettingsDescription: 'Vui lòng thiết lập Touch ID của bạn !',
+          fingerprintSuccess: 'Xác thực thành công.',
+          fingerprintHint: "",
+          fingerprintRequiredTitle: "Thiết lập Touch-ID",
+          signInTitle: "Touch ID for CEP-Nhân viên",
+          fingerprintNotRecognized: "Vân tay không hợp lệ !");
+      bool isAuthenticate = await localAuth.authenticateWithBiometrics(
+          localizedReason: 'Vui lòng quét vân tay để đăng nhập !',
+          stickyAuth: true,
+          androidAuthStrings: androidStrings);
+      if (isAuthenticate) {
+        _loginSubmitWithAuthenLocal();
+      }
+      print('isAuthenticate: ' + isAuthenticate.toString());
+    } on PlatformException catch (e) {
+      print(e);
+    }
+  }
+
+
 }

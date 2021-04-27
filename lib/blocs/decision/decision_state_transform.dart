@@ -31,9 +31,9 @@ class DecisionStateTransform
     else{
       action = DecisionStateAction.routeToPage(MenuDashboardPage());
     }
-    if (token != null && token != "") {
-      action = DecisionStateAction.routeToPage(MenuDashboardPage());
-    } 
+    // if (token != null && token != "") {
+    //   action = DecisionStateAction.routeToPage(MenuDashboardPage());
+    // } 
 
     // authenticationState == null || !authenticationState.isAuthenticated
     //     ? DecisionStateAction.routeToPage(MenuDashboardPage())

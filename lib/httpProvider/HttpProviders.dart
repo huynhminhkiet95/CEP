@@ -202,7 +202,7 @@ class HttpBase {
       response = await http
           .post(address,
               headers: {"Content-Type": "application/json"}, body: jsonBody)
-          .timeout(const Duration(seconds: 10));
+          .timeout(const Duration(seconds: 20));
       return response;
     } catch (e) {
       //throw Exception(e);

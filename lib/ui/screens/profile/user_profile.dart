@@ -42,7 +42,7 @@ class ProfilePage extends StatelessWidget {
             ),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          backgroundColor: Colors.blue,
+          backgroundColor: ColorConstants.cepColorBackground,
           elevation: 0.0,
           bottomOpacity: 0.0,
           title: const Text('Hồ Sơ Cá Nhân',textAlign: TextAlign.center,
@@ -286,7 +286,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
             height: screenSize.height * 0.25,
             padding: EdgeInsets.only(top: 4),
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: ColorConstants.cepColorBackground,
             ),
           ),
         ),

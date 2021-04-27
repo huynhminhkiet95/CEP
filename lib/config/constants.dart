@@ -3,6 +3,7 @@ class KeyConstants {
   static const String nofificationServer = "NoficationServer";
   static const String addressServer = "addressServer";
   static const String isRemember = "isRemember";
+  static const String isAuthenLocal = "isAuthenLocal";
   static const String password = "password";
   static const String userName = "userName";
   static const String rememberUserName = "rememberUserName";

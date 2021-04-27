@@ -13,6 +13,8 @@ class GlobalUser {
   String _subsidiaryId;
   String _subsidiaryName;
   String _userName;
+  String _password;
+  bool _isAuthenLocal;
   String _rememberUserName;
   String _isRememberLogin;
   String _cumId;
@@ -49,6 +51,14 @@ class GlobalUser {
   String get getUserName => _userName;
 
   set setUserName(String value) => _userName = value;
+
+  String get getPassword => _password;
+
+  set setPassword(String value) => _password = value;
+
+  bool get getAuthenLocal => _isAuthenLocal;
+
+  set setAuthenLocal(bool value) => _isAuthenLocal = value;
 
   String get getRememberUserName => _rememberUserName;
 

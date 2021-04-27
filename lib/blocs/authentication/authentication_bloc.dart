@@ -90,7 +90,13 @@ class AuthenticationBloc
           if (jsonBodyToken["isSuccessed"] == true) {
             if (jsonBodyToken["token"] != null) {
               this._sharePreferenceService.saveToken(jsonBodyToken["token"]);
+              if (event.userName != globalUser.getUserName) {
+                  this._sharePreferenceService.saveAuthenLocal(false);
+              }
+              
               this._sharePreferenceService.saveUserName(event.userName);
+              this._sharePreferenceService.savePassword(event.password);
+              
               if (event.isRemember == true) {
                 this._sharePreferenceService.saveRememberUser(event.userName);
                 this._sharePreferenceService.saveIsRemember("1");
@@ -111,6 +117,16 @@ class AuthenticationBloc
                 yield AuthenticationState.authenticated(event.isRemember,
                     event.userName, event.password, currentState.serverCode);
               }
+            }
+            else{
+              yield AuthenticationState.failedByUser(currentState);
+            Fluttertoast.showToast(
+              msg: allTranslations.text("UserIsNotExist"),
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.red[300].withOpacity(0.7),
+              textColor: Colors.white,
+            );
             }
           } else {
             yield AuthenticationState.failedByUser(currentState);

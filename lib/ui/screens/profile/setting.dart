@@ -1,7 +1,19 @@
+import 'package:CEPmobile/GlobalTranslations.dart';
+import 'package:CEPmobile/bloc_widgets/bloc_state_builder.dart';
+import 'package:CEPmobile/blocs/setting/setting_bloc.dart';
+import 'package:CEPmobile/blocs/setting/setting_event.dart';
+import 'package:CEPmobile/blocs/setting/setting_state.dart';
 import 'package:CEPmobile/config/colors.dart';
+import 'package:CEPmobile/services/service.dart';
+import 'package:CEPmobile/ui/components/CustomDialog.dart';
+import 'package:CEPmobile/ui/components/ModalProgressHUDCustomize.dart';
 import 'package:CEPmobile/ui/screens/profile/language.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
+import 'dart:io';
+import 'package:local_auth/local_auth.dart';
+import 'package:flutter/services.dart';
+import 'package:local_auth/auth_strings.dart';
 
 class SettingsScreen extends StatefulWidget {
   @override
@@ -11,9 +23,32 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   bool lockInBackground = true;
   bool notificationsEnabled = true;
+  bool isAuthenLocal = false;
+  double screenWidth, screenHeight;
+  bool _passwordVisible;
+  TextEditingController _passwordController =
+      new TextEditingController(text: "");
+
+  SettingBloc settingBloc;
+  Services services;
+  int _isAuthenType = 0;
+  final LocalAuthentication localAuth = LocalAuthentication();
+  @override
+  void initState() {
+    _passwordVisible = false;
+    _getAvailableBiometrics();
+    services = Services.of(context);
+    settingBloc = new SettingBloc(
+        services.sharePreferenceService, services.commonService);
+    settingBloc.emitEvent(LoadAuthenLocalEvent());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    screenHeight = size.height;
+    screenWidth = size.width;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ColorConstants.cepColorBackground,
@@ -33,12 +68,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
               Navigator.of(context).pop();
             }),
       ),
-      body: buildSettingsList(),
+      body: BlocEventStateBuilder<SettingState>(
+          bloc: settingBloc,
+          builder: (BuildContext context, SettingState state) {
+            return StreamBuilder<bool>(
+                stream: settingBloc.getIsAuthenLocal,
+                builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                  if (snapshot.data != null) {
+                    isAuthenLocal = snapshot.data;
+                  }
+                  return buildSettingsList();
+                });
+          }),
     );
   }
 
   Widget buildSettingsList() {
     return SettingsList(
+      darkBackgroundColor: Colors.black,
+      lightBackgroundColor: Colors.white,
       sections: [
         SettingsSection(
           title: 'Chung',
@@ -47,24 +95,45 @@ class _SettingsScreenState extends State<SettingsScreen> {
               title: 'Ngôn ngữ',
               subtitle: 'Tiếng Việt',
               leading: Icon(Icons.language),
+              titleTextStyle: TextStyle(
+                color: Colors.black,
+                fontFamily: 'SourceSansPro',
+                fontSize: 16,
+              ),
+              subtitleTextStyle: TextStyle(
+                  fontFamily: 'SourceSansPro',
+                  fontSize: 14,
+                  color: Colors.grey),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (_) => LanguagesScreen(),
                 ));
               },
             ),
-            SettingsTile(
-              title: 'Môi trường',
-              subtitle: 'Production',
-              leading: Icon(Icons.cloud_queue),
-            ),
+          
           ],
         ),
         SettingsSection(
           title: 'Tài khoản',
           tiles: [
-            SettingsTile(title: 'Số điện thoại', leading: Icon(Icons.phone)),
-            SettingsTile(title: 'Email', leading: Icon(Icons.email)),
+            SettingsTile(
+              title: 'Số điện thoại',
+              leading: Icon(Icons.phone),
+              titleTextStyle: TextStyle(
+                color: Colors.black,
+                fontFamily: 'SourceSansPro',
+                fontSize: 16,
+              ),
+            ),
+            SettingsTile(
+              title: 'Email',
+              leading: Icon(Icons.email),
+              titleTextStyle: TextStyle(
+                color: Colors.black,
+                fontFamily: 'SourceSansPro',
+                fontSize: 16,
+              ),
+            ),
             SettingsTile(title: 'Đăng xuất', leading: Icon(Icons.exit_to_app)),
           ],
         ),
@@ -77,8 +146,51 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Icons.fingerprint,
                   color: Colors.red,
                 ),
-                onToggle: (bool value) {},
-                switchValue: false),
+                onToggle: (bool value) async{
+                  await _getAvailableBiometrics();
+                  if (_isAuthenType == 0) {
+                    showAuthenPopup();
+                  } else {
+                    _passwordController.text = "";
+                    dialogCustomForCEP(context, "Xác thực vân tay", _onSubmit,
+                        children: [
+                          TextFormField(
+                            controller: _passwordController,
+                            obscureText: !_passwordVisible,
+                            style: TextStyle(color: Colors.blue),
+                            decoration: InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                                borderSide: BorderSide(color: Colors.blue),
+                              ),
+                              fillColor: Colors.red,
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.red),
+                                  borderRadius: BorderRadius.circular(20.0)),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                                borderSide: BorderSide(color: Colors.red),
+                              ),
+                              contentPadding:
+                                  EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                              hintText: allTranslations.text("password"),
+                              prefixIcon: Padding(
+                                padding: EdgeInsets.all(0.0),
+                                child: Icon(
+                                  Icons.lock_open,
+                                  color: Colors.blue,
+                                ),
+                              ),
+                              suffixStyle: TextStyle(color: Colors.red),
+                            ),
+                          )
+                        ],
+                        width: screenWidth * 0.7);
+                  }
+                },
+                switchValue: isAuthenLocal),
             SettingsTile(
               title: 'Thay đổi mật khẩu',
               leading: Icon(Icons.lock),
@@ -114,5 +226,61 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
       ],
     );
+  }
+
+  void _onSubmit() {
+    settingBloc.emitEvent(
+        UpdateAuthenLocalEvent(_passwordController.text, isAuthenLocal));
+  }
+
+  Future<void> _getAvailableBiometrics() async {
+    List<BiometricType> availableBiometrics;
+    try {
+      availableBiometrics = await localAuth.getAvailableBiometrics();
+      if (Platform.isIOS) {
+        if (availableBiometrics.contains(BiometricType.face)) {
+          // Face ID.
+          setState(() {
+            _isAuthenType = 1;
+          });
+        } else if (availableBiometrics.contains(BiometricType.fingerprint)) {
+          // Touch ID.
+          _isAuthenType = 2;
+        }
+      } else {
+        if (availableBiometrics.contains(BiometricType.fingerprint)) {
+          _isAuthenType = 2;
+        }
+      }
+    } on PlatformException catch (e) {
+      print(e);
+    }
+    if (!mounted) return;
+
+    // setState(() {
+    //   _biometricTypes = availableBiometrics;
+    // });
+  }
+
+  showAuthenPopup() async {
+    var localAuth = LocalAuthentication();
+    try {
+      const androidStrings = const AndroidAuthMessages(
+          cancelButton: "Hủy",
+          goToSettingsButton: "Cài Đặt",
+          goToSettingsDescription: 'Vui lòng thiết lập Touch ID của bạn !',
+          fingerprintSuccess: 'Xác thực thành công.',
+          fingerprintHint: "",
+          fingerprintRequiredTitle: "Thiết lập Touch-ID",
+          signInTitle: "Touch ID for CEP-Nhân viên",
+          fingerprintNotRecognized: "aaa");
+      bool isAuthenticate = await localAuth.authenticateWithBiometrics(
+          localizedReason: 'Vui lòng quét vân tay để đăng nhập !',
+          stickyAuth: true,
+          androidAuthStrings: androidStrings);
+      print('isAuthenticate: ' + isAuthenticate.toString());
+    } on PlatformException catch (e) {
+      print(e);
+    }
   }
 }
