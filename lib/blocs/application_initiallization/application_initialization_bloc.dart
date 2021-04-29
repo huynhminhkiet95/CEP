@@ -17,7 +17,7 @@ class ApplicationInitializationBloc extends BlocEventStateBase<
 
     if (event.type == ApplicationInitializationEventType.start) {
       for (double progress = 0; progress < 101; progress += 1) {
-        await Future.delayed(const Duration(milliseconds: 15));
+        await Future.delayed(const Duration(milliseconds: 30));
         yield ApplicationInitializationState.progressing(progress);
       }
     }

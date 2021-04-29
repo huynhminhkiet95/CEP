@@ -102,7 +102,7 @@ class AuthenticationBloc
                 this._sharePreferenceService.saveIsRemember("1");
               }
               else{
-                this._sharePreferenceService.saveRememberUser("");
+                this._sharePreferenceService.saveRememberUser(event.userName);
                 this._sharePreferenceService.saveIsRemember("0");
               }
               List responses = await Future.wait(

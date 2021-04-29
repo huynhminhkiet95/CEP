@@ -6,6 +6,7 @@ import 'package:CEPmobile/ui/screens/Home/dashboard.dart';
 import 'package:CEPmobile/ui/screens/Login/index.dart';
 import 'package:CEPmobile/ui/screens/Login/loginPage.dart';
 import 'package:CEPmobile/ui/screens/Login/testbiometric.dart';
+import 'package:CEPmobile/ui/screens/calculation_money/calculation_money.dart';
 import 'package:CEPmobile/ui/screens/community_development/community_development.dart';
 import 'package:CEPmobile/ui/screens/community_development/community_development_detail.dart';
 import 'package:CEPmobile/ui/screens/delete_data/delete_data.dart';
@@ -210,7 +211,9 @@ class AppState extends State<Application> {
               break;
             case 'setting':
               return SlideLeftRoute(page: SettingsScreen());
-
+            case 'calculation':
+              return SlideLeftRoute(page: CalculationMoney());
+            
             default:
               return new MyCustomRoute(
                 builder: (_) => new ErrorScreen(),

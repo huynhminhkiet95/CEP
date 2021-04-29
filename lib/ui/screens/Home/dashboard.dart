@@ -71,6 +71,9 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
       case 'Settings':
         Navigator.pushNamed(context, 'setting');
         break;
+      case 'Thống Kê':
+        Navigator.pushNamed(context, 'calculation');
+        break;
       case 'Đăng Xuất':
         _loginSubmit();
         break;

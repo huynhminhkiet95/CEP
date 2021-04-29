@@ -70,6 +70,7 @@ dependencies:
   easy_dialog: ^1.0.5
   flutter_rounded_date_picker: ^1.0.5
   settings_ui: ^0.4.0
+  number_slide_animation: ^0.1.1
   #google_fonts: ^1.1.0 
 
 dev_dependencies:
@@ -200,6 +201,9 @@ flutter:
   - assets/images/icon-end1.jpg
   - assets/images/icon-end2.jpg
   - assets/images/route.png
+  - assets/images/C.png
+  - assets/images/E.png
+  - assets/images/P.png
   - assets/images/new_button.gif
 
   #ShipmentStatus

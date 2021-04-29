@@ -322,7 +322,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     _animationController2.forward();
 
     _animationController3 = AnimationController(
-      duration: const Duration(milliseconds: 1300),
+      duration: const Duration(milliseconds: 1000),
       vsync: this,
     );
 
@@ -334,7 +334,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     _animationController3.forward();
 
     _animationController4 = AnimationController(
-      duration: const Duration(milliseconds: 1600),
+      duration: const Duration(milliseconds: 1200),
       vsync: this,
     );
 
