@@ -118,6 +118,16 @@ class AuthenticationBloc
                     event.userName, event.password, currentState.serverCode);
               }
             }
+            else if(jsonBodyToken["message"] == "Tài khoản bị khóa"){
+              yield AuthenticationState.failedByUser(currentState);
+            Fluttertoast.showToast(
+              msg: allTranslations.text("UserBlocked"),
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.red[300].withOpacity(0.7),
+              textColor: Colors.white,
+            );
+            }
             else{
               yield AuthenticationState.failedByUser(currentState);
             Fluttertoast.showToast(

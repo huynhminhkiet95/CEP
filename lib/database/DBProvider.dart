@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:CEPmobile/GlobalUser.dart';
+import 'package:CEPmobile/models/community_development/comunity_development.dart';
 import 'package:CEPmobile/models/download_data/comboboxmodel.dart';
 import 'package:CEPmobile/models/download_data/survey_info.dart';
 import 'package:CEPmobile/models/download_data/historysearchsurvey.dart';
@@ -29,250 +30,346 @@ class DBProvider {
 
   initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, "CEP5dbo.db");
-    return await openDatabase(
-      path,
-      version: 1,
-      onOpen: (db) {},
-      onCreate: (Database db, int version) async {
-        await db.execute("CREATE TABLE KhaoSat("
-            "id INTEGER,"
-            "ngayXuatDanhSach TEXT,"
-            "ngayKhaoSat TEXT,"
-            "masoCanBoKhaoSat TEXT,"
-            "chinhanhId INTEGER,"
-            "duanId INTEGER,"
-            "cumId TEXT,"
-            "thanhvienId TEXT,"
-            "tinhTrangHonNhan TEXT,"
-            "trinhDoHocVan TEXT,"
-            "khuVuc INTEGER,"
-            "lanvay INTEGER,"
-            "nguoiTraloiKhaoSat TEXT,"
-            "songuoiTrongHo INTEGER,"
-            "songuoiCoviecLam INTEGER,"
-            "dientichDatTrong INTEGER,"
-            "giaTriVatNuoi INTEGER,"
-            "dungCuLaoDong INTEGER,"
-            "phuongTienDiLai INTEGER,"
-            "taiSanSinhHoat INTEGER,"
-            "quyenSoHuuNha TEXT,"
-            "hemTruocNha INTEGER,"
-            "maiNha TEXT,"
-            "tuongNha TEXT,"
-            "nenNha TEXT,"
-            "dienTichNhaTinhTren1Nguoi INTEGER,"
-            "dien TEXT,"
-            "nuoc TEXT,"
-            "mucDichSudungVon TEXT,"
-            "soTienCanThiet INTEGER,"
-            "soTienThanhVienDaCo INTEGER,"
-            "soTienCanVay INTEGER,"
-            "thoiDiemSuDungVonvay TEXT,"
-            "tongVonDauTu INTEGER,"
-            "thuNhapRongHangThang INTEGER,"
-            "thuNhapCuaVoChong INTEGER,"
-            "thuNhapCuaCacCon INTEGER,"
-            "thuNhapKhac INTEGER,"
-            "tongChiPhiCuaThanhvien INTEGER,"
-            "chiPhiDienNuoc INTEGER,"
-            "chiPhiAnUong INTEGER,"
-            "chiPhiHocTap INTEGER,"
-            "chiPhiKhac INTEGER,"
-            "chiTraTienVayHangThang INTEGER,"
-            "tichLuyTangThemHangThang INTEGER,"
-            "nguonVay1 TEXT,"
-            "sotienVay1 INTEGER,"
-            "lyDoVay1 TEXT,"
-            "thoiDiemTatToan1 TEXT,"
-            "bienPhapThongNhat1 TEXT,"
-            "nguonVay2 TEXT,"
-            "sotienVay2 INTEGER,"
-            "lyDoVay2 TEXT,"
-            "thoiDiemTatToan2 TEXT,"
-            "bienPhapThongNhat2 TEXT,"
-            "thanhVienThuocDien TEXT,"
-            "maSoHoNgheo TEXT,"
-            "hoTenChuHo TEXT,"
-            "soTienGuiTietKiemMoiKy INTEGER,"
-            "tietKiemBatBuocXinRut INTEGER,"
-            "tietKiemTuNguyenXinRut INTEGER,"
-            "tietKiemLinhHoatXinRut INTEGER,"
-            "thoiDiemRut TEXT,"
-            "mucVayBoSung INTEGER,"
-            "mucDichVayBoSung TEXT,"
-            "ngayVayBoSung TEXT,"
-            "ghiChu TEXT,"
-            "soTienDuyetChovay INTEGER,"
-            "tietKiemDinhHuong INTEGER,"
-            "mucDichVay TEXT,"
-            "duyetChovayNgay TEXT,"
-            "daCapNhatVaoHoSoChovay INTEGER,"
-            "tinhTrangNgheo TEXT,"
-            "daDuocDuyet INTEGER,"
-            "username TEXT,"
-            "ngaycapnhat TEXT,"
-            "masoCanBoKhaoSatPss INTEGER,"
-            "sotienVayLantruoc INTEGER,"
-            "thoiGianTaivay INTEGER,"
-            "songayNoquahanCaonhat INTEGER,"
-            "thoiGianKhaosatGannhat INTEGER,"
-            "ngayTatToanDotvayTruoc TEXT,"
-            "batBuocKhaosat INTEGER,"
-            "conNo INTEGER,"
-            "dichVuSgb INTEGER,"
-            "moTheMoi INTEGER,"
-            "soTienDuyetChoVayCk INTEGER,"
-            "gioiTinh INTEGER,"
-            "cmnd TEXT,"
-            "ngaySinh TEXT,"
-            "diaChi TEXT,"
-            "thoigianthamgia TEXT,"
-            "hoVaTen TEXT,"
-            "statusCheckBox INTEGER,"
-            "idHistoryKhaoSat INTEGER"
-            ")");
+    String path = join(documentsDirectory.path, "CEP-NhanViendbo.db");
+    return await openDatabase(path, version: 1, onOpen: (db) {},
+        onCreate: (Database db, int version) async {
+      await db.execute("CREATE TABLE KhaoSat("
+          "id INTEGER,"
+          "ngayXuatDanhSach TEXT,"
+          "ngayKhaoSat TEXT,"
+          "masoCanBoKhaoSat TEXT,"
+          "chinhanhId INTEGER,"
+          "duanId INTEGER,"
+          "cumId TEXT,"
+          "thanhvienId TEXT,"
+          "tinhTrangHonNhan TEXT,"
+          "trinhDoHocVan TEXT,"
+          "khuVuc INTEGER,"
+          "lanvay INTEGER,"
+          "nguoiTraloiKhaoSat TEXT,"
+          "songuoiTrongHo INTEGER,"
+          "songuoiCoviecLam INTEGER,"
+          "dientichDatTrong INTEGER,"
+          "giaTriVatNuoi INTEGER,"
+          "dungCuLaoDong INTEGER,"
+          "phuongTienDiLai INTEGER,"
+          "taiSanSinhHoat INTEGER,"
+          "quyenSoHuuNha TEXT,"
+          "hemTruocNha INTEGER,"
+          "maiNha TEXT,"
+          "tuongNha TEXT,"
+          "nenNha TEXT,"
+          "dienTichNhaTinhTren1Nguoi INTEGER,"
+          "dien TEXT,"
+          "nuoc TEXT,"
+          "mucDichSudungVon TEXT,"
+          "soTienCanThiet INTEGER,"
+          "soTienThanhVienDaCo INTEGER,"
+          "soTienCanVay INTEGER,"
+          "thoiDiemSuDungVonvay TEXT,"
+          "tongVonDauTu INTEGER,"
+          "thuNhapRongHangThang INTEGER,"
+          "thuNhapCuaVoChong INTEGER,"
+          "thuNhapCuaCacCon INTEGER,"
+          "thuNhapKhac INTEGER,"
+          "tongChiPhiCuaThanhvien INTEGER,"
+          "chiPhiDienNuoc INTEGER,"
+          "chiPhiAnUong INTEGER,"
+          "chiPhiHocTap INTEGER,"
+          "chiPhiKhac INTEGER,"
+          "chiTraTienVayHangThang INTEGER,"
+          "tichLuyTangThemHangThang INTEGER,"
+          "nguonVay1 TEXT,"
+          "sotienVay1 INTEGER,"
+          "lyDoVay1 TEXT,"
+          "thoiDiemTatToan1 TEXT,"
+          "bienPhapThongNhat1 TEXT,"
+          "nguonVay2 TEXT,"
+          "sotienVay2 INTEGER,"
+          "lyDoVay2 TEXT,"
+          "thoiDiemTatToan2 TEXT,"
+          "bienPhapThongNhat2 TEXT,"
+          "thanhVienThuocDien TEXT,"
+          "maSoHoNgheo TEXT,"
+          "hoTenChuHo TEXT,"
+          "soTienGuiTietKiemMoiKy INTEGER,"
+          "tietKiemBatBuocXinRut INTEGER,"
+          "tietKiemTuNguyenXinRut INTEGER,"
+          "tietKiemLinhHoatXinRut INTEGER,"
+          "thoiDiemRut TEXT,"
+          "mucVayBoSung INTEGER,"
+          "mucDichVayBoSung TEXT,"
+          "ngayVayBoSung TEXT,"
+          "ghiChu TEXT,"
+          "soTienDuyetChovay INTEGER,"
+          "tietKiemDinhHuong INTEGER,"
+          "mucDichVay TEXT,"
+          "duyetChovayNgay TEXT,"
+          "daCapNhatVaoHoSoChovay INTEGER,"
+          "tinhTrangNgheo TEXT,"
+          "daDuocDuyet INTEGER,"
+          "username TEXT,"
+          "ngaycapnhat TEXT,"
+          "masoCanBoKhaoSatPss INTEGER,"
+          "sotienVayLantruoc INTEGER,"
+          "thoiGianTaivay INTEGER,"
+          "songayNoquahanCaonhat INTEGER,"
+          "thoiGianKhaosatGannhat INTEGER,"
+          "ngayTatToanDotvayTruoc TEXT,"
+          "batBuocKhaosat INTEGER,"
+          "conNo INTEGER,"
+          "dichVuSgb INTEGER,"
+          "moTheMoi INTEGER,"
+          "soTienDuyetChoVayCk INTEGER,"
+          "gioiTinh INTEGER,"
+          "cmnd TEXT,"
+          "ngaySinh TEXT,"
+          "diaChi TEXT,"
+          "thoigianthamgia TEXT,"
+          "hoVaTen TEXT,"
+          "statusCheckBox INTEGER,"
+          "idHistoryKhaoSat INTEGER"
+          ")");
 
-        await db.execute("CREATE TABLE historysearchkhaosat_tbl("
-            "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-            "cumID TEXT,"
-            "ngayXuatDanhSach TEXT,"
-            "username TEXT,"
-            "masoql TEXT"
-            ")");
+      await db.execute("CREATE TABLE historysearchkhaosat_tbl("
+          "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+          "cumID TEXT,"
+          "ngayXuatDanhSach TEXT,"
+          "username TEXT,"
+          "masoql TEXT"
+          ")");
 
-        await db.execute("CREATE TABLE metadata_tbl("
-            "server_id INTEGER,"
-            "group_id TEXT,"
-            "group_text TEXT,"
-            "item_id TEXT,"
-            "item_text TEXT"
-            ")");
+      await db.execute("CREATE TABLE metadata_tbl("
+          "server_id INTEGER,"
+          "group_id TEXT,"
+          "group_text TEXT,"
+          "item_id TEXT,"
+          "item_text TEXT"
+          ")");
 
-        await db.execute("CREATE TABLE userinfo_tbl("
-            "chiNhanhID INTEGER,"
-            "tenChiNhanh TEXT,"
-            "chucVu TEXT,"
-            "hoTen TEXT,"
-            "dienThoai TEXT,"
-            "masoql TEXT,"
-            "toTinDung INTEGER"
-            ")");
+      await db.execute("CREATE TABLE userinfo_tbl("
+          "chiNhanhID INTEGER,"
+          "tenChiNhanh TEXT,"
+          "chucVu TEXT,"
+          "hoTen TEXT,"
+          "dienThoai TEXT,"
+          "masoql TEXT,"
+          "toTinDung INTEGER"
+          ")");
 
-        await db.execute("CREATE TABLE userrole_tbl("
-            "salary INTEGER,"
-            "hPqlnlhc INTEGER,"
-            "banTgd INTEGER,"
-            "administrator INTEGER,"
-            "td INTEGER,"
-            "giaoDich INTEGER,"
-            "ktv INTEGER,"
-            "tq INTEGER,"
-            "kiemSoat2 INTEGER,"
-            "hHs INTEGER,"
-            "hPtckt INTEGER,"
-            "gdcn INTEGER,"
-            "provisional INTEGER,"
-            "ptcd INTEGER,"
-            "hPcntt INTEGER,"
-            "dataBase INTEGER,"
-            "tpkt INTEGER,"
-            "chiNhanh INTEGER,"
-            "kiemSoat INTEGER,"
-            "thionline INTEGER,"
-            "tttd INTEGER,"
-            "hPqltd INTEGER,"
-            "hPhlptd INTEGER,"
-            "tptd INTEGER,"
-            "upLoad INTEGER,"
-            "hPktnb INTEGER"
-            ")");
+      await db.execute("CREATE TABLE userrole_tbl("
+          "salary INTEGER,"
+          "hPqlnlhc INTEGER,"
+          "banTgd INTEGER,"
+          "administrator INTEGER,"
+          "td INTEGER,"
+          "giaoDich INTEGER,"
+          "ktv INTEGER,"
+          "tq INTEGER,"
+          "kiemSoat2 INTEGER,"
+          "hHs INTEGER,"
+          "hPtckt INTEGER,"
+          "gdcn INTEGER,"
+          "provisional INTEGER,"
+          "ptcd INTEGER,"
+          "hPcntt INTEGER,"
+          "dataBase INTEGER,"
+          "tpkt INTEGER,"
+          "chiNhanh INTEGER,"
+          "kiemSoat INTEGER,"
+          "thionline INTEGER,"
+          "tttd INTEGER,"
+          "hPqltd INTEGER,"
+          "hPhlptd INTEGER,"
+          "tptd INTEGER,"
+          "upLoad INTEGER,"
+          "hPktnb INTEGER"
+          ")");
 
-        await db.execute("CREATE TABLE lichsukhaosat_tbl("
-            "ngayXuatDanhSach TEXT,"
-            "masoCanBoKhaoSat TEXT,"
-            "chinhanhId INTEGER,"
-            "cumId TEXT,"
-            "thanhvienId TEXT,"
-            "tinhTrangHonNhan TEXT,"
-            "trinhDoHocVan TEXT,"
-            "khuVuc INTEGER,"
-            "lanvay INTEGER,"
-            "nguoiTraloiKhaoSat TEXT,"
-            "songuoiTrongHo INTEGER,"
-            "songuoiCoviecLam INTEGER,"
-            "dientichDatTrong INTEGER,"
-            "giaTriVatNuoi INTEGER,"
-            "dungCuLaoDong INTEGER,"
-            "phuongTienDiLai INTEGER,"
-            "taiSanSinhHoat INTEGER,"
-            "quyenSoHuuNha TEXT,"
-            "hemTruocNha INTEGER,"
-            "maiNha TEXT,"
-            "tuongNha TEXT,"
-            "nenNha TEXT,"
-            "dienTichNhaTinhTren1Nguoi INTEGER,"
-            "dien TEXT,"
-            "nuoc TEXT,"
-            "mucDichSudungVon TEXT,"
-            "soTienCanThiet INTEGER,"
-            "soTienThanhVienDaCo INTEGER,"
-            "soTienCanVay INTEGER,"
-            "thoiDiemSuDungVonvay TEXT,"
-            "tongVonDauTu INTEGER,"
-            "thuNhapRongHangThang INTEGER,"
-            "thuNhapCuaVoChong INTEGER,"
-            "thuNhapCuaCacCon INTEGER,"
-            "thuNhapKhac INTEGER,"
-            "tongChiPhiCuaThanhvien INTEGER,"
-            "chiPhiDienNuoc INTEGER,"
-            "chiPhiAnUong INTEGER,"
-            "chiPhiHocTap INTEGER,"
-            "chiPhiKhac INTEGER,"
-            "chiTraTienVayHangThang INTEGER,"
-            "tichLuyTangThemHangThang INTEGER,"
-            "nguonVay1 TEXT,"
-            "sotienVay1 INTEGER,"
-            "lyDoVay1 TEXT,"
-            "thoiDiemTatToan1 TEXT,"
-            "bienPhapThongNhat1 TEXT,"
-            "nguonVay2 TEXT,"
-            "sotienVay2 INTEGER,"
-            "lyDoVay2 TEXT,"
-            "thoiDiemTatToan2 TEXT,"
-            "bienPhapThongNhat2 TEXT,"
-            "thanhVienThuocDien TEXT,"
-            "maSoHoNgheo TEXT,"
-            "hoTenChuHo TEXT,"
-            "soTienGuiTietKiemMoiKy INTEGER,"
-            "tietKiemBatBuocXinRut INTEGER,"
-            "tietKiemTuNguyenXinRut INTEGER,"
-            "tietKiemLinhHoatXinRut INTEGER,"
-            "thoiDiemRut TEXT,"
-            "mucVayBoSung INTEGER,"
-            "mucDichVayBoSung TEXT,"
-            "ngayVayBoSung TEXT,"
-            "ghiChu TEXT,"
-            "soTienDuyetChovay INTEGER,"
-            "tietKiemDinhHuong INTEGER,"
-            "mucDichVay TEXT,"
-            "duyetChovayNgay TEXT,"
-            "daCapNhatVaoHoSoChovay INTEGER"
-            ")");
-      },
-    );
+      await db.execute("CREATE TABLE lichsukhaosat_tbl("
+          "ngayXuatDanhSach TEXT,"
+          "masoCanBoKhaoSat TEXT,"
+          "chinhanhId INTEGER,"
+          "cumId TEXT,"
+          "thanhvienId TEXT,"
+          "tinhTrangHonNhan TEXT,"
+          "trinhDoHocVan TEXT,"
+          "khuVuc INTEGER,"
+          "lanvay INTEGER,"
+          "nguoiTraloiKhaoSat TEXT,"
+          "songuoiTrongHo INTEGER,"
+          "songuoiCoviecLam INTEGER,"
+          "dientichDatTrong INTEGER,"
+          "giaTriVatNuoi INTEGER,"
+          "dungCuLaoDong INTEGER,"
+          "phuongTienDiLai INTEGER,"
+          "taiSanSinhHoat INTEGER,"
+          "quyenSoHuuNha TEXT,"
+          "hemTruocNha INTEGER,"
+          "maiNha TEXT,"
+          "tuongNha TEXT,"
+          "nenNha TEXT,"
+          "dienTichNhaTinhTren1Nguoi INTEGER,"
+          "dien TEXT,"
+          "nuoc TEXT,"
+          "mucDichSudungVon TEXT,"
+          "soTienCanThiet INTEGER,"
+          "soTienThanhVienDaCo INTEGER,"
+          "soTienCanVay INTEGER,"
+          "thoiDiemSuDungVonvay TEXT,"
+          "tongVonDauTu INTEGER,"
+          "thuNhapRongHangThang INTEGER,"
+          "thuNhapCuaVoChong INTEGER,"
+          "thuNhapCuaCacCon INTEGER,"
+          "thuNhapKhac INTEGER,"
+          "tongChiPhiCuaThanhvien INTEGER,"
+          "chiPhiDienNuoc INTEGER,"
+          "chiPhiAnUong INTEGER,"
+          "chiPhiHocTap INTEGER,"
+          "chiPhiKhac INTEGER,"
+          "chiTraTienVayHangThang INTEGER,"
+          "tichLuyTangThemHangThang INTEGER,"
+          "nguonVay1 TEXT,"
+          "sotienVay1 INTEGER,"
+          "lyDoVay1 TEXT,"
+          "thoiDiemTatToan1 TEXT,"
+          "bienPhapThongNhat1 TEXT,"
+          "nguonVay2 TEXT,"
+          "sotienVay2 INTEGER,"
+          "lyDoVay2 TEXT,"
+          "thoiDiemTatToan2 TEXT,"
+          "bienPhapThongNhat2 TEXT,"
+          "thanhVienThuocDien TEXT,"
+          "maSoHoNgheo TEXT,"
+          "hoTenChuHo TEXT,"
+          "soTienGuiTietKiemMoiKy INTEGER,"
+          "tietKiemBatBuocXinRut INTEGER,"
+          "tietKiemTuNguyenXinRut INTEGER,"
+          "tietKiemLinhHoatXinRut INTEGER,"
+          "thoiDiemRut TEXT,"
+          "mucVayBoSung INTEGER,"
+          "mucDichVayBoSung TEXT,"
+          "ngayVayBoSung TEXT,"
+          "ghiChu TEXT,"
+          "soTienDuyetChovay INTEGER,"
+          "tietKiemDinhHuong INTEGER,"
+          "mucDichVay TEXT,"
+          "duyetChovayNgay TEXT,"
+          "daCapNhatVaoHoSoChovay INTEGER"
+          ")");
+
+      await db.execute("CREATE TABLE customer_cummunity_development("
+          "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+          "maKhachHang TEXT,"
+          "chinhanhID INTEGER,"
+          "duanID INTEGER,"
+          "masoql TEXT,"
+          "cumID TEXT,"
+          "hoTen TEXT,"
+          "thanhVienID TEXT,"
+          "cmnd TEXT,"
+          "gioitinh INTEGER,"
+          "ngaysinh TEXT,"
+          "diachi TEXT,"
+          "dienthoai TEXT,"
+          "lanvay INTEGER,"
+          "thoigianthamgia TEXT,"
+          "thanhVienThuocDien INTEGER,"
+          "maHongheoCanngheo TEXT,"
+          "ngheNghiep INTEGER,"
+          "ghiChu TEXT,"
+          "moHinhNghe INTEGER,"
+          "thunhapHangthangCuaho INTEGER,"
+          "coVoChongConLaCNV INTEGER"
+          ")");
+
+      await db.execute("CREATE TABLE mainha_cummunity_development("
+          "id_khachhang INTEGER,"
+          "serverID INTEGER,"
+          "nam INTEGER,"
+          "maKhachHang TEXT,"
+          "tilephuthuoc INTEGER,"
+          "thunhap INTEGER,"
+          "taisan INTEGER,"
+          "dieukiennhao INTEGER,"
+          "quyenSoHuuNha INTEGER,"
+          "ghichuhoancanh TEXT,"
+          "cbDexuat INTEGER,"
+          "duTruKinhPhi INTEGER,"
+          "deXuatHoTro INTEGER,"
+          "giaDinhHoTro INTEGER,"
+          "tietKiem INTEGER,"
+          "tienVay INTEGER,"
+          "giaDinhDongY INTEGER,"
+          "cnDexuat INTEGER,"
+          "cnDexuatThoigian TEXT,"
+          "cnDexuatSotien INTEGER,"
+          "hosodinhkem INTEGER"
+          ")");
+
+      await db.execute("CREATE TABLE phattriennghe_cummunity_development("
+          "id_khachhang INTEGER,"
+          "serverID INTEGER,"
+          "nam INTEGER,"
+          "maKhachHang TEXT,"
+          "nguoithan TEXT,"
+          "quanHeKhacHang INTEGER,"
+          "lyDo INTEGER,"
+          "hoancanh TEXT,"
+          "nguyenvongthamgia INTEGER,"
+          "nguyenvonghoithao INTEGER,"
+          "scCnguyenvong INTEGER,"
+          "iecDnguyenvong INTEGER,"
+          "reacHnguyenvong INTEGER"
+          ")");
+
+      await db.execute("CREATE TABLE quatet_cummunity_development("
+          "id_khachhang INTEGER,"
+          "serverID INTEGER,"
+          "nam INTEGER,"
+          "maKhachHang TEXT,"
+          "loaiHoNgheo INTEGER"
+          ")");
+
+      await db.execute("CREATE TABLE bhyt_cummunity_development("
+          "id_khachhang INTEGER,"
+          "serverID INTEGER,"
+          "nam INTEGER,"
+          "maKhachHang TEXT,"
+          "mucphibaohiem INTEGER,"
+          "dieukienbhyt INTEGER,"
+          "tinhtrangsuckhoe INTEGER,"
+          "nguoithan TEXT,"
+          "namsinh INTEGER,"
+          "quanHeKhachHang INTEGER"
+          ")");
+
+      await db.execute("CREATE TABLE hocbong_cummunity_development("
+          "id_khachhang INTEGER,"
+          "serverID INTEGER,"
+          "nam INTEGER,"
+          "maKhachHang TEXT,"
+          "hotenhocsinh TEXT,"
+          "namsinh INTEGER,"
+          "lop INTEGER,"
+          "truonghoc TEXT,"
+          "quanhekhachhang INTEGER,"
+          "hocbongQuatang INTEGER,"
+          "hocluc INTEGER,"
+          "danhanhocbong INTEGER,"
+          "dinhKemHoSo INTEGER,"
+          "hoancanhhocsinh INTEGER,"
+          "hoancanhgiadinh TEXT,"
+          "mucdich INTEGER,"
+          "ghiChu TEXT,"
+          "giatri INTEGER"
+          ")");
+    }, onUpgrade: _onUpgrade);
   }
 
-  void _onUpgrade(Database db, int oldVersion, int newVersion) {
-    if (oldVersion < newVersion) {
-      db.execute("ALTER TABLE tabEmployee ADD COLUMN newCol TEXT;");
-    }
+  void _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < newVersion) {}
   }
-  // void _onUpgrade(Database db, int oldVersion, int newVersion) {
-  //   if (oldVersion < newVersion) {
-  //     db.execute("ALTER TABLE Client ADD COLUMN last_name1 TEXT;");
-  //   }
-  // }
 
   newKhaoSat(SurveyInfo model) async {
     int rs = 0;
@@ -711,9 +808,10 @@ class DBProvider {
   deleteKhaoSatByIdHistorySearch(int idHistorySearch) async {
     final db = await database;
     try {
-      await db.rawDelete('DELETE FROM KhaoSat WHERE idHistoryKhaoSat = ${idHistorySearch}');
-      await db.rawDelete('DELETE FROM historysearchkhaosat_tbl WHERE id = ${idHistorySearch}');
-     
+      await db.rawDelete(
+          'DELETE FROM KhaoSat WHERE idHistoryKhaoSat = ${idHistorySearch}');
+      await db.rawDelete(
+          'DELETE FROM historysearchkhaosat_tbl WHERE id = ${idHistorySearch}');
     } on Exception catch (ex) {
       print(ex);
       // only executed if error is of type Exception
@@ -726,7 +824,6 @@ class DBProvider {
     final db = await database;
     try {
       await db.rawDelete('DELETE FROM KhaoSat WHERE id = ${id}');
-     
     } on Exception catch (ex) {
       print(ex);
       // only executed if error is of type Exception
@@ -921,7 +1018,10 @@ class DBProvider {
         await db.rawInsert(queryString);
       }
       List<Map> list = await db.query("historysearchkhaosat_tbl",
-          columns: ["id"], where: "cumID = ? and username = ?", whereArgs: [cumID,username], limit: 1);
+          columns: ["id"],
+          where: "cumID = ? and username = ?",
+          whereArgs: [cumID, username],
+          limit: 1);
       var a = list.first;
       id = a["id"];
       return id;
@@ -935,7 +1035,8 @@ class DBProvider {
 
   getAllHistorySearchKhaoSat() async {
     final db = await database;
-    var res = await db.query("historysearchkhaosat_tbl",where: "username = ?", whereArgs: [globalUser.getUserName]);
+    var res = await db.query("historysearchkhaosat_tbl",
+        where: "username = ?", whereArgs: [globalUser.getUserName]);
     List<HistorySearchSurvey> list = res.isNotEmpty
         ? res.map((c) => HistorySearchSurvey.fromMap(c)).toList()
         : [];
@@ -1054,6 +1155,123 @@ class DBProvider {
     UserRole userInfo =
         res.isNotEmpty ? res.map((c) => UserRole.fromMap(c)).first : null;
     return userInfo;
+  }
+
+  newCommunityDevelopment(List<KhachHang> listCustomer) async {
+    int rs = 0;
+    final db = await database;
+    try {
+      for (var item in listCustomer) {
+        int checkExistsData = Sqflite.firstIntValue(await db
+            .rawQuery('''SELECT COUNT(*) FROM customer_cummunity_development " +
+              "WHERE maKhachHang='${item.maKhachHang}' and chinhanhID=${item.chinhanhId} and masoql='${item.masoql}' and cumID= '${item.cumId}' '''));
+        if (checkExistsData != 0) {
+          String queryString = '''INSERT Into customer_cummunity_development(
+                                    maKhachHang,
+                                    chinhanhID,
+                                    duanID,
+                                    masoql,
+                                    cumID,
+                                    hoTen,
+                                    thanhVienID,
+                                    cmnd,
+                                    gioitinh,
+                                    ngaysinh,
+                                    diachi,
+                                    dienthoai,
+                                    lanvay,
+                                    thoigianthamgia,
+                                    thanhVienThuocDien,
+                                    maHongheoCanngheo,
+                                    ngheNghiep,
+                                    ghiChu,
+                                    moHinhNghe,
+                                    thunhapHangthangCuaho,
+                                    coVoChongConLaCNV
+                                    )
+                VALUES ("${item.maKhachHang}",
+                        "${item.chinhanhId}",
+                        ${item.duanId},
+                        "${item.masoql}",
+                        "${item.cumId}",
+                        "${item.hoTen}",
+                        "${item.thanhVienId}",
+                        "${item.cmnd}",
+                        ${item.gioitinh},
+                        "${item.ngaysinh}",
+                        "${item.diachi}",
+                        "${item.dienthoai}",
+                        ${item.lanvay},
+                        "${item.thoigianthamgia}",
+                        ${item.thanhVienThuocDien},
+                        "${item.maHongheoCanngheo}",
+                        ${item.ngheNghiep},
+                        "${item.ghiChu}",
+                        ${item.moHinhNghe},
+                        ${item.thunhapHangthangCuaho},
+                        ${item.coVoChongConLaCnv}
+                        )
+                       ''';
+          queryString += '''
+                  INSERT Into mainha_cummunity_development(
+                                    id_khachhang,
+                                    serverID,
+                                    nam,
+                                    maKhachHang,
+                                    tilephuthuoc,
+                                    thunhap,
+                                    taisan,
+                                    dieukiennhao,
+                                    quyenSoHuuNha,
+                                    ghichuhoancanh,
+                                    cbDexuat,
+                                    duTruKinhPhi,
+                                    deXuatHoTro,
+                                    giaDinhHoTro,
+                                    tietKiem,
+                                    tienVay,
+                                    giaDinhDongY,
+                                    cnDexuat,
+                                    cnDexuatThoigian,
+                                    cnDexuatSotien,
+                                    hosodinhkem
+                                    )
+                VALUES (last_insert_rowid(),
+                        ${item.maiNha.serverId},
+                        ${item.maiNha.nam},
+                        "${item.maiNha.maKhachHang}",
+                        ${item.maiNha.tilephuthuoc},
+                        ${item.maiNha.thunhap},
+                        ${item.maiNha.taisan},
+                        ${item.maiNha.dieukiennhao},
+                        ${item.maiNha.quyenSoHuuNha},
+                        "${item.maiNha.ghichuhoancanh}",
+                        ${item.maiNha.cbDexuat},
+                        ${item.maiNha.duTruKinhPhi},
+                        ${item.maiNha.deXuatHoTro},
+                        ${item.maiNha.giaDinhHoTro},
+                        ${item.maiNha.tietKiem},
+                        ${item.maiNha.tienVay},
+                        ${item.maiNha.giaDinhDongY},
+                        ${item.maiNha.cnDexuat},
+                        "${item.maiNha.cnDexuatThoigian}",
+                        ${item.maiNha.cnDexuatSotien},
+                        ${item.maiNha.hosodinhkem}
+                        )
+          ''';
+
+          print(queryString);
+          rs = await db.rawInsert(queryString);
+        }
+      }
+
+      return rs;
+    } on Exception catch (ex) {
+      print(ex);
+      // only executed if error is of type Exception
+    } catch (error) {
+      // executed for errors of all types other than Exception
+    }
   }
 
   dropDataBase() async {

@@ -57,7 +57,7 @@ class _DownloadSurveyState extends State<DownloadSurvey> {
   }
 
   void _onSubmit() {
-    downloadDataBloc.emitEvent(LoadDownloadDataEvent(
+    downloadDataBloc.emitEvent(DownloadDataSurveyEvent(
         chiNhanhID: globalUser.getUserInfo == null
             ? ''
             : globalUser.getUserInfo.chiNhanhID,

@@ -12,6 +12,7 @@ import 'package:CEPmobile/ui/screens/community_development/community_development
 import 'package:CEPmobile/ui/screens/delete_data/delete_data.dart';
 import 'package:CEPmobile/ui/screens/downloadData/download_main.dart';
 import 'package:CEPmobile/ui/screens/error/error.dart';
+import 'package:CEPmobile/ui/screens/profile/language.dart';
 import 'package:CEPmobile/ui/screens/profile/setting.dart';
 import 'package:CEPmobile/ui/screens/profile/user_profile.dart';
 import 'package:CEPmobile/ui/screens/survey/survey.dart';
@@ -124,44 +125,7 @@ class AppState extends State<Application> {
                 builder: (_) => new MenuDashboardPage(),
                 settings: settings,
               );
-            case 'MB001':
-              return new MyCustomRoute(
-                builder: (_) => new DriverProfile(),
-                settings: settings,
-              );
-              break;
-            case 'MB002':
-              if (globalDriverProfile.getfleet.isEmpty) {
-                return new MyCustomRoute(
-                  builder: (_) => new DriverProfile(),
-                  settings: settings,
-                );
-              } else {
-                return new MyCustomRoute(
-                  builder: (_) => new DayTripRecordComponent(),
-                  settings: settings,
-                );
-              }
-              break;
-            case 'MB003':
-              if (globalDriverProfile.getfleet.isEmpty) {
-                return new MyCustomRoute(
-                  builder: (_) => new DriverProfile(),
-                  settings: settings,
-                );
-              } else {
-                return new MyCustomRoute(
-                  builder: (_) => new TodoListComponent(),
-                  settings: settings,
-                );
-              }
-              break;
-            case 'MB007':
-              return new MyCustomRoute(
-                builder: (_) => new AnnouncementScreen(),
-                settings: settings,
-              );
-              break;
+            
             case 'error':
               return SlideLeftRoute(page: ErrorScreen());
               break;
@@ -211,6 +175,8 @@ class AppState extends State<Application> {
               break;
             case 'setting':
               return SlideLeftRoute(page: SettingsScreen());
+            case 'language':
+              return SlideBottomRoute1(page: LanguagesScreen());
             case 'calculation':
               return SlideLeftRoute(page: CalculationMoney());
             

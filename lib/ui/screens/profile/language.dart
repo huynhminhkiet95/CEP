@@ -1,3 +1,4 @@
+import 'package:CEPmobile/GlobalTranslations.dart';
 import 'package:CEPmobile/config/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
@@ -9,6 +10,17 @@ class LanguagesScreen extends StatefulWidget {
 
 class _LanguagesScreenState extends State<LanguagesScreen> {
   int languageIndex = 0;
+  @override
+  void initState() {
+    if (allTranslations.currentLanguage == "en") {
+      setState(() {
+        languageIndex = 1;
+      });
+      
+    }
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +40,7 @@ class _LanguagesScreenState extends State<LanguagesScreen> {
               size: 20,
             ),
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.pop(context, true);
             }),
       ),
       body: SettingsList(
@@ -63,6 +75,9 @@ class _LanguagesScreenState extends State<LanguagesScreen> {
   void changeLanguage(int index) {
     setState(() {
       languageIndex = index;
+      languageIndex == 0
+          ? allTranslations.setNewLanguage('vi', true)
+          : allTranslations.setNewLanguage('en', true);
     });
   }
 }

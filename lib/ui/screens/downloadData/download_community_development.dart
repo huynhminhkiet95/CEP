@@ -2,22 +2,33 @@ import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:CEPmobile/config/formatdate.dart';
 import 'package:CEPmobile/ui/screens/Home/styles.dart';
+import 'package:CEPmobile/blocs/download_data/download_data_bloc.dart';
+import 'package:CEPmobile/services/service.dart';
+import 'package:CEPmobile/bloc_widgets/bloc_state_builder.dart';
+import 'package:CEPmobile/blocs/download_data/download_data_event.dart';
+import 'package:CEPmobile/blocs/download_data/download_data_state.dart';
 
 class DownloadCommunityDevelopment extends StatefulWidget {
   DownloadCommunityDevelopment({Key key}) : super(key: key);
 
   @override
-  _DownloadCommunityDevelopmentState createState() => _DownloadCommunityDevelopmentState();
+  _DownloadCommunityDevelopmentState createState() =>
+      _DownloadCommunityDevelopmentState();
 }
 
-class _DownloadCommunityDevelopmentState extends State<DownloadCommunityDevelopment> {
+class _DownloadCommunityDevelopmentState
+    extends State<DownloadCommunityDevelopment> {
   double screenWidth, screenHeight;
   GlobalKey<AutoCompleteTextFieldState<String>> key = new GlobalKey();
-  TextEditingController textAutoComplete = new TextEditingController(text: "");
+  TextEditingController textAutoCompleteCumId =
+      new TextEditingController(text: "");
   String txtCum = "";
   TextEditingController _textDateEditingController = TextEditingController(
       text: FormatDateConstants.convertDateTimeToString(DateTime.now()));
   DateTime selectedDate = DateTime.now();
+
+  DownloadDataBloc downloadDataBloc;
+  Services services;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
@@ -33,6 +44,20 @@ class _DownloadCommunityDevelopmentState extends State<DownloadCommunityDevelopm
       });
   }
 
+  @override
+  void initState() {
+    services = Services.of(context);
+    downloadDataBloc = new DownloadDataBloc(
+        services.sharePreferenceService, services.commonService);
+    super.initState();
+  }
+
+  void _onSubmit() {
+    if (textAutoCompleteCumId.text.length > 0) {
+      downloadDataBloc.emitEvent(
+        DownloadDataCommunityDevelopmentEvent(textAutoCompleteCumId.text));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +67,9 @@ class _DownloadCommunityDevelopmentState extends State<DownloadCommunityDevelopm
     screenWidth = size.width;
     return Container(
       color: Colors.blue,
-      child: customScrollViewSliverAppBarForDownload("Download Phát Triển Cộng Đồng",
-      <Widget>[
+      child: customScrollViewSliverAppBarForDownload(
+          "Download Phát Triển Cộng Đồng",
+          <Widget>[
             Container(
               height: orientation == Orientation.portrait
                   ? size.height * 0.17
@@ -56,7 +82,8 @@ class _DownloadCommunityDevelopmentState extends State<DownloadCommunityDevelopm
               child: Column(
                 children: [
                   Padding(
-                    padding:  EdgeInsets.only(left: screenWidth * 0.1, right: screenWidth * 0.1),
+                    padding: EdgeInsets.only(
+                        left: screenWidth * 0.1, right: screenWidth * 0.1),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -80,15 +107,17 @@ class _DownloadCommunityDevelopmentState extends State<DownloadCommunityDevelopm
                           width: 150,
                           child: Center(
                             child: SimpleAutoCompleteTextField(
-                                style: TextStyle(fontSize: 14, color: Colors.blue),
+                                style:
+                                    TextStyle(fontSize: 14, color: Colors.blue),
                                 key: key,
                                 suggestions: [
                                   "B147",
                                   "B148",
                                   "B175",
+                                  "B067",
                                 ],
                                 decoration: decorationTextFieldCEP,
-                                controller: textAutoComplete,
+                                controller: textAutoCompleteCumId,
                                 textSubmitted: (text) {
                                   txtCum = text;
                                 },
@@ -101,7 +130,6 @@ class _DownloadCommunityDevelopmentState extends State<DownloadCommunityDevelopm
                   SizedBox(
                     height: 10,
                   ),
-                 
                 ],
               ),
             ),
@@ -135,18 +163,16 @@ class _DownloadCommunityDevelopmentState extends State<DownloadCommunityDevelopm
                         ],
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: _onSubmit,
                     shape: const StadiumBorder(),
                   ),
                 ),
               ),
             )
           ],
-      context),
+          context),
     );
   }
-
- 
 }
 
 class AlwaysDisabledFocusNode extends FocusNode {

@@ -6,6 +6,7 @@ import 'package:CEPmobile/bloc_helpers/bloc_event_state.dart';
 import 'package:CEPmobile/config/status_code.dart';
 import 'package:CEPmobile/config/toast_result_message.dart';
 import 'package:CEPmobile/database/DBProvider.dart';
+import 'package:CEPmobile/models/community_development/comunity_development.dart';
 import 'package:CEPmobile/models/download_data/client.dart';
 import 'package:CEPmobile/models/download_data/comboboxmodel.dart';
 import 'package:CEPmobile/models/download_data/survey_info.dart';
@@ -39,7 +40,7 @@ class DownloadDataBloc
   @override
   Stream<DownloadDataState> eventHandler(
       DownloadDataEvent event, DownloadDataState state) async* {
-    if (event is LoadDownloadDataEvent) {
+    if (event is DownloadDataSurveyEvent) {
       yield DownloadDataState.updateLoading(true);
       var response = await commonService.downloadDataSurvey(
           event.chiNhanhID, event.cumID, event.ngayxuatDS, event.masoql);
@@ -51,13 +52,12 @@ class DownloadDataBloc
       if (response.statusCode == StatusCodeConstants.OK) {
         var jsonBody = json.decode(response.body);
         if (jsonBody["isSuccessed"]) {
-          
           if (jsonBody["data"] != null && jsonBody["data"].length > 0) {
             int idHistoryKhaoSat = await DBProvider.db.newHistorySearchKhaoSat(
-              event.cumID,
-              event.ngayxuatDS,
-              globalUser.getUserName,
-              event.masoql);
+                event.cumID,
+                event.ngayxuatDS,
+                globalUser.getUserName,
+                event.masoql);
             for (var item in jsonBody["data"]) {
               var listKhaoSat = SurveyInfo.fromJson(item);
               listKhaoSat.idHistoryKhaoSat = idHistoryKhaoSat;
@@ -66,8 +66,7 @@ class DownloadDataBloc
             this.sharePreferenceService.saveCumId(event.cumID);
             ToastResultMessage.success(
                 allTranslations.text("DownLoadDataSuccess"));
-          }
-          else{
+          } else {
             ToastResultMessage.info("Không có dữ liệu để download !");
           }
           yield DownloadDataState.updateLoading(false);
@@ -80,11 +79,9 @@ class DownloadDataBloc
         ToastResultMessage.error(allTranslations.text("ServerNotFound"));
       }
 
-
       if (responseSurveyHistory.statusCode == StatusCodeConstants.OK) {
         var jsonBody = json.decode(responseSurveyHistory.body);
         if (jsonBody["isSuccessed"]) {
-
           if (jsonBody["data"] != null || !jsonBody["data"].isEmpty) {
             for (var item in jsonBody["data"]) {
               var listKhaoSat = SurveyInfoHistory.fromJson(item);
@@ -95,7 +92,8 @@ class DownloadDataBloc
           }
           yield DownloadDataState.updateLoading(false);
         } else {
-          ToastResultMessage.error(allTranslations.text("DownLoadDataSurveyHistoryFailed"));
+          ToastResultMessage.error(
+              allTranslations.text("DownLoadDataSurveyHistoryFailed"));
           yield DownloadDataState.updateLoading(false);
         }
       } else {
@@ -116,6 +114,35 @@ class DownloadDataBloc
             }
             globalUser.setListComboboxModel = listCombobox;
             await DBProvider.db.newMetaDataForTBD(listCombobox);
+            ToastResultMessage.success(
+                allTranslations.text("DownLoadDataSuccess"));
+          }
+          yield DownloadDataState.updateLoading(false);
+        } else {
+          ToastResultMessage.error(allTranslations.text("ServerNotFound"));
+          yield DownloadDataState.updateLoading(false);
+        }
+      } else {
+        yield DownloadDataState.updateLoading(false);
+        ToastResultMessage.error(allTranslations.text("ServerNotFound"));
+      }
+    } else if (event is DownloadDataCommunityDevelopmentEvent) {
+      yield DownloadDataState.updateLoading(true);
+      var response = await commonService.downloadDataCommunityDevelopment(
+          globalUser.getUserInfo.chiNhanhID,
+          event.cumID,
+          globalUser.getUserInfo.masoql);
+      if (response.statusCode == StatusCodeConstants.OK) {
+        var jsonBody = json.decode(response.body);
+        if (jsonBody["isSuccessed"]) {
+          if (jsonBody["data"] != null || !jsonBody["data"].isEmpty) {
+            List<KhachHang> listCustomer = new List<KhachHang>();
+
+            for (var item in jsonBody["data"]) {
+              KhachHang khachang = KhachHang.fromJson(item);
+              listCustomer.add(khachang);
+            }
+            await DBProvider.db.newCommunityDevelopment(listCustomer);
             ToastResultMessage.success(
                 allTranslations.text("DownLoadDataSuccess"));
           }

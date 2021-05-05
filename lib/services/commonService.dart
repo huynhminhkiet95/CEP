@@ -246,6 +246,14 @@ class CommonService {
     return _httpBase.httpPostTokenNotBody(ServiceName.GetComboBoxValueChoTBD.toString());
   }
 
+  Future<Response> downloadDataCommunityDevelopment(int chiNhanhID, String cumID, String masoql) {
+    Map map = new Map();
+    map["chinhanhid"] = chiNhanhID;
+    map["cumID"] = cumID;
+    map["masoql"] = masoql;
+    return _httpBase.httpPostToken(ServiceName.GetDataCommunityDevelopment.toString(),map);
+  }
+
   Future<Response> updateSurveyInfo(List<SurveyInfo> body) {
     return _httpBase.httpPostToken(ServiceName.UpdateSurveyInfo.toString(),body);
   }

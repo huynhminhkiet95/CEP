@@ -37,7 +37,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   String userName = '';
   String password = '';
-  String _server = 'DEV';
+  String _server = 'DEV-VPN';
   bool _isRemember = false;
 
   AnimationController _animationController;

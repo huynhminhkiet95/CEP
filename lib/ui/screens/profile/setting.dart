@@ -33,9 +33,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Services services;
   int _isAuthenType = 0;
   final LocalAuthentication localAuth = LocalAuthentication();
+  String language;
   @override
   void initState() {
     _passwordVisible = false;
+    language = allTranslations.currentLanguage;
     _getAvailableBiometrics();
     services = Services.of(context);
     settingBloc = new SettingBloc(
@@ -54,7 +56,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         backgroundColor: ColorConstants.cepColorBackground,
         elevation: 20,
         title: Text(
-          'Settings',
+          allTranslations.text("Setting"),
           textAlign: TextAlign.center,
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
@@ -92,8 +94,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           title: 'Chung',
           tiles: [
             SettingsTile(
-              title: 'Ngôn ngữ',
-              subtitle: 'Tiếng Việt',
+              title: allTranslations.text("Language") ,
+              subtitle: language == 'vi' ? 'Tiếng Việt' : 'English',
               leading: Icon(Icons.language),
               titleTextStyle: TextStyle(
                 color: Colors.black,
@@ -105,19 +107,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   fontSize: 14,
                   color: Colors.grey),
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => LanguagesScreen(),
-                ));
+                Navigator.pushNamed(context, 'language').then((value) => {
+                      setState(() {
+                        language = allTranslations.currentLanguage;
+                      })
+                    });
               },
             ),
-          
           ],
         ),
         SettingsSection(
           title: 'Tài khoản',
           tiles: [
             SettingsTile(
-              title: 'Số điện thoại',
+              title: allTranslations.text("PhoneNumber") ,
               leading: Icon(Icons.phone),
               titleTextStyle: TextStyle(
                 color: Colors.black,
@@ -126,7 +129,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
             SettingsTile(
-              title: 'Email',
+              title: allTranslations.text("Email"),
               leading: Icon(Icons.email),
               titleTextStyle: TextStyle(
                 color: Colors.black,
@@ -134,25 +137,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 fontSize: 16,
               ),
             ),
-            SettingsTile(title: 'Đăng xuất', leading: Icon(Icons.exit_to_app)),
+            SettingsTile(title: allTranslations.text("Logout"), leading: Icon(Icons.exit_to_app)),
           ],
         ),
         SettingsSection(
           title: 'Bảo mật',
           tiles: [
             SettingsTile.switchTile(
-                title: 'Xác thực vân tay',
+                title: allTranslations.text("FingerPrinting"),
                 leading: Icon(
                   Icons.fingerprint,
                   color: Colors.red,
                 ),
-                onToggle: (bool value) async{
+                onToggle: (bool value) async {
                   await _getAvailableBiometrics();
                   if (_isAuthenType == 0) {
                     showAuthenPopup();
                   } else {
                     _passwordController.text = "";
-                    dialogCustomForCEP(context, "Xác thực vân tay", _onSubmit,
+                    dialogCustomForCEP(context, allTranslations.text("FingerPrinting"), _onSubmit,
                         children: [
                           TextFormField(
                             controller: _passwordController,
@@ -192,12 +195,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 },
                 switchValue: isAuthenLocal),
             SettingsTile(
-              title: 'Thay đổi mật khẩu',
+              title: allTranslations.text("ChangePassword"),
               leading: Icon(Icons.lock),
               onTap: () {},
             ),
             SettingsTile.switchTile(
-              title: 'Thông báo',
+              title: allTranslations.text("Announcement"),
               enabled: notificationsEnabled,
               leading: Icon(Icons.notifications_active),
               switchValue: true,

@@ -4,14 +4,19 @@ abstract class DownloadDataEvent extends BlocEvent {
   DownloadDataEvent();
 }
 
-class LoadDownloadDataEvent extends DownloadDataEvent {
+class DownloadDataSurveyEvent extends DownloadDataEvent {
   int chiNhanhID;
   String cumID;
   String ngayxuatDS;
   String masoql;
-  LoadDownloadDataEvent(
+  DownloadDataSurveyEvent(
       {this.chiNhanhID, this.cumID, this.ngayxuatDS, this.masoql})
       : super();
+}
+
+class DownloadDataCommunityDevelopmentEvent extends DownloadDataEvent {
+  String cumID;
+  DownloadDataCommunityDevelopmentEvent(this.cumID) : super();
 }
 
 class UpdateDownloadDataEvent extends DownloadDataEvent {

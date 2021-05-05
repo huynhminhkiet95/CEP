@@ -71,12 +71,14 @@ class _CalculationMoneyState extends State<CalculationMoney> {
           new SingleChildScrollView(
             controller: scrollController,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  height: 300,
+                  height: (screenHeight * 0.850000) - 100,
                   child: Padding(
                     padding:
-                        const EdgeInsets.only(left: 40, right: 40, top: 30),
+                        const EdgeInsets.only(left: 40, right: 40, top: 20),
                     child: ListView(
                       physics: AlwaysScrollableScrollPhysics(
                           parent: BouncingScrollPhysics()),
@@ -545,62 +547,59 @@ class _CalculationMoneyState extends State<CalculationMoney> {
                   ),
                 ),
 
-                Container(
-                  height: 300,
-                  color: Colors.red,
-                )
-                // Align(
-                //     alignment: Alignment.bottomLeft,
-                //     child: Container(
-                //       height: 100,
-                //       decoration: new BoxDecoration(
-                //           boxShadow: [
-                //             BoxShadow(
-                //               color: Colors.white,
-                //               blurRadius: 14,
-                //               spreadRadius: 15,
-                //               offset:
-                //                   Offset(1, 1), // changes position of shadow
-                //             ),
-                //           ],
-                //           color: Colors.grey,
-                //           borderRadius: new BorderRadius.only(
-                //               topLeft: Radius.elliptical(40, 40),
-                //               topRight: Radius.elliptical(40, 40))),
-                //       child: Padding(
-                //         padding: const EdgeInsets.all(20.0),
-                //         child: Row(
-                //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //           children: [
-                //             Container(
-                //               child: Text(
-                //                 "Tổng Tiền:",
-                //                 style: TextStyle(
-                //                     color: Colors.black,
-                //                     fontWeight: FontWeight.bold,
-                //                     fontSize: 18),
-                //               ),
-                //             ),
-                //             Container(
-                //                 child: AnimatedFlipCounter(
-                //               duration: Duration(milliseconds: 500),
-                //               value: total,
-                //               /* pass in a number like 2014 */
-                //               color: Colors.black,
-                //               size: 20,
-                //             )
-                //                 //  Text(
-                //                 //   "20,000,000 VNĐ",
-                //                 //   style: TextStyle(
-                //                 //       color: Colors.white,
-                //                 //       fontWeight: FontWeight.bold,
-                //                 //       fontSize: 18),
-                //                 // ),
-                //                 ),
-                //           ],
-                //         ),
-                //       ),
-                //     )),
+              
+                Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Container(
+                      height: 100,
+                      decoration: new BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.white,
+                              blurRadius: 4,
+                              spreadRadius: 4,
+                              offset:
+                                  Offset(1, 1), // changes position of shadow
+                            ),
+                          ],
+                          color: Colors.grey,
+                          borderRadius: new BorderRadius.only(
+                              topLeft: Radius.elliptical(40, 40),
+                              topRight: Radius.elliptical(40, 40))),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              child: Text(
+                                "Tổng Tiền:",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18),
+                              ),
+                            ),
+                            Container(
+                                child: AnimatedFlipCounter(
+                              duration: Duration(milliseconds: 500),
+                              value: total,
+                              /* pass in a number like 2014 */
+                              color: Colors.black,
+                              size: 20,
+                            )
+                                //  Text(
+                                //   "20,000,000 VNĐ",
+                                //   style: TextStyle(
+                                //       color: Colors.white,
+                                //       fontWeight: FontWeight.bold,
+                                //       fontSize: 18),
+                                // ),
+                                ),
+                          ],
+                        ),
+                      ),
+                    )),
               ],
             ),
           )
