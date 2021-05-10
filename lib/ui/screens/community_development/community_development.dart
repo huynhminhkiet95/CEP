@@ -1,5 +1,6 @@
 import 'package:CEPmobile/config/colors.dart';
 import 'package:CEPmobile/database/DBProvider.dart';
+import 'package:CEPmobile/models/community_development/comunity_development.dart';
 import 'package:CEPmobile/models/download_data/comboboxmodel.dart';
 import 'package:CEPmobile/models/download_data/historysearchsurvey.dart';
 import 'package:CEPmobile/models/historyscreen/history_screen.dart';
@@ -14,14 +15,11 @@ import 'package:CEPmobile/config/CustomIcons/my_flutter_app_icons.dart';
 import 'package:CEPmobile/ui/screens/survey/listofsurveymembers.dart';
 import 'package:CEPmobile/GlobalUser.dart';
 import 'package:CEPmobile/services/service.dart';
-import 'package:CEPmobile/blocs/survey/survey_bloc.dart';
-import 'package:CEPmobile/blocs/survey/survey_event.dart';
-import 'package:CEPmobile/blocs/survey/survey_state.dart';
 import 'package:CEPmobile/bloc_widgets/bloc_state_builder.dart';
 import 'package:CEPmobile/services/service.dart';
-import 'package:CEPmobile/blocs/survey/survey_bloc.dart';
-import 'package:CEPmobile/blocs/survey/survey_event.dart';
-import 'package:CEPmobile/blocs/survey/survey_state.dart';
+import 'package:CEPmobile/blocs/community_development/community_development_bloc.dart';
+import 'package:CEPmobile/blocs/community_development/community_development_event.dart';
+import 'package:CEPmobile/blocs/community_development/community_development_state.dart';
 import 'package:CEPmobile/models/download_data/survey_info.dart';
 import 'package:CEPmobile/ui/components/ModalProgressHUDCustomize.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
@@ -39,7 +37,7 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
   TabController _tabController;
   GlobalKey<AutoCompleteTextFieldState<String>> key = new GlobalKey();
   List<bool> isActiveForList = new List<bool>();
-  SurveyBloc surVeyBloc;
+  CommunityDevelopmentBloc communityDevelopmentBloc;
   Services services;
 
   @override
@@ -50,9 +48,9 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
 
     isActiveForList = List<bool>.generate(4, (int index) => false);
     services = Services.of(context);
-    surVeyBloc =
-        new SurveyBloc(services.sharePreferenceService, services.commonService);
-    surVeyBloc.emitEvent(LoadSurveyEvent());
+    communityDevelopmentBloc = new CommunityDevelopmentBloc(
+        services.sharePreferenceService, services.commonService);
+    communityDevelopmentBloc.emitEvent(LoadCommunityDevelopmentEvent());
     super.initState();
   }
 
@@ -70,16 +68,16 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
     screenWidth = size.width;
     Widget body = Container(
         color: Colors.blue,
-        child: BlocEventStateBuilder<SurveyState>(
-          bloc: surVeyBloc,
-          builder: (BuildContext context, SurveyState state) {
-            return StreamBuilder<SurveyStream>(
-                stream: surVeyBloc.getSurveyStream,
+        child: BlocEventStateBuilder<CommunityDevelopmentState>(
+          bloc: communityDevelopmentBloc,
+          builder: (BuildContext context, CommunityDevelopmentState state) {
+            return StreamBuilder<List<KhachHang>>(
+                stream: communityDevelopmentBloc.getCommunityDevelopmentStream,
                 builder: (BuildContext context,
-                    AsyncSnapshot<SurveyStream> snapshot) {
+                    AsyncSnapshot<List<KhachHang>> snapshot) {
                   //if (snapshot.data != null) {
                   return ModalProgressHUDCustomize(
-                    inAsyncCall: state?.isLoadingSaveData ?? false,
+                    inAsyncCall: state?.isLoading ?? false,
                     child: Column(
                       children: [
                         Container(
@@ -107,210 +105,234 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
           },
         ));
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: Colors.white,
-            size: 20,
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+              size: 20,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+              //bool a = GlobalDownload.isSubmitDownload;
+            },
           ),
-          onPressed: () {
-            Navigator.pop(context);
-            //bool a = GlobalDownload.isSubmitDownload;
-          },
-        ),
-        backgroundColor: ColorConstants.cepColorBackground,
-        elevation: 20,
-        title: const Text('Phát triển Cộng Đồng',
-            style: TextStyle(fontWeight: FontWeight.w600)),
-        actions: [
-          IconButton(
-              icon: Icon(
-                Icons.search,
-                color: Colors.white,
-                size: 25,
-              ),
-              onPressed: () {})
-        ],
-      ),
-      body: Container(
-        color: ColorConstants.cepColorBackground,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(
-              height: MediaQuery.of(context).size.height / 5,
-              decoration: BoxDecoration(
-                borderRadius: new BorderRadius.only(
-                  bottomLeft: Radius.elliptical(260, 100),
-                  // topRight: Radius.elliptical(260, 100),
+          backgroundColor: ColorConstants.cepColorBackground,
+          elevation: 20,
+          title: const Text('Phát triển Cộng Đồng',
+              style: TextStyle(fontWeight: FontWeight.w600)),
+          actions: [
+            IconButton(
+                icon: Icon(
+                  Icons.search,
+                  color: Colors.white,
+                  size: 25,
                 ),
-                color: Colors.white,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 40, right: 40, top: 30),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Card(
-                        elevation: 4.0,
-                        child: Container(
-                          height: 30,
-                          width: size.width * 0.2,
-                          child: Center(
-                            child: Text(
-                              "Cụm ID",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                  color: Color(0xff9596ab)),
-                            ),
-                          ),
-                        )),
-                   
-                    Container(
-                      height: 30,
-                      width: size.width * 0.55,
-                      child: Center(
-                        child: SimpleAutoCompleteTextField(
-                            style: TextStyle(fontSize: 14, color: Colors.blue),
-                            key: key,
-                            suggestions: ["B147", "B148", "B175", "B067"],
-                            decoration: decorationTextFieldCEP,
-                            // controller: _textCumIDAutoComplete,
-                            // textSubmitted: (text) {
-                            //   txtCum = text;
-                            // },
-                            clearOnSubmit: false),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              //  color: Colors.blue,
-            ),
-            Material(
-              color: ColorConstants.cepColorBackground,
-              child: TabBar(
-                isScrollable: true,
-                unselectedLabelColor: Colors.blueGrey.shade300,
-                indicatorColor: Colors.red,
-                labelColor: Colors.white,
-                tabs: [
-                  Tab(
-                    child: Column(
-                      children: [
-                        Center(
-                          child: Icon(Icons.list),
-                        ),
-                        Center(
-                            child: Text(
-                          'Tất Cả (7)',
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.bold),
-                        )),
-                      ],
-                    ),
-                  ),
-                  Tab(
-                    child: Column(
-                      children: [
-                        Center(
-                          child: Icon(IconsCustomize.scholarship),
-                        ),
-                        Center(
-                            child: Text(
-                          'Học Bổng (5)',
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.bold),
-                        )),
-                      ],
-                    ),
-                  ),
-                  Tab(
-                    child: Column(
-                      children: [
-                        Center(
-                          child: Icon(IconsCustomize.quatet),
-                        ),
-                        Center(
-                            child: Text(
-                          'Quà Tết (2)',
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.bold),
-                        )),
-                      ],
-                    ),
-                  ),
-                  Tab(
-                    child: Column(
-                      children: [
-                        Center(
-                          child: Icon(IconsCustomize.mainha),
-                        ),
-                        Center(
-                            child: Text(
-                          'Mái Nhà (3)',
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.bold),
-                        )),
-                      ],
-                    ),
-                  ),
-                  Tab(
-                    child: Column(
-                      children: [
-                        Center(
-                          child: Icon(IconsCustomize.ptnghe),
-                        ),
-                        Center(
-                            child: Text(
-                          'PT Nghề (1)',
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.bold),
-                        )),
-                      ],
-                    ),
-                  ),
-                  Tab(
-                    child: Column(
-                      children: [
-                        Center(
-                          child: Icon(IconsCustomize.insurance),
-                        ),
-                        Center(
-                            child: Text(
-                          'Bảo Hiểm (0)',
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.bold),
-                        )),
-                      ],
-                    ),
-                  ),
-                ],
-                controller: _tabController,
-                indicatorSize: TabBarIndicatorSize.tab,
-              ),
-            ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  Container(color: Colors.white, child: getItemListView()),
-                  Container(color: Colors.white, child: getItemListView()),
-                  Container(color: Colors.white, child: getItemListView()),
-                  Container(color: Colors.white, child: getItemListView()),
-                  Container(color: Colors.white, child: getItemListView()),
-                  Container(color: Colors.white, child: getItemListView()),
-                ],
-                controller: _tabController,
-              ),
-            ),
+                onPressed: () {})
           ],
         ),
-      ),
-    );
+        body: BlocEventStateBuilder<CommunityDevelopmentState>(
+            bloc: communityDevelopmentBloc,
+            builder: (BuildContext context, CommunityDevelopmentState state) {
+              return Container(
+                color: ColorConstants.cepColorBackground,
+                child: ModalProgressHUDCustomize(
+                  inAsyncCall: state?.isLoading ?? false,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: MediaQuery.of(context).size.height / 5,
+                        decoration: BoxDecoration(
+                          borderRadius: new BorderRadius.only(
+                            bottomLeft: Radius.elliptical(260, 100),
+                            // topRight: Radius.elliptical(260, 100),
+                          ),
+                          color: Colors.white,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              left: 40, right: 40, top: 30),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Card(
+                                  elevation: 4.0,
+                                  child: Container(
+                                    height: 30,
+                                    width: size.width * 0.2,
+                                    child: Center(
+                                      child: Text(
+                                        "Cụm ID",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                            color: Color(0xff9596ab)),
+                                      ),
+                                    ),
+                                  )),
+                              Container(
+                                height: 30,
+                                width: size.width * 0.55,
+                                child: Center(
+                                  child: SimpleAutoCompleteTextField(
+                                      style: TextStyle(
+                                          fontSize: 14, color: Colors.blue),
+                                      key: key,
+                                      suggestions: [
+                                        "B147",
+                                        "B148",
+                                        "B175",
+                                        "B067"
+                                      ],
+                                      decoration: decorationTextFieldCEP,
+                                      // controller: _textCumIDAutoComplete,
+                                      // textSubmitted: (text) {
+                                      //   txtCum = text;
+                                      // },
+                                      clearOnSubmit: false),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        //  color: Colors.blue,
+                      ),
+                      Material(
+                        color: ColorConstants.cepColorBackground,
+                        child: TabBar(
+                          isScrollable: true,
+                          unselectedLabelColor: Colors.blueGrey.shade300,
+                          indicatorColor: Colors.red,
+                          labelColor: Colors.white,
+                          tabs: [
+                            Tab(
+                              child: Column(
+                                children: [
+                                  Center(
+                                    child: Icon(Icons.list),
+                                  ),
+                                  Center(
+                                      child: Text(
+                                    'Tất Cả (7)',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold),
+                                  )),
+                                ],
+                              ),
+                            ),
+                            Tab(
+                              child: Column(
+                                children: [
+                                  Center(
+                                    child: Icon(IconsCustomize.scholarship),
+                                  ),
+                                  Center(
+                                      child: Text(
+                                    'Học Bổng (5)',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold),
+                                  )),
+                                ],
+                              ),
+                            ),
+                            Tab(
+                              child: Column(
+                                children: [
+                                  Center(
+                                    child: Icon(IconsCustomize.quatet),
+                                  ),
+                                  Center(
+                                      child: Text(
+                                    'Quà Tết (2)',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold),
+                                  )),
+                                ],
+                              ),
+                            ),
+                            Tab(
+                              child: Column(
+                                children: [
+                                  Center(
+                                    child: Icon(IconsCustomize.mainha),
+                                  ),
+                                  Center(
+                                      child: Text(
+                                    'Mái Nhà (3)',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold),
+                                  )),
+                                ],
+                              ),
+                            ),
+                            Tab(
+                              child: Column(
+                                children: [
+                                  Center(
+                                    child: Icon(IconsCustomize.ptnghe),
+                                  ),
+                                  Center(
+                                      child: Text(
+                                    'PT Nghề (1)',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold),
+                                  )),
+                                ],
+                              ),
+                            ),
+                            Tab(
+                              child: Column(
+                                children: [
+                                  Center(
+                                    child: Icon(IconsCustomize.insurance),
+                                  ),
+                                  Center(
+                                      child: Text(
+                                    'Bảo Hiểm (0)',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold),
+                                  )),
+                                ],
+                              ),
+                            ),
+                          ],
+                          controller: _tabController,
+                          indicatorSize: TabBarIndicatorSize.tab,
+                        ),
+                      ),
+                      Expanded(
+                        child: TabBarView(
+                          children: [
+                            Container(
+                                color: Colors.white, child: getItemListView()),
+                            Container(
+                                color: Colors.white, child: getItemListView()),
+                            Container(
+                                color: Colors.white, child: getItemListView()),
+                            Container(
+                                color: Colors.white, child: getItemListView()),
+                            Container(
+                                color: Colors.white, child: getItemListView()),
+                            Container(
+                                color: Colors.white, child: getItemListView()),
+                          ],
+                          controller: _tabController,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }));
   }
 
   Widget getItemListView() {
@@ -322,7 +344,7 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                 AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
             itemCount: 4,
             itemBuilder: (context, i) {
-              final int count = 4 ;
+              final int count = 4;
               final Animation<double> animation =
                   Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
                       parent: animationController,
@@ -337,7 +359,7 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                       opacity: animation,
                       child: Transform(
                         transform: Matrix4.translationValues(
-                            0.0,50 * (1.0 - animation.value), 0.0 ),
+                            0.0, 50 * (1.0 - animation.value), 0.0),
                         child: InkWell(
                           onTap: () {
                             setState(() {

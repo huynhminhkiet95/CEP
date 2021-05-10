@@ -852,30 +852,31 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       );
     }
     return Scaffold(
-      body: Container(
-        height: height,
-        child: BlocEventStateBuilder<AuthenticationState>(
-            bloc: authenticationBloc,
-            builder: (BuildContext context, AuthenticationState state) {
-              return ModalProgressHUDCustomize(
-                inAsyncCall: state.isAuthenticating,
-                child: loginPage,
-              );
-            }),
-      ),
-      floatingActionButton: FloatingActionButton(
-          mini: true,
-          backgroundColor: Colors.transparent,
-          child: language == 'en'
-              ? new Image.asset('assets/images/united-kingdom.png',
-                  width: 30, height: 30)
-              : new Image.asset('assets/images/vietnam.png',
-                  width: 30, height: 30),
-          onPressed: () => setState(() {
-                language = language == 'en' ? 'vi' : 'en';
-                allTranslations.setNewLanguage(language, true);
-              })),
-    );
+        body: Container(
+          height: height,
+          child: BlocEventStateBuilder<AuthenticationState>(
+              bloc: authenticationBloc,
+              builder: (BuildContext context, AuthenticationState state) {
+                return ModalProgressHUDCustomize(
+                  inAsyncCall: state.isAuthenticating,
+                  child: loginPage,
+                );
+              }),
+        ),
+        floatingActionButton: FloatingActionButton(
+            mini: true,
+            backgroundColor: Colors.transparent,
+            child: language == 'en'
+                ? new Image.asset('assets/images/united-kingdom.png',
+                    width: 30, height: 30)
+                : new Image.asset('assets/images/vietnam.png',
+                    width: 30, height: 30),
+            onPressed: () => setState(() {
+                  language = language == 'en' ? 'vi' : 'en';
+                  allTranslations.setNewLanguage(language, true);
+                })),
+      );
+    
   }
 
   Future<void> checkBiometric() async {
@@ -926,17 +927,17 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   showAuthenPopup() async {
     var localAuth = LocalAuthentication();
     try {
-      const androidStrings = const AndroidAuthMessages(
-          cancelButton: "Hủy",
-          goToSettingsButton: "Cài Đặt",
-          goToSettingsDescription: 'Vui lòng thiết lập Touch ID của bạn !',
-          fingerprintSuccess: 'Xác thực thành công.',
+     var androidStrings = AndroidAuthMessages(
+          cancelButton: allTranslations.text("Cancel"),
+          goToSettingsButton: allTranslations.text("Settings"),
+          goToSettingsDescription: allTranslations.text("PleaseSetupTouchID"),
+          fingerprintSuccess:allTranslations.text("SuccessfulAuthentication"),
           fingerprintHint: "",
-          fingerprintRequiredTitle: "Thiết lập Touch-ID",
+          fingerprintRequiredTitle: allTranslations.text("SetupTouchID"),
           signInTitle: "Touch ID for CEP-Nhân viên",
-          fingerprintNotRecognized: "Vân tay không hợp lệ !");
+          fingerprintNotRecognized: allTranslations.text("FingerPrintingNotAvailable"));
       bool isAuthenticate = await localAuth.authenticateWithBiometrics(
-          localizedReason: 'Vui lòng quét vân tay để đăng nhập !',
+          localizedReason:allTranslations.text("PleaseScanYourFingerprintToLogin"),
           stickyAuth: true,
           androidAuthStrings: androidStrings);
       if (isAuthenticate) {

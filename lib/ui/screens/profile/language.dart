@@ -29,7 +29,7 @@ class _LanguagesScreenState extends State<LanguagesScreen> {
         backgroundColor: ColorConstants.cepColorBackground,
         elevation: 20,
         title: Text(
-          'Ngôn ngữ',
+          allTranslations.text("Language"),
           textAlign: TextAlign.center,
           style: TextStyle(fontWeight: FontWeight.w600),
         ),

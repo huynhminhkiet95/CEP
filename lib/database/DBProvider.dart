@@ -30,7 +30,7 @@ class DBProvider {
 
   initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, "CEP-NhanViendbo.db");
+    String path = join(documentsDirectory.path, "CEP-NhanVien.1.0.2.dbo.db");
     return await openDatabase(path, version: 1, onOpen: (db) {},
         onCreate: (Database db, int version) async {
       await db.execute("CREATE TABLE KhaoSat("
@@ -284,7 +284,7 @@ class DBProvider {
           ")");
 
       await db.execute("CREATE TABLE mainha_cummunity_development("
-          "id_khachhang INTEGER,"
+          "idKhachhang INTEGER,"
           "serverID INTEGER,"
           "nam INTEGER,"
           "maKhachHang TEXT,"
@@ -308,7 +308,7 @@ class DBProvider {
           ")");
 
       await db.execute("CREATE TABLE phattriennghe_cummunity_development("
-          "id_khachhang INTEGER,"
+          "idKhachhang INTEGER,"
           "serverID INTEGER,"
           "nam INTEGER,"
           "maKhachHang TEXT,"
@@ -324,7 +324,7 @@ class DBProvider {
           ")");
 
       await db.execute("CREATE TABLE quatet_cummunity_development("
-          "id_khachhang INTEGER,"
+          "idKhachhang INTEGER,"
           "serverID INTEGER,"
           "nam INTEGER,"
           "maKhachHang TEXT,"
@@ -332,7 +332,7 @@ class DBProvider {
           ")");
 
       await db.execute("CREATE TABLE bhyt_cummunity_development("
-          "id_khachhang INTEGER,"
+          "idKhachhang INTEGER,"
           "serverID INTEGER,"
           "nam INTEGER,"
           "maKhachHang TEXT,"
@@ -345,7 +345,7 @@ class DBProvider {
           ")");
 
       await db.execute("CREATE TABLE hocbong_cummunity_development("
-          "id_khachhang INTEGER,"
+          "idKhachhang INTEGER,"
           "serverID INTEGER,"
           "nam INTEGER,"
           "maKhachHang TEXT,"
@@ -1113,34 +1113,34 @@ class DBProvider {
 
       String queryString =
           '''INSERT Into userrole_tbl(salary,hPqlnlhc,banTgd,administrator,td,giaoDich,ktv,tq,kiemSoat2,hHs,hPtckt,gdcn,provisional,ptcd,hPcntt,dataBase,tpkt,chiNhanh,kiemSoat,thionline,tttd,hPqltd,hPhlptd,tptd,upLoad,hPktnb)
-              VALUES (${userRole.salary},
-                      ${userRole.hPqlnlhc},
-                      ${userRole.banTgd},
-                      ${userRole.administrator},
-                      ${userRole.td},
-                      ${userRole.giaoDich},
-                      ${userRole.ktv},
-                      ${userRole.tq},
-                      ${userRole.kiemSoat2},
-                      ${userRole.hHs},
-                      ${userRole.hPtckt},
-                      ${userRole.gdcn},
-                      ${userRole.provisional},
-                      ${userRole.ptcd},
-                      ${userRole.hPcntt},
-                      ${userRole.dataBase},
-                      ${userRole.tpkt},
-                      ${userRole.chiNhanh},
-                      ${userRole.kiemSoat},
-                      ${userRole.thionline},
-                      ${userRole.tttd},
-                      ${userRole.hPqltd},
-                      ${userRole.hPhlptd},
-                      ${userRole.tptd},
-                      ${userRole.upLoad},
-                      ${userRole.hPktnb}
+              VALUES (${userRole.salary == true ? 1 : 0},
+                      ${userRole.hPqlnlhc == true ? 1 : 0},
+                      ${userRole.banTgd == true ? 1 : 0},
+                      ${userRole.administrator == true ? 1 : 0},
+                      ${userRole.td == true ? 1 : 0},
+                      ${userRole.giaoDich == true ? 1 : 0},
+                      ${userRole.ktv == true ? 1 : 0},
+                      ${userRole.tq == true ? 1 : 0},
+                      ${userRole.kiemSoat2 == true ? 1 : 0},
+                      ${userRole.hHs == true ? 1 : 0},
+                      ${userRole.hPtckt == true ? 1 : 0},
+                      ${userRole.gdcn == true ? 1 : 0},
+                      ${userRole.provisional == true ? 1 : 0},
+                      ${userRole.ptcd == true ? 1 : 0},
+                      ${userRole.hPcntt == true ? 1 : 0},
+                      ${userRole.dataBase == true ? 1 : 0},
+                      ${userRole.tpkt == true ? 1 : 0},
+                      ${userRole.chiNhanh == true ? 1 : 0},
+                      ${userRole.kiemSoat == true ? 1 : 0},
+                      ${userRole.thionline == true ? 1 : 0},
+                      ${userRole.tttd == true ? 1 : 0},
+                      ${userRole.hPqltd == true ? 1 : 0},
+                      ${userRole.hPhlptd == true ? 1 : 0},
+                      ${userRole.tptd == true ? 1 : 0},
+                      ${userRole.upLoad == true ? 1 : 0},
+                      ${userRole.hPktnb == true ? 1 : 0}
                       )''';
-      db.rawInsert(queryString);
+      await db.rawInsert(queryString);
     } on Exception catch (ex) {
       print(ex);
       // only executed if error is of type Exception
@@ -1165,8 +1165,9 @@ class DBProvider {
         int checkExistsData = Sqflite.firstIntValue(await db
             .rawQuery('''SELECT COUNT(*) FROM customer_cummunity_development " +
               "WHERE maKhachHang='${item.maKhachHang}' and chinhanhID=${item.chinhanhId} and masoql='${item.masoql}' and cumID= '${item.cumId}' '''));
-        if (checkExistsData != 0) {
-          String queryString = '''INSERT Into customer_cummunity_development(
+        if (checkExistsData == 0) {
+          String queryStringCustomer =
+              '''INSERT Into customer_cummunity_development(
                                     maKhachHang,
                                     chinhanhID,
                                     duanID,
@@ -1210,11 +1211,97 @@ class DBProvider {
                         ${item.moHinhNghe},
                         ${item.thunhapHangthangCuaho},
                         ${item.coVoChongConLaCnv}
-                        )
+                        );
                        ''';
-          queryString += '''
+          await db.rawInsert(queryStringCustomer);
+          List<Map> listCustomer = await db.query(
+              "customer_cummunity_development",
+              columns: ["id"],
+              where:
+                  "maKhachHang = ? and chinhanhID = ? and masoql = ? and cumID = ?",
+              whereArgs: [
+                item.maKhachHang,
+                item.chinhanhId,
+                item.masoql,
+                item.cumId
+              ],
+              limit: 1);
+          if (item.bhyt != null) {
+            String queryStringBHYT = '''
+                  INSERT Into bhyt_cummunity_development(
+                                    idKhachhang,
+                                    serverID,
+                                    nam,
+                                    maKhachHang,
+                                    mucphibaohiem,
+                                    dieukienbhyt,
+                                    tinhtrangsuckhoe,
+                                    nguoithan,
+                                    namsinh,
+                                    quanHeKhachHang
+                                    )
+                VALUES (${listCustomer.first["id"]},
+                        ${item.bhyt.serverId},
+                        ${item.bhyt.nam},
+                        "${item.bhyt.maKhachHang}",
+                        ${item.bhyt.mucphibaohiem},
+                        ${item.bhyt.dieukienbhyt},
+                        ${item.bhyt.tinhtrangsuckhoe},
+                        "${item.bhyt.nguoithan}",
+                        ${item.bhyt.namsinh},
+                        ${item.bhyt.quanHeKhachHang}
+                        );
+          ''';
+            await db.rawInsert(queryStringBHYT);
+          }
+          if (item.hocBong != null) {
+            String queryStringHocBong = '''
+                  INSERT Into hocbong_cummunity_development(
+                                    idKhachhang,
+                                    serverID,
+                                    nam,
+                                    maKhachHang,
+                                    hotenhocsinh,
+                                    namsinh,
+                                    lop,
+                                    truonghoc,
+                                    quanhekhachhang,
+                                    hocbongQuatang,
+                                    hocluc,
+                                    danhanhocbong,
+                                    dinhKemHoSo,
+                                    hoancanhhocsinh,
+                                    hoancanhgiadinh,
+                                    mucdich,
+                                    ghiChu,
+                                    giatri
+                                    )
+                VALUES (${listCustomer.first["id"]},
+                        ${item.hocBong.serverID},
+                        ${item.hocBong.nam},
+                        "${item.hocBong.maKhachHang}",
+                        "${item.hocBong.hotenhocsinh}",
+                        ${item.hocBong.namsinh},
+                        ${item.hocBong.lop},
+                        "${item.hocBong.truonghoc}",
+                        ${item.hocBong.quanhekhachhang},
+                        ${item.hocBong.hocbongQuatang},
+                        ${item.hocBong.hocluc},
+                        ${item.hocBong.danhanhocbong},
+                        ${item.hocBong.dinhKemHoSo},
+                        ${item.hocBong.hoancanhhocsinh},
+                        "${item.hocBong.hoancanhgiadinh}",
+                        ${item.hocBong.mucdich},
+                        "${item.hocBong.ghiChu}",
+                        ${item.hocBong.giatri}
+                        );
+          ''';
+            await db.rawInsert(queryStringHocBong);
+          }
+          if (item.maiNha != null) {
+            String queryStringMaiNha = '''
                   INSERT Into mainha_cummunity_development(
-                                    id_khachhang,
+                                    idKhachhang,
                                     serverID,
                                     nam,
                                     maKhachHang,
@@ -1236,7 +1323,7 @@ class DBProvider {
                                     cnDexuatSotien,
                                     hosodinhkem
                                     )
-                VALUES (last_insert_rowid(),
+                VALUES (${listCustomer.first["id"]},
                         ${item.maiNha.serverId},
                         ${item.maiNha.nam},
                         "${item.maiNha.maKhachHang}",
@@ -1257,11 +1344,62 @@ class DBProvider {
                         "${item.maiNha.cnDexuatThoigian}",
                         ${item.maiNha.cnDexuatSotien},
                         ${item.maiNha.hosodinhkem}
-                        )
+                        );
           ''';
-
-          print(queryString);
-          rs = await db.rawInsert(queryString);
+            await db.rawInsert(queryStringMaiNha);
+          }
+          if (item.phatTrienNghe != null) {
+            String queryStringPhatTrienNghe = '''
+                  INSERT Into phattriennghe_cummunity_development(
+                                    idKhachhang,
+                                    serverID,
+                                    nam,
+                                    maKhachHang,
+                                    nguoithan,
+                                    quanHeKhacHang,
+                                    lyDo,
+                                    hoancanh,
+                                    nguyenvongthamgia,
+                                    nguyenvonghoithao,
+                                    scCnguyenvong,
+                                    iecDnguyenvong,
+                                    reacHnguyenvong
+                                    )
+                VALUES (${listCustomer.first["id"]},
+                        ${item.phatTrienNghe.serverId},
+                        ${item.phatTrienNghe.nam},
+                        "${item.phatTrienNghe.maKhachHang}",
+                        "${item.phatTrienNghe.nguoithan}",
+                        ${item.phatTrienNghe.quanHeKhacHang},
+                        ${item.phatTrienNghe.lyDo},
+                        "${item.phatTrienNghe.hoancanh}",
+                        ${item.phatTrienNghe.nguyenvongthamgia},
+                        ${item.phatTrienNghe.nguyenvonghoithao},
+                        ${item.phatTrienNghe.scCnguyenvong},
+                        ${item.phatTrienNghe.iecDnguyenvong},
+                        ${item.phatTrienNghe.reacHnguyenvong}
+                        );
+          ''';
+            await db.rawInsert(queryStringPhatTrienNghe);
+          }
+          if (item.quaTet != null) {
+            String queryStringQuaTet = '''
+                  INSERT Into quatet_cummunity_development(
+                                    idKhachhang,
+                                    serverID,
+                                    nam,
+                                    maKhachHang,
+                                    loaiHoNgheo
+                                    )
+                VALUES (${listCustomer.first["id"]},
+                        ${item.quaTet.serverId},
+                        ${item.quaTet.nam},
+                        "${item.quaTet.maKhachHang}",
+                        ${item.quaTet.loaiHoNgheo}
+                        );
+          ''';
+            await db.rawInsert(queryStringQuaTet);
+          }
         }
       }
 
@@ -1272,6 +1410,89 @@ class DBProvider {
     } catch (error) {
       // executed for errors of all types other than Exception
     }
+  }
+
+  getCommunityDevelopmentByCum(
+      int chiNhanhID, String masoql, String cumId) async {
+    final db = await database;
+
+    var resCustomer = await db.query("customer_cummunity_development",
+        where: "chinhanhID = ? and masoql = ? and cumID = ?",
+        whereArgs: [chiNhanhID, masoql, cumId]);
+
+    var resBHYT = await db.query(
+      "bhyt_cummunity_development",
+    );
+    var resHocBong = await db.query(
+      "hocbong_cummunity_development",
+    );
+
+    var resMaiNha = await db.query(
+      "mainha_cummunity_development",
+    );
+    var resPhatTrienNghe = await db.query(
+      "phattriennghe_cummunity_development",
+    );
+    var resQuaTet = await db.query(
+      "quatet_cummunity_development",
+    );
+
+    List<KhachHang> listCustomer = resCustomer.isNotEmpty
+        ? resCustomer.map((c) => KhachHang.fromMap(c)).toList()
+        : [];
+    List<BHYT> listBHYT =
+        resBHYT.isNotEmpty ? resBHYT.map((c) => BHYT.fromJson(c)).toList() : [];
+    List<HocBong> listHocBong = resHocBong.isNotEmpty
+        ? resHocBong.map((c) => HocBong.fromJson(c)).toList()
+        : [];
+    List<MaiNha> listMaiNha = resMaiNha.isNotEmpty
+        ? resMaiNha.map((c) => MaiNha.fromJson(c)).toList()
+        : [];
+    List<PhatTrienNghe> listPhatTrienNghe = resPhatTrienNghe.isNotEmpty
+        ? resPhatTrienNghe.map((c) => PhatTrienNghe.fromJson(c)).toList()
+        : [];
+    List<QuaTet> listQuaTet = resQuaTet.isNotEmpty
+        ? resQuaTet.map((c) => QuaTet.fromJson(c)).toList()
+        : [];
+
+    for (var itemCustomer in listCustomer) {
+      List<BHYT> bhyt = listBHYT
+          .where((e) =>
+              e.idKhachhang == itemCustomer.id &&
+              e.maKhachHang == itemCustomer.maKhachHang)
+          .toList();
+      itemCustomer.bhyt = bhyt.length > 0 ? bhyt.first : null;
+
+      List<HocBong> hocBong = listHocBong
+          .where((e) =>
+              e.idKhachhang == itemCustomer.id &&
+              e.maKhachHang == itemCustomer.maKhachHang)
+          .toList();
+      itemCustomer.hocBong = hocBong.length > 0 ? hocBong.first : null;
+      
+      List<MaiNha> mainha = listMaiNha
+          .where((e) =>
+              e.idKhachhang == itemCustomer.id &&
+              e.maKhachHang == itemCustomer.maKhachHang)
+          .toList();
+      itemCustomer.maiNha = mainha.length > 0 ? mainha.first : null;
+
+      List<PhatTrienNghe> phatTrienNghe = listPhatTrienNghe
+          .where((e) =>
+              e.idKhachhang == itemCustomer.id &&
+              e.maKhachHang == itemCustomer.maKhachHang)
+          .toList();
+      itemCustomer.phatTrienNghe = phatTrienNghe.length > 0 ? phatTrienNghe.first : null;
+
+      List<QuaTet> quaTet = listQuaTet
+          .where((e) =>
+              e.idKhachhang == itemCustomer.id &&
+              e.maKhachHang == itemCustomer.maKhachHang)
+          .toList();
+      itemCustomer.quaTet = quaTet.length > 0 ? quaTet.first : null;
+    }
+
+    return listCustomer;
   }
 
   dropDataBase() async {

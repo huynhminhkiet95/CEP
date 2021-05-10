@@ -8,6 +8,8 @@ import 'package:CEPmobile/bloc_widgets/bloc_state_builder.dart';
 import 'package:CEPmobile/blocs/download_data/download_data_event.dart';
 import 'package:CEPmobile/blocs/download_data/download_data_state.dart';
 
+import '../../../GlobalTranslations.dart';
+
 class DownloadCommunityDevelopment extends StatefulWidget {
   DownloadCommunityDevelopment({Key key}) : super(key: key);
 
@@ -68,7 +70,7 @@ class _DownloadCommunityDevelopmentState
     return Container(
       color: Colors.blue,
       child: customScrollViewSliverAppBarForDownload(
-          "Download Phát Triển Cộng Đồng",
+           allTranslations.text("DownloadCummunityDevelopment"),
           <Widget>[
             Container(
               height: orientation == Orientation.portrait
@@ -94,7 +96,7 @@ class _DownloadCommunityDevelopmentState
                               width: 90,
                               child: Center(
                                 child: Text(
-                                  "Cụm ID",
+                                 allTranslations.text("ClusterID"),
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14,
@@ -147,7 +149,7 @@ class _DownloadCommunityDevelopmentState
                       padding: EdgeInsets.all(10.0),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
-                        children: const <Widget>[
+                        children:  <Widget>[
                           Icon(
                             Icons.system_update,
                             color: Colors.white,
@@ -156,7 +158,7 @@ class _DownloadCommunityDevelopmentState
                             width: 10.0,
                           ),
                           Text(
-                            "Download Thông Tin PTCĐ",
+                          allTranslations.text("DownloadCummunityDevelopment"),
                             maxLines: 1,
                             style: TextStyle(color: Colors.white),
                           ),

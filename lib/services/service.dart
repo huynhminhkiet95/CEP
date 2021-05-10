@@ -33,6 +33,7 @@ class Services {
     await sharePreferenceService.getPassword();
     await sharePreferenceService.getAuthenLocal();
     await sharePreferenceService.getCumId();
+    await sharePreferenceService.getCumIdOfCommunityDevelopment();
     await sharePreferenceService.getRememberUser();
     await sharePreferenceService.getIsRemember();
     await sharePreferenceService.getUserInfo();

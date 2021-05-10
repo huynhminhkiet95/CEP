@@ -143,6 +143,7 @@ class DownloadDataBloc
               listCustomer.add(khachang);
             }
             await DBProvider.db.newCommunityDevelopment(listCustomer);
+            this.sharePreferenceService.saveCumIdOfCommunityDevelopment(event.cumID);
             ToastResultMessage.success(
                 allTranslations.text("DownLoadDataSuccess"));
           }

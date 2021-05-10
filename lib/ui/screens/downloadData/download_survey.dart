@@ -4,7 +4,9 @@ import 'package:CEPmobile/bloc_widgets/bloc_state_builder.dart';
 import 'package:CEPmobile/blocs/download_data/download_data_event.dart';
 import 'package:CEPmobile/blocs/download_data/download_data_state.dart';
 import 'package:CEPmobile/config/colors.dart';
+import 'package:CEPmobile/global_variables/global_download.dart';
 import 'package:CEPmobile/ui/components/ModalProgressHUDCustomize.dart';
+import 'package:CEPmobile/ui/screens/survey/style.dart';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:CEPmobile/config/formatdate.dart';
@@ -31,7 +33,7 @@ class _DownloadSurveyState extends State<DownloadSurvey> {
   DateTime selectedDate = DateTime.now();
   DownloadDataBloc downloadDataBloc;
   Services services;
-  GlobalKey<FormState> formkey = GlobalKey<FormState>();
+  GlobalKey<FormState> formkeyDownload = GlobalKey<FormState>();
   bool _autoValidate = false;
 
   Future<void> _selectDate(BuildContext context) async {
@@ -66,6 +68,7 @@ class _DownloadSurveyState extends State<DownloadSurvey> {
         ngayxuatDS: _textDateEditingController.text.toString(),
         //masoql: globalUser.getUserInfo == null ? '' : globalUser.getUserInfo.masoql
         masoql: globalUser.getUserInfo.masoql.toString()));
+    GlobalDownload.isSubmitDownload = true;
   }
 
   @override
@@ -82,7 +85,7 @@ class _DownloadSurveyState extends State<DownloadSurvey> {
             return ModalProgressHUDCustomize(
               inAsyncCall: state.isLoading,
               child: customScrollViewSliverAppBarForDownload(
-                  "Download Thông Tin Khảo Sát",
+                  allTranslations.text("DownloadSurveyInfo"),
                   <Widget>[
                     Container(
                       height: orientation == Orientation.portrait
@@ -96,7 +99,9 @@ class _DownloadSurveyState extends State<DownloadSurvey> {
                       child: Column(
                         children: [
                           Padding(
-                            padding:  EdgeInsets.only(left: screenWidth * 0.1, right: screenWidth * 0.1),
+                            padding: EdgeInsets.only(
+                                left: screenWidth * 0.1,
+                                right: screenWidth * 0.1),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -107,7 +112,7 @@ class _DownloadSurveyState extends State<DownloadSurvey> {
                                       width: size.width * 0.2,
                                       child: Center(
                                         child: Text(
-                                          "Cụm ID",
+                                          allTranslations.text("ClusterID"),
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 14,
@@ -120,7 +125,8 @@ class _DownloadSurveyState extends State<DownloadSurvey> {
                                   width: size.width * 0.55,
                                   child: Center(
                                     child: SimpleAutoCompleteTextField(
-                                        style: TextStyle(fontSize: 14, color: Colors.blue),
+                                        style: TextStyle(
+                                            fontSize: 14, color: Colors.blue),
                                         key: key,
                                         suggestions: [
                                           "B147",
@@ -128,7 +134,6 @@ class _DownloadSurveyState extends State<DownloadSurvey> {
                                           "B175",
                                           "B067"
                                         ],
-                                        
                                         decoration: decorationTextFieldCEP,
                                         controller: _textCumIDAutoComplete,
                                         textSubmitted: (text) {
@@ -144,7 +149,9 @@ class _DownloadSurveyState extends State<DownloadSurvey> {
                             height: 10,
                           ),
                           Padding(
-                            padding:  EdgeInsets.only(left: screenWidth * 0.1, right: screenWidth * 0.1),
+                            padding: EdgeInsets.only(
+                                left: screenWidth * 0.1,
+                                right: screenWidth * 0.1),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -155,7 +162,7 @@ class _DownloadSurveyState extends State<DownloadSurvey> {
                                       width: size.width * 0.4,
                                       child: Center(
                                         child: Text(
-                                          "Ngày Xuất Danh Sách",
+                                          allTranslations.text("ExportDate"),
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 14,
@@ -163,10 +170,12 @@ class _DownloadSurveyState extends State<DownloadSurvey> {
                                         ),
                                       ),
                                     )),
-                                Container(
-                                  height: 35,
-                                  width: size.width * 0.36,
-                                  child: InkWell(
+                                
+                                InkWell(
+                                  onTap: () => _selectDate(context),
+                                  child: Container(
+
+                                    width: size.width * 0.36,
                                     child: Container(
                                       width: screenWidth * 1,
                                       height: 40,
@@ -191,7 +200,7 @@ class _DownloadSurveyState extends State<DownloadSurvey> {
                                                 : "",
                                             style: TextStyle(
                                                 fontSize: 13,
-                                                color:Colors.blue),
+                                                color: Colors.blue),
                                           ),
                                           SizedBox(
                                             width: 20.0,
@@ -204,7 +213,6 @@ class _DownloadSurveyState extends State<DownloadSurvey> {
                                         ],
                                       ),
                                     ),
-                                    onTap: () => _selectDate(context),
                                   ),
                                 ),
                               ],
@@ -227,7 +235,7 @@ class _DownloadSurveyState extends State<DownloadSurvey> {
                               padding: EdgeInsets.all(10.0),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
-                                children: const <Widget>[
+                                children: <Widget>[
                                   Icon(
                                     Icons.system_update,
                                     color: Colors.white,
@@ -236,7 +244,7 @@ class _DownloadSurveyState extends State<DownloadSurvey> {
                                     width: 10.0,
                                   ),
                                   Text(
-                                    "Download Thông Tin Khảo Sát",
+                                    allTranslations.text("DownloadSurveyInfo"),
                                     maxLines: 1,
                                     style: TextStyle(color: Colors.white),
                                   ),

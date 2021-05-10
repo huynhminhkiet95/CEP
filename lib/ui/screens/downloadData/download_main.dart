@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:CEPmobile/config/CustomIcons/my_flutter_app_icons.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../../GlobalTranslations.dart';
+
 class DownloadScreen extends StatefulWidget {
   final int selectedIndex;
   const DownloadScreen({Key key, this.selectedIndex}) : super(key: key);
@@ -39,14 +41,26 @@ class _DownloadScreenState extends State<DownloadScreen> {
   @override
   void initState() {
     if (widget.selectedIndex != null) {
-      _selectedIndex = widget.selectedIndex;
-      Fluttertoast.showToast(
-        msg: "Vui lòng tải dữ liệu cho Combobox !",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.grey[300].withOpacity(0.7),
-        textColor: Colors.black,
-      );
+      if (widget.selectedIndex == 4) {
+        _selectedIndex = widget.selectedIndex;
+        Fluttertoast.showToast(
+          msg: "Vui lòng tải dữ liệu cho Combobox !",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.grey[300].withOpacity(0.7),
+          textColor: Colors.black,
+        );
+      }
+      if (widget.selectedIndex == 0) {
+        _selectedIndex = widget.selectedIndex;
+        Fluttertoast.showToast(
+          msg: "Vui lòng tải dữ liệu cho Khảo Sát !",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.grey[300].withOpacity(0.7),
+          textColor: Colors.black,
+        );
+      }
     }
   }
 
@@ -54,63 +68,67 @@ class _DownloadScreenState extends State<DownloadScreen> {
   Widget build(BuildContext context) {
     Orientation orientation = MediaQuery.of(context).orientation;
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: Colors.white,
-            size: 20,
-          ),
-          onPressed: () {
-            Navigator.pop(context, GlobalDownload.isSubmitDownload);
-            //bool a = GlobalDownload.isSubmitDownload;
-          },
-        ),
-        backgroundColor: ColorConstants.cepColorBackground,
-        elevation: 20,
-        title:  Text('Tải Xuống', textAlign: TextAlign.center,
-          style: TextStyle(fontWeight: FontWeight.w600),),
-      ),
-      body: GestureDetector(
-        onHorizontalDragUpdate: (details) {
-          int sensitivity = 8;
-          if (details.delta.dx > sensitivity) {
-            Navigator.of(context).pop();
-          }
-        },
-        child: Container(
-          child: _widgetOptions.elementAt(_selectedIndex),
-        ),
-      ),
-      bottomNavigationBar: ConvexAppBar(
-          height: 60,
-          items: [
-            TabItem(
-              icon: IconsCustomize.survey_icon,
-              title:
-                  orientation == Orientation.portrait ? 'Khảo Sát' : 'Khảo Sát',
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+              size: 20,
             ),
-            TabItem(icon: IconsCustomize.thu_no, title: 'Thu Nợ'),
-            TabItem(
-                icon: IconsCustomize.tu_van,
-                title: orientation == Orientation.portrait
-                    ? 'Tư Vấn T...'
-                    : 'Tư Vấn Tiết Kiệm'),
-            TabItem(
-                icon: IconsCustomize.phattriencongdong,
-                title: orientation == Orientation.portrait ? 'PTCĐ' : 'PTCĐ'),
-            TabItem(
-                icon: Icons.list,
-                title: orientation == Orientation.portrait
-                    ? 'Danh Sách...'
-                    : 'Danh Sách Chọn'),
-          ],
-          //curveSize: 100,
-          initialActiveIndex: _selectedIndex,
-          onTap: onItemTapped,
-          activeColor: Colors.white,
-          backgroundColor: ColorConstants.cepColorBackground),
-    );
+            onPressed: () {
+              Navigator.pop(context, GlobalDownload.isSubmitDownload);
+              //bool a = GlobalDownload.isSubmitDownload;
+            },
+          ),
+          backgroundColor: ColorConstants.cepColorBackground,
+          elevation: 20,
+          title: Text(
+            allTranslations.text("DownLoad"),
+            textAlign: TextAlign.center,
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
+        ),
+        body: GestureDetector(
+          onHorizontalDragUpdate: (details) {
+            int sensitivity = 8;
+            if (details.delta.dx > sensitivity) {
+              Navigator.of(context).pop();
+            }
+          },
+          child: Container(
+            child: _widgetOptions.elementAt(_selectedIndex),
+          ),
+        ),
+        bottomNavigationBar: ConvexAppBar(
+            height: 60,
+            items: [
+              TabItem(
+                icon: IconsCustomize.survey_icon,
+                title:
+                    orientation == Orientation.portrait ? 'Khảo Sát' : 'Khảo Sát',
+              ),
+              TabItem(icon: IconsCustomize.thu_no, title: 'Thu Nợ'),
+              TabItem(
+                  icon: IconsCustomize.tu_van,
+                  title: orientation == Orientation.portrait
+                      ? 'Tư Vấn T...'
+                      : 'Tư Vấn Tiết Kiệm'),
+              TabItem(
+                  icon: IconsCustomize.phattriencongdong,
+                  title: orientation == Orientation.portrait ? 'PTCĐ' : 'PTCĐ'),
+              TabItem(
+                  icon: Icons.list,
+                  title: orientation == Orientation.portrait
+                      ? 'Danh Sách...'
+                      : 'Danh Sách Chọn'),
+            ],
+            //curveSize: 100,
+            initialActiveIndex: _selectedIndex,
+            onTap: onItemTapped,
+            activeColor: Colors.white,
+            backgroundColor: ColorConstants.cepColorBackground),
+      );
+    
   }
 }

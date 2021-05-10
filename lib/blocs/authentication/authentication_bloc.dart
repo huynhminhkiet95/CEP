@@ -62,10 +62,10 @@ class AuthenticationBloc
           server.serverNotification = "http://10.10.0.36:8889/";
           break;
         case "DEV":
-          server.serverAddress = "https://staffapi.cep.org.vn/";
-          server.serverApi = "https://staffapi.cep.org.vn/";
+          server.serverAddress = "https://staff-api.cep.org.vn/";
+          server.serverApi = "https://staff-api.cep.org.vn/";
           server.serverCode = event.serverCode;
-          server.serverNotification = "https://staffapi.cep.org.vn/";
+          server.serverNotification = "https://staff-api.cep.org.vn/";
           break;
         case "PROD":
           server.serverAddress = "http://10.10.0.36:8889/";

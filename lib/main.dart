@@ -27,6 +27,7 @@ import 'package:CEPmobile/route.dart';
 import 'package:CEPmobile/services/service.dart';
 import 'package:CEPmobile/ui/decision_page_no_business.dart';
 import 'package:CEPmobile/ui/initialization_page.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:CEPmobile/ui/screens/survey/survey_detail.dart';
 import 'config/typeinspectionconstants.dart';
@@ -99,10 +100,10 @@ class AppState extends State<Application> {
       bloc: authenticationBloc,
       child: MaterialApp(
         theme: ThemeData(fontFamily: 'SourceSansPro'),
-        // localizationsDelegates: [
-        //   GlobalMaterialLocalizations.delegate,
-        //   GlobalWidgetsLocalizations.delegate,
-        // ],
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
         supportedLocales: allTranslations.supportedLocales(),
         title: allTranslations.text('app_title'),
         debugShowCheckedModeBanner: false,

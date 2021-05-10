@@ -1,5 +1,8 @@
 import 'package:CEPmobile/GlobalTranslations.dart';
+import 'package:CEPmobile/bloc_helpers/bloc_provider.dart';
 import 'package:CEPmobile/bloc_widgets/bloc_state_builder.dart';
+import 'package:CEPmobile/blocs/authentication/authentication_bloc.dart';
+import 'package:CEPmobile/blocs/authentication/authentication_event.dart';
 import 'package:CEPmobile/blocs/setting/setting_bloc.dart';
 import 'package:CEPmobile/blocs/setting/setting_event.dart';
 import 'package:CEPmobile/blocs/setting/setting_state.dart';
@@ -28,6 +31,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _passwordVisible;
   TextEditingController _passwordController =
       new TextEditingController(text: "");
+  AuthenticationBloc _authenticationBloc;
 
   SettingBloc settingBloc;
   Services services;
@@ -42,6 +46,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     services = Services.of(context);
     settingBloc = new SettingBloc(
         services.sharePreferenceService, services.commonService);
+    _authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
     settingBloc.emitEvent(LoadAuthenLocalEvent());
     super.initState();
   }
@@ -94,7 +99,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           title: 'Chung',
           tiles: [
             SettingsTile(
-              title: allTranslations.text("Language") ,
+              title: allTranslations.text("Language"),
               subtitle: language == 'vi' ? 'Tiếng Việt' : 'English',
               leading: Icon(Icons.language),
               titleTextStyle: TextStyle(
@@ -120,7 +125,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           title: 'Tài khoản',
           tiles: [
             SettingsTile(
-              title: allTranslations.text("PhoneNumber") ,
+              title: allTranslations.text("PhoneNumber"),
               leading: Icon(Icons.phone),
               titleTextStyle: TextStyle(
                 color: Colors.black,
@@ -137,7 +142,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 fontSize: 16,
               ),
             ),
-            SettingsTile(title: allTranslations.text("Logout"), leading: Icon(Icons.exit_to_app)),
+            SettingsTile(
+              title: allTranslations.text("Logout"),
+              leading: Icon(Icons.exit_to_app),
+              onTap: () => _loginSubmit(),
+            ),
           ],
         ),
         SettingsSection(
@@ -155,7 +164,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     showAuthenPopup();
                   } else {
                     _passwordController.text = "";
-                    dialogCustomForCEP(context, allTranslations.text("FingerPrinting"), _onSubmit,
+                    dialogCustomForCEP(context,
+                        allTranslations.text("FingerPrinting"), _onSubmit,
                         children: [
                           TextFormField(
                             controller: _passwordController,
@@ -236,6 +246,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
         UpdateAuthenLocalEvent(_passwordController.text, isAuthenLocal));
   }
 
+  void _loginSubmit() {
+    _authenticationBloc.emitEvent(AuthenticationEventLogout());
+  }
+
   Future<void> _getAvailableBiometrics() async {
     List<BiometricType> availableBiometrics;
     try {
@@ -268,13 +282,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
   showAuthenPopup() async {
     var localAuth = LocalAuthentication();
     try {
-      const androidStrings = const AndroidAuthMessages(
-          cancelButton: "Hủy",
-          goToSettingsButton: "Cài Đặt",
-          goToSettingsDescription: 'Vui lòng thiết lập Touch ID của bạn !',
-          fingerprintSuccess: 'Xác thực thành công.',
+      var androidStrings = AndroidAuthMessages(
+          cancelButton: allTranslations.text("Cancel"),
+          goToSettingsButton: allTranslations.text("Settings"),
+          goToSettingsDescription: allTranslations.text("PleaseSetupTouchID"),
+          fingerprintSuccess:allTranslations.text("SuccessfulAuthentication"),
           fingerprintHint: "",
-          fingerprintRequiredTitle: "Thiết lập Touch-ID",
+          fingerprintRequiredTitle: allTranslations.text("SetupTouchID"),
           signInTitle: "Touch ID for CEP-Nhân viên",
           fingerprintNotRecognized: "aaa");
       bool isAuthenticate = await localAuth.authenticateWithBiometrics(

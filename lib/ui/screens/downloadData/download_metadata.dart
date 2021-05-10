@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:CEPmobile/config/formatdate.dart';
 import 'package:CEPmobile/ui/screens/Home/styles.dart';
 
+import '../../../GlobalTranslations.dart';
+
 class DownloadMetaData extends StatefulWidget {
   DownloadMetaData({Key key}) : super(key: key);
 
@@ -69,7 +71,7 @@ class _DownloadMetaDataState extends State<DownloadMetaData> {
             return ModalProgressHUDCustomize(
               inAsyncCall: state.isLoading,
               child: customScrollViewSliverAppBarForDownload(
-                  "Download Danh Sách Chọn",
+                  allTranslations.text("DownloadCombobox"),
                   <Widget>[
                     Container(
                       height: orientation == Orientation.portrait
@@ -98,7 +100,7 @@ class _DownloadMetaDataState extends State<DownloadMetaData> {
                               padding: EdgeInsets.all(10.0),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
-                                children: const <Widget>[
+                                children: <Widget>[
                                   Icon(
                                     Icons.system_update,
                                     color: Colors.white,
@@ -107,7 +109,7 @@ class _DownloadMetaDataState extends State<DownloadMetaData> {
                                     width: 10.0,
                                   ),
                                   Text(
-                                    "Download Danh Sách Chọn",
+                                     allTranslations.text("DownloadCombobox"),
                                     maxLines: 1,
                                     style: TextStyle(color: Colors.white),
                                   ),

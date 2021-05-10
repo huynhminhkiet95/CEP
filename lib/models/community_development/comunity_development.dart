@@ -21,6 +21,7 @@ class ComunityDevelopment {
 }
 
 class KhachHang {
+  int id;
   String maKhachHang;
   double chinhanhId;
   double duanId;
@@ -49,7 +50,8 @@ class KhachHang {
   QuaTet quaTet;
 
   KhachHang(
-      {this.maKhachHang,
+      {this.id,
+      this.maKhachHang,
       this.chinhanhId,
       this.duanId,
       this.masoql,
@@ -77,11 +79,13 @@ class KhachHang {
       this.quaTet});
 
   KhachHang.fromJson(Map<String, dynamic> json) {
+    if (json["id"] is int) this.id = json["id"];
     if (json["maKhachHang"] is String) this.maKhachHang = json["maKhachHang"];
-    if (json["chinhanhID"] is double) this.chinhanhId = json["chinhanhID"];
+    if (json["chinhanhID"] is double) {
+      this.chinhanhId = json["chinhanhID"];
+    }
     if (json["duanID"] != null) {
-      
-      this.duanId = json["duanID"] as double;
+      this.duanId = json["duanID"];
     }
     if (json["masoql"] is String) this.masoql = json["masoql"];
     if (json["cumID"] is String) this.cumId = json["cumID"];
@@ -106,8 +110,11 @@ class KhachHang {
       this.thunhapHangthangCuaho = json["thunhapHangthangCuaho"];
     if (json["coVoChongConLaCNV"] is bool)
       this.coVoChongConLaCnv = json["coVoChongConLaCNV"];
-    if (json["bhyt"] is Map) this.bhyt = json["bhyt"] == null ? null : BHYT.fromJson(json["bhyt"]);
-    if (json["hocBong"] is Map) this.hocBong = json["hocBong"] == null ? null : HocBong.fromJson(json["hocBong"]);
+    if (json["bhyt"] is Map)
+      this.bhyt = json["bhyt"] == null ? null : BHYT.fromJson(json["bhyt"]);
+    if (json["hocBong"] is Map)
+      this.hocBong =
+          json["hocBong"] == null ? null : HocBong.fromJson(json["hocBong"]);
     if (json["maiNha"] is Map)
       this.maiNha =
           json["maiNha"] == null ? null : MaiNha.fromJson(json["maiNha"]);
@@ -122,6 +129,7 @@ class KhachHang {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data["id"] = this.id;
     data["maKhachHang"] = this.maKhachHang;
     data["chinhanhID"] = this.chinhanhId;
     data["duanID"] = this.duanId;
@@ -151,25 +159,60 @@ class KhachHang {
     if (this.quaTet != null) data["quaTet"] = this.quaTet.toJson();
     return data;
   }
+
+  factory KhachHang.fromMap(Map<String, dynamic> json) {
+    double chinhanhID = (json["chinhanhID"] ?? 0).toDouble();
+    return new KhachHang(
+        id: json["id"],
+        maKhachHang: json["maKhachHang"],
+        chinhanhId: (json["chinhanhID"] ?? 0).toDouble(),
+        duanId: (json["duanID"] ?? 0).toDouble(),
+        masoql: json["masoql"],
+        cumId: json["cumID"],
+        hoTen: json["hoTen"],
+        thanhVienId: json["thanhVienID"],
+        cmnd: json["cmnd"],
+        gioitinh: (json["gioitinh"] as int).toDouble(),
+        ngaysinh: json["ngaysinh"],
+        diachi: json["diachi"],
+        dienthoai: json["dienthoai"],
+        lanvay: (json["lanvay"] ?? 0).toDouble(),
+        thoigianthamgia: json["thoigianthamgia"],
+        thanhVienThuocDien: (json["thanhVienThuocDien"] ?? 0).toDouble(),
+        maHongheoCanngheo: json["maHongheoCanngheo"],
+        ngheNghiep: (json["ngheNghiep"] ?? 0).toDouble(),
+        ghiChu: json["ghiChu"],
+        moHinhNghe: json["moHinhNghe"] == 0 ? false : true,
+        thunhapHangthangCuaho: (json["thunhapHangthangCuaho"] ?? 0).toDouble(),
+        coVoChongConLaCnv: json["coVoChongConLaCNVINTEGER"]);
+  }
 }
 
 class QuaTet {
+  int idKhachhang;
   int serverId;
   double nam;
   String maKhachHang;
   double loaiHoNgheo;
 
-  QuaTet({this.serverId, this.nam, this.maKhachHang, this.loaiHoNgheo});
+  QuaTet(
+      {this.idKhachhang,
+      this.serverId,
+      this.nam,
+      this.maKhachHang,
+      this.loaiHoNgheo});
 
   QuaTet.fromJson(Map<String, dynamic> json) {
+    if (json["idKhachhang"] is int) this.idKhachhang = json["idKhachhang"];
     if (json["serverID"] is int) this.serverId = json["serverID"];
-    if (json["nam"] is double) this.nam = json["nam"];
+    if (json["nam"] is double) this.nam = (json["nam"] ?? 0).toDouble();
     if (json["maKhachHang"] is String) this.maKhachHang = json["maKhachHang"];
-    if (json["loaiHoNgheo"] is double) this.loaiHoNgheo = json["loaiHoNgheo"];
+    if (json["loaiHoNgheo"] is double) this.loaiHoNgheo = (json["loaiHoNgheo"]?? 0).toDouble();
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data["idKhachhang"] = this.idKhachhang;
     data["serverID"] = this.serverId;
     data["nam"] = this.nam;
     data["maKhachHang"] = this.maKhachHang;
@@ -179,6 +222,7 @@ class QuaTet {
 }
 
 class PhatTrienNghe {
+  int idKhachhang;
   int serverId;
   double nam;
   String maKhachHang;
@@ -193,7 +237,8 @@ class PhatTrienNghe {
   double reacHnguyenvong;
 
   PhatTrienNghe(
-      {this.serverId,
+      {this.idKhachhang,
+      this.serverId,
       this.nam,
       this.maKhachHang,
       this.nguoithan,
@@ -207,28 +252,30 @@ class PhatTrienNghe {
       this.reacHnguyenvong});
 
   PhatTrienNghe.fromJson(Map<String, dynamic> json) {
+    if (json["idKhachhang"] is int) this.idKhachhang = json["idKhachhang"];
     if (json["serverID"] is int) this.serverId = json["serverID"];
-    if (json["nam"] is double) this.nam = json["nam"];
+    if (json["nam"] is double) this.nam = (json["nam"] ?? 0).toDouble();
     if (json["maKhachHang"] is String) this.maKhachHang = json["maKhachHang"];
     if (json["nguoithan"] is String) this.nguoithan = json["nguoithan"];
     if (json["quanHeKhacHang"] is double)
       this.quanHeKhacHang = json["quanHeKhacHang"];
-    if (json["lyDo"] is double) this.lyDo = json["lyDo"];
+    if (json["lyDo"] is double) this.lyDo = (json["lyDo"] ?? 0).toDouble();
     if (json["hoancanh"] is String) this.hoancanh = json["hoancanh"];
     if (json["nguyenvongthamgia"] is double)
-      this.nguyenvongthamgia = json["nguyenvongthamgia"];
+      this.nguyenvongthamgia = (json["nguyenvongthamgia"] ?? 0).toDouble();
     if (json["nguyenvonghoithao"] is double)
-      this.nguyenvonghoithao = json["nguyenvonghoithao"];
+      this.nguyenvonghoithao = (json["nguyenvonghoithao"] ?? 0).toDouble();
     if (json["scCnguyenvong"] is double)
-      this.scCnguyenvong = json["scCnguyenvong"];
+      this.scCnguyenvong = (json["scCnguyenvong"] ?? 0).toDouble();
     if (json["iecDnguyenvong"] is double)
-      this.iecDnguyenvong = json["iecDnguyenvong"];
+      this.iecDnguyenvong = (json["iecDnguyenvong"] ?? 0).toDouble();
     if (json["reacHnguyenvong"] is double)
-      this.reacHnguyenvong = json["reacHnguyenvong"];
+      this.reacHnguyenvong = (json["reacHnguyenvong"] ?? 0).toDouble();
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data["idKhachhang"] = this.idKhachhang;
     data["serverID"] = this.serverId;
     data["nam"] = this.nam;
     data["maKhachHang"] = this.maKhachHang;
@@ -246,6 +293,7 @@ class PhatTrienNghe {
 }
 
 class MaiNha {
+  int idKhachhang;
   int serverId;
   double nam;
   String maKhachHang;
@@ -268,7 +316,8 @@ class MaiNha {
   double hosodinhkem;
 
   MaiNha(
-      {this.serverId,
+      {this.idKhachhang,
+      this.serverId,
       this.nam,
       this.maKhachHang,
       this.tilephuthuoc,
@@ -290,34 +339,40 @@ class MaiNha {
       this.hosodinhkem});
 
   MaiNha.fromJson(Map<String, dynamic> json) {
+    if (json["idKhachhang"] is int) this.idKhachhang = json["idKhachhang"];
     if (json["serverID"] is int) this.serverId = json["serverID"];
-    if (json["nam"] is double) this.nam = json["nam"];
+    if (json["nam"] != null) this.nam = (json["nam"] ?? 0).toDouble();
     if (json["maKhachHang"] is String) this.maKhachHang = json["maKhachHang"];
-    if (json["tilephuthuoc"] is double) this.tilephuthuoc = json["tilephuthuoc"];
-    if (json["thunhap"] is double) this.thunhap = json["thunhap"];
-    if (json["taisan"] is double) this.taisan = json["taisan"];
-    if (json["dieukiennhao"] is double) this.dieukiennhao = json["dieukiennhao"];
-    if (json["quyenSoHuuNha"] is double)
-      this.quyenSoHuuNha = json["quyenSoHuuNha"];
+    if (json["tilephuthuoc"] != null)
+      this.tilephuthuoc = (json["tilephuthuoc"] ?? 0).toDouble();
+    if (json["thunhap"]  != null) this.thunhap = (json["thunhap"]?? 0).toDouble();
+    if (json["taisan"]  != null) this.taisan = (json["taisan"]?? 0).toDouble();
+    if (json["dieukiennhao"]  != null)
+      this.dieukiennhao = (json["dieukiennhao"]?? 0).toDouble();
+    if (json["quyenSoHuuNha"]  != null)
+      this.quyenSoHuuNha = (json["quyenSoHuuNha"]?? 0).toDouble();
     if (json["ghichuhoancanh"] is String)
       this.ghichuhoancanh = json["ghichuhoancanh"];
-    if (json["cbDexuat"] is double) this.cbDexuat = json["cbDexuat"];
-    if (json["duTruKinhPhi"] is double) this.duTruKinhPhi = json["duTruKinhPhi"];
-    if (json["deXuatHoTro"] is double) this.deXuatHoTro = json["deXuatHoTro"];
-    if (json["giaDinhHoTro"] is double) this.giaDinhHoTro = json["giaDinhHoTro"];
-    if (json["tietKiem"] is double) this.tietKiem = json["tietKiem"];
-    if (json["tienVay"] is double) this.tienVay = json["tienVay"];
+    if (json["cbDexuat"]  != null) this.cbDexuat = (json["cbDexuat"]?? 0).toDouble();
+    if (json["duTruKinhPhi"]  != null)
+      this.duTruKinhPhi = (json["duTruKinhPhi"]?? 0).toDouble();
+    if (json["deXuatHoTro"] != null) this.deXuatHoTro = (json["deXuatHoTro"]?? 0).toDouble();
+    if (json["giaDinhHoTro"] != null)
+      this.giaDinhHoTro = (json["giaDinhHoTro"]?? 0).toDouble();
+    if (json["tietKiem"]  != null) this.tietKiem = (json["tietKiem"]?? 0).toDouble();
+    if (json["tienVay"]  != null) this.tienVay = (json["tienVay"]?? 0).toDouble();
     if (json["giaDinhDongY"] is bool) this.giaDinhDongY = json["giaDinhDongY"];
-    if (json["cnDexuat"] is double) this.cnDexuat = json["cnDexuat"];
+    if (json["cnDexuat"]  != null) this.cnDexuat = (json["cnDexuat"]?? 0).toDouble();
     if (json["cnDexuatThoigian"] is String)
       this.cnDexuatThoigian = json["cnDexuatThoigian"];
-    if (json["cnDexuatSotien"] is double)
-      this.cnDexuatSotien = json["cnDexuatSotien"];
-    if (json["hosodinhkem"] is double) this.hosodinhkem = json["hosodinhkem"];
+    if (json["cnDexuatSotien"]  != null)
+      this.cnDexuatSotien = (json["cnDexuatSotien"]?? 0).toDouble();
+    if (json["hosodinhkem"]  != null) this.hosodinhkem = (json["hosodinhkem"]?? 0).toDouble();
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data["idKhachhang"] = this.idKhachhang;
     data["serverID"] = this.serverId;
     data["nam"] = this.nam;
     data["maKhachHang"] = this.maKhachHang;
@@ -343,6 +398,7 @@ class MaiNha {
 }
 
 class BHYT {
+  int idKhachhang;
   int serverId;
   double nam;
   String maKhachHang;
@@ -354,7 +410,8 @@ class BHYT {
   double quanHeKhachHang;
 
   BHYT(
-      {this.serverId,
+      {this.idKhachhang,
+      this.serverId,
       this.nam,
       this.maKhachHang,
       this.mucphibaohiem,
@@ -365,19 +422,21 @@ class BHYT {
       this.quanHeKhachHang});
 
   BHYT.fromJson(Map<String, dynamic> json) {
-    if (json["serverID"] is int) this.serverId = json["serverID"];
-    if (json["nam"] is double) this.nam = json["nam"];
-    if (json["maKhachHang"] is String) this.nam = json["maKhachHang"];
-    if (json["mucphibaohiem"] is double) this.nam = json["mucphibaohiem"];
-    if (json["dieukienbhyt"] is double) this.nam = json["dieukienbhyt"];
-    if (json["tinhtrangsuckhoe"] is double) this.nam = json["tinhtrangsuckhoe"];
-    if (json["nguoithan"] is String) this.nam = json["nguoithan"];
-    if (json["namsinh"] is double) this.nam = json["namsinh"];
-    if (json["quanHeKhachHang"] is double) this.nam = json["quanHeKhachHang"];
+    if (json["idKhachhang"] != null) this.idKhachhang = json["idKhachhang"];
+    if (json["serverID"]  != null) this.serverId = json["serverID"];
+    if (json["nam"]  != null) this.nam = json["nam"];
+    if (json["maKhachHang"]  != null) this.nam = json["maKhachHang"];
+    if (json["mucphibaohiem"]  != null) this.nam = json["mucphibaohiem"];
+    if (json["dieukienbhyt"]  != null) this.nam = json["dieukienbhyt"];
+    if (json["tinhtrangsuckhoe"]  != null) this.nam = json["tinhtrangsuckhoe"];
+    if (json["nguoithan"]  != null) this.nam = json["nguoithan"];
+    if (json["namsinh"]  != null) this.nam = json["namsinh"];
+    if (json["quanHeKhachHang"]  != null) this.nam = json["quanHeKhachHang"];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data["idKhachhang"] = this.idKhachhang;
     data["serverID"] = this.serverId;
     data["nam"] = this.nam;
     data["maKhachHang"] = this.maKhachHang;
@@ -393,6 +452,7 @@ class BHYT {
 }
 
 class HocBong {
+  int idKhachhang;
   int serverID;
   double nam;
   String maKhachHang;
@@ -412,7 +472,8 @@ class HocBong {
   double giatri;
 
   HocBong(
-      {this.serverID,
+      {this.idKhachhang,
+      this.serverID,
       this.nam,
       this.maKhachHang,
       this.hotenhocsinh,
@@ -431,27 +492,29 @@ class HocBong {
       this.giatri});
 
   HocBong.fromJson(Map<String, dynamic> json) {
+    idKhachhang = json['idKhachhang'];
     serverID = json['serverID'];
-    nam = json['nam'];
+    nam = (json["nam"] ?? 0).toDouble();
     maKhachHang = json['maKhachHang'];
     hotenhocsinh = json['hotenhocsinh'];
-    namsinh = json['namsinh'];
-    lop = json['lop'];
+    namsinh = (json['namsinh'] ?? 0).toDouble();
+    lop = (json['lop'] ?? 0).toDouble();
     truonghoc = json['truonghoc'];
-    quanhekhachhang = json['quanhekhachhang'];
-    hocbongQuatang = json['hocbong_Quatang'];
-    hocluc = json['hocluc'];
-    danhanhocbong = json['danhanhocbong'];
-    dinhKemHoSo = json['dinhKemHoSo'];
-    hoancanhhocsinh = json['hoancanhhocsinh'];
+    quanhekhachhang = (json['quanhekhachhang'] ?? 0).toDouble();
+    hocbongQuatang = (json['hocbong_Quatang'] ?? 0).toDouble();
+    hocluc = (json['hocluc'] ?? 0).toDouble();
+    danhanhocbong = json['danhanhocbong'] == 0 ? false : true;
+    dinhKemHoSo = (json['dinhKemHoSo'] ?? 0).toDouble();
+    hoancanhhocsinh = (json['hoancanhhocsinh'] ?? 0).toDouble();
     hoancanhgiadinh = json['hoancanhgiadinh'];
-    mucdich = json['mucdich'];
+    mucdich = (json['mucdich'] ?? 0).toDouble();
     ghiChu = json['ghiChu'];
-    giatri = json['giatri'];
+    giatri = (json['giatri'] ?? 0).toDouble();
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['idKhachhang'] = this.idKhachhang;
     data['serverID'] = this.serverID;
     data['nam'] = this.nam;
     data['maKhachHang'] = this.maKhachHang;

@@ -3,6 +3,8 @@ import 'package:CEPmobile/config/colors.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
+import '../../../GlobalTranslations.dart';
+
 class ProfilePageDesign extends StatefulWidget {
   @override
   _ProfilePageDesignState createState() => _ProfilePageDesignState();
@@ -45,7 +47,7 @@ class ProfilePage extends StatelessWidget {
           backgroundColor: ColorConstants.cepColorBackground,
           elevation: 0.0,
           bottomOpacity: 0.0,
-          title: const Text('Hồ Sơ Cá Nhân',textAlign: TextAlign.center,
+          title: Text(allTranslations.text("Profile"),textAlign: TextAlign.center,
           style: TextStyle(fontWeight: FontWeight.w600),),
           actions: [
             IconButton(
@@ -97,7 +99,8 @@ class ProfilePage extends StatelessWidget {
                             width: 30,
                           ),
                           Text(
-                            "Chi nhánh ID:",
+                            allTranslations.text("BranchID")
+                            ,
                             style: _style(),
                           ),
                           VerticalDivider(
@@ -127,7 +130,8 @@ class ProfilePage extends StatelessWidget {
                           width: 30,
                         ),
                         Text(
-                          "Điện thoại:",
+                          allTranslations.text("PhoneNumber") + ':'
+                        ,
                           style: _style(),
                         ),
                         VerticalDivider(
@@ -183,7 +187,8 @@ class ProfilePage extends StatelessWidget {
                           width: 30,
                         ),
                         Text(
-                          "Địa chỉ:",
+                          allTranslations.text("Address")
+                          ,
                           style: _style(),
                         ),
                         VerticalDivider(
@@ -213,7 +218,8 @@ class ProfilePage extends StatelessWidget {
                           width: 30,
                         ),
                         Text(
-                          "Mã số quản lý:",
+                          allTranslations.text("ManagerCodeNumber")
+                          ,
                           style: _style(),
                         ),
                         VerticalDivider(
@@ -243,7 +249,7 @@ class ProfilePage extends StatelessWidget {
                           width: 30,
                         ),
                         Text(
-                          "Tổ tín dụng",
+                          allTranslations.text("CreditGroups"),
                           style: _style(),
                         ),
                         VerticalDivider(

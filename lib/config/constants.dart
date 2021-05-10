@@ -21,4 +21,5 @@ class KeyConstants {
   static const String serverSSO = "serverSSO";
   static const String tokenUser = "tokenUser";
   static const String cumId = "cumId";
+  static const String cumIdOfCommunityDevelopment = "cumIdOfCommunityDevelopment";
 }

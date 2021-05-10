@@ -1,3 +1,4 @@
+import 'package:CEPmobile/GlobalTranslations.dart';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:CEPmobile/config/formatdate.dart';
@@ -42,7 +43,7 @@ class _DownloadSavingState extends State<DownloadSaving> {
     screenWidth = size.width;
     return Container(
       color: Colors.blue,
-      child: customScrollViewSliverAppBarForDownload("Download Thông Tin Tư Vấn Tiết Kiệm",
+      child: customScrollViewSliverAppBarForDownload(allTranslations.text("DownloadSavingAdvisory"),
       <Widget>[
             Container(
               height: orientation == Orientation.portrait
@@ -68,7 +69,7 @@ class _DownloadSavingState extends State<DownloadSaving> {
                               width: 150,
                               child: Center(
                                 child: Text(
-                                  "Ngày Cần Download",
+                                 allTranslations.text("DateNeedToDownload"),
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14,
@@ -140,7 +141,7 @@ class _DownloadSavingState extends State<DownloadSaving> {
                       padding: EdgeInsets.all(10.0),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
-                        children: const <Widget>[
+                        children: <Widget>[
                           Icon(
                             Icons.system_update,
                             color: Colors.white,
@@ -149,7 +150,7 @@ class _DownloadSavingState extends State<DownloadSaving> {
                             width: 10.0,
                           ),
                           Text(
-                            "Download Thông Tin Tư Vấn",
+                           allTranslations.text("DownLoad"),
                             maxLines: 1,
                             style: TextStyle(color: Colors.white),
                           ),

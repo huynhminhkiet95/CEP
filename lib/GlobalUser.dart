@@ -18,6 +18,7 @@ class GlobalUser {
   String _rememberUserName;
   String _isRememberLogin;
   String _cumId;
+  String _cumIdOfCommunityDevelopment;
   String _userId;
   String _defaultBranch;
   String _token;
@@ -71,6 +72,10 @@ class GlobalUser {
   String get getCumId => _cumId;
 
   set setCumId(String value) => _cumId = value;
+
+  String get getCumIdOfCommunityDevelopment => _cumIdOfCommunityDevelopment;
+
+  set setCumIdOfCommunityDevelopment(String value) => _cumIdOfCommunityDevelopment = value;
 
   String get getDefaultCenter => _defaultCenter;
 

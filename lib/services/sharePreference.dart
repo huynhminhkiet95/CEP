@@ -111,6 +111,18 @@ class SharePreferenceService {
     return cumId;
   }
 
+  Future<void> saveCumIdOfCommunityDevelopment(String cumIdOfCommunityDevelopment) async {
+    share.setString(KeyConstants.cumIdOfCommunityDevelopment, cumIdOfCommunityDevelopment);
+    globalUser.setCumIdOfCommunityDevelopment = cumIdOfCommunityDevelopment;
+  }
+
+  Future<String> getCumIdOfCommunityDevelopment() async {
+    String cumIdOfCommunityDevelopment = share.getString(KeyConstants.cumIdOfCommunityDevelopment);
+    globalUser.setCumIdOfCommunityDevelopment = cumIdOfCommunityDevelopment;
+    return cumIdOfCommunityDevelopment;
+  }
+
+
   Future<void> getUserInfo() async {
     globalUser.setUserInfo = await DBProvider.db.getUserInfo();
   }

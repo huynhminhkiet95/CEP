@@ -10,6 +10,7 @@ import 'package:CEPmobile/ui/navigation/slide_route.dart';
 import 'package:CEPmobile/ui/screens/error/error.dart';
 import 'package:flutter/material.dart';
 
+import '../../../GlobalTranslations.dart';
 import '../../../globalServer.dart';
 //import 'package:path/path.dart';
 
@@ -54,32 +55,11 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
     _animationController.dispose();
   }
 
-  void _onTapMenuItem(String nameMenu) {
-    switch (nameMenu) {
-      case 'Khảo Sát':
-        Navigator.pushNamed(context, 'survey');
-        break;
-      case 'Tải Xuống':
-        Navigator.pushNamed(context, 'download');
-        break;
-      case 'Phát Triển Cộng Đồng':
-        Navigator.pushNamed(context, 'comunitydevelopment');
-        break;
-      case 'Xóa Dữ Liệu':
-        Navigator.pushNamed(context, 'deletedata');
-        break;
-      case 'Settings':
-        Navigator.pushNamed(context, 'setting');
-        break;
-      case 'Thống Kê':
-        Navigator.pushNamed(context, 'calculation');
-        break;
-      case 'Đăng Xuất':
-        _loginSubmit();
-        break;
-      default:
-        Navigator.pushNamed(context, 'error');
+  void _onTapMenuItem(String router) {
+    if (router == "logout") {
+      return _loginSubmit();
     }
+    Navigator.pushNamed(context, router);
   }
 
   void _loginSubmit() {
@@ -169,7 +149,7 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
                           Text(
                               globalUser.getUserInfo == null
                                   ? ''
-                                  : " Mã số " + globalUser.getUserInfo.masoql,
+                                  : " ${allTranslations.text("CodeNumber")} " + globalUser.getUserInfo.masoql,
                               style: TextStyle(color: Colors.white))
                         ],
                       ),
@@ -208,18 +188,36 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
     var listMenuDefault = ItemDashBoard.getItemMenuDefault();
 
     for (var item in listMenuByUser) {
+      bool isDisable = false;
+
+      if (globalUser.getUserName == "kiet.hm") {
+      } else {
+        switch (item.router) {
+          case "comunitydevelopment":
+            isDisable = true;
+            break;
+          case "error":
+            isDisable = true;
+            break;
+
+          default:
+        }
+      }
       listWidget.add(
         Divider(
           color: Colors.white,
           height: 2,
         ),
       );
+
       Widget widgetTileMenu = Material(
-        color: ColorConstants.cepColorBackground,
+        color: isDisable ? Colors.grey : ColorConstants.cepColorBackground,
         child: InkWell(
           splashColor: Colors.blue,
           onTap: () {
-            _onTapMenuItem(item.title);
+            if (!isDisable) {
+              _onTapMenuItem(item.router);
+            }
           },
           child: Container(
             color: Colors.blue[100].withOpacity(0),
@@ -264,7 +262,7 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
         child: InkWell(
           splashColor: Colors.blue,
           onTap: () {
-            _onTapMenuItem(item.title);
+            _onTapMenuItem(item.router);
           },
           child: Container(
             color: Colors.blue[100].withOpacity(0),
@@ -389,7 +387,7 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
                             });
                           },
                         ),
-                        Text("Màn Hình Chính",
+                        Text(allTranslations.text("Dashboard"),
                             style: TextStyle(
                               fontSize: 22,
                               color: Colors.white,
@@ -413,10 +411,9 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
                               orientation == Orientation.portrait ? 10 : 30,
                           mainAxisSpacing:
                               orientation == Orientation.portrait ? 10 : 30,
-                          children: new List<Widget>.generate(listDashboard.length,(index){
-                          
-                          
-                          // listDashboard.map((data) {
+                          children: new List<Widget>.generate(
+                              listDashboard.length, (index) {
+                            // listDashboard.map((data) {
                             final int count = listDashboard.length;
                             final Animation<double> animation =
                                 Tween<double>(begin: 0.0, end: 1.0).animate(
@@ -431,14 +428,35 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
                             return AnimatedBuilder(
                                 animation: _animationControllerItemMenu,
                                 builder: (BuildContext context, Widget child) {
+                                  bool isDisable = false;
+
+                                  if (globalUser.getUserName == "kiet.hm") {
+                                  } else {
+                                    switch (listDashboard[index].router) {
+                                      case "comunitydevelopment":
+                                        isDisable = true;
+                                        break;
+                                      case "error":
+                                        isDisable = true;
+                                        break;
+
+                                      default:
+                                    }
+                                  }
+
                                   return FadeTransition(
                                     opacity: animation,
                                     child: Transform(
-                                      transform: Matrix4.translationValues(50 * (1.0 - animation.value),0.0,
-                                           0.0),
+                                      transform: Matrix4.translationValues(
+                                          50 * (1.0 - animation.value),
+                                          0.0,
+                                          0.0),
                                       child: InkWell(
                                         onTap: () {
-                                          _onTapMenuItem(listDashboard[index].title);
+                                          if (!isDisable) {
+                                            _onTapMenuItem(
+                                                listDashboard[index].router);
+                                          }
                                         },
                                         child: Container(
                                           height: 20,
@@ -446,7 +464,9 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
                                               border: Border.all(
                                                   width: 3.0,
                                                   color: Colors.white),
-                                              color: color,
+                                              color: isDisable
+                                                  ? Colors.grey
+                                                  : color,
                                               borderRadius:
                                                   BorderRadius.circular(10)),
                                           child: Column(

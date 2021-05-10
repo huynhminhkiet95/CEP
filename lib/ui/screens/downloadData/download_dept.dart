@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:CEPmobile/config/formatdate.dart';
 import 'package:CEPmobile/ui/screens/Home/styles.dart';
 
+import '../../../GlobalTranslations.dart';
+
 class DownloadDept extends StatefulWidget {
   DownloadDept({Key key}) : super(key: key);
 
@@ -42,7 +44,7 @@ class _DownloadDeptState extends State<DownloadDept> {
     screenWidth = size.width;
     return Container(
       color: Colors.blue,
-      child: customScrollViewSliverAppBarForDownload("Download Thông Tin Thu Nợ",
+      child: customScrollViewSliverAppBarForDownload(allTranslations.text("DownloadDeptInfo"),
       <Widget>[
             Container(
               height: orientation == Orientation.portrait
@@ -67,7 +69,7 @@ class _DownloadDeptState extends State<DownloadDept> {
                               width: 150,
                               child: Center(
                                 child: Text(
-                                  "Ngày Thu Nợ",
+                                 allTranslations.text("DeptDate"),
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14,
@@ -139,7 +141,7 @@ class _DownloadDeptState extends State<DownloadDept> {
                       padding: EdgeInsets.all(10.0),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
-                        children: const <Widget>[
+                        children: <Widget>[
                           Icon(
                             Icons.system_update,
                             color: Colors.white,
@@ -148,7 +150,7 @@ class _DownloadDeptState extends State<DownloadDept> {
                             width: 10.0,
                           ),
                           Text(
-                            "Download Thông Tin Thu Nợ",
+                           allTranslations.text("DownloadDeptInfo"),
                             maxLines: 1,
                             style: TextStyle(color: Colors.white),
                           ),

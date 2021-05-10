@@ -13,7 +13,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../GlobalUser.dart';
 
 class HttpBase {
-  
   Future<http.Response> httpGet(String url) async {
     try {
       var address = globalServer.getServerAddress;
@@ -160,6 +159,7 @@ class HttpBase {
   Future<http.Response> httpPostToken(String url, dynamic body) async {
     String token = globalUser.gettoken;
     var address = globalServer.getServerAddress;
+    var a = json.encode(body);
     http.Response result;
     try {
       result = await http.post(address + url,
