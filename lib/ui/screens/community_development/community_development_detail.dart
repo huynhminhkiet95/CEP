@@ -12,14 +12,17 @@ import 'package:CEPmobile/ui/css/style.css.dart';
 import 'package:CEPmobile/ui/screens/survey/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rounded_date_picker/rounded_picker.dart';
+import 'package:CEPmobile/models/community_development/comunity_development.dart';
+import 'package:CEPmobile/config/formatdate.dart';
+
 import 'dart:math' as math;
 
 import 'community_development.style.dart';
 
 class CommunityDevelopmentDetail extends StatefulWidget {
-  final int id;
+  final KhachHang khachHang;
   final List<ComboboxModel> listCombobox;
-  CommunityDevelopmentDetail({Key key, this.id, this.listCombobox})
+  CommunityDevelopmentDetail({Key key, this.khachHang, this.listCombobox})
       : super(key: key);
 
   @override
@@ -48,7 +51,8 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
   AnimationController _controllerFadeTransitionInsurance;
   Animation<double> _animationFadeTransitionInsurance;
 
-  int selectedIndexKhuVuc;
+  int selectedIndexIsOfficerInFamily;
+  int selectedIndexCareerModel;
 
   AnimationController _controllerRotateIconScholarship;
   AnimationController _controllerRotateIconGiftTET;
@@ -67,13 +71,19 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
   //region Propertu
   TextEditingController _controllerCareerSpecific =
       new TextEditingController(text: "");
-  TextEditingController _controllerAmountOfLaborTools =
+  TextEditingController _controllerFamilysMonthlyIncome =
       new TextEditingController(text: "");
+
+  TextEditingController _controllerFullNameForScholarship =
+      new TextEditingController(text: "");
+
   TextEditingController _controllerSchoolName =
       new TextEditingController(text: "");
   TextEditingController _controllerClassName =
       new TextEditingController(text: "");
   TextEditingController _controllerFamilyCircumstances =
+      new TextEditingController(text: "");
+  TextEditingController _controllerSpecificPurpose =
       new TextEditingController(text: "");
 
   DateTime selectedTimetoUseLoanDate;
@@ -87,7 +97,8 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
   List<DropdownMenuItem<String>> _assetsModelDropdownList;
   List<DropdownMenuItem<String>> _homeOwnershipModelDropdownList;
   List<DropdownMenuItem<String>> _customerBuildSuggestionsModelDropdownList;
-  List<DropdownMenuItem<String>> _relationsWithCustomersJobDevelopModelDropdownList;
+  List<DropdownMenuItem<String>>
+      _relationsWithCustomersJobDevelopModelDropdownList;
 
   TextStyle textStyleTextFieldCEP =
       TextStyle(color: ColorConstants.cepColorBackground, fontSize: 14);
@@ -156,9 +167,15 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
   SurveyBloc surVeyBloc;
   Services services;
 
-  void changeIndex(int index) {
+  void changeIndexIsOfficerInFamily(int index) {
     setState(() {
-      selectedIndexKhuVuc = index;
+      selectedIndexIsOfficerInFamily = index;
+    });
+  }
+
+  void changeIndexCareerModel(int index) {
+    setState(() {
+      selectedIndexCareerModel = index;
     });
   }
 
@@ -177,27 +194,68 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
 
   void loadInitData() {
     _tabController = new TabController(length: 2, vsync: this);
-
+    // co vo chong la CNV
+    selectedIndexIsOfficerInFamily = widget.khachHang.coVoChongConLaCnv ? 1 : 0;
+    // mo hinh nghe
+    selectedIndexCareerModel = widget.khachHang.moHinhNghe ? 1 : 0;
+    // nghe nghiep cu the
+    _controllerCareerSpecific.text = widget.khachHang.ghiChu;
+    // nghe nghiep cu the
+    _controllerFamilysMonthlyIncome.text =
+        widget.khachHang.thunhapHangthangCuaho.toString();
     // nghe nghiep
     _occupationOfCustomerModelDropdownList = Helper.buildDropdownFromMetaData(
         widget.listCombobox.where((e) => e.groupId == 'NgheNghiep').toList());
-    _occupationOfCustomerValue = "0";
+    _occupationOfCustomerValue = widget.khachHang.ngheNghiep.toInt().toString();
+    // thu nhap hang thang cua ho
+    _controllerFamilysMonthlyIncome.text =
+        widget.khachHang.thunhapHangthangCuaho.toInt().toString();
+
+    // ho va ten hoc sinh hoc bong
+    _controllerFullNameForScholarship.text =
+        widget.khachHang.hocBong.hotenhocsinh;
 
     ///nam sinh
     _birthOfYearModelDropdownList = Helper.buildDropdownNonMetaData(
         List<String>.generate(42, (int index) => (1980 + index).toString()));
-    _birthOfYearValue = "0";
+    _birthOfYearValue = widget.khachHang.hocBong.namsinh.toInt().toString();
 
     //quan he voi KH
     _relationsWithCustomersModelDropdownList = Helper.buildDropdownFromMetaData(
         widget.listCombobox
             .where((e) => e.groupId == 'QuanHeConChau')
             .toList());
-    _relationsWithCustomersValue = "0";
+    _relationsWithCustomersValue =
+        widget.khachHang.hocBong.quanhekhachhang.toInt().toString();
+
+    // truong
+    _controllerSchoolName.text = widget.khachHang.hocBong.truonghoc;
+    // lop
+    _controllerClassName.text = widget.khachHang.hocBong.lop.toInt().toString();
     // hoc luc
     _capacityModelDropdownList = Helper.buildDropdownFromMetaData(
         widget.listCombobox.where((e) => e.groupId == 'Hocluc').toList());
-    _capacityValue = "0";
+    _capacityValue = widget.khachHang.hocBong.hocluc.toInt().toString();
+
+    // hoan canh gia dinh
+    _controllerFamilyCircumstances.text =
+        widget.khachHang.hocBong.hoancanhgiadinh;
+
+    // trao hoc bong & qua tang
+    selectedIndexScholarshipAndGift =
+        widget.khachHang.hocBong.hocbongQuatang.toInt();
+
+    // muc dich su dung hoc bong
+    listUsePurpose = widget.listCombobox
+        .where((e) => e.groupId == 'MucDichSuDungHocBong')
+        .map((e) => MetaDataCheckbox(
+            groupText: e.itemText,
+            itemID: int.parse(e.itemId),
+            value: Helper.checkFlag(
+                widget.khachHang.hocBong.mucdich.toInt(), int.parse(e.itemId))))
+        .toList();
+    _controllerSpecificPurpose.text = widget.khachHang.hocBong.ghiChu;
+
     // ho so dinh kem
     listAttachment = widget.listCombobox
         .where((e) => e.groupId == 'DinhKemHoSo')
@@ -206,14 +264,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
             itemID: int.parse(e.itemId),
             value: Helper.checkFlag(63, int.parse(e.itemId))))
         .toList();
-    // muc dich su dung hoc bong
-    listUsePurpose = widget.listCombobox
-        .where((e) => e.groupId == 'MucDichSuDungHocBong')
-        .map((e) => MetaDataCheckbox(
-            groupText: e.itemText,
-            itemID: int.parse(e.itemId),
-            value: Helper.checkFlag(4, int.parse(e.itemId))))
-        .toList();
+
     // hoan canh cua hoc sinh
     listStudentSituation = widget.listCombobox
         .where((e) => e.groupId == 'HoanCanhHocSinh')
@@ -247,13 +298,12 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
     _homeOwnershipValue = "0";
 
     // quan he voi khach hang phat trien nghe
-    _relationsWithCustomersJobDevelopModelDropdownList = Helper.buildDropdownFromMetaData(widget
-        .listCombobox
-        .where((e) => e.groupId == 'QuanHeKhachHang')
-        .toList());
+    _relationsWithCustomersJobDevelopModelDropdownList =
+        Helper.buildDropdownFromMetaData(widget.listCombobox
+            .where((e) => e.groupId == 'QuanHeKhachHang')
+            .toList());
     _relationsWithCustomersJobDevelop = "0";
 
-    
     // dieu kien nha o cua khach hang
     listHousingConditionsOfCustomers = widget.listCombobox
         .where((e) => e.groupId == 'Dieukiennhao')
@@ -534,7 +584,8 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                           children: [
                             labelCard("Chi nhánh"),
                             cardVerticalDivider,
-                            labelValue("10"),
+                            labelValue(
+                                widget.khachHang.chinhanhId.toInt().toString()),
                           ],
                         ),
                         Row(
@@ -542,7 +593,8 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                           children: [
                             labelCard("Lần vay"),
                             cardVerticalDivider,
-                            labelValue("1"),
+                            labelValue(
+                                widget.khachHang.lanvay.toInt().toString()),
                           ],
                         ),
                       ],
@@ -553,7 +605,9 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                       children: [
                         labelCard("Thành viên:"),
                         cardVerticalDivider,
-                        labelValue("KIET365 - HUYNH MINH KIET"),
+                        labelValue(widget.khachHang.thanhVienId +
+                            ' - ' +
+                            widget.khachHang.hoTen),
                       ],
                     ),
                     divider15,
@@ -564,7 +618,9 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                           children: [
                             cardIcon(IconsCustomize.birth_date),
                             cardVerticalDivider,
-                            labelValue("15-02-1960"),
+                            labelValue(
+                                FormatDateConstants.convertDateTimeToDDMMYYYY(
+                                    widget.khachHang.ngaysinh)),
                           ],
                         ),
                         Row(
@@ -575,7 +631,8 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                               color: Colors.blue,
                             ),
                             cardVerticalDivider,
-                            labelValue("Nữ"),
+                            labelValue(
+                                widget.khachHang.gioitinh == 0 ? "Nữ" : "Nam"),
                           ],
                         ),
                         Row(
@@ -585,7 +642,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                               color: Colors.blue,
                             ),
                             cardVerticalDivider,
-                            labelValue("384769378"),
+                            labelValue(widget.khachHang.dienthoai),
                           ],
                         ),
                       ],
@@ -602,7 +659,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                         SizedBox(
                           width: screenWidth * 0.77,
                           child: Text(
-                            "102 Quang Trung,P.Hiệp Phú, Quận 9, TP Thủ Đức",
+                            widget.khachHang.diachi,
                             style: TextStyle(
                                 color: Colors.green[800],
                                 fontSize: 14,
@@ -622,7 +679,9 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                               color: Colors.blue,
                             ),
                             cardVerticalDivider,
-                            labelValue("14-08-2008"),
+                            labelValue(
+                                FormatDateConstants.convertDateTimeToDDMMYYYY(
+                                    widget.khachHang.thoigianthamgia)),
                           ],
                         ),
                         Row(
@@ -630,7 +689,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                           children: [
                             labelCard("Mã số hộ nghèo:"),
                             cardVerticalDivider,
-                            labelValue("123XX2"),
+                            labelValue(widget.khachHang.maHongheoCanngheo),
                           ],
                         ),
                       ],
@@ -675,12 +734,12 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        customRadio(listTypeArea[0], 1),
+                        customRadioIsOfficerInFamily(listTypeArea[0], 1),
                         VerticalDivider(
                           width: 10,
                           color: Colors.grey.withOpacity(0),
                         ),
-                        customRadio(listTypeArea[1], 0),
+                        customRadioIsOfficerInFamily(listTypeArea[1], 0),
                       ],
                     ),
                   )
@@ -722,12 +781,12 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        customRadio(listTypeArea[0], 1),
+                        customRadioCareerModel(listTypeArea[0], 1),
                         VerticalDivider(
                           width: 10,
                           color: Colors.grey.withOpacity(0),
                         ),
-                        customRadio(listTypeArea[1], 0),
+                        customRadioCareerModel(listTypeArea[1], 0),
                       ],
                     ),
                   )
@@ -821,7 +880,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                         Expanded(
                           child: TextField(
                             style: textStyleTextFieldCEP,
-                            controller: _controllerAmountOfLaborTools,
+                            controller: _controllerFamilysMonthlyIncome,
                             decoration: inputDecorationTextFieldCEP(
                                 "Nhập số tiền...",
                                 suffixText: "VNĐ"),
@@ -971,8 +1030,6 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                           ),
                         ),
                       ),
-                    
-
                       AnimatedSize(
                         vsync: this,
                         duration: Duration(milliseconds: 1500),
@@ -1162,7 +1219,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                                     inputDecorationTextFieldCEP(
                                                         "Nhập..."),
                                                 keyboardType:
-                                                    TextInputType.text,
+                                                    TextInputType.number,
                                                 // Only numbers can be entered
                                               ),
                                             ),
@@ -1337,7 +1394,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                               height: 40,
                                               child: TextField(
                                                 controller:
-                                                    _controllerClassName,
+                                                    _controllerSpecificPurpose,
                                                 style: textStyleTextFieldCEP,
                                                 decoration:
                                                     inputDecorationTextFieldCEP(
@@ -1473,7 +1530,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                         ],
                                       ),
                                     ),
-                                   ],
+                                  ],
                                 ),
                               ),
                             ],
@@ -2027,8 +2084,8 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                             height: 40,
                                             child: TextField(
                                               style: textStyleTextFieldCEP,
-                                              controller:
-                                                  _controllerAmountOfLaborTools,
+                                              // controller:
+                                              //     _controllerAmountOfLaborTools,
                                               decoration:
                                                   inputDecorationTextFieldCEP(
                                                       "Nhập số tiền...",
@@ -2065,8 +2122,8 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                             height: 40,
                                             child: TextField(
                                               style: textStyleTextFieldCEP,
-                                              controller:
-                                                  _controllerAmountOfLaborTools,
+                                              // controller:
+                                              //     _controllerAmountOfLaborTools,
                                               decoration:
                                                   inputDecorationTextFieldCEP(
                                                       "Nhập số tiền...",
@@ -2103,8 +2160,8 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                             height: 40,
                                             child: TextField(
                                               style: textStyleTextFieldCEP,
-                                              controller:
-                                                  _controllerAmountOfLaborTools,
+                                              // controller:
+                                              //     _controllerAmountOfLaborTools,
                                               decoration:
                                                   inputDecorationTextFieldCEP(
                                                       "Nhập số tiền...",
@@ -2141,8 +2198,8 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                             height: 40,
                                             child: TextField(
                                               style: textStyleTextFieldCEP,
-                                              controller:
-                                                  _controllerAmountOfLaborTools,
+                                              // controller:
+                                              //     _controllerAmountOfLaborTools,
                                               decoration:
                                                   inputDecorationTextFieldCEP(
                                                       "Nhập số tiền...",
@@ -2232,8 +2289,8 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                           Container(
                                             height: 40,
                                             child: TextField(
-                                              controller:
-                                                  _controllerFamilyCircumstances,
+                                              // controller:
+                                              //     _controllerFamilyCircumstances,
                                               style: textStyleTextFieldCEP,
                                               decoration:
                                                   inputDecorationTextFieldCEP(
@@ -2450,8 +2507,8 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                           Container(
                                             height: 40,
                                             child: TextField(
-                                              controller:
-                                                  _controllerFamilyCircumstances,
+                                              // controller:
+                                              //     _controllerFamilyCircumstances,
                                               style: textStyleTextFieldCEP,
                                               decoration:
                                                   inputDecorationTextFieldCEP(
@@ -2487,10 +2544,12 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                                   _relationsWithCustomersJobDevelopModelDropdownList,
                                               onChanged: (value) {
                                                 setState(() {
-                                                  _relationsWithCustomersJobDevelop = value;
+                                                  _relationsWithCustomersJobDevelop =
+                                                      value;
                                                 });
                                               },
-                                              value: _relationsWithCustomersJobDevelop,
+                                              value:
+                                                  _relationsWithCustomersJobDevelop,
                                               width: screenWidth * 1,
                                               isEnabled: true,
                                               isUnderline: true,
@@ -2519,8 +2578,8 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                           Container(
                                             height: 40,
                                             child: TextField(
-                                              controller:
-                                                  _controllerFamilyCircumstances,
+                                              // controller:
+                                              //     _controllerFamilyCircumstances,
                                               style: textStyleTextFieldCEP,
                                               decoration:
                                                   inputDecorationTextFieldCEP(
@@ -2788,10 +2847,10 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                     animation: _controllerRotateIconInsurance,
                                     builder: (_, child) {
                                       return Transform.rotate(
-                                        angle:
-                                            _controllerRotateIconInsurance.value *
-                                                1 *
-                                                math.pi,
+                                        angle: _controllerRotateIconInsurance
+                                                .value *
+                                            1 *
+                                            math.pi,
                                         child: child,
                                       );
                                     },
@@ -2844,8 +2903,8 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                             height: 40,
                                             child: TextField(
                                               style: textStyleTextFieldCEP,
-                                              controller:
-                                                  _controllerAmountOfLaborTools,
+                                              // controller:
+                                              //     _controllerAmountOfLaborTools,
                                               decoration:
                                                   inputDecorationTextFieldCEP(
                                                       "Nhập số tiền...",
@@ -2990,10 +3049,12 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                                   _relationsWithCustomersJobDevelopModelDropdownList,
                                               onChanged: (value) {
                                                 setState(() {
-                                                  _relationsWithCustomersJobDevelop = value;
+                                                  _relationsWithCustomersJobDevelop =
+                                                      value;
                                                 });
                                               },
-                                              value: _relationsWithCustomersJobDevelop,
+                                              value:
+                                                  _relationsWithCustomersJobDevelop,
                                               width: screenWidth * 1,
                                               isEnabled: true,
                                               isUnderline: true,
@@ -3002,7 +3063,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                         ],
                                       ),
                                     ),
-                                 divider15,
+                                    divider15,
                                     Container(
                                       child: Row(
                                         mainAxisAlignment:
@@ -3048,8 +3109,6 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                     ],
                   ),
                 ),
-                
-              
               ],
             ),
           ),
@@ -3061,18 +3120,36 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
         ),
       );
 
-  Widget customRadio(String txt, int index) {
+  Widget customRadioIsOfficerInFamily(String txt, int index) {
     return OutlineButton(
-      onPressed: () => changeIndex(index),
+      onPressed: () => changeIndexIsOfficerInFamily(index),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       borderSide: BorderSide(
-          color: selectedIndexKhuVuc == index
+          color: selectedIndexIsOfficerInFamily == index
               ? ColorConstants.cepColorBackground
               : Colors.grey),
       child: Text(
         txt,
         style: TextStyle(
-            color: selectedIndexKhuVuc == index
+            color: selectedIndexIsOfficerInFamily == index
+                ? ColorConstants.cepColorBackground
+                : Colors.grey),
+      ),
+    );
+  }
+
+  Widget customRadioCareerModel(String txt, int index) {
+    return OutlineButton(
+      onPressed: () => changeIndexCareerModel(index),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      borderSide: BorderSide(
+          color: selectedIndexCareerModel == index
+              ? ColorConstants.cepColorBackground
+              : Colors.grey),
+      child: Text(
+        txt,
+        style: TextStyle(
+            color: selectedIndexCareerModel == index
                 ? ColorConstants.cepColorBackground
                 : Colors.grey),
       ),

@@ -24,6 +24,8 @@ import 'package:CEPmobile/models/download_data/survey_info.dart';
 import 'package:CEPmobile/ui/components/ModalProgressHUDCustomize.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 
+import '../../../GlobalTranslations.dart';
+
 class CommunityDevelopmentScreen extends StatefulWidget {
   @override
   _CommunityDevelopmentScreenState createState() =>
@@ -36,17 +38,32 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
   double screenWidth, screenHeight;
   TabController _tabController;
   GlobalKey<AutoCompleteTextFieldState<String>> key = new GlobalKey();
-  List<bool> isActiveForList = new List<bool>();
+  //List<bool> isActiveForList = new List<bool>();
+  List<bool> isActiveForListScholarship = new List<bool>();
+  List<bool> isActiveForListGiftTet = new List<bool>();
+  List<bool> isActiveForListRoof = new List<bool>();
+  List<bool> isActiveForListDevelopOccupation = new List<bool>();
+  List<bool> isActiveForListInsurance = new List<bool>();
+
+  var arrActive = new List(6);
+
   CommunityDevelopmentBloc communityDevelopmentBloc;
   Services services;
+  bool isInitLoad;
 
   @override
   void initState() {
+    isInitLoad = true;
+    arrActive[0] = new List<bool>();
+    arrActive[1] = new List<bool>();
+    arrActive[2] = new List<bool>();
+    arrActive[3] = new List<bool>();
+    arrActive[4] = new List<bool>();
+    arrActive[5] = new List<bool>();
     _tabController = new TabController(length: 6, vsync: this);
     animationController = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
 
-    isActiveForList = List<bool>.generate(4, (int index) => false);
     services = Services.of(context);
     communityDevelopmentBloc = new CommunityDevelopmentBloc(
         services.sharePreferenceService, services.commonService);
@@ -138,213 +155,341 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                 color: ColorConstants.cepColorBackground,
                 child: ModalProgressHUDCustomize(
                   inAsyncCall: state?.isLoading ?? false,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Container(
-                        height: MediaQuery.of(context).size.height / 5,
-                        decoration: BoxDecoration(
-                          borderRadius: new BorderRadius.only(
-                            bottomLeft: Radius.elliptical(260, 100),
-                            // topRight: Radius.elliptical(260, 100),
-                          ),
-                          color: Colors.white,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 40, right: 40, top: 30),
-                          child: Row(
+                  child: StreamBuilder<List<KhachHang>>(
+                      stream: communityDevelopmentBloc
+                          .getCommunityDevelopmentStream,
+                      builder: (context, snapshot) {
+                        if (snapshot.data != null) {
+                          List<KhachHang> listCommunityDevelopmentAll =
+                              snapshot.data;
+                          List<KhachHang>
+                              listCommunityDevelopmentForScholarship =
+                              listCommunityDevelopmentAll
+                                  .where((e) => e.hocBong.serverID != 0)
+                                  .toList();
+                          List<KhachHang> listCommunityDevelopmentForGiftTet =
+                              listCommunityDevelopmentAll
+                                  .where((e) => e.quaTet.serverId != 0)
+                                  .toList();
+                          List<KhachHang> listCommunityDevelopmentForRoof =
+                              listCommunityDevelopmentAll
+                                  .where((e) => e.maiNha.serverId != 0)
+                                  .toList();
+                          List<KhachHang>
+                              listCommunityDevelopmentForDevelopOccupation =
+                              listCommunityDevelopmentAll
+                                  .where((e) => e.phatTrienNghe.serverId != 0)
+                                  .toList();
+                          List<KhachHang> listCommunityDevelopmentForInsurance =
+                              listCommunityDevelopmentAll
+                                  .where((e) => e.bhyt.serverId != 0)
+                                  .toList();
+
+                          if (isInitLoad == true) {
+                            arrActive[0] = List<bool>.generate(
+                                listCommunityDevelopmentAll.length,
+                                (int index) => false);
+                            arrActive[1] = List<bool>.generate(
+                                listCommunityDevelopmentForScholarship.length,
+                                (int index) => false);
+                            arrActive[2] = List<bool>.generate(
+                                listCommunityDevelopmentForGiftTet.length,
+                                (int index) => false);
+                            arrActive[3] = List<bool>.generate(
+                                listCommunityDevelopmentForRoof.length,
+                                (int index) => false);
+                            arrActive[4] = List<bool>.generate(
+                                listCommunityDevelopmentForDevelopOccupation
+                                    .length,
+                                (int index) => false);
+                            arrActive[5] = List<bool>.generate(
+                                listCommunityDevelopmentForInsurance.length,
+                                (int index) => false);
+                            isInitLoad = false;
+                          }
+
+                          return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Card(
-                                  elevation: 4.0,
-                                  child: Container(
-                                    height: 30,
-                                    width: size.width * 0.2,
-                                    child: Center(
-                                      child: Text(
-                                        "Cụm ID",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                            color: Color(0xff9596ab)),
+                              Container(
+                                height: MediaQuery.of(context).size.height / 5,
+                                decoration: BoxDecoration(
+                                  borderRadius: new BorderRadius.only(
+                                    bottomLeft: Radius.elliptical(260, 100),
+                                    // topRight: Radius.elliptical(260, 100),
+                                  ),
+                                  color: Colors.white,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 40, right: 40, top: 30),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Card(
+                                          elevation: 4.0,
+                                          child: Container(
+                                            height: 30,
+                                            width: size.width * 0.2,
+                                            child: Center(
+                                              child: Text(
+                                                "Cụm ID",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 14,
+                                                    color: Color(0xff9596ab)),
+                                              ),
+                                            ),
+                                          )),
+                                      Container(
+                                        height: 30,
+                                        width: size.width * 0.55,
+                                        child: Center(
+                                          child: SimpleAutoCompleteTextField(
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.blue),
+                                              key: key,
+                                              suggestions: [
+                                                "B147",
+                                                "B148",
+                                                "B175",
+                                                "B067"
+                                              ],
+                                              decoration:
+                                                  decorationTextFieldCEP,
+                                              // controller: _textCumIDAutoComplete,
+                                              // textSubmitted: (text) {
+                                              //   txtCum = text;
+                                              // },
+                                              clearOnSubmit: false),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                //  color: Colors.blue,
+                              ),
+                              Material(
+                                color: ColorConstants.cepColorBackground,
+                                child: TabBar(
+                                  isScrollable: true,
+                                  unselectedLabelColor:
+                                      Colors.blueGrey.shade300,
+                                  indicatorColor: Colors.red,
+                                  labelColor: Colors.white,
+                                  tabs: [
+                                    Tab(
+                                      child: Column(
+                                        children: [
+                                          Center(
+                                            child: Icon(Icons.list),
+                                          ),
+                                          Center(
+                                              child: Text(
+                                            'Tất Cả (${listCommunityDevelopmentAll.length})',
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold),
+                                          )),
+                                        ],
                                       ),
                                     ),
-                                  )),
-                              Container(
-                                height: 30,
-                                width: size.width * 0.55,
-                                child: Center(
-                                  child: SimpleAutoCompleteTextField(
-                                      style: TextStyle(
-                                          fontSize: 14, color: Colors.blue),
-                                      key: key,
-                                      suggestions: [
-                                        "B147",
-                                        "B148",
-                                        "B175",
-                                        "B067"
-                                      ],
-                                      decoration: decorationTextFieldCEP,
-                                      // controller: _textCumIDAutoComplete,
-                                      // textSubmitted: (text) {
-                                      //   txtCum = text;
-                                      // },
-                                      clearOnSubmit: false),
+                                    Tab(
+                                      child: Column(
+                                        children: [
+                                          Center(
+                                            child: Icon(
+                                                IconsCustomize.scholarship),
+                                          ),
+                                          Center(
+                                              child: Text(
+                                            'Học Bổng (${listCommunityDevelopmentForScholarship.length})',
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold),
+                                          )),
+                                        ],
+                                      ),
+                                    ),
+                                    Tab(
+                                      child: Column(
+                                        children: [
+                                          Center(
+                                            child: Icon(IconsCustomize.quatet),
+                                          ),
+                                          Center(
+                                              child: Text(
+                                            'Quà Tết (${listCommunityDevelopmentForGiftTet.length})',
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold),
+                                          )),
+                                        ],
+                                      ),
+                                    ),
+                                    Tab(
+                                      child: Column(
+                                        children: [
+                                          Center(
+                                            child: Icon(IconsCustomize.mainha),
+                                          ),
+                                          Center(
+                                              child: Text(
+                                            'Mái Nhà (${listCommunityDevelopmentForRoof.length})',
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold),
+                                          )),
+                                        ],
+                                      ),
+                                    ),
+                                    Tab(
+                                      child: Column(
+                                        children: [
+                                          Center(
+                                            child: Icon(IconsCustomize.ptnghe),
+                                          ),
+                                          Center(
+                                              child: Text(
+                                            'PT Nghề (${listCommunityDevelopmentForDevelopOccupation.length})',
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold),
+                                          )),
+                                        ],
+                                      ),
+                                    ),
+                                    Tab(
+                                      child: Column(
+                                        children: [
+                                          Center(
+                                            child:
+                                                Icon(IconsCustomize.insurance),
+                                          ),
+                                          Center(
+                                              child: Text(
+                                            'Bảo Hiểm (${listCommunityDevelopmentForInsurance.length})',
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold),
+                                          )),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                  controller: _tabController,
+                                  indicatorSize: TabBarIndicatorSize.tab,
+                                ),
+                              ),
+                              Expanded(
+                                child: TabBarView(
+                                  children: [
+                                    Container(
+                                        color: Colors.white,
+                                        child: getItemListView(
+                                            listCommunityDevelopmentAll, 0)),
+                                    Container(
+                                        color: Colors.white,
+                                        child: getItemListView(
+                                            listCommunityDevelopmentForScholarship,
+                                            1)),
+                                    Container(
+                                        color: Colors.white,
+                                        child: getItemListView(
+                                            listCommunityDevelopmentForGiftTet,
+                                            2)),
+                                    Container(
+                                        color: Colors.white,
+                                        child: getItemListView(
+                                            listCommunityDevelopmentForRoof,
+                                            3)),
+                                    Container(
+                                        color: Colors.white,
+                                        child: getItemListView(
+                                            listCommunityDevelopmentForDevelopOccupation,
+                                            4)),
+                                    Container(
+                                        color: Colors.white,
+                                        child: getItemListView(
+                                            listCommunityDevelopmentForInsurance,
+                                            5)),
+                                  ],
+                                  controller: _tabController,
                                 ),
                               ),
                             ],
-                          ),
-                        ),
-                        //  color: Colors.blue,
-                      ),
-                      Material(
-                        color: ColorConstants.cepColorBackground,
-                        child: TabBar(
-                          isScrollable: true,
-                          unselectedLabelColor: Colors.blueGrey.shade300,
-                          indicatorColor: Colors.red,
-                          labelColor: Colors.white,
-                          tabs: [
-                            Tab(
-                              child: Column(
-                                children: [
-                                  Center(
-                                    child: Icon(Icons.list),
+                          );
+                        } else {
+                          return ModalProgressHUDCustomize(
+                              inAsyncCall: state?.isLoading,
+                              child: Container(
+                                color: Colors.white,
+                                child: Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.asset('assets/images/no_data.gif',
+                                          width: 150, height: 150),
+                                      Text(
+                                        allTranslations.text("NoDataFound"),
+                                        style: TextStyle(
+                                            color: Colors.grey[700],
+                                            fontWeight: FontWeight.w700,
+                                            wordSpacing: 1),
+                                      ),
+                                      Text(
+                                        allTranslations
+                                            .text("ClickThisButtonToDownload"),
+                                        style: TextStyle(
+                                            color: Colors.grey[700],
+                                            fontWeight: FontWeight.w700,
+                                            wordSpacing: 1),
+                                      ),
+                                      RaisedButton(
+                                        onPressed: () {
+                                          Navigator.pushNamed(context, 'download',
+                                              arguments: {
+                                                'selectedIndex': 3,
+                                              }).then((value) => setState(() {
+                                                if (true == value) {
+                                                  initState();
+                                                }
+                                              }));
+                                        },
+                                        child: Text(
+                                          allTranslations.text("DownLoad"),
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                        color: Colors.cyan,
+                                        textColor: Colors.white,
+                                      )
+                                    ],
                                   ),
-                                  Center(
-                                      child: Text(
-                                    'Tất Cả (7)',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold),
-                                  )),
-                                ],
-                              ),
-                            ),
-                            Tab(
-                              child: Column(
-                                children: [
-                                  Center(
-                                    child: Icon(IconsCustomize.scholarship),
-                                  ),
-                                  Center(
-                                      child: Text(
-                                    'Học Bổng (5)',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold),
-                                  )),
-                                ],
-                              ),
-                            ),
-                            Tab(
-                              child: Column(
-                                children: [
-                                  Center(
-                                    child: Icon(IconsCustomize.quatet),
-                                  ),
-                                  Center(
-                                      child: Text(
-                                    'Quà Tết (2)',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold),
-                                  )),
-                                ],
-                              ),
-                            ),
-                            Tab(
-                              child: Column(
-                                children: [
-                                  Center(
-                                    child: Icon(IconsCustomize.mainha),
-                                  ),
-                                  Center(
-                                      child: Text(
-                                    'Mái Nhà (3)',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold),
-                                  )),
-                                ],
-                              ),
-                            ),
-                            Tab(
-                              child: Column(
-                                children: [
-                                  Center(
-                                    child: Icon(IconsCustomize.ptnghe),
-                                  ),
-                                  Center(
-                                      child: Text(
-                                    'PT Nghề (1)',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold),
-                                  )),
-                                ],
-                              ),
-                            ),
-                            Tab(
-                              child: Column(
-                                children: [
-                                  Center(
-                                    child: Icon(IconsCustomize.insurance),
-                                  ),
-                                  Center(
-                                      child: Text(
-                                    'Bảo Hiểm (0)',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold),
-                                  )),
-                                ],
-                              ),
-                            ),
-                          ],
-                          controller: _tabController,
-                          indicatorSize: TabBarIndicatorSize.tab,
-                        ),
-                      ),
-                      Expanded(
-                        child: TabBarView(
-                          children: [
-                            Container(
-                                color: Colors.white, child: getItemListView()),
-                            Container(
-                                color: Colors.white, child: getItemListView()),
-                            Container(
-                                color: Colors.white, child: getItemListView()),
-                            Container(
-                                color: Colors.white, child: getItemListView()),
-                            Container(
-                                color: Colors.white, child: getItemListView()),
-                            Container(
-                                color: Colors.white, child: getItemListView()),
-                          ],
-                          controller: _tabController,
-                        ),
-                      ),
-                    ],
-                  ),
+                                ),
+                              ));
+                        }
+                      }),
                 ),
               );
             }));
   }
 
-  Widget getItemListView() {
+  Widget getItemListView(List<KhachHang> listItem, int index) {
     return Container(
         color: Colors.grey[300],
-        // margin: EdgeInsets.only(top: 10),
         child: ListView.builder(
             physics:
                 AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-            itemCount: 4,
+            itemCount: listItem.length,
             itemBuilder: (context, i) {
-              final int count = 4;
+              final int count = listItem.length;
               final Animation<double> animation =
                   Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
                       parent: animationController,
@@ -363,9 +508,13 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                         child: InkWell(
                           onTap: () {
                             setState(() {
-                              isActiveForList =
-                                  List<bool>.generate(4, (int index) => false);
-                              isActiveForList[i] = true;
+                              if (arrActive[index][i] == true) {
+                                arrActive[index][i] = !arrActive[index][i];
+                              } else {
+                                arrActive[index] = List<bool>.generate(
+                                    listItem.length, (int index) => false);
+                                arrActive[index][i] = true;
+                              }
                             });
                           },
                           child: new Container(
@@ -380,8 +529,8 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                               child: Container(
-                                height: 110,
-                                color: isActiveForList[i] == false
+                                height: 100,
+                                color: arrActive[index][i] == false
                                     ? Colors.white10
                                     : Colors.lightGreen[200],
                                 child: Stack(
@@ -389,13 +538,13 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                                     new AnimatedPositioned(
                                       duration: Duration(milliseconds: 500),
                                       curve: Curves.linearToEaseOut,
-                                      left: isActiveForList[i] == false
+                                      left: arrActive[index][i] == false
                                           ? screenWidth * 1
                                           : (screenWidth * 1) - 98,
                                       width: 70,
                                       //top: 35,
                                       child: Container(
-                                        height: 110,
+                                        height: 100,
                                         color: Colors.red,
                                         child: IconButton(
                                             icon: Icon(
@@ -422,7 +571,7 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                                                 Navigator.pushNamed(context,
                                                     'comunitydevelopmentdetail',
                                                     arguments: {
-                                                      'id': 1,
+                                                      'khachhang': listItem[i],
                                                       'metadata': listCombobox,
                                                     }).then((value) {});
                                               }
@@ -433,10 +582,10 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                                       duration: Duration(milliseconds: 500),
                                       curve: Curves.linearToEaseOut,
                                       right:
-                                          isActiveForList[i] == false ? 0 : 70,
+                                          arrActive[index][i] == false ? 0 : 70,
                                       child: AnimatedContainer(
                                         width: screenWidth * 0.927,
-                                        height: 110,
+                                        height: 100,
                                         padding: EdgeInsets.all(8),
                                         // margin: EdgeInsets.only(
                                         //     right: isActiveForList[i] == false ? 0 : 60),
@@ -445,18 +594,18 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                                             borderRadius: BorderRadius.only(
                                                 topLeft: Radius.circular(10),
                                                 topRight: Radius.circular(
-                                                    isActiveForList[i] == false
+                                                    arrActive[index][i] == false
                                                         ? 10
                                                         : 0),
                                                 bottomLeft: Radius.circular(10),
                                                 bottomRight: Radius.circular(
-                                                    isActiveForList[i] == false
+                                                    arrActive[index][i] == false
                                                         ? 10
                                                         : 0)),
                                             // borderRadius: BorderRadius.all(
                                             //   Radius.circular(10),
                                             // ),
-                                            color: isActiveForList[i] == false
+                                            color: arrActive[index][i] == false
                                                 ? Colors.white10
                                                 : Colors.lightGreen[200]),
                                         // Provide an optional curve to make the animation feel smoother.
@@ -471,7 +620,9 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                                               padding: EdgeInsets.only(
                                                   left: 4, bottom: 5),
                                               child: Text(
-                                                "KIET365 - Huynh Minh Kiet",
+                                                listItem[i].thanhVienId +
+                                                    ' - ' +
+                                                    listItem[i].hoTen,
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 13),
@@ -503,7 +654,10 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                                                       Container(
                                                         width: 30,
                                                         child: Text(
-                                                          "Nam",
+                                                          listItem[i].gioitinh ==
+                                                                  0
+                                                              ? "Nữ"
+                                                              : "Nam",
                                                           style: TextStyle(
                                                               fontWeight:
                                                                   FontWeight
@@ -532,7 +686,9 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                                                         width: 1,
                                                       ),
                                                       Text(
-                                                        "1980",
+                                                        listItem[i]
+                                                            .ngaysinh
+                                                            .substring(0, 4),
                                                         style: TextStyle(
                                                             fontWeight:
                                                                 FontWeight.bold,
@@ -555,7 +711,7 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                                                         width: 15,
                                                       ),
                                                       Text(
-                                                        "212275568",
+                                                        listItem[i].cmnd,
                                                         style: TextStyle(
                                                             fontWeight:
                                                                 FontWeight.bold,
@@ -579,9 +735,9 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                                                     width: 1,
                                                   ),
                                                   Container(
-                                                    width: 230,
+                                                    width: screenWidth * 0.8,
                                                     child: Text(
-                                                      "102 Quang Trung, P. Hiệp Phú, Quận 9, TP Thủ Đức",
+                                                      listItem[i].diachi,
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.bold,

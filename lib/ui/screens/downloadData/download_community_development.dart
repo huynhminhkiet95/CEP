@@ -4,10 +4,8 @@ import 'package:CEPmobile/config/formatdate.dart';
 import 'package:CEPmobile/ui/screens/Home/styles.dart';
 import 'package:CEPmobile/blocs/download_data/download_data_bloc.dart';
 import 'package:CEPmobile/services/service.dart';
-import 'package:CEPmobile/bloc_widgets/bloc_state_builder.dart';
 import 'package:CEPmobile/blocs/download_data/download_data_event.dart';
-import 'package:CEPmobile/blocs/download_data/download_data_state.dart';
-
+import 'package:CEPmobile/global_variables/global_download.dart';
 import '../../../GlobalTranslations.dart';
 
 class DownloadCommunityDevelopment extends StatefulWidget {
@@ -58,6 +56,7 @@ class _DownloadCommunityDevelopmentState
     if (textAutoCompleteCumId.text.length > 0) {
       downloadDataBloc.emitEvent(
         DownloadDataCommunityDevelopmentEvent(textAutoCompleteCumId.text));
+      GlobalDownload.isSubmitDownload = true;
     }
   }
 

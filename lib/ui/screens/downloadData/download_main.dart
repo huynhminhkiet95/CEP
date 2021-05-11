@@ -51,10 +51,22 @@ class _DownloadScreenState extends State<DownloadScreen> {
           textColor: Colors.black,
         );
       }
+
       if (widget.selectedIndex == 0) {
         _selectedIndex = widget.selectedIndex;
         Fluttertoast.showToast(
           msg: "Vui lòng tải dữ liệu cho Khảo Sát !",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.grey[300].withOpacity(0.7),
+          textColor: Colors.black,
+        );
+      }
+
+      if (widget.selectedIndex == 3) {
+        _selectedIndex = widget.selectedIndex;
+        Fluttertoast.showToast(
+          msg: "Vui lòng tải dữ liệu cho PTCĐ !",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           backgroundColor: Colors.grey[300].withOpacity(0.7),

@@ -184,7 +184,7 @@ class KhachHang {
         ghiChu: json["ghiChu"],
         moHinhNghe: json["moHinhNghe"] == 0 ? false : true,
         thunhapHangthangCuaho: (json["thunhapHangthangCuaho"] ?? 0).toDouble(),
-        coVoChongConLaCnv: json["coVoChongConLaCNVINTEGER"]);
+        coVoChongConLaCnv: json["coVoChongConLaCNV"] == 0 ? false : true);
   }
 }
 
@@ -424,14 +424,14 @@ class BHYT {
   BHYT.fromJson(Map<String, dynamic> json) {
     if (json["idKhachhang"] != null) this.idKhachhang = json["idKhachhang"];
     if (json["serverID"]  != null) this.serverId = json["serverID"];
-    if (json["nam"]  != null) this.nam = json["nam"];
-    if (json["maKhachHang"]  != null) this.nam = json["maKhachHang"];
-    if (json["mucphibaohiem"]  != null) this.nam = json["mucphibaohiem"];
-    if (json["dieukienbhyt"]  != null) this.nam = json["dieukienbhyt"];
-    if (json["tinhtrangsuckhoe"]  != null) this.nam = json["tinhtrangsuckhoe"];
-    if (json["nguoithan"]  != null) this.nam = json["nguoithan"];
-    if (json["namsinh"]  != null) this.nam = json["namsinh"];
-    if (json["quanHeKhachHang"]  != null) this.nam = json["quanHeKhachHang"];
+    if (json["nam"]  != null) this.nam = json["nam"].toDouble();
+    if (json["maKhachHang"]  != null) this.maKhachHang = json["maKhachHang"];
+    if (json["mucphibaohiem"]  != null) this.mucphibaohiem = json["mucphibaohiem"].toDouble();
+    if (json["dieukienbhyt"]  != null) this.dieukienbhyt = json["dieukienbhyt"].toDouble();
+    if (json["tinhtrangsuckhoe"]  != null) this.tinhtrangsuckhoe = json["tinhtrangsuckhoe"].toDouble();
+    if (json["nguoithan"]  != null) this.nguoithan = json["nguoithan"];
+    if (json["namsinh"]  != null) this.namsinh = json["namsinh"].toDouble();
+    if (json["quanHeKhachHang"]  != null) this.quanHeKhachHang = json["quanHeKhachHang"].toDouble();
   }
 
   Map<String, dynamic> toJson() {

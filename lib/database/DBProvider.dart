@@ -1226,8 +1226,8 @@ class DBProvider {
                 item.cumId
               ],
               limit: 1);
-          if (item.bhyt != null) {
-            String queryStringBHYT = '''
+
+          String queryStringBHYT = '''
                   INSERT Into bhyt_cummunity_development(
                                     idKhachhang,
                                     serverID,
@@ -1241,21 +1241,20 @@ class DBProvider {
                                     quanHeKhachHang
                                     )
                 VALUES (${listCustomer.first["id"]},
-                        ${item.bhyt.serverId},
-                        ${item.bhyt.nam},
-                        "${item.bhyt.maKhachHang}",
-                        ${item.bhyt.mucphibaohiem},
-                        ${item.bhyt.dieukienbhyt},
-                        ${item.bhyt.tinhtrangsuckhoe},
-                        "${item.bhyt.nguoithan}",
-                        ${item.bhyt.namsinh},
-                        ${item.bhyt.quanHeKhachHang}
+                        ${item.bhyt == null ? 0 : item.bhyt.serverId},
+                        ${item.bhyt == null ? DateTime.now().year : item.bhyt.nam},
+                        "${item.bhyt == null ? item.chinhanhId.toInt().toString() + '_' + item.thanhVienId : item.bhyt.maKhachHang}",
+                        ${item.bhyt == null ? 0 : item.bhyt.mucphibaohiem},
+                        ${item.bhyt == null ? 0 : item.bhyt.dieukienbhyt},
+                        ${item.bhyt == null ? 0 : item.bhyt.tinhtrangsuckhoe},
+                        "${item.bhyt == null ? "" : item.bhyt.nguoithan}",
+                        ${item.bhyt == null ? DateTime.now().year : item.bhyt.namsinh},
+                        ${item.bhyt == null ? 0 : item.bhyt.quanHeKhachHang}
                         );
           ''';
-            await db.rawInsert(queryStringBHYT);
-          }
-          if (item.hocBong != null) {
-            String queryStringHocBong = '''
+          await db.rawInsert(queryStringBHYT);
+
+          String queryStringHocBong = '''
                   INSERT Into hocbong_cummunity_development(
                                     idKhachhang,
                                     serverID,
@@ -1277,29 +1276,28 @@ class DBProvider {
                                     giatri
                                     )
                 VALUES (${listCustomer.first["id"]},
-                        ${item.hocBong.serverID},
-                        ${item.hocBong.nam},
-                        "${item.hocBong.maKhachHang}",
-                        "${item.hocBong.hotenhocsinh}",
-                        ${item.hocBong.namsinh},
-                        ${item.hocBong.lop},
-                        "${item.hocBong.truonghoc}",
-                        ${item.hocBong.quanhekhachhang},
-                        ${item.hocBong.hocbongQuatang},
-                        ${item.hocBong.hocluc},
-                        ${item.hocBong.danhanhocbong},
-                        ${item.hocBong.dinhKemHoSo},
-                        ${item.hocBong.hoancanhhocsinh},
-                        "${item.hocBong.hoancanhgiadinh}",
-                        ${item.hocBong.mucdich},
-                        "${item.hocBong.ghiChu}",
-                        ${item.hocBong.giatri}
+                        ${item.hocBong == null ? 0 : item.hocBong.serverID},
+                        ${item.hocBong == null ? DateTime.now().year : item.hocBong.nam},
+                        "${item.hocBong == null ? item.chinhanhId.toInt().toString() + '_' + item.thanhVienId : item.hocBong.maKhachHang}",
+                        "${item.hocBong == null ? "" : item.hocBong.hotenhocsinh}",
+                        ${item.hocBong == null ? DateTime.now().year : item.hocBong.namsinh},
+                        ${item.hocBong == null ? 0 : item.hocBong.lop},
+                        "${item.hocBong == null ? '' : item.hocBong.truonghoc}",
+                        ${item.hocBong == null ? 0 : item.hocBong.quanhekhachhang},
+                        ${item.hocBong == null ? 0 : item.hocBong.hocbongQuatang},
+                        ${item.hocBong == null ? 0 : item.hocBong.hocluc},
+                        ${item.hocBong == null ? 0 : item.hocBong.danhanhocbong},
+                        ${item.hocBong == null ? 0 : item.hocBong.dinhKemHoSo},
+                        ${item.hocBong == null ? 0 : item.hocBong.hoancanhhocsinh},
+                        "${item.hocBong == null ? '' : item.hocBong.hoancanhgiadinh}",
+                        ${item.hocBong == null ? 0 : item.hocBong.mucdich},
+                        "${item.hocBong == null ? '' : item.hocBong.ghiChu}",
+                        ${item.hocBong == null ? 0 : item.hocBong.giatri}
                         );
           ''';
-            await db.rawInsert(queryStringHocBong);
-          }
-          if (item.maiNha != null) {
-            String queryStringMaiNha = '''
+          await db.rawInsert(queryStringHocBong);
+
+          String queryStringMaiNha = '''
                   INSERT Into mainha_cummunity_development(
                                     idKhachhang,
                                     serverID,
@@ -1324,32 +1322,31 @@ class DBProvider {
                                     hosodinhkem
                                     )
                 VALUES (${listCustomer.first["id"]},
-                        ${item.maiNha.serverId},
-                        ${item.maiNha.nam},
-                        "${item.maiNha.maKhachHang}",
-                        ${item.maiNha.tilephuthuoc},
-                        ${item.maiNha.thunhap},
-                        ${item.maiNha.taisan},
-                        ${item.maiNha.dieukiennhao},
-                        ${item.maiNha.quyenSoHuuNha},
-                        "${item.maiNha.ghichuhoancanh}",
-                        ${item.maiNha.cbDexuat},
-                        ${item.maiNha.duTruKinhPhi},
-                        ${item.maiNha.deXuatHoTro},
-                        ${item.maiNha.giaDinhHoTro},
-                        ${item.maiNha.tietKiem},
-                        ${item.maiNha.tienVay},
-                        ${item.maiNha.giaDinhDongY},
-                        ${item.maiNha.cnDexuat},
-                        "${item.maiNha.cnDexuatThoigian}",
-                        ${item.maiNha.cnDexuatSotien},
-                        ${item.maiNha.hosodinhkem}
+                        ${item.maiNha == null ? 0 : item.maiNha.serverId},
+                        ${item.maiNha == null ? DateTime.now().year : item.maiNha.nam},
+                        "${item.maiNha == null ? item.chinhanhId.toInt().toString() + '_' + item.thanhVienId : item.maiNha.maKhachHang}",
+                        ${item.maiNha == null ? 0 : item.maiNha.tilephuthuoc},
+                        ${item.maiNha == null ? 0 : item.maiNha.thunhap},
+                        ${item.maiNha == null ? 0 : item.maiNha.taisan},
+                        ${item.maiNha == null ? 0 : item.maiNha.dieukiennhao},
+                        ${item.maiNha == null ? 0 : item.maiNha.quyenSoHuuNha},
+                        "${item.maiNha == null ? "" : item.maiNha.ghichuhoancanh}",
+                        ${item.maiNha == null ? 0 : item.maiNha.cbDexuat},
+                        ${item.maiNha == null ? 0 : item.maiNha.duTruKinhPhi},
+                        ${item.maiNha == null ? 0 : item.maiNha.deXuatHoTro},
+                        ${item.maiNha == null ? 0 : item.maiNha.giaDinhHoTro},
+                        ${item.maiNha == null ? 0 : item.maiNha.tietKiem},
+                        ${item.maiNha == null ? 0 : item.maiNha.tienVay},
+                        ${item.maiNha == null ? 0 : item.maiNha.giaDinhDongY},
+                        ${item.maiNha == null ? 0 : item.maiNha.cnDexuat},
+                        "${item.maiNha == null ? "" : item.maiNha.cnDexuatThoigian}",
+                        ${item.maiNha == null ? 0 : item.maiNha.cnDexuatSotien},
+                        ${item.maiNha == null ? 0 : item.maiNha.hosodinhkem}
                         );
           ''';
-            await db.rawInsert(queryStringMaiNha);
-          }
-          if (item.phatTrienNghe != null) {
-            String queryStringPhatTrienNghe = '''
+          await db.rawInsert(queryStringMaiNha);
+
+          String queryStringPhatTrienNghe = '''
                   INSERT Into phattriennghe_cummunity_development(
                                     idKhachhang,
                                     serverID,
@@ -1366,24 +1363,23 @@ class DBProvider {
                                     reacHnguyenvong
                                     )
                 VALUES (${listCustomer.first["id"]},
-                        ${item.phatTrienNghe.serverId},
-                        ${item.phatTrienNghe.nam},
-                        "${item.phatTrienNghe.maKhachHang}",
-                        "${item.phatTrienNghe.nguoithan}",
-                        ${item.phatTrienNghe.quanHeKhacHang},
-                        ${item.phatTrienNghe.lyDo},
-                        "${item.phatTrienNghe.hoancanh}",
-                        ${item.phatTrienNghe.nguyenvongthamgia},
-                        ${item.phatTrienNghe.nguyenvonghoithao},
-                        ${item.phatTrienNghe.scCnguyenvong},
-                        ${item.phatTrienNghe.iecDnguyenvong},
-                        ${item.phatTrienNghe.reacHnguyenvong}
+                        ${item.phatTrienNghe == null ? 0 : item.phatTrienNghe.serverId},
+                        ${item.phatTrienNghe == null ? DateTime.now().year : item.phatTrienNghe.nam},
+                        "${item.phatTrienNghe == null ? item.chinhanhId.toInt().toString() + '_' + item.thanhVienId : item.phatTrienNghe.maKhachHang}",
+                        "${item.phatTrienNghe == null ? "" : item.phatTrienNghe.nguoithan}",
+                        ${item.phatTrienNghe == null ? 0 : item.phatTrienNghe.quanHeKhacHang},
+                        ${item.phatTrienNghe == null ? 0 : item.phatTrienNghe.lyDo},
+                        "${item.phatTrienNghe == null ? "" : item.phatTrienNghe.hoancanh}",
+                        ${item.phatTrienNghe == null ? 0 : item.phatTrienNghe.nguyenvongthamgia},
+                        ${item.phatTrienNghe == null ? 0 : item.phatTrienNghe.nguyenvonghoithao},
+                        ${item.phatTrienNghe == null ? 0 : item.phatTrienNghe.scCnguyenvong},
+                        ${item.phatTrienNghe == null ? 0 : item.phatTrienNghe.iecDnguyenvong},
+                        ${item.phatTrienNghe == null ? 0 : item.phatTrienNghe.reacHnguyenvong}
                         );
           ''';
-            await db.rawInsert(queryStringPhatTrienNghe);
-          }
-          if (item.quaTet != null) {
-            String queryStringQuaTet = '''
+          await db.rawInsert(queryStringPhatTrienNghe);
+
+          String queryStringQuaTet = '''
                   INSERT Into quatet_cummunity_development(
                                     idKhachhang,
                                     serverID,
@@ -1392,14 +1388,13 @@ class DBProvider {
                                     loaiHoNgheo
                                     )
                 VALUES (${listCustomer.first["id"]},
-                        ${item.quaTet.serverId},
-                        ${item.quaTet.nam},
-                        "${item.quaTet.maKhachHang}",
-                        ${item.quaTet.loaiHoNgheo}
+                        ${item.quaTet == null ? 0 : item.quaTet.serverId},
+                        ${item.quaTet == null ? DateTime.now().year : item.quaTet.nam},
+                        "${item.quaTet == null ? item.chinhanhId.toInt().toString() + '_' + item.thanhVienId : item.quaTet.maKhachHang}",
+                        ${item.quaTet == null ? 0 : item.quaTet.loaiHoNgheo}
                         );
           ''';
-            await db.rawInsert(queryStringQuaTet);
-          }
+          await db.rawInsert(queryStringQuaTet);
         }
       }
 
@@ -1469,7 +1464,7 @@ class DBProvider {
               e.maKhachHang == itemCustomer.maKhachHang)
           .toList();
       itemCustomer.hocBong = hocBong.length > 0 ? hocBong.first : null;
-      
+
       List<MaiNha> mainha = listMaiNha
           .where((e) =>
               e.idKhachhang == itemCustomer.id &&
@@ -1482,7 +1477,8 @@ class DBProvider {
               e.idKhachhang == itemCustomer.id &&
               e.maKhachHang == itemCustomer.maKhachHang)
           .toList();
-      itemCustomer.phatTrienNghe = phatTrienNghe.length > 0 ? phatTrienNghe.first : null;
+      itemCustomer.phatTrienNghe =
+          phatTrienNghe.length > 0 ? phatTrienNghe.first : null;
 
       List<QuaTet> quaTet = listQuaTet
           .where((e) =>

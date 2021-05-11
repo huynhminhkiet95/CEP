@@ -155,7 +155,7 @@ class FormatDateConstants {
 
   static String convertDateTimeToDDMMYYYY(String jsonDate) {
     var datetime = convertJsonDateToDateTime(jsonDate);
-    var strDatetime = formatDate(datetime, [dd, '/', mm, '/', yyyy]);
+    var strDatetime = formatDate(datetime, [dd, '-', mm, '-', yyyy]);
     return strDatetime;
   }
 

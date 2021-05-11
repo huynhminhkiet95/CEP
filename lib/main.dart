@@ -170,7 +170,7 @@ class AppState extends State<Application> {
             case 'comunitydevelopmentdetail':
             final Map<String, Object> arguments = settings.arguments;
               return SlideTopRoute(page: CommunityDevelopmentDetail(
-                id: arguments['id'],
+                khachHang: arguments['khachhang'],
                 listCombobox: arguments['metadata'],
               ));
               break;
