@@ -203,11 +203,14 @@ class QuaTet {
       this.loaiHoNgheo});
 
   QuaTet.fromJson(Map<String, dynamic> json) {
-    if (json["idKhachhang"] is int) this.idKhachhang = json["idKhachhang"];
-    if (json["serverID"] is int) this.serverId = json["serverID"];
-    if (json["nam"] is double) this.nam = (json["nam"] ?? 0).toDouble();
+    if (json["idKhachhang"] != null) this.idKhachhang = json["idKhachhang"];
+    if (json["serverID"] != null) this.serverId = json["serverID"];
+    if (json["nam"] != null) this.nam = (json["nam"] ?? 0).toDouble();
     if (json["maKhachHang"] is String) this.maKhachHang = json["maKhachHang"];
-    if (json["loaiHoNgheo"] is double) this.loaiHoNgheo = (json["loaiHoNgheo"]?? 0).toDouble();
+    if (json["loaiHoNgheo"] != null){
+      this.loaiHoNgheo = (json["loaiHoNgheo"]?? 0).toDouble();
+    }
+     
   }
 
   Map<String, dynamic> toJson() {
@@ -361,7 +364,7 @@ class MaiNha {
       this.giaDinhHoTro = (json["giaDinhHoTro"]?? 0).toDouble();
     if (json["tietKiem"]  != null) this.tietKiem = (json["tietKiem"]?? 0).toDouble();
     if (json["tienVay"]  != null) this.tienVay = (json["tienVay"]?? 0).toDouble();
-    if (json["giaDinhDongY"] is bool) this.giaDinhDongY = json["giaDinhDongY"];
+    if (json["giaDinhDongY"] != null) this.giaDinhDongY = json["giaDinhDongY"] == 1 ? true: false;
     if (json["cnDexuat"]  != null) this.cnDexuat = (json["cnDexuat"]?? 0).toDouble();
     if (json["cnDexuatThoigian"] is String)
       this.cnDexuatThoigian = json["cnDexuatThoigian"];

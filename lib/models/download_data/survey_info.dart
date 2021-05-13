@@ -196,22 +196,22 @@ class SurveyInfo {
   SurveyInfo.fromJson(Map<String, dynamic> json) {
     if (json["ID"] is int) this.id = json["ID"];
     if (json["NgayXuatDanhSach"] is String)
-      this.ngayXuatDanhSach = json["NgayXuatDanhSach"];
-    if (json["NgayKhaoSat"] is String) this.ngayKhaoSat = json["NgayKhaoSat"];
+      this.ngayXuatDanhSach = json["NgayXuatDanhSach"].trim();
+    if (json["NgayKhaoSat"] is String) this.ngayKhaoSat = json["NgayKhaoSat"].trim();
     if (json["MasoCanBoKhaoSat"] is String)
-      this.masoCanBoKhaoSat = json["MasoCanBoKhaoSat"];
+      this.masoCanBoKhaoSat = json["MasoCanBoKhaoSat"].trim();
     if (json["ChinhanhID"] is int) this.chinhanhId = json["ChinhanhID"];
     if (json["DuanID"] is int) this.duanId = json["DuanID"];
-    if (json["CumID"] is String) this.cumId = json["CumID"];
-    if (json["ThanhvienID"] is String) this.thanhvienId = json["ThanhvienID"];
+    if (json["CumID"] is String) this.cumId = json["CumID"].trim();
+    if (json["ThanhvienID"] is String) this.thanhvienId = json["ThanhvienID"].trim();
     if (json["TinhTrangHonNhan"] is String)
-      this.tinhTrangHonNhan = json["TinhTrangHonNhan"];
+      this.tinhTrangHonNhan = json["TinhTrangHonNhan"].trim();
     if (json["TrinhDoHocVan"] is String)
-      this.trinhDoHocVan = json["TrinhDoHocVan"];
+      this.trinhDoHocVan = json["TrinhDoHocVan"].trim();
     if (json["KhuVuc"] is int) this.khuVuc = json["KhuVuc"];
     if (json["Lanvay"] is int) this.lanvay = json["Lanvay"];
     if (json["NguoiTraloiKhaoSat"] is String)
-      this.nguoiTraloiKhaoSat = json["NguoiTraloiKhaoSat"];
+      this.nguoiTraloiKhaoSat = json["NguoiTraloiKhaoSat"].trim();
     if (json["SonguoiTrongHo"] is int)
       this.songuoiTrongHo = json["SonguoiTrongHo"];
     if (json["SonguoiCoviecLam"] is int)
@@ -227,24 +227,24 @@ class SurveyInfo {
     if (json["TaiSanSinhHoat"] is int)
       this.taiSanSinhHoat = json["TaiSanSinhHoat"];
     if (json["QuyenSoHuuNha"] is String)
-      this.quyenSoHuuNha = json["QuyenSoHuuNha"];
+      this.quyenSoHuuNha = json["QuyenSoHuuNha"].trim();
     if (json["HemTruocNha"] is int) this.hemTruocNha = json["HemTruocNha"];
-    if (json["MaiNha"] is String) this.maiNha = json["MaiNha"];
-    if (json["TuongNha"] is String) this.tuongNha = json["TuongNha"];
-    if (json["NenNha"] is String) this.nenNha = json["NenNha"];
+    if (json["MaiNha"] is String) this.maiNha = json["MaiNha"].trim();
+    if (json["TuongNha"] is String) this.tuongNha = json["TuongNha"].trim();
+    if (json["NenNha"] is String) this.nenNha = json["NenNha"].trim();
     if (json["DienTichNhaTinhTren1Nguoi"] is int)
       this.dienTichNhaTinhTren1Nguoi = json["DienTichNhaTinhTren1Nguoi"];
-    if (json["Dien"] is String) this.dien = json["Dien"];
-    if (json["Nuoc"] is String) this.nuoc = json["Nuoc"];
+    if (json["Dien"] is String) this.dien = json["Dien"].trim();
+    if (json["Nuoc"] is String) this.nuoc = json["Nuoc"].trim();
     if (json["MucDichSudungVon"] is String)
-      this.mucDichSudungVon = json["MucDichSudungVon"];
+      this.mucDichSudungVon = json["MucDichSudungVon"].trim();
     if (json["SoTienCanThiet"] is int)
       this.soTienCanThiet = json["SoTienCanThiet"];
     if (json["SoTienThanhVienDaCo"] is int)
       this.soTienThanhVienDaCo = json["SoTienThanhVienDaCo"];
     if (json["SoTienCanVay"] is int) this.soTienCanVay = json["SoTienCanVay"];
     if (json["ThoiDiemSuDungVonvay"] is String)
-      this.thoiDiemSuDungVonvay = json["ThoiDiemSuDungVonvay"];
+      this.thoiDiemSuDungVonvay = json["ThoiDiemSuDungVonvay"].trim();
     if (json["TongVonDauTu"] is int) this.tongVonDauTu = json["TongVonDauTu"];
     if (json["ThuNhapRongHangThang"] is int)
       this.thuNhapRongHangThang = json["ThuNhapRongHangThang"];
@@ -264,24 +264,24 @@ class SurveyInfo {
       this.chiTraTienVayHangThang = json["ChiTraTienVayHangThang"];
     if (json["TichLuyTangThemHangThang"] is int)
       this.tichLuyTangThemHangThang = json["TichLuyTangThemHangThang"];
-    if (json["NguonVay1"] is String) this.nguonVay1 = json["NguonVay1"];
+    if (json["NguonVay1"] is String) this.nguonVay1 = json["NguonVay1"].trim();
     if (json["SotienVay1"] is int) this.sotienVay1 = json["SotienVay1"];
-    if (json["LyDoVay1"] is String) this.lyDoVay1 = json["LyDoVay1"];
+    if (json["LyDoVay1"] is String) this.lyDoVay1 = json["LyDoVay1"].trim();
     if (json["ThoiDiemTatToan1"] is String)
-      this.thoiDiemTatToan1 = json["ThoiDiemTatToan1"];
+      this.thoiDiemTatToan1 = json["ThoiDiemTatToan1"].trim();
     if (json["BienPhapThongNhat1"] is String)
-      this.bienPhapThongNhat1 = json["BienPhapThongNhat1"];
-    if (json["NguonVay2"] is String) this.nguonVay2 = json["NguonVay2"];
+      this.bienPhapThongNhat1 = json["BienPhapThongNhat1"].trim();
+    if (json["NguonVay2"] is String) this.nguonVay2 = json["NguonVay2"].trim();
     if (json["SotienVay2"] is int) this.sotienVay2 = json["SotienVay2"];
-    if (json["LyDoVay2"] is String) this.lyDoVay2 = json["LyDoVay2"];
+    if (json["LyDoVay2"] is String) this.lyDoVay2 = json["LyDoVay2"].trim();
     if (json["ThoiDiemTatToan2"] is String)
-      this.thoiDiemTatToan2 = json["ThoiDiemTatToan2"];
+      this.thoiDiemTatToan2 = json["ThoiDiemTatToan2"].trim();
     if (json["BienPhapThongNhat2"] is String)
-      this.bienPhapThongNhat2 = json["BienPhapThongNhat2"];
+      this.bienPhapThongNhat2 = json["BienPhapThongNhat2"].trim();
     if (json["ThanhVienThuocDien"] is String)
-      this.thanhVienThuocDien = json["ThanhVienThuocDien"];
-    if (json["MaSoHoNgheo"] is String) this.maSoHoNgheo = json["MaSoHoNgheo"];
-    if (json["HoTenChuHo"] is String) this.hoTenChuHo = json["HoTenChuHo"];
+      this.thanhVienThuocDien = json["ThanhVienThuocDien"].trim();
+    if (json["MaSoHoNgheo"] is String) this.maSoHoNgheo = json["MaSoHoNgheo"].trim();
+    if (json["HoTenChuHo"] is String) this.hoTenChuHo = json["HoTenChuHo"].trim();
     if (json["SoTienGuiTietKiemMoiKy"] is int)
       this.soTienGuiTietKiemMoiKy = json["SoTienGuiTietKiemMoiKy"];
     if (json["TietKiemBatBuocXinRut"] is int)
@@ -290,27 +290,27 @@ class SurveyInfo {
       this.tietKiemTuNguyenXinRut = json["TietKiemTuNguyenXinRut"];
     if (json["TietKiemLinhHoatXinRut"] is int)
       this.tietKiemLinhHoatXinRut = json["TietKiemLinhHoatXinRut"];
-    if (json["ThoiDiemRut"] is String) this.thoiDiemRut = json["ThoiDiemRut"];
+    if (json["ThoiDiemRut"] is String) this.thoiDiemRut = json["ThoiDiemRut"].trim();
     if (json["MucVayBoSung"] is int) this.mucVayBoSung = json["MucVayBoSung"];
     if (json["MucDichVayBoSung"] is String)
-      this.mucDichVayBoSung = json["MucDichVayBoSung"];
+      this.mucDichVayBoSung = json["MucDichVayBoSung"].trim();
     if (json["NgayVayBoSung"] is String)
       this.ngayVayBoSung = json["NgayVayBoSung"];
-    if (json["GhiChu"] is String) this.ghiChu = json["GhiChu"];
+    if (json["GhiChu"] is String) this.ghiChu = json["GhiChu"].trim();
     if (json["SoTienDuyetChovay"] is int)
       this.soTienDuyetChovay = json["SoTienDuyetChovay"];
     if (json["TietKiemDinhHuong"] is int)
       this.tietKiemDinhHuong = json["TietKiemDinhHuong"];
-    if (json["MucDichVay"] is String) this.mucDichVay = json["MucDichVay"];
+    if (json["MucDichVay"] is String) this.mucDichVay = json["MucDichVay"].trim();
     if (json["DuyetChovayNgay"] is String)
-      this.duyetChovayNgay = json["DuyetChovayNgay"];
+      this.duyetChovayNgay = json["DuyetChovayNgay"].trim();
     if (json["DaCapNhatVaoHoSoChovay"] is int)
       this.daCapNhatVaoHoSoChovay = json["DaCapNhatVaoHoSoChovay"];
     if (json["TinhTrangNgheo"] is String)
-      this.tinhTrangNgheo = json["TinhTrangNgheo"];
+      this.tinhTrangNgheo = json["TinhTrangNgheo"].trim();
     if (json["DaDuocDuyet"] is int) this.daDuocDuyet = json["DaDuocDuyet"];
-    if (json["Username"] is String) this.username = json["Username"];
-    if (json["Ngaycapnhat"] is String) this.ngaycapnhat = json["Ngaycapnhat"];
+    if (json["Username"] is String) this.username = json["Username"].trim();
+    if (json["Ngaycapnhat"] is String) this.ngaycapnhat = json["Ngaycapnhat"].trim();
     if (json["MasoCanBoKhaoSatPSS"] is dynamic)
       this.masoCanBoKhaoSatPss = json["MasoCanBoKhaoSatPSS"];
     if (json["SotienVayLantruoc"] is int)
@@ -322,7 +322,7 @@ class SurveyInfo {
     if (json["ThoiGianKhaosatGannhat"] is int)
       this.thoiGianKhaosatGannhat = json["ThoiGianKhaosatGannhat"];
     if (json["NgayTatToanDotvayTruoc"] is String)
-      this.ngayTatToanDotvayTruoc = json["NgayTatToanDotvayTruoc"];
+      this.ngayTatToanDotvayTruoc = json["NgayTatToanDotvayTruoc"].trim();
     if (json["BatBuocKhaosat"] is int)
       this.batBuocKhaosat = json["BatBuocKhaosat"];
     if (json["ConNo"] is int) this.conNo = json["ConNo"];
@@ -333,12 +333,12 @@ class SurveyInfo {
     if (json["SoTienDuyetChoVayCK"] is int)
       this.soTienDuyetChoVayCk = json["SoTienDuyetChoVayCK"];
     if (json["GioiTinh"] is int) this.gioiTinh = json["GioiTinh"];
-    if (json["cmnd"] is String) this.cmnd = json["cmnd"];
-    if (json["NgaySinh"] is String) this.ngaySinh = json["NgaySinh"];
-    if (json["DiaChi"] is String) this.diaChi = json["DiaChi"];
+    if (json["cmnd"] is String) this.cmnd = json["cmnd"].trim();
+    if (json["NgaySinh"] is String) this.ngaySinh = json["NgaySinh"].trim();
+    if (json["DiaChi"] is String) this.diaChi = json["DiaChi"].trim();
     if (json["Thoigianthamgia"] is String)
-      this.thoigianthamgia = json["Thoigianthamgia"];
-    if (json["HoVaTen"] is String) this.hoVaTen = json["HoVaTen"];
+      this.thoigianthamgia = json["Thoigianthamgia"].trim();
+    if (json["HoVaTen"] is String) this.hoVaTen = json["HoVaTen"].trim();
     this.idHistoryKhaoSat = json["idHistoryKhaoSat"];
   }
 
@@ -374,7 +374,7 @@ class SurveyInfo {
     data["nuoc"] = this.nuoc;
     data["mucDichSudungVon"] = this.mucDichSudungVon;
     data["soTienCanThiet"] = this.soTienCanThiet;
-    data["soThanhVienDaCo"] = this.soTienThanhVienDaCo;
+    data["soTienThanhVienDaCo"] = this.soTienThanhVienDaCo;
     data["soTienCanVay"] = this.soTienCanVay;
     data["thoiDiemSuDungVonvay"] = this.thoiDiemSuDungVonvay;
     data["tongVonDauTu"] = this.tongVonDauTu;
@@ -409,12 +409,12 @@ class SurveyInfo {
     data["thoiDiemRut"] = this.thoiDiemRut;
     data["mucVayBoSung"] = this.mucVayBoSung;
     data["mucDichVayBoSung"] = this.mucDichVayBoSung;
-    data["ngayVayBoSung"] = this.ngayVayBoSung;
+    data["ngayVayBoSung"] =  this.ngayVayBoSung == "null" ? null : this.ngayVayBoSung;
     data["ghiChu"] = this.ghiChu;
     data["soTienDuyetChovay"] = this.soTienDuyetChovay;
     data["tietKiemDinhHuong"] = this.tietKiemDinhHuong;
     data["mucDichVay"] = this.mucDichVay;
-    data["duyetChovayNgay"] = this.duyetChovayNgay;
+    data["duyetChovayNgay"] =  this.duyetChovayNgay == "null" ? null : this.duyetChovayNgay;
     data["daCapNhatVaoHoSoChovay"] = this.daCapNhatVaoHoSoChovay;
     data["tinhTrangNgheo"] = this.tinhTrangNgheo;
     data["daDuocDuyet"] = this.daDuocDuyet;

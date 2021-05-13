@@ -41,6 +41,7 @@ class AnimatedFlipCounter extends StatelessWidget {
           color: color,
         );
       }),
+      
     );
   }
 }
@@ -65,7 +66,7 @@ class _SingleDigitFlipCounter extends StatelessWidget {
   Widget build(BuildContext context) {
     if (value == ',') {
       return SizedBox(
-        height: height,
+        height: height + 3,
         width: width,
         child: Stack(
           fit: StackFit.expand,
@@ -77,8 +78,8 @@ class _SingleDigitFlipCounter extends StatelessWidget {
                 child: Text(
                   ',',
                   style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
+                      fontSize: height,
+                      color: color,
                       fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
@@ -126,7 +127,7 @@ class _SingleDigitFlipCounter extends StatelessWidget {
           child: Text(
             MoneyFormat.moneyFormat(digit.toString()),
             style: TextStyle(
-                fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
+                fontSize: 16, color: color, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
         ),

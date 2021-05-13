@@ -32,7 +32,7 @@ dependencies:
   http: '0.12.0'
   progress_hud: ^1.1.0
   fluttertoast: ^3.0.3
-  flutter_launcher_icons: "^0.7.0"
+  flutter_launcher_icons: ^0.7.4
   modal_progress_hud: ^0.1.3
   date_format: ^1.0.6
   url_launcher: ^5.0.2
@@ -78,10 +78,11 @@ dev_dependencies:
     sdk: flutter
     
 flutter_icons:
+  android: true
   ios: true
-  android: "launcher_icon"
-  image_path_ios: "assets/logo/cep-large-icon-logo-intro.png"
-  image_path_android: "assets/logo/cep-large-icon-logo-intro.png"
+  image_path: "assets/logo/CEP-logo_lauch.png"
+  # image_path_ios: "assets/logo/CEP-logo_lauch.png"
+  # image_path_android: "assets/logo/CEP-logo_lauch.png"
   # adaptive_icon_background: "assets/launcher/background.png"
   # adaptive_icon_foreground: "assets/launcher/foreground.png"
 
@@ -105,6 +106,7 @@ flutter:
   - locale/i18n_vi.json
   - locale/i18n_kr.json
   - assets/logo/icon_logo.png
+  - assets/logo/CEP-logo_lauch.png
   - assets/logo/cep-large-icon-logo-intro.png
   - assets/logo/icon_main_logo.png
   - assets/logo/logo.png

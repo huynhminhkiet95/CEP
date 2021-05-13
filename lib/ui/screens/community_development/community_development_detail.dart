@@ -1,12 +1,14 @@
 import 'package:CEPmobile/blocs/survey/survey_bloc.dart';
 import 'package:CEPmobile/config/CustomIcons/my_flutter_app_icons.dart';
 import 'package:CEPmobile/config/colors.dart';
+import 'package:CEPmobile/config/moneyformat.dart';
 import 'package:CEPmobile/models/comon/metadata_checkbox.dart';
 import 'package:CEPmobile/models/download_data/comboboxmodel.dart';
 import 'package:CEPmobile/resources/CurrencyInputFormatter.dart';
 import 'package:CEPmobile/services/helper.dart';
 import 'package:CEPmobile/services/service.dart';
 import 'package:CEPmobile/ui/components/CardWithMultipleCheckbox.dart';
+import 'package:CEPmobile/ui/components/animated_flip_counter.dart';
 import 'package:CEPmobile/ui/components/dropdown.dart';
 import 'package:CEPmobile/ui/css/style.css.dart';
 import 'package:CEPmobile/ui/screens/survey/style.dart';
@@ -85,6 +87,28 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
       new TextEditingController(text: "");
   TextEditingController _controllerSpecificPurpose =
       new TextEditingController(text: "");
+  TextEditingController _controllerScholarshipValue =
+      new TextEditingController(text: "");
+
+  TextEditingController _controllerAmountProposeCEPSupport =
+      new TextEditingController(text: "");
+  TextEditingController _controllerAmountFamilySupport =
+      new TextEditingController(text: "");
+  TextEditingController _controllerAmountSaving =
+      new TextEditingController(text: "");
+  TextEditingController _controllerAmountLoan =
+      new TextEditingController(text: "");
+  TextEditingController _controllerFamilyCircumstancesNote =
+      new TextEditingController(text: "");
+  TextEditingController _controllerFullNameOfRelative =
+      new TextEditingController(text: "");
+  TextEditingController _controllerFamilyCircumstancesForDevelopOccupation =
+      new TextEditingController(text: "");
+  TextEditingController _controllerInsuranceFees =
+      new TextEditingController(text: "");
+  TextEditingController _controllerFullNameOfRelativeForInsurance =
+      new TextEditingController(text: "");
+  int totalAmount = 0;
 
   DateTime selectedTimetoUseLoanDate;
   List<DropdownMenuItem<String>> _occupationOfCustomerModelDropdownList;
@@ -100,8 +124,14 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
   List<DropdownMenuItem<String>>
       _relationsWithCustomersJobDevelopModelDropdownList;
 
+  List<DropdownMenuItem<String>>
+      _conditionToHaveInsuranceServiceModelDropdownList;
+  List<DropdownMenuItem<String>> _customerStatusHealthModelDropdownList;
+  List<DropdownMenuItem<String>>
+      _relationsWithCustomersForInsuranceModelDropdownList;
   TextStyle textStyleTextFieldCEP =
       TextStyle(color: ColorConstants.cepColorBackground, fontSize: 14);
+
   String _occupationOfCustomerValue;
   String _birthOfYearValue;
   String _relationsWithCustomersValue;
@@ -113,6 +143,9 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
   String _homeOwnershipValue;
   String _customerBuildSuggestionsValue;
   String _relationsWithCustomersJobDevelop;
+  String _conditionToHaveInsuranceServiceValue;
+  String _customerStatusHealthValue;
+  String _relationsWithCustomersForInsuranceValue;
 
   bool isScholarship = false;
   bool isGiftTET = false;
@@ -120,7 +153,8 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
   bool isCareerDevelopment = false;
   bool isInsurance = false;
   int selectedIndexScholarshipAndGift;
-  int selectedIndexGetScholarshipSomeYearAgo;
+  int selectedIndexGetScholarshipSomeYearsAgo;
+  int selectedIndexGetConfirmBuild;
 
   //
   //
@@ -186,14 +220,21 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
     });
   }
 
-  void changeIndexGetScholarshipSomeYearAgo(int index) {
+  void changeIndexGetScholarshipSomeYearsAgo(int index) {
     setState(() {
-      selectedIndexGetScholarshipSomeYearAgo = index;
+      selectedIndexGetScholarshipSomeYearsAgo = index;
+    });
+  }
+
+  void changeIndexGetConfirmBuild(int index) {
+    setState(() {
+      selectedIndexGetConfirmBuild = index;
     });
   }
 
   void loadInitData() {
     _tabController = new TabController(length: 2, vsync: this);
+
     // co vo chong la CNV
     selectedIndexIsOfficerInFamily = widget.khachHang.coVoChongConLaCnv ? 1 : 0;
     // mo hinh nghe
@@ -211,6 +252,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
     _controllerFamilysMonthlyIncome.text =
         widget.khachHang.thunhapHangthangCuaho.toInt().toString();
 
+    /// Hoc Bong///
     // ho va ten hoc sinh hoc bong
     _controllerFullNameForScholarship.text =
         widget.khachHang.hocBong.hotenhocsinh;
@@ -254,7 +296,11 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
             value: Helper.checkFlag(
                 widget.khachHang.hocBong.mucdich.toInt(), int.parse(e.itemId))))
         .toList();
+    // muc dich cu the
     _controllerSpecificPurpose.text = widget.khachHang.hocBong.ghiChu;
+    // gia tri hoc bong
+    _controllerScholarshipValue.text =
+        widget.khachHang.hocBong.giatri.toInt().toString();
 
     // ho so dinh kem
     listAttachment = widget.listCombobox
@@ -262,7 +308,9 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
         .map((e) => MetaDataCheckbox(
             groupText: e.itemText,
             itemID: int.parse(e.itemId),
-            value: Helper.checkFlag(63, int.parse(e.itemId))))
+            value: Helper.checkFlag(
+                widget.khachHang.hocBong.dinhKemHoSo.toInt(),
+                int.parse(e.itemId))))
         .toList();
 
     // hoan canh cua hoc sinh
@@ -271,38 +319,44 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
         .map((e) => MetaDataCheckbox(
             groupText: e.itemText,
             itemID: int.parse(e.itemId),
-            value: Helper.checkFlag(4, int.parse(e.itemId))))
+            value: Helper.checkFlag(
+                widget.khachHang.hocBong.hoancanhhocsinh.toInt(),
+                int.parse(e.itemId))))
         .toList();
+    // da nhan hoc bong nhung nam truoc
 
+    selectedIndexGetScholarshipSomeYearsAgo =
+        widget.khachHang.hocBong.danhanhocbong ? 1 : 0;
+    ////// final Hoc Bong///////
+    ///
+    // Qua tet
     // khach hang thuoc ho
     _typeCustomerModelDropdownList = Helper.buildDropdownFromMetaData(
         widget.listCombobox.where((e) => e.groupId == 'LoaiHoNgheo').toList());
-    _typeCustomerValue = "0";
+    _typeCustomerValue = widget.khachHang.quaTet.loaiHoNgheo.toInt().toString();
+
+    /// final Qua tet
     // ty le phu thuoc
+
     _depenRatioModelDropdownList = Helper.buildDropdownFromMetaData(
         widget.listCombobox.where((e) => e.groupId == 'Tilephuthuoc').toList());
-    _depenRatioCustomerValue = "0";
+    _depenRatioCustomerValue =
+        widget.khachHang.maiNha.tilephuthuoc.toInt().toString();
     // thu nhap
     _incomeModelDropdownList = Helper.buildDropdownFromMetaData(
         widget.listCombobox.where((e) => e.groupId == 'Thunhap').toList());
-    _incomeValue = "0";
+    _incomeValue = widget.khachHang.maiNha.thunhap.toInt().toString();
     // tai san
     _assetsModelDropdownList = Helper.buildDropdownFromMetaData(
         widget.listCombobox.where((e) => e.groupId == 'Taisan').toList());
-    _assetsValue = "0";
+    _assetsValue = widget.khachHang.maiNha.taisan.toInt().toString();
     // quyen so huu nha
     _homeOwnershipModelDropdownList = Helper.buildDropdownFromMetaData(widget
         .listCombobox
         .where((e) => e.groupId == 'QuyenSoHuuNha')
         .toList());
-    _homeOwnershipValue = "0";
-
-    // quan he voi khach hang phat trien nghe
-    _relationsWithCustomersJobDevelopModelDropdownList =
-        Helper.buildDropdownFromMetaData(widget.listCombobox
-            .where((e) => e.groupId == 'QuanHeKhachHang')
-            .toList());
-    _relationsWithCustomersJobDevelop = "0";
+    _homeOwnershipValue =
+        widget.khachHang.maiNha.quyenSoHuuNha.toInt().toString();
 
     // dieu kien nha o cua khach hang
     listHousingConditionsOfCustomers = widget.listCombobox
@@ -310,13 +364,26 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
         .map((e) => MetaDataCheckbox(
             groupText: e.itemText,
             itemID: int.parse(e.itemId),
-            value: Helper.checkFlag(4, int.parse(e.itemId))))
+            value: Helper.checkFlag(
+                widget.khachHang.maiNha.dieukiennhao.toInt(),
+                int.parse(e.itemId))))
         .toList();
     // de xuat xay sua cua kh
     _customerBuildSuggestionsModelDropdownList =
         Helper.buildDropdownFromMetaData(
             widget.listCombobox.where((e) => e.groupId == 'CBDexuat').toList());
-    _homeOwnershipValue = "0";
+    _customerBuildSuggestionsValue =
+        widget.khachHang.maiNha.cbDexuat.toInt().toString();
+    _controllerAmountProposeCEPSupport.text =
+        widget.khachHang.maiNha.deXuatHoTro.toInt().toString();
+    _controllerAmountFamilySupport.text =
+        widget.khachHang.maiNha.giaDinhHoTro.toInt().toString();
+    _controllerAmountSaving.text =
+        widget.khachHang.maiNha.tietKiem.toInt().toString();
+    _controllerAmountLoan.text =
+        widget.khachHang.maiNha.tienVay.toInt().toString();
+
+    onTotalAmountForRoof();
 
     // ho so dinh kem mai nha cep
     listAttachmentForHomeCEP = widget.listCombobox
@@ -324,15 +391,36 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
         .map((e) => MetaDataCheckbox(
             groupText: e.itemText,
             itemID: int.parse(e.itemId),
-            value: Helper.checkFlag(4, int.parse(e.itemId))))
+            value: Helper.checkFlag(widget.khachHang.maiNha.hosodinhkem.toInt(),
+                int.parse(e.itemId))))
         .toList();
+
+    _controllerFamilyCircumstancesNote.text =
+        widget.khachHang.maiNha.ghichuhoancanh;
+
+    selectedIndexGetConfirmBuild = widget.khachHang.maiNha.giaDinhDongY ? 1 : 0;
+    // Phat Trien Nghe //
+    // ho ten nguoi than
+    _controllerFullNameOfRelative.text =
+        widget.khachHang.phatTrienNghe.nguoithan;
+    // quan he voi khach hang phat trien nghe
+    _relationsWithCustomersJobDevelopModelDropdownList =
+        Helper.buildDropdownFromMetaData(widget.listCombobox
+            .where((e) => e.groupId == 'QuanHeKhachHang')
+            .toList());
+    _relationsWithCustomersJobDevelop =
+        widget.khachHang.phatTrienNghe.quanHeKhacHang.toInt().toString();
+    // hoan canh gia dinh
+    _controllerFullNameOfRelative.text =
+        widget.khachHang.phatTrienNghe.hoancanh;
     // ly do tham gia
     listJoinReason = widget.listCombobox
         .where((e) => e.groupId == 'LyDo')
         .map((e) => MetaDataCheckbox(
             groupText: e.itemText,
             itemID: int.parse(e.itemId),
-            value: Helper.checkFlag(4, int.parse(e.itemId))))
+            value: Helper.checkFlag(widget.khachHang.phatTrienNghe.lyDo.toInt(),
+                int.parse(e.itemId))))
         .toList();
 
     // tham quan mo hinh nghe nghiep
@@ -341,7 +429,9 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
         .map((e) => MetaDataCheckbox(
             groupText: e.itemText,
             itemID: int.parse(e.itemId),
-            value: Helper.checkFlag(4, int.parse(e.itemId))))
+            value: Helper.checkFlag(
+                widget.khachHang.phatTrienNghe.nguyenvongthamgia.toInt(),
+                int.parse(e.itemId))))
         .toList();
     // hoi thao ho tro ky thuat
     listEngineerSupportSeminar = widget.listCombobox
@@ -349,7 +439,9 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
         .map((e) => MetaDataCheckbox(
             groupText: e.itemText,
             itemID: int.parse(e.itemId),
-            value: Helper.checkFlag(4, int.parse(e.itemId))))
+            value: Helper.checkFlag(
+                widget.khachHang.phatTrienNghe.nguyenvonghoithao.toInt(),
+                int.parse(e.itemId))))
         .toList();
     // SCC
     listSCC = widget.listCombobox
@@ -357,7 +449,9 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
         .map((e) => MetaDataCheckbox(
             groupText: e.itemText,
             itemID: int.parse(e.itemId),
-            value: Helper.checkFlag(4, int.parse(e.itemId))))
+            value: Helper.checkFlag(
+                widget.khachHang.phatTrienNghe.scCnguyenvong.toInt(),
+                int.parse(e.itemId))))
         .toList();
     // IECD
     listIECD = widget.listCombobox
@@ -365,7 +459,9 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
         .map((e) => MetaDataCheckbox(
             groupText: e.itemText,
             itemID: int.parse(e.itemId),
-            value: Helper.checkFlag(1, int.parse(e.itemId))))
+            value: Helper.checkFlag(
+                widget.khachHang.phatTrienNghe.iecDnguyenvong.toInt(),
+                int.parse(e.itemId))))
         .toList();
     // REACH
     listREACH = widget.listCombobox
@@ -373,8 +469,25 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
         .map((e) => MetaDataCheckbox(
             groupText: e.itemText,
             itemID: int.parse(e.itemId),
-            value: Helper.checkFlag(4, int.parse(e.itemId))))
+            value: Helper.checkFlag(
+                widget.khachHang.phatTrienNghe.reacHnguyenvong.toInt(),
+                int.parse(e.itemId))))
         .toList();
+    // muc phi bao hiem
+    _controllerInsuranceFees.text =
+        widget.khachHang.bhyt.mucphibaohiem.toInt().toString();
+    // dieu kien tiep can dich vu BHYT
+    _conditionToHaveInsuranceServiceModelDropdownList =
+        Helper.buildDropdownFromMetaData(widget.listCombobox
+            .where((e) => e.groupId == 'Dieukienbhyt')
+            .toList());
+
+    // tinh trang suc khoe
+    _customerStatusHealthModelDropdownList =
+        Helper.buildDropdownFromMetaData(widget.listCombobox
+            .where((e) => e.groupId == 'Tinhtrangsuckhoe')
+            .toList());
+    // quan he voi khach hang phat trien nghe
   }
 
   @override
@@ -1327,7 +1440,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                                 width: 10,
                                               ),
                                               customRadioScholarshipAndGift(
-                                                  listTypeScholarship[1], 0),
+                                                  listTypeScholarship[1], 2),
                                             ],
                                           )
                                         ],
@@ -1430,16 +1543,20 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                             child: Container(
                                               height: 40,
                                               child: TextField(
-                                                controller:
-                                                    _controllerClassName,
-                                                style: textStyleTextFieldCEP,
-                                                decoration:
-                                                    inputDecorationTextFieldCEP(
-                                                        "Nhập..."),
-                                                keyboardType:
-                                                    TextInputType.text,
-                                                // Only numbers can be entered
-                                              ),
+                                                  controller:
+                                                      _controllerScholarshipValue,
+                                                  style: textStyleTextFieldCEP,
+                                                  decoration:
+                                                      inputDecorationTextFieldCEP(
+                                                          "Nhập số tiền...",
+                                                          suffixText: "VNĐ"),
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  inputFormatters: [
+                                                    CurrencyInputFormatter(),
+                                                  ]
+                                                  // Only numbers can be entered
+                                                  ),
                                             ),
                                           ),
                                         ],
@@ -1518,12 +1635,12 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                             mainAxisAlignment:
                                                 MainAxisAlignment.start,
                                             children: [
-                                              customRadioGetScholarshipSomeYearAgo(
+                                              customRadioGetScholarshipSomeYearsAgo(
                                                   listTypeGetScholarship[0], 1),
                                               VerticalDivider(
                                                 width: 10,
                                               ),
-                                              customRadioGetScholarshipSomeYearAgo(
+                                              customRadioGetScholarshipSomeYearsAgo(
                                                   listTypeGetScholarship[1], 0),
                                             ],
                                           )
@@ -2083,9 +2200,16 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                           Container(
                                             height: 40,
                                             child: TextField(
+                                              onEditingComplete: () {
+                                                FocusScope.of(context)
+                                                    .requestFocus(
+                                                        new FocusNode());
+                                                onTotalAmountForRoof();
+                                              },
+                                              maxLength: 13,
                                               style: textStyleTextFieldCEP,
-                                              // controller:
-                                              //     _controllerAmountOfLaborTools,
+                                              controller:
+                                                  _controllerAmountProposeCEPSupport,
                                               decoration:
                                                   inputDecorationTextFieldCEP(
                                                       "Nhập số tiền...",
@@ -2122,8 +2246,15 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                             height: 40,
                                             child: TextField(
                                               style: textStyleTextFieldCEP,
-                                              // controller:
-                                              //     _controllerAmountOfLaborTools,
+                                              onEditingComplete: () {
+                                                FocusScope.of(context)
+                                                    .requestFocus(
+                                                        new FocusNode());
+                                                onTotalAmountForRoof();
+                                              },
+                                              maxLength: 13,
+                                              controller:
+                                                  _controllerAmountFamilySupport,
                                               decoration:
                                                   inputDecorationTextFieldCEP(
                                                       "Nhập số tiền...",
@@ -2159,9 +2290,16 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                           Container(
                                             height: 40,
                                             child: TextField(
+                                              onEditingComplete: () {
+                                                FocusScope.of(context)
+                                                    .requestFocus(
+                                                        new FocusNode());
+                                                onTotalAmountForRoof();
+                                              },
+                                              maxLength: 13,
                                               style: textStyleTextFieldCEP,
-                                              // controller:
-                                              //     _controllerAmountOfLaborTools,
+                                              controller:
+                                                  _controllerAmountSaving,
                                               decoration:
                                                   inputDecorationTextFieldCEP(
                                                       "Nhập số tiền...",
@@ -2197,9 +2335,15 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                           Container(
                                             height: 40,
                                             child: TextField(
+                                              onEditingComplete: () {
+                                                FocusScope.of(context)
+                                                    .requestFocus(
+                                                        new FocusNode());
+                                                onTotalAmountForRoof();
+                                              },
+                                              maxLength: 13,
                                               style: textStyleTextFieldCEP,
-                                              // controller:
-                                              //     _controllerAmountOfLaborTools,
+                                              controller: _controllerAmountLoan,
                                               decoration:
                                                   inputDecorationTextFieldCEP(
                                                       "Nhập số tiền...",
@@ -2221,7 +2365,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           SizedBox(
-                                            width: screenWidth * 0.5,
+                                            width: screenWidth * 0.4,
                                             child: Text(
                                               "Dự trù kinh phí",
                                               style: TextStyle(
@@ -2230,16 +2374,34 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                               ),
                                             ),
                                           ),
-                                          SizedBox(
-                                            width: screenWidth * 0.3,
-                                            child: Text(
-                                              "123,000,000 vnđ",
-                                              style: TextStyle(
-                                                color: Colors.black38,
-                                                fontSize: 14,
+                                          Row(
+                                            children: [
+                                              SizedBox(
+                                                width: 20,
+                                                child: Opacity(
+                                                  opacity: 1,
+                                                  child: Text(
+                                                    new String.fromCharCodes(
+                                                        new Runes('\u{20ab}')),
+                                                    style: TextStyle(
+                                                        fontSize: 18,
+                                                        color: Colors.grey,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                ),
                                               ),
-                                            ),
-                                          ),
+                                              AnimatedFlipCounter(
+                                                duration:
+                                                    Duration(milliseconds: 500),
+                                                value: totalAmount,
+                                                /* pass in a number like 2014 */
+                                                color: Colors.grey,
+                                                size: 14,
+                                              ),
+                                            ],
+                                          )
                                         ],
                                       ),
                                     ),
@@ -2289,8 +2451,8 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                           Container(
                                             height: 40,
                                             child: TextField(
-                                              // controller:
-                                              //     _controllerFamilyCircumstances,
+                                              controller:
+                                                  _controllerFamilyCircumstancesNote,
                                               style: textStyleTextFieldCEP,
                                               decoration:
                                                   inputDecorationTextFieldCEP(
@@ -2324,13 +2486,13 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                             mainAxisAlignment:
                                                 MainAxisAlignment.start,
                                             children: [
-                                              customRadioGetScholarshipSomeYearAgo(
+                                              customRadioGetConfirmBuild(
                                                   listFamilyConfirmToBuild[0],
                                                   1),
                                               VerticalDivider(
                                                 width: 10,
                                               ),
-                                              customRadioGetScholarshipSomeYearAgo(
+                                              customRadioGetConfirmBuild(
                                                   listFamilyConfirmToBuild[1],
                                                   0),
                                             ],
@@ -2507,8 +2669,8 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                           Container(
                                             height: 40,
                                             child: TextField(
-                                              // controller:
-                                              //     _controllerFamilyCircumstances,
+                                              controller:
+                                                  _controllerFullNameOfRelative,
                                               style: textStyleTextFieldCEP,
                                               decoration:
                                                   inputDecorationTextFieldCEP(
@@ -2578,8 +2740,8 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                           Container(
                                             height: 40,
                                             child: TextField(
-                                              // controller:
-                                              //     _controllerFamilyCircumstances,
+                                              controller:
+                                                  _controllerFamilyCircumstancesForDevelopOccupation,
                                               style: textStyleTextFieldCEP,
                                               decoration:
                                                   inputDecorationTextFieldCEP(
@@ -2903,8 +3065,8 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                             height: 40,
                                             child: TextField(
                                               style: textStyleTextFieldCEP,
-                                              // controller:
-                                              //     _controllerAmountOfLaborTools,
+                                              controller:
+                                                  _controllerInsuranceFees,
                                               decoration:
                                                   inputDecorationTextFieldCEP(
                                                       "Nhập số tiền...",
@@ -3174,18 +3336,36 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
     );
   }
 
-  Widget customRadioGetScholarshipSomeYearAgo(String txt, int index) {
+  Widget customRadioGetScholarshipSomeYearsAgo(String txt, int index) {
     return OutlineButton(
-      onPressed: () => changeIndexGetScholarshipSomeYearAgo(index),
+      onPressed: () => changeIndexGetScholarshipSomeYearsAgo(index),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       borderSide: BorderSide(
-          color: selectedIndexGetScholarshipSomeYearAgo == index
+          color: selectedIndexGetScholarshipSomeYearsAgo == index
               ? ColorConstants.cepColorBackground
               : Colors.grey),
       child: Text(
         txt,
         style: TextStyle(
-            color: selectedIndexGetScholarshipSomeYearAgo == index
+            color: selectedIndexGetScholarshipSomeYearsAgo == index
+                ? ColorConstants.cepColorBackground
+                : Colors.grey),
+      ),
+    );
+  }
+
+  Widget customRadioGetConfirmBuild(String txt, int index) {
+    return OutlineButton(
+      onPressed: () => changeIndexGetConfirmBuild(index),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      borderSide: BorderSide(
+          color: selectedIndexGetConfirmBuild == index
+              ? ColorConstants.cepColorBackground
+              : Colors.grey),
+      child: Text(
+        txt,
+        style: TextStyle(
+            color: selectedIndexGetConfirmBuild == index
                 ? ColorConstants.cepColorBackground
                 : Colors.grey),
       ),
@@ -3228,5 +3408,14 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
       },
     );
     return picked;
+  }
+
+  onTotalAmountForRoof() {
+    totalAmount = MoneyFormat.convertCurrencyToInt(
+            _controllerAmountProposeCEPSupport.text) +
+        MoneyFormat.convertCurrencyToInt(_controllerAmountFamilySupport.text) +
+        MoneyFormat.convertCurrencyToInt(_controllerAmountSaving.text) +
+        MoneyFormat.convertCurrencyToInt(_controllerAmountLoan.text);
+    print("1");
   }
 }

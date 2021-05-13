@@ -6,7 +6,7 @@ import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 InputDecoration inputDecorationTextFieldCEP(String hintText,
     {String suffixText = ''}) {
   return InputDecoration(
-      
+      counterText: "",
       contentPadding: EdgeInsets.only(left: 10),
       labelStyle:
           TextStyle(fontSize: 11, color: ColorConstants.cepColorBackground),
