@@ -6,7 +6,6 @@ import 'package:CEPmobile/GlobalUser.dart';
 import 'package:CEPmobile/bloc_helpers/bloc_event_state.dart';
 import 'package:CEPmobile/config/status_code.dart';
 import 'package:CEPmobile/database/DBProvider.dart';
-import 'package:CEPmobile/models/download_data/comboboxmodel.dart';
 import 'package:CEPmobile/models/download_data/historysearchsurvey.dart';
 import 'package:CEPmobile/models/download_data/survey_info.dart';
 import 'package:CEPmobile/models/download_data/survey_info_history.dart';
@@ -45,7 +44,7 @@ class SurveyBloc extends BlocEventStateBase<SurveyEvent, SurveyState> {
 
   @override
   void dispose() {
-    //_getSurveyController?.close();
+    _getSurveyStreamController?.close();
     super.dispose();
   }
 

@@ -1,15 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:CEPmobile/services/sharePreference.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:CEPmobile/globalServer.dart';
 import 'package:async/async.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../GlobalUser.dart';
 
 class HttpBase {
@@ -286,7 +282,6 @@ class HttpBase {
         "Content-Type": 'application/json',
         "Authorization": 'Bearer $token'
       };
-      var address = globalServer.getServerAddress;
       var uri = Uri.parse(
           "https://fbmp.enterprise.vn:9110/api/document/savedocument");
       var request = new http.MultipartRequest("POST", uri);

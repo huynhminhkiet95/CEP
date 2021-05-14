@@ -1,4 +1,3 @@
-import 'package:CEPmobile/config/colors.dart';
 import 'package:flutter/material.dart';
 
 import '../../../GlobalTranslations.dart';

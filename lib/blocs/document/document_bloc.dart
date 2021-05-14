@@ -28,7 +28,8 @@ class DocumentBloc extends BlocEventStateBase<DocumentEvent, DocumentState> {
 
   @override
   void dispose() {
-    // _getActivitys?.close();
+    _getDocumentsController?.close();
+    _setDocumentsController?.close();
     super.dispose();
   }
 

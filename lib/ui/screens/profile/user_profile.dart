@@ -1,7 +1,6 @@
 import 'package:CEPmobile/GlobalUser.dart';
 import 'package:CEPmobile/config/colors.dart';
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
 
 import '../../../GlobalTranslations.dart';
 

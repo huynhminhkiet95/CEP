@@ -1,6 +1,5 @@
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
-import 'package:CEPmobile/config/formatdate.dart';
 import 'package:CEPmobile/ui/screens/Home/styles.dart';
 import 'package:CEPmobile/blocs/download_data/download_data_bloc.dart';
 import 'package:CEPmobile/services/service.dart';
@@ -23,26 +22,25 @@ class _DownloadCommunityDevelopmentState
   TextEditingController textAutoCompleteCumId =
       new TextEditingController(text: "");
   String txtCum = "";
-  TextEditingController _textDateEditingController = TextEditingController(
-      text: FormatDateConstants.convertDateTimeToString(DateTime.now()));
+
   DateTime selectedDate = DateTime.now();
 
   DownloadDataBloc downloadDataBloc;
   Services services;
 
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
-    if (picked != null && picked != selectedDate)
-      setState(() {
-        selectedDate = picked;
-        _textDateEditingController.text =
-            FormatDateConstants.convertDateTimeToString(selectedDate);
-      });
-  }
+  // Future<void> _selectDate(BuildContext context) async {
+  //   final DateTime picked = await showDatePicker(
+  //       context: context,
+  //       initialDate: selectedDate,
+  //       firstDate: DateTime(2015, 8),
+  //       lastDate: DateTime(2101));
+  //   if (picked != null && picked != selectedDate)
+  //     setState(() {
+  //       selectedDate = picked;
+  //       _textDateEditingController.text =
+  //           FormatDateConstants.convertDateTimeToString(selectedDate);
+  //     });
+  // }
 
   @override
   void initState() {

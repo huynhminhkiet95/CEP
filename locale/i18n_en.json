@@ -30,6 +30,7 @@
     "AuthenSuccess":"Fingerprint authentication is successful !",
     "UnAuthenSuccess":"Remove Fingerprint authentication is successful !",
     "ServerNotFound":"Server is not found, please waiting a few minutes !",
+    "NetworkSlow":"Maybe your network is slow, please check again!",
     "DownLoadDataSurveyHistoryFailed":"Downloading list of survey history was unsuccessful. Please waiting a few minutes !",
     "DownLoadDataSuccess":"Download the data successfully !",
     "UpdateSurveyInfoSuccessfully":"Update survey info is successfully !",

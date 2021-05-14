@@ -4,7 +4,6 @@ import 'package:CEPmobile/bloc_helpers/bloc_event_state.dart';
 import 'package:CEPmobile/blocs/setting/setting_event.dart';
 import 'package:CEPmobile/blocs/setting/setting_state.dart';
 import 'package:CEPmobile/config/toast_result_message.dart';
-import 'package:CEPmobile/models/survey/survey_result.dart';
 import 'package:CEPmobile/services/commonService.dart';
 import 'package:CEPmobile/services/sharePreference.dart';
 import 'package:rxdart/rxdart.dart';

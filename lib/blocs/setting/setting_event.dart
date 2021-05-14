@@ -1,5 +1,4 @@
 import 'package:CEPmobile/bloc_helpers/bloc_event_state.dart';
-import 'package:flutter/material.dart';
 
 abstract class SettingEvent extends BlocEvent {
   SettingEvent();

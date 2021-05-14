@@ -1,5 +1,4 @@
 import 'package:CEPmobile/config/colors.dart';
-import 'package:CEPmobile/models/download_data/comboboxmodel.dart';
 import 'package:flutter/material.dart';
 
 class CustomDropdown<T> extends StatelessWidget {

@@ -1,5 +1,4 @@
 import 'package:CEPmobile/bloc_helpers/bloc_event_state.dart';
-import 'package:CEPmobile/models/download_data/survey_info.dart';
 import 'package:CEPmobile/ui/screens/survey/listofsurveymembers.dart';
 import 'package:flutter/material.dart';
 

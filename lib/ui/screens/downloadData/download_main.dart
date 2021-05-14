@@ -21,8 +21,7 @@ class DownloadScreen extends StatefulWidget {
 
 class _DownloadScreenState extends State<DownloadScreen> {
   int _selectedIndex = 0;
-  static TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.w600);
+
   bool isStatusDownLoad = false;
   List<Widget> _widgetOptions = <Widget>[
     new DownloadSurvey(),
@@ -74,7 +73,9 @@ class _DownloadScreenState extends State<DownloadScreen> {
         );
       }
     }
+    super.initState();
   }
+  
 
   @override
   Widget build(BuildContext context) {

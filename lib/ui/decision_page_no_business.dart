@@ -1,4 +1,3 @@
-import 'package:CEPmobile/GlobalUser.dart';
 import 'package:flutter/material.dart';
 import 'package:CEPmobile/bloc_helpers/bloc_provider.dart';
 import 'package:CEPmobile/bloc_widgets/bloc_state_transform_builder.dart';

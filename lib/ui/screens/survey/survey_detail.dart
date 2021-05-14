@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:ui';
-
 import 'package:CEPmobile/bloc_widgets/bloc_state_builder.dart';
 import 'package:CEPmobile/blocs/survey/survey_state.dart';
 import 'package:CEPmobile/config/colors.dart';
@@ -13,22 +12,16 @@ import 'package:CEPmobile/ui/components/CustomDialog.dart';
 import 'package:CEPmobile/ui/components/ModalProgressHUDCustomize.dart';
 import 'package:CEPmobile/ui/components/dropdown.dart';
 import 'package:CEPmobile/ui/screens/survey/style.dart';
-import 'package:easy_dialog/easy_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:CEPmobile/config/CustomIcons/my_flutter_app_icons.dart';
 import 'package:CEPmobile/services/service.dart';
 import 'package:CEPmobile/blocs/survey/survey_bloc.dart';
 import 'package:CEPmobile/blocs/survey/survey_event.dart';
-import 'package:CEPmobile/services/service.dart';
-import 'package:CEPmobile/blocs/survey/survey_bloc.dart';
-import 'package:CEPmobile/blocs/survey/survey_event.dart';
 import 'package:CEPmobile/models/download_data/survey_info.dart';
 import 'package:CEPmobile/models/download_data/survey_info_history.dart';
 import 'package:CEPmobile/resources/CurrencyInputFormatter.dart';
-
 import 'package:flutter/services.dart';
-import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:intl/intl.dart';
 
 class SurveyDetailScreen extends StatefulWidget {
@@ -538,91 +531,128 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
         widget.listCombobox
             .where((e) => e.groupId == 'NguoiTraloiKhaosat')
             .toList());
-    _surveyRespondentsValue = widget.surveyInfo.nguoiTraloiKhaoSat.trim().isEmpty ? "0" : widget.surveyInfo.nguoiTraloiKhaoSat.trim();
+    _surveyRespondentsValue =
+        widget.surveyInfo.nguoiTraloiKhaoSat.trim().isEmpty
+            ? "0"
+            : widget.surveyInfo.nguoiTraloiKhaoSat.trim();
 
     /// tinh trang hon nhan
     _maritalStatusModelDropdownList = Helper.buildDropdownFromMetaData(widget
         .listCombobox
         .where((e) => e.groupId == 'TinhTrangHonNhan')
         .toList());
-    _maritalStatusValue = widget.surveyInfo.tinhTrangHonNhan.trim().isEmpty ? "0" : widget.surveyInfo.tinhTrangHonNhan;
+    _maritalStatusValue = widget.surveyInfo.tinhTrangHonNhan.trim().isEmpty
+        ? "0"
+        : widget.surveyInfo.tinhTrangHonNhan;
 
     ///trinh do hoc van
     _educationLevelModelDropdownList = Helper.buildDropdownFromMetaData(widget
         .listCombobox
         .where((e) => e.groupId == 'TrinhDoHocVan')
         .toList());
-    _educationLevelValue = widget.surveyInfo.trinhDoHocVan.trim().isEmpty ?"0" : widget.surveyInfo.trinhDoHocVan.trim();
+    _educationLevelValue = widget.surveyInfo.trinhDoHocVan.trim().isEmpty
+        ? "0"
+        : widget.surveyInfo.trinhDoHocVan.trim();
 
     /// quyen so huu
     _ownershipModelDropdownList = Helper.buildDropdownFromMetaData(widget
         .listCombobox
         .where((e) => e.groupId == 'QuyenSoHuuNha')
         .toList());
-    _ownershipValue = widget.surveyInfo.quyenSoHuuNha.trim().isEmpty ? "0" : widget.surveyInfo.quyenSoHuuNha.trim();
+    _ownershipValue = widget.surveyInfo.quyenSoHuuNha.trim().isEmpty
+        ? "0"
+        : widget.surveyInfo.quyenSoHuuNha.trim();
 
     ///mai nha
     _roofModelDropdownList = Helper.buildDropdownFromMetaData(
         widget.listCombobox.where((e) => e.groupId == 'MaiNha').toList());
-    _roofValue =  widget.surveyInfo.maiNha.trim().isEmpty ? "0" : widget.surveyInfo.maiNha.trim();
-  
+    _roofValue = widget.surveyInfo.maiNha.trim().isEmpty
+        ? "0"
+        : widget.surveyInfo.maiNha.trim();
 
     ///tuong nha
     _wallModelDropdownList = Helper.buildDropdownFromMetaData(
         widget.listCombobox.where((e) => e.groupId == 'TuongNha').toList());
-    _wallValue = widget.surveyInfo.tuongNha.trim().isEmpty ? "0" : widget.surveyInfo.tuongNha.trim();
+    _wallValue = widget.surveyInfo.tuongNha.trim().isEmpty
+        ? "0"
+        : widget.surveyInfo.tuongNha.trim();
 
     ///nen nha
     _floorModelDropdownList = Helper.buildDropdownFromMetaData(
         widget.listCombobox.where((e) => e.groupId == 'NenNha').toList());
-    _floorValue = widget.surveyInfo.nenNha.trim().isEmpty ? "0" : widget.surveyInfo.nenNha.trim(); 
+    _floorValue = widget.surveyInfo.nenNha.trim().isEmpty
+        ? "0"
+        : widget.surveyInfo.nenNha.trim();
 
     ///dien
     _powerModelDropdownList = Helper.buildDropdownFromMetaData(
         widget.listCombobox.where((e) => e.groupId == 'Dien').toList());
-    _powerValue =widget.surveyInfo.dien.trim().isEmpty ? "0" : widget.surveyInfo.dien.trim();
+    _powerValue = widget.surveyInfo.dien.trim().isEmpty
+        ? "0"
+        : widget.surveyInfo.dien.trim();
 
     ///nuoc
     _waterModelDropdownList = Helper.buildDropdownFromMetaData(
         widget.listCombobox.where((e) => e.groupId == 'Nuoc').toList());
-    _waterValue =widget.surveyInfo.nuoc.trim().isEmpty ? "0" : widget.surveyInfo.nuoc.trim();
+    _waterValue = widget.surveyInfo.nuoc.trim().isEmpty
+        ? "0"
+        : widget.surveyInfo.nuoc.trim();
 
     ///nguon vay 1
     _capitalModelDropdownList = Helper.buildDropdownFromMetaData(
         widget.listCombobox.where((e) => e.groupId == 'NguonVay').toList());
-    _capital1Value = widget.surveyInfo.nguonVay1.trim().isEmpty ? "0" : widget.surveyInfo.nguonVay1.trim();
-    _capital2Value =widget.surveyInfo.nguonVay2.trim().isEmpty ? "0" : widget.surveyInfo.nguonVay2.trim(); 
+    _capital1Value = widget.surveyInfo.nguonVay1.trim().isEmpty
+        ? "0"
+        : widget.surveyInfo.nguonVay1.trim();
+    _capital2Value = widget.surveyInfo.nguonVay2.trim().isEmpty
+        ? "0"
+        : widget.surveyInfo.nguonVay2.trim();
 
     ///ly do vay
     _reasonLoanModelDropdownList = Helper.buildDropdownFromMetaData(
         widget.listCombobox.where((e) => e.groupId == 'LyDoVay').toList());
-    _reasonLoan1Value =widget.surveyInfo.lyDoVay1.trim().isEmpty ? "0" : widget.surveyInfo.lyDoVay1.trim();
-    _reasonLoan2Value =widget.surveyInfo.lyDoVay2.trim().isEmpty ? "0" : widget.surveyInfo.lyDoVay2.trim();
+    _reasonLoan1Value = widget.surveyInfo.lyDoVay1.trim().isEmpty
+        ? "0"
+        : widget.surveyInfo.lyDoVay1.trim();
+    _reasonLoan2Value = widget.surveyInfo.lyDoVay2.trim().isEmpty
+        ? "0"
+        : widget.surveyInfo.lyDoVay2.trim();
 
     ///bien phap thong nhat
     _uniformMeasuresModelDropdownList = Helper.buildDropdownFromMetaData(widget
         .listCombobox
         .where((e) => e.groupId == 'BienPhapThongNhat')
         .toList());
-    _uniformMeasure1Value = widget.surveyInfo.bienPhapThongNhat1.trim().isEmpty ? "0" : widget.surveyInfo.bienPhapThongNhat1.trim();
-    _uniformMeasure2Value =widget.surveyInfo.bienPhapThongNhat2.trim().isEmpty ? "0" : widget.surveyInfo.bienPhapThongNhat2.trim();
+    _uniformMeasure1Value = widget.surveyInfo.bienPhapThongNhat1.trim().isEmpty
+        ? "0"
+        : widget.surveyInfo.bienPhapThongNhat1.trim();
+    _uniformMeasure2Value = widget.surveyInfo.bienPhapThongNhat2.trim().isEmpty
+        ? "0"
+        : widget.surveyInfo.bienPhapThongNhat2.trim();
 
     //thanh vien thuoc dien
     _typeMemberModelDropdownList = Helper.buildDropdownFromMetaData(widget
         .listCombobox
         .where((e) => e.groupId == 'ThanhVienThuocDien')
         .toList());
-    _typeMemberValue =widget.surveyInfo.thanhVienThuocDien.trim().isEmpty ? "0" : widget.surveyInfo.thanhVienThuocDien.trim(); 
+    _typeMemberValue = widget.surveyInfo.thanhVienThuocDien.trim().isEmpty
+        ? "0"
+        : widget.surveyInfo.thanhVienThuocDien.trim();
 
     ///muc dich vay von bo sung
     _additionalLoanPurposeModelDropdownList = Helper.buildDropdownFromMetaData(
         widget.listCombobox.where((e) => e.groupId == 'MucDich').toList());
-    _additionalLoanPurposeValue =widget.surveyInfo.mucDichVayBoSung.trim().isEmpty ? "0" : widget.surveyInfo.mucDichVayBoSung.trim();
+    _additionalLoanPurposeValue =
+        widget.surveyInfo.mucDichVayBoSung.trim().isEmpty
+            ? "0"
+            : widget.surveyInfo.mucDichVayBoSung.trim();
 
     ///muc dich vay von
     _loanPurposeModelDropdownList = Helper.buildDropdownFromMetaData(
         widget.listCombobox.where((e) => e.groupId == 'MucDich').toList());
-    _loanPurposeValue = widget.surveyInfo.mucDichVay.trim().isEmpty ? "0" : widget.surveyInfo.mucDichVay.trim(); 
+    _loanPurposeValue = widget.surveyInfo.mucDichVay.trim().isEmpty
+        ? "0"
+        : widget.surveyInfo.mucDichVay.trim();
 
     selectedSurveyDate = FormatDateConstants.convertJsonDateToDateTime(
         widget.surveyInfo.ngayKhaoSat);
@@ -861,7 +891,6 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
 
   @override
   Widget build(BuildContext context) {
-    Orientation orientation = MediaQuery.of(context).orientation;
     Size size = MediaQuery.of(context).size;
     screenHeight = size.height;
     screenWidth = size.width;
@@ -1887,15 +1916,21 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                     ),
                                                   ),
                                                   Container(
-                                                    height: 40,
+                                                    constraints: BoxConstraints(
+                                                      maxHeight:
+                                                          double.infinity,
+                                                    ),
                                                     child: TextField(
+                                                      maxLength: 40,
                                                       controller:
                                                           _controllerPurposeUseMoney,
                                                       style:
                                                           textStyleTextFieldCEP,
                                                       decoration:
                                                           inputDecorationTextFieldCEP(
-                                                              "Nhập tối đa 40 ký tự"),
+                                                              "Nhập tối đa 40 ký tự",
+                                                              isCounterText:
+                                                                  true),
                                                       keyboardType:
                                                           TextInputType.text,
                                                       // Only numbers can be entered
@@ -4822,15 +4857,15 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
     if (_controllerNumberPeopleWorked.text.isEmpty ||
         _controllerNumberPeopleInFamily.text.isEmpty) {
       tabController.animateTo(1);
-      new Timer( Duration(milliseconds: 200), (){
+      new Timer(Duration(milliseconds: 200), () {
         formkeySurveyDetail.currentState.validate();
       });
-      
+
       return;
     } else if (int.parse(_controllerNumberPeopleWorked.text) >
         int.parse(_controllerNumberPeopleInFamily.text)) {
       tabController.animateTo(1);
-      new Timer( Duration(milliseconds: 200), (){
+      new Timer(Duration(milliseconds: 200), () {
         formkeySurveyDetail.currentState.validate();
       });
       return;

@@ -1,17 +1,12 @@
 import 'dart:async';
 import 'dart:io';
-
-import 'package:CEPmobile/GlobalUser.dart';
 import 'package:CEPmobile/config/colors.dart';
-import 'package:CEPmobile/ui/components/ModalProgressHUDCustomize.dart';
 import 'package:flutter/material.dart';
-
 import 'package:CEPmobile/bloc_widgets/bloc_state_builder.dart';
 import 'package:CEPmobile/blocs/application_initiallization/application_initialization_bloc.dart';
 import 'package:CEPmobile/blocs/application_initiallization/application_initialization_event.dart';
 import 'package:CEPmobile/blocs/application_initiallization/application_initialization_state.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'dart:math' as math;
 
 class InitializationPage extends StatefulWidget {
   @override

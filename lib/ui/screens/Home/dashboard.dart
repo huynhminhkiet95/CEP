@@ -6,12 +6,9 @@ import 'package:CEPmobile/blocs/authentication/authentication_bloc.dart';
 import 'package:CEPmobile/blocs/authentication/authentication_event.dart';
 import 'package:CEPmobile/config/colors.dart';
 import 'package:CEPmobile/models/dashboard/ItemDashboard.dart';
-import 'package:CEPmobile/ui/navigation/slide_route.dart';
-import 'package:CEPmobile/ui/screens/error/error.dart';
 import 'package:flutter/material.dart';
 
 import '../../../GlobalTranslations.dart';
-import '../../../globalServer.dart';
 //import 'package:path/path.dart';
 
 class MenuDashboardPage extends StatefulWidget {
@@ -305,17 +302,17 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
         ? BorderRadius.all(Radius.circular(40))
         : BorderRadius.all(Radius.circular(0));
 
-    var menuIcon = isCollapsed
-        ? Icon(
-            Icons.menu,
-            color: Colors.white,
-            size: screenWidth * 0.06,
-          )
-        : Icon(
-            Icons.close_rounded,
-            color: Colors.white,
-            size: screenWidth * 0.06,
-          );
+    // var menuIcon = isCollapsed
+    //     ? Icon(
+    //         Icons.menu,
+    //         color: Colors.white,
+    //         size: screenWidth * 0.06,
+    //       )
+    //     : Icon(
+    //         Icons.close_rounded,
+    //         color: Colors.white,
+    //         size: screenWidth * 0.06,
+    //       );
     Orientation orientation = MediaQuery.of(context).orientation;
 
     return AnimatedPositioned(

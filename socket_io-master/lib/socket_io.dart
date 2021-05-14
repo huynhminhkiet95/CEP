@@ -1,19 +1,18 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-/// TODO
+/// todo
 class SocketIO {
-  /// TODO
+  /// todo
   static const channelName = 'semigradsky.com/socket.io';
 
-  /// TODO
+  /// todo
   static final MethodChannel _globalMethodChannel =
       new MethodChannel(channelName);
 
-  /// TODO
+  /// todo
   static Future<SocketIO> createNewInstance(String uri) async {
     final String instanceId = await _globalMethodChannel.invokeMethod(
       'createNewInstance',
@@ -25,16 +24,16 @@ class SocketIO {
     );
   }
 
-  /// TODO
+  /// todo
   final String uri;
 
-  /// TODO
+  /// todo
   final String instanceId;
 
-  /// TODO
+  /// todo
   final MethodChannel _methodChannel;
 
-  /// TODO
+  /// todo
   SocketIO._internal({
     this.uri,
     this.instanceId,
@@ -49,7 +48,7 @@ class SocketIO {
     });
   }
 
-  /// TODO
+  /// todo
   final Map<String, Map<String, Function>> _listeners = {};
 
   /// Manually opens the socket.
@@ -68,7 +67,7 @@ class SocketIO {
     _listeners[event][listenerId] = listener;
   }
 
-  /// TODO
+  /// todo
   off(String event, Function listener) async {
     if (!_listeners.containsKey(event)) return;
     String listenerId;
@@ -93,7 +92,7 @@ class SocketIO {
     return await _methodChannel.invokeMethod('id');
   }
 
-  /// TODO
+  /// todo
   Future<bool> get isConnected async {
     return await _methodChannel.invokeMethod('isConnected');
   }
@@ -113,7 +112,7 @@ class SocketIO {
     });
   }
 
-  /// TODO
+  /// todo
   _handleData({
     String event,
     List<dynamic> arguments = const [],
@@ -135,7 +134,7 @@ class SocketIO {
   }
 }
 
-/// TODO
+/// todo
 class SocketIOEvent {
   /// Fired upon a connection including a successful reconnection.
   static const connect = 'connect';
@@ -149,7 +148,7 @@ class SocketIOEvent {
   /// Fired when an error occurs.
   static const error = 'error';
 
-  /// TODO
+  /// todo
   static const connecting = 'connecting';
 
   /// Fired upon a successful reconnection.
@@ -158,7 +157,7 @@ class SocketIOEvent {
   /// Fired upon a reconnection attempt error.
   static const reconnectError = 'reconnect_error';
 
-  /// TODO
+  /// todo
   static const reconnectFailed = 'reconnect_failed';
 
   /// Fired upon an attempt to reconnect.

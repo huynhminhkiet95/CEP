@@ -1,13 +1,8 @@
 import 'dart:io';
-
 import 'package:CEPmobile/GlobalUser.dart';
 import 'package:CEPmobile/config/CustomIcons/my_flutter_app_icons.dart';
 import 'package:CEPmobile/ui/components/Widget/bezierContainer.dart';
 import 'package:CEPmobile/ui/components/Widget/customClipper.dart';
-import 'package:CEPmobile/ui/css/style.css.dart';
-import 'package:CEPmobile/ui/navigation/slide_route.dart';
-import 'package:CEPmobile/ui/screens/Login/signup.dart';
-import 'package:CEPmobile/ui/screens/Login/welcomePage.dart';
 import 'package:flutter/material.dart';
 import 'package:CEPmobile/GlobalTranslations.dart';
 import 'package:CEPmobile/blocs/authentication/authentication_bloc.dart';
@@ -20,10 +15,7 @@ import 'package:CEPmobile/bloc_widgets/bloc_state_builder.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
-import 'dart:math' as math;
 
-// import 'package:flutter_login_signup/src/signup.dart';
-// import 'package:google_fonts/google_fonts.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title}) : super(key: key);
@@ -37,7 +29,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   String userName = '';
   String password = '';
-  String _server = 'DEV';
+  String _server = 'DEV-VPN';
   bool _isRemember = false;
 
   AnimationController _animationController;
@@ -73,7 +65,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   AuthenticationBloc authenticationBloc;
   Services services;
   final LocalAuthentication localAuth = LocalAuthentication();
-  bool _cancheckBiometric = false;
   int _isAuthenType = 0;
 
   //#endregion
@@ -104,11 +95,11 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         isRemember: _isRemember));
   }
 
-  void _updateRemember(bool value) => {
-        setState(() {
-          _isRemember = value;
-        })
-      };
+  void _updateRemember(bool value) {
+    setState(() {
+      _isRemember = value;
+    });
+  }
 
   Widget _backButton() {
     return InkWell(
@@ -202,51 +193,53 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                 milliseconds: 1000,
               ),
               opacity: opacityAnimationHeader,
-              child:globalUser.getAuthenLocal ? InkWell(
-                onTap: () => showAuthenPopup(),
-                child: RotatedBox(
-                  quarterTurns: 3,
-                  child: Stack(
-                    children: [
-                      RotatedBox(
-                          quarterTurns: 1,
-                          child: _isAuthenType == 1
-                              ? Icon(
-                                  IconsCustomize.face_id_v2,
-                                  color: Colors.blue,
-                                  size: 50,
-                                )
-                              : _isAuthenType == 2
-                                  ? Icon(
-                                      Icons.fingerprint,
-                                      color: Colors.grey,
-                                      size: 50,
-                                    )
-                                  : null),
-                      SizeTransition(
-                        sizeFactor: _animationFingerPrint,
-                        axis: Axis.horizontal,
-                        axisAlignment: -1,
-                        child: RotatedBox(
-                            quarterTurns: 1,
-                            child: _isAuthenType == 1
-                                ? Icon(
-                                    IconsCustomize.face_id_v2,
-                                    color: Colors.blue,
-                                    size: 50,
-                                  )
-                                : _isAuthenType == 2
+              child: globalUser.getAuthenLocal
+                  ? InkWell(
+                      onTap: () => showAuthenPopup(),
+                      child: RotatedBox(
+                        quarterTurns: 3,
+                        child: Stack(
+                          children: [
+                            RotatedBox(
+                                quarterTurns: 1,
+                                child: _isAuthenType == 1
                                     ? Icon(
-                                        Icons.fingerprint,
-                                        color: Colors.red,
+                                        IconsCustomize.face_id_v2,
+                                        color: Colors.blue,
                                         size: 50,
                                       )
-                                    : null),
+                                    : _isAuthenType == 2
+                                        ? Icon(
+                                            Icons.fingerprint,
+                                            color: Colors.grey,
+                                            size: 50,
+                                          )
+                                        : null),
+                            SizeTransition(
+                              sizeFactor: _animationFingerPrint,
+                              axis: Axis.horizontal,
+                              axisAlignment: -1,
+                              child: RotatedBox(
+                                  quarterTurns: 1,
+                                  child: _isAuthenType == 1
+                                      ? Icon(
+                                          IconsCustomize.face_id_v2,
+                                          color: Colors.blue,
+                                          size: 50,
+                                        )
+                                      : _isAuthenType == 2
+                                          ? Icon(
+                                              Icons.fingerprint,
+                                              color: Colors.red,
+                                              size: 50,
+                                            )
+                                          : null),
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
-                ),
-              ) : Container(),
+                    )
+                  : Container(),
             ),
           ),
         )
@@ -852,31 +845,30 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       );
     }
     return Scaffold(
-        body: Container(
-          height: height,
-          child: BlocEventStateBuilder<AuthenticationState>(
-              bloc: authenticationBloc,
-              builder: (BuildContext context, AuthenticationState state) {
-                return ModalProgressHUDCustomize(
-                  inAsyncCall: state.isAuthenticating,
-                  child: loginPage,
-                );
-              }),
-        ),
-        floatingActionButton: FloatingActionButton(
-            mini: true,
-            backgroundColor: Colors.transparent,
-            child: language == 'en'
-                ? new Image.asset('assets/images/united-kingdom.png',
-                    width: 30, height: 30)
-                : new Image.asset('assets/images/vietnam.png',
-                    width: 30, height: 30),
-            onPressed: () => setState(() {
-                  language = language == 'en' ? 'vi' : 'en';
-                  allTranslations.setNewLanguage(language, true);
-                })),
-      );
-    
+      body: Container(
+        height: height,
+        child: BlocEventStateBuilder<AuthenticationState>(
+            bloc: authenticationBloc,
+            builder: (BuildContext context, AuthenticationState state) {
+              return ModalProgressHUDCustomize(
+                inAsyncCall: state.isAuthenticating,
+                child: loginPage,
+              );
+            }),
+      ),
+      floatingActionButton: FloatingActionButton(
+          mini: true,
+          backgroundColor: Colors.transparent,
+          child: language == 'en'
+              ? new Image.asset('assets/images/united-kingdom.png',
+                  width: 30, height: 30)
+              : new Image.asset('assets/images/vietnam.png',
+                  width: 30, height: 30),
+          onPressed: () => setState(() {
+                language = language == 'en' ? 'vi' : 'en';
+                allTranslations.setNewLanguage(language, true);
+              })),
+    );
   }
 
   Future<void> checkBiometric() async {
@@ -884,7 +876,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       bool canCheckBiometrics = await localAuth.canCheckBiometrics;
       if (!mounted) return;
       setState(() {
-        _cancheckBiometric = canCheckBiometrics;
       });
 
       if (canCheckBiometrics) {
@@ -927,17 +918,19 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   showAuthenPopup() async {
     var localAuth = LocalAuthentication();
     try {
-     var androidStrings = AndroidAuthMessages(
+      var androidStrings = AndroidAuthMessages(
           cancelButton: allTranslations.text("Cancel"),
           goToSettingsButton: allTranslations.text("Settings"),
           goToSettingsDescription: allTranslations.text("PleaseSetupTouchID"),
-          fingerprintSuccess:allTranslations.text("SuccessfulAuthentication"),
+          fingerprintSuccess: allTranslations.text("SuccessfulAuthentication"),
           fingerprintHint: "",
           fingerprintRequiredTitle: allTranslations.text("SetupTouchID"),
           signInTitle: "Touch ID for CEP-Nhân viên",
-          fingerprintNotRecognized: allTranslations.text("FingerPrintingNotAvailable"));
+          fingerprintNotRecognized:
+              allTranslations.text("FingerPrintingNotAvailable"));
       bool isAuthenticate = await localAuth.authenticateWithBiometrics(
-          localizedReason:allTranslations.text("PleaseScanYourFingerprintToLogin"),
+          localizedReason:
+              allTranslations.text("PleaseScanYourFingerprintToLogin"),
           stickyAuth: true,
           androidAuthStrings: androidStrings);
       if (isAuthenticate) {
@@ -948,6 +941,4 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       print(e);
     }
   }
-
-
 }

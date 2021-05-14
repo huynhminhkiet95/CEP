@@ -3,17 +3,14 @@ import 'package:CEPmobile/GlobalUser.dart';
 import 'package:CEPmobile/bloc_widgets/bloc_state_builder.dart';
 import 'package:CEPmobile/blocs/download_data/download_data_event.dart';
 import 'package:CEPmobile/blocs/download_data/download_data_state.dart';
-import 'package:CEPmobile/config/colors.dart';
 import 'package:CEPmobile/global_variables/global_download.dart';
 import 'package:CEPmobile/ui/components/ModalProgressHUDCustomize.dart';
-import 'package:CEPmobile/ui/screens/survey/style.dart';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:CEPmobile/config/formatdate.dart';
 import 'package:CEPmobile/ui/screens/Home/styles.dart';
 import 'package:CEPmobile/blocs/download_data/download_data_bloc.dart';
 import 'package:CEPmobile/services/service.dart';
-import 'package:CEPmobile/bloc_helpers/bloc_provider.dart';
 
 class DownloadSurvey extends StatefulWidget {
   DownloadSurvey({Key key}) : super(key: key);
@@ -34,7 +31,6 @@ class _DownloadSurveyState extends State<DownloadSurvey> {
   DownloadDataBloc downloadDataBloc;
   Services services;
   GlobalKey<FormState> formkeyDownload = GlobalKey<FormState>();
-  bool _autoValidate = false;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(

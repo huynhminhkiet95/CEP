@@ -1,11 +1,5 @@
-import 'dart:io';
-
-import 'package:CEPmobile/httpProvider/HttpProviders.dart';
-import 'package:CEPmobile/models/comon/metadata_checkbox.dart';
 import 'package:CEPmobile/models/download_data/comboboxmodel.dart';
-import 'package:CEPmobile/services/service_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 
 class Helper {
   static List<DropdownMenuItem<String>> buildDropdownFromMetaData(

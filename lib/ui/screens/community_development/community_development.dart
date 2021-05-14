@@ -1,29 +1,17 @@
 import 'package:CEPmobile/config/colors.dart';
-import 'package:CEPmobile/database/DBProvider.dart';
 import 'package:CEPmobile/models/community_development/comunity_development.dart';
 import 'package:CEPmobile/models/download_data/comboboxmodel.dart';
-import 'package:CEPmobile/models/download_data/historysearchsurvey.dart';
-import 'package:CEPmobile/models/historyscreen/history_screen.dart';
-import 'package:CEPmobile/models/survey/survey_result.dart';
 import 'package:CEPmobile/ui/screens/Home/styles.dart';
-import 'package:CEPmobile/ui/screens/community_development/community_development_item.dart';
-import 'package:CEPmobile/ui/screens/survey/style.dart';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:CEPmobile/config/CustomIcons/my_flutter_app_icons.dart';
-import 'package:CEPmobile/ui/screens/survey/listofsurveymembers.dart';
 import 'package:CEPmobile/GlobalUser.dart';
 import 'package:CEPmobile/services/service.dart';
 import 'package:CEPmobile/bloc_widgets/bloc_state_builder.dart';
-import 'package:CEPmobile/services/service.dart';
 import 'package:CEPmobile/blocs/community_development/community_development_bloc.dart';
 import 'package:CEPmobile/blocs/community_development/community_development_event.dart';
 import 'package:CEPmobile/blocs/community_development/community_development_state.dart';
-import 'package:CEPmobile/models/download_data/survey_info.dart';
 import 'package:CEPmobile/ui/components/ModalProgressHUDCustomize.dart';
-import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
-
 import '../../../GlobalTranslations.dart';
 
 class CommunityDevelopmentScreen extends StatefulWidget {
@@ -79,48 +67,9 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
 
   @override
   Widget build(BuildContext context) {
-    Orientation orientation = MediaQuery.of(context).orientation;
     Size size = MediaQuery.of(context).size;
     screenHeight = size.height;
     screenWidth = size.width;
-    Widget body = Container(
-        color: Colors.blue,
-        child: BlocEventStateBuilder<CommunityDevelopmentState>(
-          bloc: communityDevelopmentBloc,
-          builder: (BuildContext context, CommunityDevelopmentState state) {
-            return StreamBuilder<List<KhachHang>>(
-                stream: communityDevelopmentBloc.getCommunityDevelopmentStream,
-                builder: (BuildContext context,
-                    AsyncSnapshot<List<KhachHang>> snapshot) {
-                  //if (snapshot.data != null) {
-                  return ModalProgressHUDCustomize(
-                    inAsyncCall: state?.isLoading ?? false,
-                    child: Column(
-                      children: [
-                        Container(
-                          height: orientation == Orientation.portrait
-                              ? size.height * 0.23
-                              : size.height * 0.3,
-                          decoration: BoxDecoration(
-                            borderRadius: new BorderRadius.only(
-                                bottomLeft: Radius.elliptical(260, 100)),
-                            color: Colors.white,
-                          ),
-                          child: null,
-                        ),
-                        TabBarView(
-                          children: [
-                            Icon(Icons.flight, size: 350),
-                            Icon(Icons.directions_transit, size: 350),
-                            Icon(Icons.directions_car, size: 350),
-                          ],
-                        ),
-                      ],
-                    ),
-                  );
-                });
-          },
-        ));
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(

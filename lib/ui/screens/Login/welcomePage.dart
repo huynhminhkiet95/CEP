@@ -1,5 +1,4 @@
-import 'package:CEPmobile/GlobalUser.dart';
-import 'package:CEPmobile/ui/screens/Login/loginPage.dart';
+
 import 'package:flutter/material.dart';
 // import 'package:flutter_login_signup/src/loginPage.dart';
 // import 'package:flutter_login_signup/src/signup.dart';
@@ -67,32 +66,9 @@ class _WelcomePageState extends State<WelcomePage> {
         ));
   }
 
-  Widget _title() {
-    return RichText(
-      textAlign: TextAlign.center,
-      text: TextSpan(text: 'd',
-          // style: GoogleFonts.portLligatSans(
-          //   textStyle: Theme.of(context).textTheme.display1,
-          //   fontSize: 30,
-          //   fontWeight: FontWeight.w700,
-          //   color: Colors.white,
-          // ),
-          children: [
-            TextSpan(
-              text: 'ev',
-              style: TextStyle(color: Colors.black, fontSize: 30),
-            ),
-            TextSpan(
-              text: 'rnz',
-              style: TextStyle(color: Colors.white, fontSize: 30),
-            ),
-          ]),
-    );
-  }
-
   @override
   void deactivate() {
-    // TODO: implement deactivate
+    // Todo: implement deactivate
     print("deactivate");
     super.deactivate();
   }
@@ -101,14 +77,14 @@ class _WelcomePageState extends State<WelcomePage> {
   void setState(fn) {
     print("setState");
 
-    // TODO: implement setState
+    // todo: implement setState
     super.setState(fn);
   }
 
   @override
   void initState() {
     
-    // TODO: implement initState
+    // Todo: implement initState
     // 
     super.initState();
     print("initState");

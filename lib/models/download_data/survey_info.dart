@@ -311,7 +311,7 @@ class SurveyInfo {
     if (json["DaDuocDuyet"] is int) this.daDuocDuyet = json["DaDuocDuyet"];
     if (json["Username"] is String) this.username = json["Username"].trim();
     if (json["Ngaycapnhat"] is String) this.ngaycapnhat = json["Ngaycapnhat"].trim();
-    if (json["MasoCanBoKhaoSatPSS"] is dynamic)
+    if (json["MasoCanBoKhaoSatPSS"] is String)// previous is dynamic
       this.masoCanBoKhaoSatPss = json["MasoCanBoKhaoSatPSS"];
     if (json["SotienVayLantruoc"] is int)
       this.sotienVayLantruoc = json["SotienVayLantruoc"];

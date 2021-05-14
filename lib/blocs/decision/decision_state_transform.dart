@@ -1,12 +1,8 @@
-import 'package:CEPmobile/GlobalUser.dart';
 import 'package:CEPmobile/bloc_helpers/bloc_state_transform_base.dart';
 import 'package:CEPmobile/blocs/authentication/authentication_bloc.dart';
 import 'package:CEPmobile/blocs/authentication/authentication_state.dart';
 import 'package:CEPmobile/blocs/decision/decision_state_action.dart';
-import 'package:CEPmobile/ui/screens/Home/googleiofilteroptionanimation.dart';
 import 'package:CEPmobile/ui/screens/Home/dashboard.dart';
-import 'package:CEPmobile/ui/screens/Login/index.dart';
-import 'package:CEPmobile/ui/screens/Login/loginPage.dart';
 import 'package:CEPmobile/ui/screens/Login/welcomePage.dart';
 
 class DecisionStateTransform
@@ -23,7 +19,7 @@ class DecisionStateTransform
   factory DecisionStateTransform.init(AuthenticationBloc blocIn) {
     AuthenticationState authenticationState = blocIn.lastState;
     DecisionStateAction action;
-    String token = globalUser.gettoken;
+    // String token = globalUser.gettoken;
     
     if(authenticationState == null || !authenticationState.isAuthenticated) {
       action = DecisionStateAction.routeToPage(WelcomePage());

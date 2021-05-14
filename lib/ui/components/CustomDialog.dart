@@ -5,7 +5,6 @@ dialogCustomForCEP(BuildContext context, String title, onPressed(),
     List<Widget> children,
     String titleOnpress = "Đồng Ý"}) {
   Size size = MediaQuery.of(context).size;
-  double screenHeight = size.height;
   double screenWidth = size.width;
   showGeneralDialog(
       barrierColor: Colors.black.withOpacity(0.5),

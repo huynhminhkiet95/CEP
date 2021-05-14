@@ -2,27 +2,17 @@ import 'package:CEPmobile/blocs/delete_data/delete_data_bloc.dart';
 import 'package:CEPmobile/blocs/delete_data/delete_data_event.dart';
 import 'package:CEPmobile/blocs/delete_data/delete_data_state.dart';
 import 'package:CEPmobile/config/colors.dart';
-import 'package:CEPmobile/database/DBProvider.dart';
-import 'package:CEPmobile/models/download_data/comboboxmodel.dart';
-import 'package:CEPmobile/models/download_data/historysearchsurvey.dart';
-import 'package:CEPmobile/models/historyscreen/history_screen.dart';
 import 'package:CEPmobile/models/survey/survey_result.dart';
 import 'package:CEPmobile/ui/components/CustomDialog.dart';
 import 'package:CEPmobile/ui/screens/Home/styles.dart';
 import 'package:CEPmobile/ui/screens/survey/style.dart';
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:CEPmobile/config/CustomIcons/my_flutter_app_icons.dart';
 import 'package:CEPmobile/ui/screens/survey/listofsurveymembers.dart';
-import 'package:CEPmobile/GlobalUser.dart';
 import 'package:CEPmobile/services/service.dart';
-
 import 'package:CEPmobile/bloc_widgets/bloc_state_builder.dart';
-import 'package:CEPmobile/services/service.dart';
-
 import 'package:CEPmobile/models/download_data/survey_info.dart';
 import 'package:CEPmobile/ui/components/ModalProgressHUDCustomize.dart';
-import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 
 class DeleteDataScreen extends StatefulWidget {
   @override
@@ -39,19 +29,12 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> with TickerProvider
   String dropdownDeptDateValue;
 
   double screenWidth, screenHeight;
-  int _selectedIndex = 0;
-  static TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.w600);
+
   DeleteDataBloc deleteDataBloc;
   Services services;
-  List<Widget> _widgetOptions;
   List<CheckBoxSurvey> checkBoxSurvey = new List<CheckBoxSurvey>();
   bool isCheckAll = false;
-  void onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+ 
 
   SurveyStream surveyStream;
   Widget getItemListView(List<SurveyInfo> listSurvey) {

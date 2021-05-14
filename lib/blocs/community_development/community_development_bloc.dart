@@ -1,25 +1,13 @@
 import 'dart:async';
 import 'dart:core';
-
-import 'package:CEPmobile/GlobalTranslations.dart';
 import 'package:CEPmobile/GlobalUser.dart';
 import 'package:CEPmobile/bloc_helpers/bloc_event_state.dart';
 import 'package:CEPmobile/blocs/community_development/community_development_state.dart';
 import 'package:CEPmobile/database/DBProvider.dart';
 import 'package:CEPmobile/models/community_development/comunity_development.dart';
-import 'package:CEPmobile/models/download_data/historysearchsurvey.dart';
-import 'package:CEPmobile/models/download_data/survey_info.dart';
-import 'package:CEPmobile/models/download_data/survey_info_history.dart';
-import 'package:CEPmobile/models/survey/survey_result.dart';
 import 'package:CEPmobile/services/commonService.dart';
 import 'package:CEPmobile/services/sharePreference.dart';
-import 'package:CEPmobile/blocs/survey/survey_state.dart';
-import 'package:CEPmobile/blocs/survey/survey_event.dart';
-import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rxdart/rxdart.dart';
-import 'dart:convert';
-
 import 'community_development_event.dart';
 
 class CommunityDevelopmentBloc extends BlocEventStateBase<
@@ -37,7 +25,7 @@ class CommunityDevelopmentBloc extends BlocEventStateBase<
 
   @override
   void dispose() {
-    //_getSurveyController?.close();
+    _getCommunityDevelopmentController?.close();
     super.dispose();
   }
 

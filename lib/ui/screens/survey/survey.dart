@@ -32,19 +32,12 @@ class _SurveyScreenState extends State<SurveyScreen>
   String dropdownNgayXuatDanhSachValue;
 
   double screenWidth, screenHeight;
-  int _selectedIndex = 0;
-  static TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.w600);
+ 
   SurveyBloc surVeyBloc;
   Services services;
-  List<Widget> _widgetOptions;
   List<CheckBoxSurvey> checkBoxSurvey = new List<CheckBoxSurvey>();
   bool isCheckAll = false;
-  void onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+  
 
   SurveyStream surveyStream;
 

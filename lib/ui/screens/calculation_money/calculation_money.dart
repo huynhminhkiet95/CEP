@@ -1,9 +1,7 @@
 import 'package:CEPmobile/config/colors.dart';
 import 'package:CEPmobile/ui/components/animated_flip_counter.dart';
 import 'package:CEPmobile/ui/components/spin_textfield_number.dart';
-import 'package:CEPmobile/ui/screens/survey/style.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class CalculationMoney extends StatefulWidget {
   CalculationMoney({Key key}) : super(key: key);

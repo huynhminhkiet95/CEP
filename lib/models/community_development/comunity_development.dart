@@ -161,7 +161,6 @@ class KhachHang {
   }
 
   factory KhachHang.fromMap(Map<String, dynamic> json) {
-    double chinhanhID = (json["chinhanhID"] ?? 0).toDouble();
     return new KhachHang(
         id: json["id"],
         maKhachHang: json["maKhachHang"],

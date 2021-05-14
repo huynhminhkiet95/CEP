@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:CEPmobile/bloc_helpers/bloc_event_state.dart';
-import 'package:CEPmobile/models/users/ValidateUserIdPwdJsonResult.dart';
 
 class AuthenticationState extends BlocState {
   AuthenticationState(

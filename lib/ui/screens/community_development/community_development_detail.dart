@@ -607,7 +607,6 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
 
   @override
   Widget build(BuildContext context) {
-    Orientation orientation = MediaQuery.of(context).orientation;
     Size size = MediaQuery.of(context).size;
     screenHeight = size.height;
     screenWidth = size.width;

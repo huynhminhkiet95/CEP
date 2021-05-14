@@ -5,10 +5,8 @@ import 'package:CEPmobile/blocs/survey/survey_event.dart';
 import 'package:CEPmobile/blocs/survey/survey_state.dart';
 import 'package:CEPmobile/config/CustomIcons/my_flutter_app_icons.dart';
 import 'package:CEPmobile/config/colors.dart';
-
 import 'package:CEPmobile/ui/components/ModalProgressHUDCustomize.dart';
 import 'package:flutter/material.dart';
-import 'package:CEPmobile/database/DBProvider.dart';
 import 'package:CEPmobile/models/download_data/survey_info.dart';
 
 class ListOfSurveyMembers extends StatefulWidget {

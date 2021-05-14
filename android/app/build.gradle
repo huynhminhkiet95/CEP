@@ -33,7 +33,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.cep.CEPmobilenhanvien"
+        applicationId "com.cep.CEPstaffmobile"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
@@ -48,10 +48,10 @@ android {
     }
     signingConfigs {
         release {
-            storePassword "Init0518"
+            storePassword "123456"
             keyAlias "key"
-            keyPassword "Init0518"
-            storeFile file("keytool.jks")
+            keyPassword "123456"
+            storeFile file("key.jks")
         }
     }
     

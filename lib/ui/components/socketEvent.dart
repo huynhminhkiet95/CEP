@@ -1,4 +1,4 @@
-/// TODO
+/// todo
 class SocketIOEvent {
   /// Fired upon a connection including a successful reconnection.
   static const connect = 'connect';
@@ -12,7 +12,7 @@ class SocketIOEvent {
   /// Fired when an error occurs.
   static const error = 'error';
 
-  /// TODO
+  /// todo
   static const connecting = 'connecting';
 
   /// Fired upon a successful reconnection.
@@ -21,7 +21,7 @@ class SocketIOEvent {
   /// Fired upon a reconnection attempt error.
   static const reconnectError = 'reconnect_error';
 
-  /// TODO
+  /// todo
   static const reconnectFailed = 'reconnect_failed';
 
   /// Fired upon an attempt to reconnect.

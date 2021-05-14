@@ -7,7 +7,6 @@ import 'package:CEPmobile/services/service.dart';
 import 'package:CEPmobile/ui/components/ModalProgressHUDCustomize.dart';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
-import 'package:CEPmobile/config/formatdate.dart';
 import 'package:CEPmobile/ui/screens/Home/styles.dart';
 
 import '../../../GlobalTranslations.dart';
@@ -24,25 +23,11 @@ class _DownloadMetaDataState extends State<DownloadMetaData> {
   GlobalKey<AutoCompleteTextFieldState<String>> key = new GlobalKey();
   TextEditingController textAutoComplete = new TextEditingController(text: "");
   String txtCum = "";
-  TextEditingController _textDateEditingController = TextEditingController(
-      text: FormatDateConstants.convertDateTimeToString(DateTime.now()));
+
   DateTime selectedDate = DateTime.now();
   DownloadDataBloc downloadDataBloc;
   Services services;
 
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
-    if (picked != null && picked != selectedDate)
-      setState(() {
-        selectedDate = picked;
-        _textDateEditingController.text =
-            FormatDateConstants.convertDateTimeToString(selectedDate);
-      });
-  }
 
   @override
   void initState() {

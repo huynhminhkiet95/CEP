@@ -3,24 +3,20 @@ import 'dart:convert';
 import 'package:CEPmobile/GlobalTranslations.dart';
 import 'package:CEPmobile/GlobalUser.dart';
 import 'package:CEPmobile/bloc_helpers/bloc_event_state.dart';
-import 'package:CEPmobile/bloc_helpers/bloc_sinletion.dart';
 import 'package:CEPmobile/blocs/authentication/authentication_event.dart';
 import 'package:CEPmobile/blocs/authentication/authentication_state.dart';
 import 'package:CEPmobile/config/status_code.dart';
 import 'package:CEPmobile/database/DBProvider.dart';
 import 'package:CEPmobile/dtos/datalogin.dart';
 import 'package:CEPmobile/dtos/serverInfo.dart';
-import 'package:CEPmobile/globalDriverProfile.dart';
 import 'package:CEPmobile/globalRememberUser.dart';
 import 'package:CEPmobile/globalServer.dart';
-import 'package:CEPmobile/models/users/ValidateUserIdPwdJsonResult.dart';
 import 'package:CEPmobile/models/users/user_info.dart';
 import 'package:CEPmobile/models/users/user_role.dart';
 import 'package:CEPmobile/services/commonService.dart';
 import 'package:CEPmobile/services/sharePreference.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthenticationBloc
     extends BlocEventStateBase<AuthenticationEvent, AuthenticationState> {
@@ -182,20 +178,9 @@ class AuthenticationBloc
     }
   }
 
-  Future getStaffInfo() async {
-    var getStaff = await _commonService.getStaff(globalUser.getId);
-    if (getStaff != null && getStaff.statusCode == 200) {
-      var dataBody = json.decode(getStaff.body);
-      if (dataBody["payload"] != null) {
-        var staffInfo = StaffInfo.fromJson(dataBody);
-        globalUser.setStaffId = staffInfo.staffId;
-        globalDriverProfile.setfleet = staffInfo.fleetdesc;
-      }
-    }
-  }
 
   Future<UserInfo> getUserInfo(String userName) async {
-    UserInfo userInfoModel = null;
+    UserInfo userInfoModel;
     try {
       var userInfo = await this
           ._commonService
@@ -219,7 +204,7 @@ class AuthenticationBloc
   }
 
   Future<UserRole> getUserRoles(String userName) async {
-    UserRole userRolesModel = null;
+    UserRole userRolesModel;
     try {
       var userRoles = await this
           ._commonService

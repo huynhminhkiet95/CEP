@@ -1,24 +1,13 @@
 import 'dart:io';
-
-import 'package:CEPmobile/dtos/announcement/announcementdto.dart';
-import 'package:CEPmobile/dtos/common/getaprrovetriprecords.dart';
-import 'package:CEPmobile/dtos/common/gettodobookings.dart';
-import 'package:CEPmobile/dtos/common/saveAcceptTrip.dart';
-import 'package:CEPmobile/dtos/common/savePickUpTrip.dart';
-import 'package:CEPmobile/dtos/common/uploaddocument.dart';
 import 'package:CEPmobile/dtos/datalogin.dart';
-import 'package:CEPmobile/dtos/localdistributtion/daytriprecord.dart';
-import 'package:CEPmobile/dtos/localdistributtion/triprecord.dart';
 import 'package:CEPmobile/globalServer.dart';
 import 'package:CEPmobile/models/download_data/survey_info.dart';
 import 'package:http/http.dart';
 import 'package:sprintf/sprintf.dart';
-
 import 'package:CEPmobile/dtos/UserLogin.dart';
 import 'package:CEPmobile/httpProvider/HttpProviders.dart';
 import 'package:CEPmobile/services/service_constants.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../GlobalUser.dart';
 import '../globalDriverProfile.dart';
 
@@ -43,113 +32,17 @@ class CommonService {
     return _httpBase.httpGetToken(sprintf(ServiceName.GetUserRoles.toString(),[userName]));
   }
 
-  Future<Response> getEmployeePrivate(String employeeId, String systemId) {
-    Map map = new Map();
-    map["EmployeeId"] = employeeId;
-    map["SystemId"] = systemId;
-    return _httpBase.httpPostSSO(ServiceName.GetEmployeePrivate.toString(), map);
-  }
-
-  Future<Response> getMenuPermission(
-      String userId, String systemId, String subsidiaryId) {
-    Map map = new Map();
-    map["UserID"] = userId;
-    map["SystemId"] = systemId;
-    map["PlatformId"] = 'MB_ENT';
-    map["SubsidiaryId"] = subsidiaryId;
-    return _httpBase.httpPostSSO(
-        ServiceName.Get_PageMenuPermission.toString(), map);
-  }
+ 
 
   Future<Response> getUserProfile(int id) {
     var url = ServiceName.Get_UserProfile.toString() + id.toString();
     return _httpBase.httpGetToken(url);
   }
 
-  Future<Response> saveTriprecord(TripRecord triprecord, String subsidiaryId) {
-    var url =
-        sprintf(ServiceName.SaveBookTripRecord.toString(), [subsidiaryId, '']);
-    return _httpBase.httpPostToken(url, triprecord.toJson());
-  }
+ 
 
-  Future<Response> saveDayTriprecord(
-      DayTripRecord triprecord, String subsidiaryId) {
-    var url =
-        sprintf(ServiceName.SaveDayTripRecord.toString(), [subsidiaryId, '']);
-    return _httpBase.httpPostToken(url, triprecord.toJson());
-  }
+ 
 
-  Future<Response> getLastestMileage(
-      String equipmentCode, String subsidiaryId) {
-    var url = sprintf(
-        ServiceName.GetFleetMile.toString(), [equipmentCode, subsidiaryId]);
-    return _httpBase.httpPostToken(url, {"FleetDesc": "$equipmentCode"});
-  }
-
-  Future<Response> getTodoBookings(
-      GetTodoBookings gettodobookings, String subsidiaryId) {
-    var url =
-        sprintf(ServiceName.Get_TodoBookings.toString(), [subsidiaryId, '']);
-    return _httpBase.httpPostToken(url, gettodobookings);
-  }
-
-  Future<Response> getAnnouncements(int userId) {
-    var url = ServiceName.GetAnnouncements.toString() + userId.toString();
-    return _httpBase.httpGetToken(url);
-  }
-
-  Future<Response> saveAnnouncementEndorse(
-      SaveAnnouncementEndorse saveAnnouncementEndorse) {
-    var url = ServiceName.SaveAnnouncementEndorse.toString();
-    return _httpBase.httpPostToken(url, saveAnnouncementEndorse);
-  }
-
-  Future<Response> saveAcceptTrip(SaveAcceptTrip data, String subsidiaryId) {
-    var url =
-        sprintf(ServiceName.SaveAcceptTrip.toString(), [subsidiaryId, '']);
-    return _httpBase.httpPostToken(url, data);
-  }
-
-  Future<Response> uploadDocument(
-      UploadDocumentEntry uploadDocumentEntry, String subsidiaryId) {
-    var url =
-        sprintf(ServiceName.UploadDocument.toString(), [subsidiaryId, ""]);
-    return _httpBase.httpPost(url, uploadDocumentEntry.toJson());
-  }
-
-  Future<Response> savePickUpTrip(SavePickUpTrip data, String subsidiaryId) {
-    var url =
-        sprintf(ServiceName.Savefleettracking.toString(), [subsidiaryId, '']);
-    return _httpBase.httpPostToken(url, data);
-  }
-
-  Future<Response> getaprrovetriprecords(
-      Getaprrovetriprecords getaprrovetriprecords, String subsidiaryId) {
-    var url = sprintf(
-        ServiceName.Get_Triprecordsmobileapp.toString(), [subsidiaryId, '']);
-    return _httpBase.httpPostToken(url, getaprrovetriprecords);
-  }
-
-  Future<Response> deletetriprecord(int id, int userId, String subsidiaryId) {
-    Map map = new Map();
-    map["TRId"] = id;
-    map["updateUser"] = userId;
-    var url =
-        sprintf(ServiceName.Deletetriprecord.toString(), [subsidiaryId, '']);
-    return _httpBase.httpPostToken(url, map);
-  }
-
-  Future<Response> getCheckList(
-      String fromdate, String todate, String equipmentCode, int userId) {
-    Map map = new Map();
-    map["CheckDateF"] = fromdate;
-    map["CheckDateT"] = todate;
-    map["equipmentCode"] = equipmentCode;
-    map["CreatedUser"] = userId;
-    var url = sprintf(ServiceName.Get_CheckLists.toString(),
-        [globalUser.getDefaultSubsidiary, '']);
-    return _httpBase.httpPostToken(url, map);
-  }
 
   Future<Response> getNotifications(
       String userId, String sourceType, String messageType) {
@@ -187,10 +80,6 @@ class CommonService {
     return _httpBase.httpGetAsync(url);
   }
 
-  Future<Response> getStaff(int id) {
-    var url = sprintf(ServiceName.Get_staffinfo.toString(), [id, ""]);
-    return _httpBase.httpGetToken(url);
-  }
 
   static void goInspectionList(String type) async {
     if (await canLaunch('chrome://')) {

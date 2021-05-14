@@ -1,6 +1,5 @@
 import 'package:CEPmobile/config/numberformattter.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 
 class CurrencyInputFormatter extends TextInputFormatter {
   @override

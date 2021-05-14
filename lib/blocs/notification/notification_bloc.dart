@@ -23,7 +23,7 @@ class NotificationBloc
 
   @override
   void dispose() {
-    //_getNotifications?.close();
+    _getNotifications?.close();
     super.dispose();
   }
 
@@ -77,7 +77,7 @@ class NotificationBloc
       var notifications = await commonService.deleteNotifications(event.reqIds);
 
       if (notifications != null && notifications.statusCode == 200) {
-        var dataJson = json.decode(notifications.body);
+        // var dataJson = json.decode(notifications.body);
       }
       yield NotificationState.updateLoading(false);
     }

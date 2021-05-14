@@ -9,8 +9,6 @@ import 'package:CEPmobile/blocs/setting/setting_state.dart';
 import 'package:CEPmobile/config/colors.dart';
 import 'package:CEPmobile/services/service.dart';
 import 'package:CEPmobile/ui/components/CustomDialog.dart';
-import 'package:CEPmobile/ui/components/ModalProgressHUDCustomize.dart';
-import 'package:CEPmobile/ui/screens/profile/language.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'dart:io';
@@ -112,11 +110,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   fontSize: 14,
                   color: Colors.grey),
               onTap: () {
-                Navigator.pushNamed(context, 'language').then((value) => {
-                      setState(() {
-                        language = allTranslations.currentLanguage;
-                      })
-                    });
+                Navigator.pushNamed(context, 'language').then((value) {
+                  setState(() {
+                    language = allTranslations.currentLanguage;
+                  });
+                });
               },
             ),
           ],
@@ -286,7 +284,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           cancelButton: allTranslations.text("Cancel"),
           goToSettingsButton: allTranslations.text("Settings"),
           goToSettingsDescription: allTranslations.text("PleaseSetupTouchID"),
-          fingerprintSuccess:allTranslations.text("SuccessfulAuthentication"),
+          fingerprintSuccess: allTranslations.text("SuccessfulAuthentication"),
           fingerprintHint: "",
           fingerprintRequiredTitle: allTranslations.text("SetupTouchID"),
           signInTitle: "Touch ID for CEP-Nhân viên",

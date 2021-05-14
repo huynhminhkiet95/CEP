@@ -64,7 +64,7 @@ class DeleteDataBloc
 
   @override
   void dispose() {
-    //_getSurveyController?.close();
+    _getSurveyStreamController?.close();
     super.dispose();
   }
 

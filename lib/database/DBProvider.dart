@@ -584,8 +584,8 @@ class DBProvider {
     int rs = 0;
     final db = await database;
     try {
-      int rsDelete =
-          await db.rawDelete('DELETE FROM KhaoSat WHERE id = ${model.id}');
+      // int rsDelete =
+      //     await db.rawDelete('DELETE FROM KhaoSat WHERE id = ${model.id}');
       int checkExistsData = Sqflite.firstIntValue(await db.rawQuery(
           "SELECT COUNT(*) FROM KhaoSat WHERE id=${model.id} and idHistoryKhaoSat= ${model.idHistoryKhaoSat}"));
       if (checkExistsData == 0) {
@@ -809,9 +809,9 @@ class DBProvider {
     final db = await database;
     try {
       await db.rawDelete(
-          'DELETE FROM KhaoSat WHERE idHistoryKhaoSat = ${idHistorySearch}');
+          'DELETE FROM KhaoSat WHERE idHistoryKhaoSat = $idHistorySearch');
       await db.rawDelete(
-          'DELETE FROM historysearchkhaosat_tbl WHERE id = ${idHistorySearch}');
+          'DELETE FROM historysearchkhaosat_tbl WHERE id = $idHistorySearch');
     } on Exception catch (ex) {
       print(ex);
       // only executed if error is of type Exception
@@ -823,7 +823,7 @@ class DBProvider {
   deleteKhaoSatById(int id) async {
     final db = await database;
     try {
-      await db.rawDelete('DELETE FROM KhaoSat WHERE id = ${id}');
+      await db.rawDelete('DELETE FROM KhaoSat WHERE id = $id');
     } on Exception catch (ex) {
       print(ex);
       // only executed if error is of type Exception
@@ -1006,14 +1006,14 @@ class DBProvider {
     final db = await database;
     try {
       int checkExistsData = Sqflite.firstIntValue(await db.rawQuery(
-          "SELECT COUNT(*) FROM historysearchkhaosat_tbl WHERE cumID='${cumID}' and username = '${username}' and ngayXuatDanhSach = '${ngayXuatDanhSach}'"));
+          "SELECT COUNT(*) FROM historysearchkhaosat_tbl WHERE cumID='$cumID' and username = '$username' and ngayXuatDanhSach = '$ngayXuatDanhSach'"));
       if (checkExistsData == 0) {
         String queryString =
             '''INSERT Into historysearchkhaosat_tbl(cumID,ngayXuatDanhSach,username,masoql)
-                VALUES ("${cumID}",
-                        "${ngayXuatDanhSach}",
-                        "${username}",
-                        "${masoql}"
+                VALUES ("$cumID",
+                        "$ngayXuatDanhSach",
+                        "$username",
+                        "$masoql"
                         )''';
         await db.rawInsert(queryString);
       }

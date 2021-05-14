@@ -4,9 +4,7 @@ import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:CEPmobile/config/constants.dart';
 import 'package:CEPmobile/dtos/serverInfo.dart';
-import 'package:CEPmobile/dtos/userInfor.dart';
 import 'package:CEPmobile/globalDriverProfile.dart';
-import 'package:CEPmobile/globalRememberUser.dart';
 import 'package:CEPmobile/globalServer.dart';
 import 'package:CEPmobile/models/location/currentPosition.dart';
 
