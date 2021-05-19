@@ -1,4 +1,4 @@
-package com.cep.CEPstaffmobile;
+package com.cep.CEPstaff;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterFragmentActivity;
