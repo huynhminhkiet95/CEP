@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:CEPmobile/config/colors.dart';
+import 'package:CEPmobile/services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:CEPmobile/bloc_widgets/bloc_state_builder.dart';
 import 'package:CEPmobile/blocs/application_initiallization/application_initialization_bloc.dart';
@@ -16,6 +17,7 @@ class InitializationPage extends StatefulWidget {
 class _InitializationPageState extends State<InitializationPage>
     with TickerProviderStateMixin {
   ApplicationInitializationBloc bloc;
+  Services services;
   AnimationController _controller;
   Animation<double> _animation;
 
@@ -27,7 +29,8 @@ class _InitializationPageState extends State<InitializationPage>
   @override
   void initState() {
     super.initState();
-    bloc = ApplicationInitializationBloc();
+    services = Services.of(context);
+    bloc = ApplicationInitializationBloc(services.sharePreferenceService);
     bloc.emitEvent(ApplicationInitializationEvent());
 
     _controller = AnimationController(

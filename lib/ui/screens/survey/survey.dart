@@ -622,7 +622,7 @@ class _SurveyScreenState extends State<SurveyScreen>
         physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
         itemCount: count,
         itemBuilder: (context, i) {
-          final int count = 4;
+          final int count = listSurvey.length;
           final Animation<double> animation =
               Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
                   parent: animationController,

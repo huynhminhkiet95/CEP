@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:CEPmobile/GlobalUser.dart';
 import 'package:CEPmobile/bloc_helpers/bloc_event_state.dart';
-import 'package:CEPmobile/models/comon/notification.dart';
+import 'package:CEPmobile/models/common/notification.dart';
 import 'package:CEPmobile/services/commonService.dart';
 import 'package:CEPmobile/services/sharePreference.dart';
 import 'package:rxdart/rxdart.dart';

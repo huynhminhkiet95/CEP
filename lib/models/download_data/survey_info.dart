@@ -409,7 +409,7 @@ class SurveyInfo {
     data["thoiDiemRut"] = this.thoiDiemRut;
     data["mucVayBoSung"] = this.mucVayBoSung;
     data["mucDichVayBoSung"] = this.mucDichVayBoSung;
-    data["ngayVayBoSung"] =  this.ngayVayBoSung == "null" ? null : this.ngayVayBoSung;
+    data["ngayVayBoSung"] =  (this.ngayVayBoSung == "null" || this.ngayVayBoSung.isEmpty) ? null : this.ngayVayBoSung;
     data["ghiChu"] = this.ghiChu;
     data["soTienDuyetChovay"] = this.soTienDuyetChovay;
     data["tietKiemDinhHuong"] = this.tietKiemDinhHuong;
@@ -425,7 +425,7 @@ class SurveyInfo {
     data["thoiGianTaivay"] = this.thoiGianTaivay;
     data["songayNoquahanCaonhat"] = this.songayNoquahanCaonhat;
     data["thoiGianKhaosatGannhat"] = this.thoiGianKhaosatGannhat;
-    data["ngayTatToanDotvayTruoc"] = this.ngayTatToanDotvayTruoc;
+    data["ngayTatToanDotvayTruoc"] =(this.ngayTatToanDotvayTruoc == "null" || this.ngayTatToanDotvayTruoc.isEmpty) ? null : this.ngayTatToanDotvayTruoc;
     data["batBuocKhaosat"] = this.batBuocKhaosat;
     data["conNo"] = this.conNo;
     data["dichVuSGB"] = this.dichVuSgb;

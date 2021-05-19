@@ -32,12 +32,16 @@ class CommonService {
     return _httpBase.httpGetToken(sprintf(ServiceName.GetUserRoles.toString(),[userName]));
   }
 
- 
-
   Future<Response> getUserProfile(int id) {
     var url = ServiceName.Get_UserProfile.toString() + id.toString();
     return _httpBase.httpGetToken(url);
   }
+
+  Future<Response> getCurrentVersion() {
+    var url = ServiceName.GetCurrentVersion.toString();
+    return _httpBase.httpGet(url);
+  }
+
 
  
 
@@ -75,11 +79,7 @@ class CommonService {
     return _httpBase.httpPostHubNoBody(url, map);
   }
 
-  Future<Response> getlastedversion() {
-    var url = ServiceName.Getlastedversion.toString();
-    return _httpBase.httpGetAsync(url);
-  }
-
+ 
 
   static void goInspectionList(String type) async {
     if (await canLaunch('chrome://')) {

@@ -141,8 +141,8 @@
     "UnSelectAll":"Bỏ chọn tất cả",
     "ConfirmSaveDataToServer":"Bạn có muốn lưu dữ liệu lên server ?",
     "UpdateToServer":"Cập Nhật Lên Server",
-    "ListSurveyMember":"Danh Sách Thành Viên Khảo Sát"
-
+    "ListSurveyMember":"Danh Sách Thành Viên Khảo Sát",
+    "UpdateVersion":"Đã có phiên bản mới, vui lòng cập nhật phiên bản !"
 
 
 }

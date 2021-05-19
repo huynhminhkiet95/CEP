@@ -6,17 +6,21 @@ import 'package:CEPmobile/bloc_helpers/bloc_event_state.dart';
 import 'package:CEPmobile/blocs/authentication/authentication_event.dart';
 import 'package:CEPmobile/blocs/authentication/authentication_state.dart';
 import 'package:CEPmobile/config/status_code.dart';
+import 'package:CEPmobile/config/version.dart';
 import 'package:CEPmobile/database/DBProvider.dart';
 import 'package:CEPmobile/dtos/datalogin.dart';
 import 'package:CEPmobile/dtos/serverInfo.dart';
 import 'package:CEPmobile/globalRememberUser.dart';
 import 'package:CEPmobile/globalServer.dart';
+import 'package:CEPmobile/models/common/version_staff.dart';
 import 'package:CEPmobile/models/users/user_info.dart';
 import 'package:CEPmobile/models/users/user_role.dart';
 import 'package:CEPmobile/services/commonService.dart';
 import 'package:CEPmobile/services/sharePreference.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:package_info/package_info.dart';
+import 'package:rxdart/rxdart.dart';
 
 class AuthenticationBloc
     extends BlocEventStateBase<AuthenticationEvent, AuthenticationState> {
@@ -30,6 +34,24 @@ class AuthenticationBloc
                 globalRememberUser.getUserName,
                 globalRememberUser.getPassword,
                 globalServer.getServerCode));
+
+  BehaviorSubject<bool> _getIsNewVersionController = BehaviorSubject<bool>();
+  Stream<bool> get getIsNewVersionStream => _getIsNewVersionController;
+
+  @override
+  void dispose() async{
+     await _getIsNewVersionController.drain();
+    _getIsNewVersionController?.close();
+    super.dispose();
+  }
+
+  // @mustCallSuper
+  // void dispose() async{
+  //   await _eventSubject.drain();
+  //   _eventSubject.close();
+  //   await _stateSubject.drain();
+  //   _stateSubject.close();
+  // }
 
   @override
   Stream<AuthenticationState> eventHandler(
@@ -49,33 +71,12 @@ class AuthenticationBloc
       ///
 
       // the network is ready to test
-      var server = new ServerInfo();
-      switch (event.serverCode) {
-        case "DEV-VPN":
-          server.serverAddress = "http://10.10.0.36:8889/";
-          server.serverApi = "http://10.10.0.36:8889/";
-          server.serverCode = event.serverCode;
-          server.serverNotification = "http://10.10.0.36:8889/";
-          break;
-        case "DEV":
-          server.serverAddress = "https://staff-api.cep.org.vn/";
-          server.serverApi = "https://staff-api.cep.org.vn/";
-          server.serverCode = event.serverCode;
-          server.serverNotification = "https://staff-api.cep.org.vn/";
-          break;
-        case "PROD":
-          server.serverAddress = "http://10.10.0.36:8889/";
-          server.serverApi = "http://10.10.0.36:8889/";
-          server.serverCode = event.serverCode;
-          server.serverNotification = "http://10.10.0.36:8889/";
-          break;
-      }
 
       var dataToken = new DataLogin(
         userName: event.userName,
         password: event.password,
       );
-      this._sharePreferenceService.updateServerInfo(server);
+
       var token = await this
           ._commonService
           .getToken(dataToken)
@@ -87,17 +88,16 @@ class AuthenticationBloc
             if (jsonBodyToken["token"] != null) {
               this._sharePreferenceService.saveToken(jsonBodyToken["token"]);
               if (event.userName != globalUser.getUserName) {
-                  this._sharePreferenceService.saveAuthenLocal(false);
+                this._sharePreferenceService.saveAuthenLocal(false);
               }
-              
+
               this._sharePreferenceService.saveUserName(event.userName);
               this._sharePreferenceService.savePassword(event.password);
-              
+
               if (event.isRemember == true) {
                 this._sharePreferenceService.saveRememberUser(event.userName);
                 this._sharePreferenceService.saveIsRemember("1");
-              }
-              else{
+              } else {
                 this._sharePreferenceService.saveRememberUser(event.userName);
                 this._sharePreferenceService.saveIsRemember("0");
               }
@@ -113,26 +113,24 @@ class AuthenticationBloc
                 yield AuthenticationState.authenticated(event.isRemember,
                     event.userName, event.password, currentState.serverCode);
               }
-            }
-            else if(jsonBodyToken["message"] == "Tài khoản bị khóa"){
+            } else if (jsonBodyToken["message"] == "Tài khoản bị khóa") {
               yield AuthenticationState.failedByUser(currentState);
-            Fluttertoast.showToast(
-              msg: allTranslations.text("UserBlocked"),
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              backgroundColor: Colors.red[300].withOpacity(0.7),
-              textColor: Colors.white,
-            );
-            }
-            else{
+              Fluttertoast.showToast(
+                msg: allTranslations.text("UserBlocked"),
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                backgroundColor: Colors.red[300].withOpacity(0.7),
+                textColor: Colors.white,
+              );
+            } else {
               yield AuthenticationState.failedByUser(currentState);
-            Fluttertoast.showToast(
-              msg: allTranslations.text("UserIsNotExist"),
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              backgroundColor: Colors.red[300].withOpacity(0.7),
-              textColor: Colors.white,
-            );
+              Fluttertoast.showToast(
+                msg: allTranslations.text("UserIsNotExist"),
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                backgroundColor: Colors.red[300].withOpacity(0.7),
+                textColor: Colors.white,
+              );
             }
           } else {
             yield AuthenticationState.failedByUser(currentState);
@@ -176,8 +174,25 @@ class AuthenticationBloc
         yield AuthenticationState.notAuthenticated("", "", false);
       }
     }
+    if (event is LoadCurrentVersionEvent) {
+      var response = await _commonService.getCurrentVersion();
+      if (response != null &&
+          response.statusCode == 200 &&
+          response.body.isNotEmpty) {
+        var dataJson = json.decode(response.body);
+        if (dataJson['data'].isNotEmpty) {
+          VersionStaff versionStaff = VersionStaff.fromJson(dataJson['data']);
+          PackageInfo packageInfo = await PackageInfo.fromPlatform();
+          String buildNumber = packageInfo.buildNumber;
+          if (int.parse(buildNumber) < versionStaff.maPhienBan) {
+            _getIsNewVersionController.sink.add(false);
+          } else {
+            _getIsNewVersionController.sink.add(true);
+          }
+        }
+      }
+    }
   }
-
 
   Future<UserInfo> getUserInfo(String userName) async {
     UserInfo userInfoModel;

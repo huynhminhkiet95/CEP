@@ -141,6 +141,7 @@
     "UnSelectAll":"UnSelect All",
     "ConfirmSaveDataToServer":"Would you like to save the data to server ?",
     "UpdateToServer":"Update to Server",
-    "ListSurveyMember":"List Survey Member"
+    "ListSurveyMember":"List Survey Member",
+    "UpdateVersion":"The new version has been release in Store GoolePlay, Please click OK button to update !"
 
 }

@@ -148,7 +148,7 @@ class FormatDateConstants {
 
   static String convertDateTimeToStringT(DateTime dateTime) {
     if (dateTime == null) {
-      return "";
+      return  "";
     }
     return DateFormat('yyyy-MM-ddT00:00:00').format(dateTime);
   }

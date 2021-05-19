@@ -2,10 +2,14 @@ import 'dart:io';
 
 import 'package:CEPmobile/GlobalUser.dart';
 import 'package:CEPmobile/bloc_helpers/bloc_provider.dart';
+import 'package:CEPmobile/bloc_widgets/bloc_state_builder.dart';
 import 'package:CEPmobile/blocs/authentication/authentication_bloc.dart';
 import 'package:CEPmobile/blocs/authentication/authentication_event.dart';
+import 'package:CEPmobile/blocs/authentication/authentication_state.dart';
 import 'package:CEPmobile/config/colors.dart';
 import 'package:CEPmobile/models/dashboard/ItemDashboard.dart';
+import 'package:CEPmobile/services/service.dart';
+import 'package:CEPmobile/services/sharePreference.dart';
 import 'package:flutter/material.dart';
 
 import '../../../GlobalTranslations.dart';
@@ -27,10 +31,18 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
   Animation<double> _scaleAnimation;
   Animation<double> _menuScaleAnimation;
   Animation<Offset> _slideAnimation;
-  AuthenticationBloc _authenticationBloc;
+  AuthenticationBloc authenticationBloc;
+  Services services;
+  SharePreferenceService _sharePreferenceService;
   @override
   void initState() {
     super.initState();
+    services = Services.of(context);
+    // authenticationBloc = new AuthenticationBloc(
+    //     services.commonService, services.sharePreferenceService);
+    
+    authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
+
     _animationControllerItemMenu = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
     _controller = AnimationController(vsync: this, duration: duration);
@@ -41,27 +53,31 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
         .animate(_controller);
     _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 400));
-    _authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
   }
 
   @override
   void dispose() {
     _controller.dispose();
-    super.dispose();
     _animationControllerItemMenu?.dispose();
     _animationController.dispose();
+    authenticationBloc.dispose();
+    super.dispose();
   }
 
   void _onTapMenuItem(String router) {
     if (router == "logout") {
-      return _loginSubmit();
+      globalUser.settoken = "";
+      this.services.sharePreferenceService.saveToken("");
+      Navigator.pushNamed(context, '/welcomeLogin');
+      return;
     }
     Navigator.pushNamed(context, router);
   }
 
-  void _loginSubmit() {
-    _authenticationBloc.emitEvent(AuthenticationEventLogout());
-  }
+  // void _loginSubmit() {
+
+  //   authenticationBloc.emitEvent(AuthenticationEventLogout());
+  // }
 
   Future<bool> _onWillPop() {
     return showDialog(
@@ -93,15 +109,19 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
 
     return WillPopScope(
       onWillPop: _onWillPop,
-      child: Scaffold(
-        backgroundColor: ColorConstants.cepColorBackground,
-        body: Stack(
-          children: <Widget>[
-            menu(context),
-            dashboard(context),
-          ],
-        ),
-      ),
+      child: BlocEventStateBuilder<AuthenticationState>(
+          bloc: authenticationBloc,
+          builder: (BuildContext context, AuthenticationState state) {
+            return Scaffold(
+              backgroundColor: ColorConstants.cepColorBackground,
+              body: Stack(
+                children: <Widget>[
+                  menu(context),
+                  dashboard(context),
+                ],
+              ),
+            );
+          }),
     );
   }
 
@@ -146,7 +166,8 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
                           Text(
                               globalUser.getUserInfo == null
                                   ? ''
-                                  : " ${allTranslations.text("CodeNumber")} " + globalUser.getUserInfo.masoql,
+                                  : " ${allTranslations.text("CodeNumber")} " +
+                                      globalUser.getUserInfo.masoql,
                               style: TextStyle(color: Colors.white))
                         ],
                       ),

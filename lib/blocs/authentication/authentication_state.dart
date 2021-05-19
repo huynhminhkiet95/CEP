@@ -186,4 +186,7 @@ class AuthenticationState extends BlocState {
         hasFailed: false,
         userIsNotExit: false);
   }
+
+  
+
 }

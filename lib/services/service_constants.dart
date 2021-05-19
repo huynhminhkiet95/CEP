@@ -8,6 +8,7 @@ mixin ServiceName {
   static const String GetComboBoxValueChoTBD = "api/NhanVien/GetComboBoxValueChoTBĐ";
   static const String GetDataCommunityDevelopment = "api/NhanVien/XuatPTCDXuongDiDong";
   static const String UpdateSurveyInfo = "api/NhanVien/CapNhatThongTinKhaoSat";
+  static const String GetCurrentVersion = "api/NhanVien/GetVersion_Staff";
 
   static const String Get_UserProfile = "api/authentication/userprofile/";
   static const String Get_TodoBookings = "api/etp/booking/gettodobooking";
@@ -16,8 +17,7 @@ mixin ServiceName {
   static const String Get_TotalNotifications = "api/CountMessageByUser/";
   static const String Update_Notifications = "api/UpdateMsgStatus";
   static const String Delete_Notifications = "api/DeleteMessage/";
-  static const String Getlastedversion =
-      "api/ssocommonservice/getlastedversion/MB_ENT";
+  
   
   static const String SaveImage = "api/document/saveimage";
   static const String GetDocuments = "api/document/getdocuments";

@@ -149,7 +149,7 @@ class DownloadDataBloc
           }
           yield DownloadDataState.updateLoading(false);
         } else {
-          ToastResultMessage.error(allTranslations.text("ServerNotFound"));
+          ToastResultMessage.info("Không có dữ liệu để download !");
           yield DownloadDataState.updateLoading(false);
         }
       } else {

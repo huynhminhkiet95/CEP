@@ -1,4 +1,4 @@
-import 'package:CEPmobile/models/comon/PageMenuPermission.dart';
+import 'package:CEPmobile/models/common/PageMenuPermission.dart';
 import 'package:rxdart/rxdart.dart';
 
 class GlobalPermission {

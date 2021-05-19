@@ -24,7 +24,7 @@ import 'package:CEPmobile/ui/initialization_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:CEPmobile/ui/screens/survey/survey_detail.dart';
-import 'models/comon/message.dart';
+import 'models/common/message.dart';
 import 'ui/screens/Login/welcomePage.dart';
 
 
@@ -108,7 +108,7 @@ class AppState extends State<Application> {
             case '/menudashboard':
               return SlideLeftRoute(page: MenuDashboardPage());
             case '/welcomeLogin':
-              return SlideRightRoute(page: WelcomePage());
+              return SlideBottomRoute1(page: WelcomePage());
             case '/home':
               return new MyCustomRoute(
                 builder: (_) => new MenuDashboardPage(),

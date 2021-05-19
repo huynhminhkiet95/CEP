@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:CEPmobile/config/colors.dart';
-import 'package:CEPmobile/models/comon/StdCode.dart';
+import 'package:CEPmobile/models/common/StdCode.dart';
 
 typedef void SelectValueCallBack(String foo);
 

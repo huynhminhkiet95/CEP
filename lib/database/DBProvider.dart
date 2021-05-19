@@ -7,6 +7,7 @@ import 'package:CEPmobile/models/download_data/historysearchsurvey.dart';
 import 'package:CEPmobile/models/download_data/survey_info_history.dart';
 import 'package:CEPmobile/models/users/user_info.dart';
 import 'package:CEPmobile/models/users/user_role.dart';
+import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -31,8 +32,10 @@ class DBProvider {
   initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, "CEP-NhanVien.1.0.2.dbo.db");
-    return await openDatabase(path, version: 1, onOpen: (db) {},
-        onCreate: (Database db, int version) async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    return await openDatabase(path,
+        version: int.parse(packageInfo.buildNumber),
+        onOpen: (db) {}, onCreate: (Database db, int version) async {
       await db.execute("CREATE TABLE KhaoSat("
           "id INTEGER,"
           "ngayXuatDanhSach TEXT,"
@@ -368,7 +371,10 @@ class DBProvider {
   }
 
   void _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    if (oldVersion < newVersion) {}
+    if (oldVersion < newVersion) {
+      await db.execute(
+          "ALTER TABLE customer_cummunity_development ADD COLUMN adminName TEXT");
+    }
   }
 
   newKhaoSat(SurveyInfo model) async {
@@ -584,8 +590,8 @@ class DBProvider {
     int rs = 0;
     final db = await database;
     try {
-      // int rsDelete =
-      //     await db.rawDelete('DELETE FROM KhaoSat WHERE id = ${model.id}');
+      await db.rawDelete(
+          'DELETE FROM KhaoSat WHERE id = ${model.id} and idHistoryKhaoSat= ${model.idHistoryKhaoSat}');
       int checkExistsData = Sqflite.firstIntValue(await db.rawQuery(
           "SELECT COUNT(*) FROM KhaoSat WHERE id=${model.id} and idHistoryKhaoSat= ${model.idHistoryKhaoSat}"));
       if (checkExistsData == 0) {
@@ -1188,7 +1194,8 @@ class DBProvider {
                                     ghiChu,
                                     moHinhNghe,
                                     thunhapHangthangCuaho,
-                                    coVoChongConLaCNV
+                                    coVoChongConLaCNV,
+                                    adminName
                                     )
                 VALUES ("${item.maKhachHang}",
                         "${item.chinhanhId}",
@@ -1210,7 +1217,8 @@ class DBProvider {
                         "${item.ghiChu}",
                         ${item.moHinhNghe},
                         ${item.thunhapHangthangCuaho},
-                        ${item.coVoChongConLaCnv}
+                        ${item.coVoChongConLaCnv},
+                        "${globalUser.getUserName}"
                         );
                        ''';
           await db.rawInsert(queryStringCustomer);
@@ -1405,6 +1413,31 @@ class DBProvider {
     } catch (error) {
       // executed for errors of all types other than Exception
     }
+  }
+
+  updateCommunityDevelopment(KhachHang customer) async {
+    int rs = 0;
+    final db = await database;
+    try {
+      int checkExistsData = Sqflite.firstIntValue(await db
+          .rawQuery('''SELECT COUNT(*) FROM customer_cummunity_development " +
+              "WHERE maKhachHang='${customer.maKhachHang}' and chinhanhID=${customer.chinhanhId} and masoql='${customer.masoql}' and cumID= '${customer.cumId}' '''));
+      if (checkExistsData > 0) {
+        int updateCount = await db.rawUpdate('''
+                                  UPDATE customer_cummunity_development 
+                                  SET coVoChongConLaCNV = ?, moHinhNghe = ? , ngheNghiep = ?, ghiChu = ?
+                                  WHERE maKhachHang = ? and chinhanhID = ? and masoql = ?
+                                  ''', [
+          customer.coVoChongConLaCnv,
+          customer.moHinhNghe,
+          customer.ngheNghiep,
+          customer.ghiChu,
+          customer.maKhachHang,
+          customer.chinhanhId,
+          customer.masoql
+        ]);
+      }
+    } catch (e) {}
   }
 
   getCommunityDevelopmentByCum(

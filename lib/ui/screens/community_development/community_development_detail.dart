@@ -1,8 +1,11 @@
+import 'package:CEPmobile/bloc_widgets/bloc_state_builder.dart';
+import 'package:CEPmobile/blocs/community_development/community_development_bloc.dart';
+import 'package:CEPmobile/blocs/community_development/community_development_state.dart';
 import 'package:CEPmobile/blocs/survey/survey_bloc.dart';
 import 'package:CEPmobile/config/CustomIcons/my_flutter_app_icons.dart';
 import 'package:CEPmobile/config/colors.dart';
 import 'package:CEPmobile/config/moneyformat.dart';
-import 'package:CEPmobile/models/comon/metadata_checkbox.dart';
+import 'package:CEPmobile/models/common/metadata_checkbox.dart';
 import 'package:CEPmobile/models/download_data/comboboxmodel.dart';
 import 'package:CEPmobile/resources/CurrencyInputFormatter.dart';
 import 'package:CEPmobile/services/helper.dart';
@@ -13,7 +16,6 @@ import 'package:CEPmobile/ui/components/dropdown.dart';
 import 'package:CEPmobile/ui/css/style.css.dart';
 import 'package:CEPmobile/ui/screens/survey/style.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rounded_date_picker/rounded_picker.dart';
 import 'package:CEPmobile/models/community_development/comunity_development.dart';
 import 'package:CEPmobile/config/formatdate.dart';
 
@@ -123,12 +125,12 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
   List<DropdownMenuItem<String>> _customerBuildSuggestionsModelDropdownList;
   List<DropdownMenuItem<String>>
       _relationsWithCustomersJobDevelopModelDropdownList;
-
   List<DropdownMenuItem<String>>
       _conditionToHaveInsuranceServiceModelDropdownList;
   List<DropdownMenuItem<String>> _customerStatusHealthModelDropdownList;
   List<DropdownMenuItem<String>>
       _relationsWithCustomersForInsuranceModelDropdownList;
+  List<DropdownMenuItem<String>> _birthOfYearInsuranceModelDropdownList;
   TextStyle textStyleTextFieldCEP =
       TextStyle(color: ColorConstants.cepColorBackground, fontSize: 14);
 
@@ -146,6 +148,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
   String _conditionToHaveInsuranceServiceValue;
   String _customerStatusHealthValue;
   String _relationsWithCustomersForInsuranceValue;
+  String _birthOfYearInsuranceValue;
 
   bool isScholarship = false;
   bool isGiftTET = false;
@@ -198,7 +201,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
   List<MetaDataCheckbox> listIECD;
   List<MetaDataCheckbox> listREACH;
 
-  SurveyBloc surVeyBloc;
+  CommunityDevelopmentBloc communityDevelopmentBloc;
   Services services;
 
   void changeIndexIsOfficerInFamily(int index) {
@@ -481,18 +484,50 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
         Helper.buildDropdownFromMetaData(widget.listCombobox
             .where((e) => e.groupId == 'Dieukienbhyt')
             .toList());
-
+    _conditionToHaveInsuranceServiceValue =
+        widget.khachHang.bhyt.dieukienbhyt.toInt().toString();
     // tinh trang suc khoe
-    _customerStatusHealthModelDropdownList =
-        Helper.buildDropdownFromMetaData(widget.listCombobox
+    _customerStatusHealthModelDropdownList = Helper.buildDropdownFromMetaData(
+        widget.listCombobox
             .where((e) => e.groupId == 'Tinhtrangsuckhoe')
             .toList());
-    // quan he voi khach hang phat trien nghe
+    _customerStatusHealthValue =
+        widget.khachHang.bhyt.tinhtrangsuckhoe.toInt().toString();
+    // ho va ten nguoi than
+    _controllerFullNameOfRelativeForInsurance.text =
+        widget.khachHang.bhyt.nguoithan;
+    // quan he voi khach hang bhyt
+    _relationsWithCustomersForInsuranceModelDropdownList =
+        Helper.buildDropdownFromMetaData(widget.listCombobox
+            .where((e) => e.groupId == 'QuanHeKhachHang')
+            .toList());
+    _relationsWithCustomersForInsuranceValue =
+        widget.khachHang.bhyt.quanHeKhachHang.toInt().toString();
+    // nam sinh insurance
+    ///nam sinh
+    _birthOfYearInsuranceModelDropdownList = Helper.buildDropdownNonMetaData(
+        List<String>.generate(42, (int index) => (1980 + index).toString()));
+    _birthOfYearInsuranceValue =
+        widget.khachHang.hocBong.namsinh.toInt().toString();
+  }
+
+  void fillCheckboxTypeCommunityDevelopment() {
+    isInsurance = widget.khachHang.bhyt.serverId == 0 ? false : true;
+    isScholarship = widget.khachHang.hocBong.serverID == 0 ? false : true;
+    isGiftTET = widget.khachHang.quaTet.serverId == 0 ? false : true;
+    isHomeCEP = widget.khachHang.maiNha.serverId == 0 ? false : true;
+    isCareerDevelopment =
+        widget.khachHang.phatTrienNghe.serverId == 0 ? false : true;
   }
 
   @override
   void initState() {
+    services = Services.of(context);
+    communityDevelopmentBloc = new CommunityDevelopmentBloc(
+        services.sharePreferenceService, services.commonService);
     loadInitData();
+    fillCheckboxTypeCommunityDevelopment();
+
     //services = Services.of(context);
     _scrollController = ScrollController()
       ..addListener(() {
@@ -610,65 +645,85 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
     Size size = MediaQuery.of(context).size;
     screenHeight = size.height;
     screenWidth = size.width;
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-            icon: Icon(
-              Icons.close,
-              color: Colors.white,
-              size: 25,
-            ),
-            onPressed: () {
-              Navigator.pop(context, false);
-            }),
-        backgroundColor: ColorConstants.cepColorBackground,
-        elevation: 20,
-        title: const Text('Chi Tiết Phát triển Cộng Đồng'),
-        bottom: TabBar(
-          isScrollable: true,
-          unselectedLabelColor: Colors.blueGrey.shade300,
-          indicatorColor: Colors.red,
-          labelColor: Colors.white,
-          tabs: [
-            Tab(
-              child: Column(
-                children: [
-                  Center(
-                    child: Icon(Icons.list),
-                  ),
-                  Center(
-                      child: Text(
-                    'Thông Tin Thành Viên',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                  )),
-                ],
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+              icon: Icon(
+                Icons.save,
+                color: Colors.white,
+                size: 25,
               ),
-            ),
-            Tab(
-              child: Column(
-                children: [
-                  Center(
-                    child: Icon(IconsCustomize.insurance),
-                  ),
-                  Center(
-                      child: Text(
-                    'Chương Trình PT Cộng Đồng',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                  )),
-                ],
-              ),
-            ),
+              onPressed: () {
+                Navigator.pop(context, false);
+              }),
+          actions: [
+            IconButton(
+                icon: Icon(
+                  Icons.upload_rounded,
+                  color: Colors.white,
+                  size: 25,
+                ),
+                onPressed: () {
+                  Navigator.pop(context, false);
+                })
           ],
-          controller: _tabController,
-          indicatorSize: TabBarIndicatorSize.tab,
+          backgroundColor: ColorConstants.cepColorBackground,
+          elevation: 20,
+          title: const Text('Chi Tiết Phát triển Cộng Đồng'),
+          bottom: TabBar(
+            isScrollable: true,
+            unselectedLabelColor: Colors.blueGrey.shade300,
+            indicatorColor: Colors.red,
+            labelColor: Colors.white,
+            tabs: [
+              Tab(
+                child: Column(
+                  children: [
+                    Center(
+                      child: Icon(Icons.list),
+                    ),
+                    Center(
+                        child: Text(
+                      'Thông Tin Thành Viên',
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                    )),
+                  ],
+                ),
+              ),
+              Tab(
+                child: Column(
+                  children: [
+                    Center(
+                      child: Icon(IconsCustomize.insurance),
+                    ),
+                    Center(
+                        child: Text(
+                      'Chương Trình PT Cộng Đồng',
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                    )),
+                  ],
+                ),
+              ),
+            ],
+            controller: _tabController,
+            indicatorSize: TabBarIndicatorSize.tab,
+          ),
         ),
-      ),
-      body: TabBarView(
-        children: [
-          tabbarContent1(),
-          tabbarContent2(),
-        ],
-        controller: _tabController,
+        body: BlocEventStateBuilder<CommunityDevelopmentState>(
+            bloc: communityDevelopmentBloc,
+            builder: (BuildContext context, CommunityDevelopmentState state) {
+              return TabBarView(
+                children: [
+                  tabbarContent1(),
+                  tabbarContent2(),
+                ],
+                controller: _tabController,
+              );
+            }),
       ),
     );
   }
@@ -3101,13 +3156,15 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                             height: 40,
                                             child: CustomDropdown(
                                               dropdownMenuItemList:
-                                                  _typeCustomerModelDropdownList,
+                                                  _conditionToHaveInsuranceServiceModelDropdownList,
                                               onChanged: (value) {
                                                 setState(() {
-                                                  _typeCustomerValue = value;
+                                                  _conditionToHaveInsuranceServiceValue =
+                                                      value;
                                                 });
                                               },
-                                              value: _typeCustomerValue,
+                                              value:
+                                                  _conditionToHaveInsuranceServiceValue,
                                               width: screenWidth * 1,
                                               isEnabled: true,
                                               isUnderline: true,
@@ -3137,13 +3194,14 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                             height: 40,
                                             child: CustomDropdown(
                                               dropdownMenuItemList:
-                                                  _typeCustomerModelDropdownList,
+                                                  _customerStatusHealthModelDropdownList,
                                               onChanged: (value) {
                                                 setState(() {
-                                                  _typeCustomerValue = value;
+                                                  _customerStatusHealthValue =
+                                                      value;
                                                 });
                                               },
-                                              value: _typeCustomerValue,
+                                              value: _customerStatusHealthValue,
                                               width: screenWidth * 1,
                                               isEnabled: true,
                                               isUnderline: true,
@@ -3174,7 +3232,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                             height: 40,
                                             child: TextField(
                                               controller:
-                                                  _controllerCareerSpecific,
+                                                  _controllerFullNameOfRelativeForInsurance,
                                               style: textStyleTextFieldCEP,
                                               decoration:
                                                   inputDecorationTextFieldCEP(
@@ -3207,15 +3265,15 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                             height: 40,
                                             child: CustomDropdown(
                                               dropdownMenuItemList:
-                                                  _relationsWithCustomersJobDevelopModelDropdownList,
+                                                  _relationsWithCustomersForInsuranceModelDropdownList,
                                               onChanged: (value) {
                                                 setState(() {
-                                                  _relationsWithCustomersJobDevelop =
+                                                  _relationsWithCustomersForInsuranceValue =
                                                       value;
                                                 });
                                               },
                                               value:
-                                                  _relationsWithCustomersJobDevelop,
+                                                  _relationsWithCustomersForInsuranceValue,
                                               width: screenWidth * 1,
                                               isEnabled: true,
                                               isUnderline: true,
@@ -3247,10 +3305,15 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                               height: 40,
                                               child: CustomDropdown(
                                                 dropdownMenuItemList:
-                                                    _birthOfYearModelDropdownList,
-                                                onChanged:
-                                                    _onChangeBirthOfYearModelDropdown,
-                                                value: _birthOfYearValue,
+                                                    _birthOfYearInsuranceModelDropdownList,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    _birthOfYearInsuranceValue =
+                                                        value;
+                                                  });
+                                                },
+                                                value:
+                                                    _birthOfYearInsuranceValue,
                                                 width: screenWidth * 1,
                                                 isEnabled: true,
                                                 isUnderline: true,
@@ -3416,5 +3479,27 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
         MoneyFormat.convertCurrencyToInt(_controllerAmountSaving.text) +
         MoneyFormat.convertCurrencyToInt(_controllerAmountLoan.text);
     print("1");
+  }
+
+  Future<bool> _onWillPop() {
+    return showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Are you sure?'),
+            content: Text('Do you want to save the data ?'),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text('No'),
+              ),
+              FlatButton(
+                onPressed: () => null,
+                /*Navigator.of(context).pop(true)*/
+                child: Text('Yes'),
+              ),
+            ],
+          ),
+        ) ??
+        false;
   }
 }

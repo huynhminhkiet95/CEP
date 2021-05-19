@@ -1330,57 +1330,75 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                               ),
                                             ),
 
-                                            InkWell(
-                                              child: Container(
-                                                width: screenWidth * 0.5,
-                                                height: 40,
-                                                padding: EdgeInsets.only(
-                                                    top: 10,
-                                                    bottom: 10,
-                                                    left: 10,
-                                                    right: 10),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  border: Border.all(
-                                                      color: ColorConstants
-                                                          .cepColorBackground, // set border color
-                                                      width:
-                                                          1.0), // set border width
-                                                  borderRadius: BorderRadius
-                                                      .all(Radius.circular(
-                                                          10.0)), // set rounded corner radius
-                                                ),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                      selectedSurveyDate != null
-                                                          ? "${selectedSurveyDate.toLocal()}"
-                                                              .split(' ')[0]
-                                                          : "",
-                                                      style: TextStyle(
-                                                          fontSize: 13,
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                InkWell(
+                                                  child: Container(
+                                                    width: screenWidth * 0.5,
+                                                    height: 40,
+                                                    padding: EdgeInsets.only(
+                                                        top: 10,
+                                                        bottom: 10,
+                                                        left: 10,
+                                                        right: 10),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      border: Border.all(
                                                           color: ColorConstants
-                                                              .cepColorBackground),
+                                                              .cepColorBackground, // set border color
+                                                          width:
+                                                              1.0), // set border width
+                                                      borderRadius: BorderRadius
+                                                          .all(Radius.circular(
+                                                              10.0)), // set rounded corner radius
                                                     ),
-                                                    SizedBox(
-                                                      width: 20.0,
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          selectedSurveyDate !=
+                                                                  null
+                                                              ? "${selectedSurveyDate.toLocal()}"
+                                                                  .split(' ')[0]
+                                                              : "",
+                                                          style: TextStyle(
+                                                              fontSize: 13,
+                                                              color: ColorConstants
+                                                                  .cepColorBackground),
+                                                        ),
+                                                        SizedBox(
+                                                          width: 20.0,
+                                                        ),
+                                                        Icon(
+                                                          Icons.calendar_today,
+                                                          size: 17,
+                                                          color: ColorConstants
+                                                              .cepColorBackground,
+                                                        )
+                                                      ],
                                                     ),
-                                                    Icon(
-                                                      Icons.calendar_today,
-                                                      size: 17,
-                                                      color: ColorConstants
-                                                          .cepColorBackground,
-                                                    )
-                                                  ],
+                                                  ),
+                                                  onTap: () {
+                                                    buildSurveyDatePicker(
+                                                        context,
+                                                        selectedSurveyDate);
+                                                  },
                                                 ),
-                                              ),
-                                              onTap: () {
-                                                buildSurveyDatePicker(context,
-                                                    selectedSurveyDate);
-                                              },
+                                                Builder(builder: (context) {
+                                                  if (selectedSurveyDate !=
+                                                      null) {
+                                                    return Container();
+                                                  }
+                                                  return Text(
+                                                      "* Trường này bắt buộc nhập !",
+                                                      style: TextStyle(
+                                                          color: Colors.red, fontSize: 12));
+                                                }),
+                                              ],
                                             )
                                             // Text(
                                             //   "${selectedDate.toLocal()}".split(' ')[0],
@@ -4854,7 +4872,10 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
     //tabController.animateTo(2);
 
     formkeySurveyDetail.currentState.validate();
-    if (_controllerNumberPeopleWorked.text.isEmpty ||
+    if (selectedSurveyDate == null) {
+      tabController.animateTo(0);
+    }
+    else if (_controllerNumberPeopleWorked.text.isEmpty ||
         _controllerNumberPeopleInFamily.text.isEmpty) {
       tabController.animateTo(1);
       new Timer(Duration(milliseconds: 200), () {

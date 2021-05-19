@@ -10,6 +10,7 @@ import 'package:CEPmobile/config/colors.dart';
 import 'package:CEPmobile/services/service.dart';
 import 'package:CEPmobile/ui/components/CustomDialog.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info/package_info.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'dart:io';
 import 'package:local_auth/local_auth.dart';
@@ -30,7 +31,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   TextEditingController _passwordController =
       new TextEditingController(text: "");
   AuthenticationBloc _authenticationBloc;
-
+  PackageInfo packageInfo;
   SettingBloc settingBloc;
   Services services;
   int _isAuthenType = 0;
@@ -39,6 +40,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   void initState() {
     _passwordVisible = false;
+    getVersionInfo();
     language = allTranslations.currentLanguage;
     _getAvailableBiometrics();
     services = Services.of(context);
@@ -229,7 +231,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
               Text(
-                'Version: 1.0.0',
+                'Version: ${packageInfo.version}(${packageInfo.buildNumber})',
                 style: TextStyle(color: Color(0xFF777777)),
               ),
             ],
@@ -297,5 +299,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     } on PlatformException catch (e) {
       print(e);
     }
+  }
+
+  getVersionInfo() async {
+    packageInfo = await PackageInfo.fromPlatform();
   }
 }

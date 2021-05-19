@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:CEPmobile/GlobalUser.dart';
 import 'package:CEPmobile/config/CustomIcons/my_flutter_app_icons.dart';
+import 'package:CEPmobile/config/version.dart';
 import 'package:CEPmobile/ui/components/Widget/bezierContainer.dart';
 import 'package:CEPmobile/ui/components/Widget/customClipper.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +14,9 @@ import 'package:CEPmobile/bloc_helpers/bloc_provider.dart';
 import 'package:CEPmobile/ui/components/ModalProgressHUDCustomize.dart';
 import 'package:CEPmobile/bloc_widgets/bloc_state_builder.dart';
 import 'package:flutter/services.dart';
+import 'package:launch_review/launch_review.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
-
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title}) : super(key: key);
@@ -29,7 +30,6 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   String userName = '';
   String password = '';
-  String _server = 'DEV-VPN';
   bool _isRemember = false;
 
   AnimationController _animationController;
@@ -76,7 +76,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       authenticationBloc.emitEvent(AuthenticationEventLogin(
           userName: _userNameController.text.toString(),
           password: _passwordController.text.toString(),
-          serverCode: _server,
           isRemember: _isRemember));
     } else {
       setState(() {
@@ -91,7 +90,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     authenticationBloc.emitEvent(AuthenticationEventLogin(
         userName: _userNameController.text.toString(),
         password: password,
-        serverCode: _server,
         isRemember: _isRemember));
   }
 
@@ -373,6 +371,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
 
     _animationControllerFingerPrint.dispose();
 
+   // authenticationBloc.dispose();
     super.dispose();
   }
 
@@ -875,8 +874,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     try {
       bool canCheckBiometrics = await localAuth.canCheckBiometrics;
       if (!mounted) return;
-      setState(() {
-      });
+      setState(() {});
 
       if (canCheckBiometrics) {
         _getAvailableBiometrics();

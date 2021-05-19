@@ -1,6 +1,6 @@
 // import 'package:flutter/material.dart';
 // import 'package:iglsmobile/conf%C3%ACg/colors.dart';
-// import 'package:iglsmobile/models/comon/StdCode.dart';
+// import 'package:iglsmobile/models/common/StdCode.dart';
 
 // typedef void SelectValueCallBack(String foo);
 

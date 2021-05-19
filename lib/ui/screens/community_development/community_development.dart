@@ -34,7 +34,6 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
   List<bool> isActiveForListInsurance = new List<bool>();
 
   var arrActive = new List(6);
-
   CommunityDevelopmentBloc communityDevelopmentBloc;
   Services services;
   bool isInitLoad;
@@ -108,7 +107,7 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                       stream: communityDevelopmentBloc
                           .getCommunityDevelopmentStream,
                       builder: (context, snapshot) {
-                        if (snapshot.data != null) {
+                        if (snapshot.data != null && snapshot.data.length > 0) {
                           List<KhachHang> listCommunityDevelopmentAll =
                               snapshot.data;
                           List<KhachHang>
@@ -406,7 +405,7 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                                                 'selectedIndex': 3,
                                               }).then((value) => setState(() {
                                                 if (true == value) {
-                                                  initState();
+                                                  communityDevelopmentBloc.emitEvent(LoadCommunityDevelopmentEvent());
                                                 }
                                               }));
                                         },
@@ -513,7 +512,7 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                                                     }).then(
                                                     (value) => setState(() {
                                                           if (true == value) {
-                                                            initState();
+                                                            
                                                           }
                                                         }));
                                               } else {

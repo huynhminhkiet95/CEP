@@ -129,8 +129,9 @@ class SurveyBloc extends BlocEventStateBase<SurveyEvent, SurveyState> {
       globalUser.setListSurveyGlobal = listSurvey;
 
       Timer(Duration(milliseconds: 1000), () {
-        Navigator.pop(event.context, listSurvey);
+        
         if (rs > 0) {
+          Navigator.pop(event.context, listSurvey);
           Fluttertoast.showToast(
             msg: allTranslations.text("UpdateSurveyInfoSuccessfully"),
             timeInSecForIos: 10,
