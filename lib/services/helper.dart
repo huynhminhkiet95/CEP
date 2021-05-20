@@ -1,5 +1,6 @@
 import 'package:CEPmobile/models/download_data/comboboxmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:CEPmobile/models/common/metadata_checkbox.dart';
 
 class Helper {
   static List<DropdownMenuItem<String>> buildDropdownFromMetaData(
@@ -38,6 +39,24 @@ class Helper {
 
   static bool checkFlag(int sum, int value) {
     bool rs = (sum & value) != 0;
+    return rs;
+  }
+
+  static double sumValueCheckedForListCheckbox(List<MetaDataCheckbox> list) {
+    double rs = 0;
+    if (list
+            .where((e) => e.value == true)
+            .map((e) => e.itemID)
+            .toList()
+            .length >
+        0) {
+      rs = list
+          .where((e) => e.value == true)
+          .map((e) => e.itemID)
+          .reduce((value, element) => value + element)
+          .toDouble();
+    }
+
     return rs;
   }
 }

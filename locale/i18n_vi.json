@@ -35,6 +35,8 @@
     "DownLoadDataSuccess":"Download Dữ liệu thành công !",
     "UpdateSurveyInfoSuccessfully":"Cập nhật thông tin khảo sát thành công !",
     "RemoveSurveyInfoSuccessfully":"Xóa dữ liệu Khảo Sát thành công !",
+    "UpdateCommunityDevelopmentInfoSuccessfully":"Cập nhật thông tin PTCĐ thành công !",
+    "RemoveCommunityDevelopmentInfoSuccessfully":"Xóa dữ liệu PTCĐ thành công !",
     "Time":"Thời gian",
     "Distances":"Khoảng cách",
     "Status":"Trạng thái",

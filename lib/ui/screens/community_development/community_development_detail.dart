@@ -1,5 +1,6 @@
 import 'package:CEPmobile/bloc_widgets/bloc_state_builder.dart';
 import 'package:CEPmobile/blocs/community_development/community_development_bloc.dart';
+import 'package:CEPmobile/blocs/community_development/community_development_event.dart';
 import 'package:CEPmobile/blocs/community_development/community_development_state.dart';
 import 'package:CEPmobile/blocs/survey/survey_bloc.dart';
 import 'package:CEPmobile/config/CustomIcons/my_flutter_app_icons.dart';
@@ -252,8 +253,8 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
         widget.listCombobox.where((e) => e.groupId == 'NgheNghiep').toList());
     _occupationOfCustomerValue = widget.khachHang.ngheNghiep.toInt().toString();
     // thu nhap hang thang cua ho
-    _controllerFamilysMonthlyIncome.text =
-        widget.khachHang.thunhapHangthangCuaho.toInt().toString();
+    _controllerFamilysMonthlyIncome.text = MoneyFormat.moneyFormat(
+        widget.khachHang.thunhapHangthangCuaho.toInt().toString());
 
     /// Hoc Bong///
     // ho va ten hoc sinh hoc bong
@@ -302,8 +303,8 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
     // muc dich cu the
     _controllerSpecificPurpose.text = widget.khachHang.hocBong.ghiChu;
     // gia tri hoc bong
-    _controllerScholarshipValue.text =
-        widget.khachHang.hocBong.giatri.toInt().toString();
+    _controllerScholarshipValue.text = MoneyFormat.moneyFormat(
+        widget.khachHang.hocBong.giatri.toInt().toString());
 
     // ho so dinh kem
     listAttachment = widget.listCombobox
@@ -377,14 +378,14 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
             widget.listCombobox.where((e) => e.groupId == 'CBDexuat').toList());
     _customerBuildSuggestionsValue =
         widget.khachHang.maiNha.cbDexuat.toInt().toString();
-    _controllerAmountProposeCEPSupport.text =
-        widget.khachHang.maiNha.deXuatHoTro.toInt().toString();
-    _controllerAmountFamilySupport.text =
-        widget.khachHang.maiNha.giaDinhHoTro.toInt().toString();
-    _controllerAmountSaving.text =
-        widget.khachHang.maiNha.tietKiem.toInt().toString();
-    _controllerAmountLoan.text =
-        widget.khachHang.maiNha.tienVay.toInt().toString();
+    _controllerAmountProposeCEPSupport.text = MoneyFormat.moneyFormat(
+        widget.khachHang.maiNha.deXuatHoTro.toInt().toString());
+    _controllerAmountFamilySupport.text = MoneyFormat.moneyFormat(
+        widget.khachHang.maiNha.giaDinhHoTro.toInt().toString());
+    _controllerAmountSaving.text = MoneyFormat.moneyFormat(
+        widget.khachHang.maiNha.tietKiem.toInt().toString());
+    _controllerAmountLoan.text = MoneyFormat.moneyFormat(
+        widget.khachHang.maiNha.tienVay.toInt().toString());
 
     onTotalAmountForRoof();
 
@@ -414,7 +415,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
     _relationsWithCustomersJobDevelop =
         widget.khachHang.phatTrienNghe.quanHeKhacHang.toInt().toString();
     // hoan canh gia dinh
-    _controllerFullNameOfRelative.text =
+    _controllerFamilyCircumstancesForDevelopOccupation.text =
         widget.khachHang.phatTrienNghe.hoancanh;
     // ly do tham gia
     listJoinReason = widget.listCombobox
@@ -477,8 +478,8 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                 int.parse(e.itemId))))
         .toList();
     // muc phi bao hiem
-    _controllerInsuranceFees.text =
-        widget.khachHang.bhyt.mucphibaohiem.toInt().toString();
+    _controllerInsuranceFees.text = MoneyFormat.moneyFormat(
+        widget.khachHang.bhyt.mucphibaohiem.toInt().toString());
     // dieu kien tiep can dich vu BHYT
     _conditionToHaveInsuranceServiceModelDropdownList =
         Helper.buildDropdownFromMetaData(widget.listCombobox
@@ -512,12 +513,11 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
   }
 
   void fillCheckboxTypeCommunityDevelopment() {
-    isInsurance = widget.khachHang.bhyt.serverId == 0 ? false : true;
-    isScholarship = widget.khachHang.hocBong.serverID == 0 ? false : true;
-    isGiftTET = widget.khachHang.quaTet.serverId == 0 ? false : true;
-    isHomeCEP = widget.khachHang.maiNha.serverId == 0 ? false : true;
-    isCareerDevelopment =
-        widget.khachHang.phatTrienNghe.serverId == 0 ? false : true;
+    isInsurance = widget.khachHang.isCheckBHYT;
+    isScholarship = widget.khachHang.isCheckHocBong;
+    isGiftTET = widget.khachHang.isCheckQuaTet;
+    isHomeCEP = widget.khachHang.isCheckMaiNha;
+    isCareerDevelopment = widget.khachHang.isCheckPhatTrienNghe;
   }
 
   @override
@@ -640,6 +640,105 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
     });
   }
 
+  _onSaveToSqlite() {
+    KhachHang model = new KhachHang();
+    model.id = widget.khachHang.id;
+    model.coVoChongConLaCnv =
+        selectedIndexIsOfficerInFamily == 1 ? true : false;
+    model.moHinhNghe = selectedIndexCareerModel == 1 ? true : false;
+    model.ghiChu = _controllerCareerSpecific.text;
+    model.ngheNghiep = double.parse(_occupationOfCustomerValue);
+    model.thunhapHangthangCuaho =
+        MoneyFormat.convertCurrencyToInt(_controllerFamilysMonthlyIncome.text)
+            .toDouble();
+
+    // Hoc Bong//
+    model.hocBong = new HocBong();
+    model.hocBong.hotenhocsinh = _controllerFullNameForScholarship.text;
+    model.hocBong.namsinh = double.parse(_birthOfYearValue);
+    model.hocBong.quanhekhachhang = double.parse(_relationsWithCustomersValue);
+    model.hocBong.truonghoc = _controllerSchoolName.text;
+    model.hocBong.lop = double.parse(_controllerClassName.text);
+    model.hocBong.hocluc = double.parse(_capacityValue);
+    model.hocBong.hoancanhgiadinh = _controllerFamilyCircumstances.text;
+    model.hocBong.hoancanhgiadinh = _controllerFamilyCircumstances.text;
+    model.hocBong.hocbongQuatang = selectedIndexScholarshipAndGift.toDouble();
+    model.hocBong.mucdich =
+        Helper.sumValueCheckedForListCheckbox(listUsePurpose);
+    model.hocBong.ghiChu = _controllerSpecificPurpose.text;
+    model.hocBong.giatri =
+        MoneyFormat.convertCurrencyToInt(_controllerScholarshipValue.text)
+            .toDouble();
+    model.hocBong.dinhKemHoSo =
+        Helper.sumValueCheckedForListCheckbox(listAttachment);
+    model.hocBong.hoancanhhocsinh =
+        Helper.sumValueCheckedForListCheckbox(listStudentSituation);
+    model.hocBong.danhanhocbong =
+        selectedIndexGetScholarshipSomeYearsAgo == 1 ? true : false;
+    print("a");
+    ////// final Hoc Bong ///////
+
+    // Qua Tet//
+    model.quaTet = new QuaTet();
+    model.quaTet.loaiHoNgheo = double.parse(_typeCustomerValue);
+    //
+    // Mai Nha//
+    model.maiNha = new MaiNha();
+    model.maiNha.tilephuthuoc = double.parse(_depenRatioCustomerValue);
+    model.maiNha.thunhap = double.parse(_incomeValue);
+    model.maiNha.taisan = double.parse(_assetsValue);
+    model.maiNha.quyenSoHuuNha = double.parse(_homeOwnershipValue);
+    model.maiNha.dieukiennhao =
+        Helper.sumValueCheckedForListCheckbox(listHousingConditionsOfCustomers);
+    model.maiNha.cbDexuat = double.parse(_customerBuildSuggestionsValue);
+    model.maiNha.deXuatHoTro = MoneyFormat.convertCurrencyToInt(
+            _controllerAmountProposeCEPSupport.text)
+        .toDouble();
+    model.maiNha.giaDinhHoTro = MoneyFormat.convertCurrencyToInt(_controllerAmountFamilySupport.text).toDouble();
+    model.maiNha.tietKiem = MoneyFormat.convertCurrencyToInt(_controllerAmountSaving.text).toDouble();
+    model.maiNha.tienVay = MoneyFormat.convertCurrencyToInt(_controllerAmountLoan.text).toDouble();
+    model.maiNha.hosodinhkem =
+        Helper.sumValueCheckedForListCheckbox(listAttachmentForHomeCEP);
+    model.maiNha.ghichuhoancanh = _controllerFamilyCircumstancesNote.text;
+    model.maiNha.giaDinhDongY =
+        selectedIndexGetConfirmBuild == 1 ? true : false;
+    //
+    // Phat Trien Nghe//
+    model.phatTrienNghe = new PhatTrienNghe();
+    model.phatTrienNghe.nguoithan = _controllerFullNameOfRelative.text;
+    model.phatTrienNghe.quanHeKhacHang =
+        double.parse(_relationsWithCustomersJobDevelop);
+    model.phatTrienNghe.hoancanh =
+        _controllerFamilyCircumstancesForDevelopOccupation.text;
+    model.phatTrienNghe.lyDo =
+        Helper.sumValueCheckedForListCheckbox(listJoinReason);
+    model.phatTrienNghe.nguyenvongthamgia =
+        Helper.sumValueCheckedForListCheckbox(listSightseeingOccupationModel);
+    model.phatTrienNghe.nguyenvonghoithao =
+        Helper.sumValueCheckedForListCheckbox(listEngineerSupportSeminar);
+    model.phatTrienNghe.scCnguyenvong =
+        Helper.sumValueCheckedForListCheckbox(listSCC);
+    model.phatTrienNghe.iecDnguyenvong =
+        Helper.sumValueCheckedForListCheckbox(listIECD);
+    model.phatTrienNghe.reacHnguyenvong =
+        Helper.sumValueCheckedForListCheckbox(listREACH);
+    //
+    // Bao Hiem//
+    model.bhyt = new BHYT();
+    model.bhyt.mucphibaohiem = MoneyFormat.convertCurrencyToInt(_controllerInsuranceFees.text).toDouble();
+    model.bhyt.dieukienbhyt =
+        double.parse(_conditionToHaveInsuranceServiceValue);
+    model.bhyt.tinhtrangsuckhoe = double.parse(_customerStatusHealthValue);
+    model.bhyt.tinhtrangsuckhoe = double.parse(_customerStatusHealthValue);
+    model.bhyt.nguoithan = _controllerFullNameOfRelativeForInsurance.text;
+    model.bhyt.quanHeKhachHang =
+        double.parse(_relationsWithCustomersForInsuranceValue);
+    model.bhyt.namsinh = double.parse(_birthOfYearInsuranceValue);
+    //
+    communityDevelopmentBloc
+        .emitEvent(UpdateCommunityDevelopmentEvent(context, model));
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -656,7 +755,8 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                 size: 25,
               ),
               onPressed: () {
-                Navigator.pop(context, false);
+                _onSaveToSqlite();
+                // Navigator.pop(context, false);
               }),
           actions: [
             IconButton(

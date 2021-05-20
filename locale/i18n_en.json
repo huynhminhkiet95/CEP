@@ -35,6 +35,8 @@
     "DownLoadDataSuccess":"Download the data successfully !",
     "UpdateSurveyInfoSuccessfully":"Update survey info is successfully !",
     "RemoveSurveyInfoSuccessfully":"Delete survey info is successfully !",
+    "UpdateCommunityDevelopmentInfoSuccessfully":"Update Community Development info is successfully !",
+    "RemoveCommunityDevelopmentInfoSuccessfully":"Delete Community Development info is successfully ",
     "Time":"Time",
     "Distances":"Distances",
     "HistoryTodo":"History Todo",

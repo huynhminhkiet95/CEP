@@ -31,7 +31,7 @@ class DBProvider {
 
   initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, "CEP-NhanVien.1.0.2.dbo.db");
+    String path = join(documentsDirectory.path, "CEP-NhanVien.dbo.db");
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     return await openDatabase(path,
         version: int.parse(packageInfo.buildNumber),
@@ -283,7 +283,13 @@ class DBProvider {
           "ghiChu TEXT,"
           "moHinhNghe INTEGER,"
           "thunhapHangthangCuaho INTEGER,"
-          "coVoChongConLaCNV INTEGER"
+          "coVoChongConLaCNV INTEGER,"
+          "adminName TEXT,"
+          "isCheckHocBong INTEGER,"
+          "isCheckQuaTet INTEGER,"
+          "isCheckMaiNha INTEGER,"
+          "isCheckPhatTrienNghe INTEGER,"
+          "isCheckBHYT INTEGER"
           ")");
 
       await db.execute("CREATE TABLE mainha_cummunity_development("
@@ -371,10 +377,10 @@ class DBProvider {
   }
 
   void _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    if (oldVersion < newVersion) {
-      await db.execute(
-          "ALTER TABLE customer_cummunity_development ADD COLUMN adminName TEXT");
-    }
+    // if (oldVersion < newVersion) {
+    //   await db.execute(
+    //       "ALTER TABLE customer_cummunity_development ADD COLUMN adminName TEXT");
+    // }
   }
 
   newKhaoSat(SurveyInfo model) async {
@@ -1170,7 +1176,8 @@ class DBProvider {
       for (var item in listCustomer) {
         int checkExistsData = Sqflite.firstIntValue(await db
             .rawQuery('''SELECT COUNT(*) FROM customer_cummunity_development " +
-              "WHERE maKhachHang='${item.maKhachHang}' and chinhanhID=${item.chinhanhId} and masoql='${item.masoql}' and cumID= '${item.cumId}' '''));
+              "WHERE adminName='${globalUser.getUserName}' and maKhachHang='${item.maKhachHang}' 
+              and chinhanhID=${item.chinhanhId} and masoql='${item.masoql}' and cumID= '${item.cumId}' '''));
         if (checkExistsData == 0) {
           String queryStringCustomer =
               '''INSERT Into customer_cummunity_development(
@@ -1195,7 +1202,12 @@ class DBProvider {
                                     moHinhNghe,
                                     thunhapHangthangCuaho,
                                     coVoChongConLaCNV,
-                                    adminName
+                                    adminName,
+                                    isCheckHocBong,
+                                    isCheckQuaTet,
+                                    isCheckMaiNha,
+                                    isCheckPhatTrienNghe,
+                                    isCheckBHYT
                                     )
                 VALUES ("${item.maKhachHang}",
                         "${item.chinhanhId}",
@@ -1218,7 +1230,12 @@ class DBProvider {
                         ${item.moHinhNghe},
                         ${item.thunhapHangthangCuaho},
                         ${item.coVoChongConLaCnv},
-                        "${globalUser.getUserName}"
+                        "${globalUser.getUserName}",
+                        ${item.hocBong == null ? 0 : 1},
+                        ${item.quaTet == null ? 0 : 1},
+                        ${item.maiNha == null ? 0 : 1},
+                        ${item.phatTrienNghe == null ? 0 : 1},
+                        ${item.bhyt == null ? 0 : 1}
                         );
                        ''';
           await db.rawInsert(queryStringCustomer);
@@ -1416,28 +1433,158 @@ class DBProvider {
   }
 
   updateCommunityDevelopment(KhachHang customer) async {
-    int rs = 0;
     final db = await database;
     try {
-      int checkExistsData = Sqflite.firstIntValue(await db
-          .rawQuery('''SELECT COUNT(*) FROM customer_cummunity_development " +
-              "WHERE maKhachHang='${customer.maKhachHang}' and chinhanhID=${customer.chinhanhId} and masoql='${customer.masoql}' and cumID= '${customer.cumId}' '''));
-      if (checkExistsData > 0) {
-        int updateCount = await db.rawUpdate('''
-                                  UPDATE customer_cummunity_development 
-                                  SET coVoChongConLaCNV = ?, moHinhNghe = ? , ngheNghiep = ?, ghiChu = ?
-                                  WHERE maKhachHang = ? and chinhanhID = ? and masoql = ?
-                                  ''', [
-          customer.coVoChongConLaCnv,
-          customer.moHinhNghe,
-          customer.ngheNghiep,
-          customer.ghiChu,
-          customer.maKhachHang,
-          customer.chinhanhId,
-          customer.masoql
-        ]);
-      }
-    } catch (e) {}
+      int count = await db.rawUpdate('''UPDATE customer_cummunity_development
+                             SET  coVoChongConLaCNV = ?,
+                                  moHinhNghe = ?,
+                                  ngheNghiep = ?,
+                                  ghiChu = ?,
+                                  thunhapHangthangCuaho = ?
+                             WHERE id = ?''', [
+        customer.coVoChongConLaCnv ? 1 : 0,
+        customer.moHinhNghe ? 1 : 0,
+        customer.ngheNghiep.toInt(),
+        customer.ghiChu,
+        customer.thunhapHangthangCuaho.toInt(),
+        customer.id
+      ]);
+  
+      // List responses = await Future.wait([
+      //   db.rawUpdate('''UPDATE customer_cummunity_development
+      //                        SET  coVoChongConLaCNV = ?,
+      //                             moHinhNghe = ?,
+      //                             ngheNghiep = ?,
+      //                             ghiChu = ?,
+      //                             thunhapHangthangCuaho = ?
+      //                        WHERE idKhachhang = ?''', [
+      //     customer.coVoChongConLaCnv,
+      //     customer.moHinhNghe,
+      //     customer.ngheNghiep,
+      //     customer.ghiChu,
+      //     customer.thunhapHangthangCuaho,
+      //     customer.id
+      //   ]),
+      //   db.rawUpdate('''UPDATE bhyt_cummunity_development 
+      //                        SET  mucphibaohiem = ?, 
+      //                             dieukienbhyt = ? , 
+      //                             tinhtrangsuckhoe = ?, 
+      //                             nguoithan = ?,
+      //                             namsinh = ?,
+      //                             quanHeKhachHang = ?
+      //                        WHERE idKhachhang = ?''', [
+      //     customer.bhyt.mucphibaohiem,
+      //     customer.bhyt.dieukienbhyt,
+      //     customer.bhyt.tinhtrangsuckhoe,
+      //     customer.bhyt.nguoithan,
+      //     customer.bhyt.namsinh,
+      //     customer.bhyt.quanHeKhachHang,
+      //     customer.id
+      //   ]),
+      //   db.rawUpdate('''UPDATE hocbong_cummunity_development 
+      //                        SET  hotenhocsinh = ?, 
+      //                             namsinh = ? , 
+      //                             lop = ?, 
+      //                             truonghoc = ?,
+      //                             quanhekhachhang = ?,
+      //                             hocbongQuatang = ?,
+      //                             hocluc = ?,
+      //                             danhanhocbong = ?,
+      //                             dinhKemHoSo = ?,
+      //                             hoancanhhocsinh = ?,
+      //                             hoancanhgiadinh = ?,
+      //                             mucdich = ?,
+      //                             ghiChu = ?,
+      //                             giatri = ?
+      //                        WHERE idKhachhang = ?''', [
+      //     customer.hocBong.hotenhocsinh,
+      //     customer.hocBong.namsinh,
+      //     customer.hocBong.lop,
+      //     customer.hocBong.truonghoc,
+      //     customer.hocBong.quanhekhachhang,
+      //     customer.hocBong.hocbongQuatang,
+      //     customer.hocBong.hocluc,
+      //     customer.hocBong.danhanhocbong,
+      //     customer.hocBong.dinhKemHoSo,
+      //     customer.hocBong.hoancanhhocsinh,
+      //     customer.hocBong.hoancanhgiadinh,
+      //     customer.hocBong.mucdich,
+      //     customer.hocBong.ghiChu,
+      //     customer.hocBong.giatri,
+      //     customer.id
+      //   ]),
+      //   db.rawUpdate('''UPDATE mainha_cummunity_development 
+      //                        SET  tilephuthuoc = ?, 
+      //                             thunhap = ?,
+      //                             taisan = ?,
+      //                             dieukiennhao = ?,
+      //                             quyenSoHuuNha = ?,
+      //                             ghichuhoancanh = ?,
+      //                             cbDexuat = ?,
+      //                             duTruKinhPhi = ?,
+      //                             deXuatHoTro = ?,
+      //                             giaDinhHoTro = ?,
+      //                             tietKiem = ?,
+      //                             tienVay = ?,
+      //                             giaDinhDongY = ?,
+      //                             cnDexuat = ?,
+      //                             cnDexuatThoigian = ?,
+      //                             cnDexuatSotien = ?,
+      //                             hosodinhkem = ?
+      //                        WHERE idKhachhang = ?''', [
+      //     customer.maiNha.tilephuthuoc,
+      //     customer.maiNha.thunhap,
+      //     customer.maiNha.taisan,
+      //     customer.maiNha.dieukiennhao,
+      //     customer.maiNha.quyenSoHuuNha,
+      //     customer.maiNha.ghichuhoancanh,
+      //     customer.maiNha.cbDexuat,
+      //     customer.maiNha.duTruKinhPhi,
+      //     customer.maiNha.deXuatHoTro,
+      //     customer.maiNha.giaDinhHoTro,
+      //     customer.maiNha.tietKiem,
+      //     customer.maiNha.tienVay,
+      //     customer.maiNha.giaDinhDongY,
+      //     customer.maiNha.cnDexuat,
+      //     customer.maiNha.cnDexuatThoigian,
+      //     customer.maiNha.cnDexuatSotien,
+      //     customer.maiNha.hosodinhkem,
+      //     customer.id
+      //   ]),
+      //   db.rawUpdate('''UPDATE phattriennghe_cummunity_development 
+      //                        SET  nguoithan = ?, 
+      //                             quanHeKhacHang = ?,
+      //                             lyDo = ?,
+      //                             hoancanh = ?,
+      //                             nguyenvongthamgia = ?,
+      //                             nguyenvonghoithao = ?,
+      //                             scCnguyenvong = ?,
+      //                             iecDnguyenvong = ?,
+      //                             reacHnguyenvong = ?
+      //                        WHERE idKhachhang = ?''', [
+      //     customer.phatTrienNghe.nguoithan,
+      //     customer.phatTrienNghe.quanHeKhacHang,
+      //     customer.phatTrienNghe.lyDo,
+      //     customer.phatTrienNghe.hoancanh,
+      //     customer.phatTrienNghe.nguyenvongthamgia,
+      //     customer.phatTrienNghe.nguyenvonghoithao,
+      //     customer.phatTrienNghe.scCnguyenvong,
+      //     customer.phatTrienNghe.iecDnguyenvong,
+      //     customer.phatTrienNghe.reacHnguyenvong,
+      //     customer.id
+      //   ]),
+      //   db.rawUpdate('''UPDATE quatet_cummunity_development 
+      //                        SET  loaiHoNgheo = ?
+      //                        WHERE idKhachhang = ?''',
+      //       [customer.quaTet.loaiHoNgheo, customer.id])
+      // ]);
+      String a = "";
+    } on Exception catch (ex) {
+      print(ex);
+      // only executed if error is of type Exception
+    } catch (error) {
+      // executed for errors of all types other than Exception
+    }
   }
 
   getCommunityDevelopmentByCum(
@@ -1445,8 +1592,8 @@ class DBProvider {
     final db = await database;
 
     var resCustomer = await db.query("customer_cummunity_development",
-        where: "chinhanhID = ? and masoql = ? and cumID = ?",
-        whereArgs: [chiNhanhID, masoql, cumId]);
+        where: "chinhanhID = ? and masoql = ? and cumID = ? and adminName = ?",
+        whereArgs: [chiNhanhID, masoql, cumId, globalUser.getUserName]);
 
     var resBHYT = await db.query(
       "bhyt_cummunity_development",
