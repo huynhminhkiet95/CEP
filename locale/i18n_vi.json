@@ -37,6 +37,7 @@
     "RemoveSurveyInfoSuccessfully":"Xóa dữ liệu Khảo Sát thành công !",
     "UpdateCommunityDevelopmentInfoSuccessfully":"Cập nhật thông tin PTCĐ thành công !",
     "RemoveCommunityDevelopmentInfoSuccessfully":"Xóa dữ liệu PTCĐ thành công !",
+    "InsertCommunityDevelopmentSuccessfully":"Dữ liệu đã được thêm vào PTCĐ !",
     "Time":"Thời gian",
     "Distances":"Khoảng cách",
     "Status":"Trạng thái",

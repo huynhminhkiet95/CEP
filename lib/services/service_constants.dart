@@ -8,6 +8,7 @@ mixin ServiceName {
   static const String GetComboBoxValueChoTBD = "api/NhanVien/GetComboBoxValueChoTBĐ";
   static const String GetDataCommunityDevelopment = "api/NhanVien/XuatPTCDXuongDiDong";
   static const String UpdateSurveyInfo = "api/NhanVien/CapNhatThongTinKhaoSat";
+  static const String UpdateCommunityDevelopmentInfo = "api/NhanVien/CapNhatPhatTrienCongDong";
   static const String GetCurrentVersion = "api/NhanVien/GetVersion_Staff";
 
   static const String Get_UserProfile = "api/authentication/userprofile/";

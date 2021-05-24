@@ -1,4 +1,5 @@
 import 'package:CEPmobile/bloc_helpers/bloc_event_state.dart';
+import 'package:CEPmobile/models/community_development/comunity_development.dart';
 import 'package:CEPmobile/models/download_data/survey_info.dart';
 import 'package:CEPmobile/ui/screens/survey/listofsurveymembers.dart';
 import 'package:flutter/material.dart';
@@ -27,4 +28,10 @@ class UpdateSurveyToServerEvent extends SurveyEvent {
   final List<CheckBoxSurvey> listCheckBox;
   final BuildContext context;
   UpdateSurveyToServerEvent(this.listCheckBox, this.context) : super();
+}
+
+class InsertNewCommunityDevelopment extends SurveyEvent {
+  final List<KhachHang> listKhachHang;
+  final BuildContext context;
+  InsertNewCommunityDevelopment(this.context,this.listKhachHang);
 }

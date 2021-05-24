@@ -37,6 +37,7 @@
     "RemoveSurveyInfoSuccessfully":"Delete survey info is successfully !",
     "UpdateCommunityDevelopmentInfoSuccessfully":"Update Community Development info is successfully !",
     "RemoveCommunityDevelopmentInfoSuccessfully":"Delete Community Development info is successfully ",
+    "InsertCommunityDevelopmentSuccessfully":"The data has been inserted successfully !",
     "Time":"Time",
     "Distances":"Distances",
     "HistoryTodo":"History Todo",

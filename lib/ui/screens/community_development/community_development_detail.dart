@@ -12,6 +12,7 @@ import 'package:CEPmobile/resources/CurrencyInputFormatter.dart';
 import 'package:CEPmobile/services/helper.dart';
 import 'package:CEPmobile/services/service.dart';
 import 'package:CEPmobile/ui/components/CardWithMultipleCheckbox.dart';
+import 'package:CEPmobile/ui/components/CustomDialog.dart';
 import 'package:CEPmobile/ui/components/animated_flip_counter.dart';
 import 'package:CEPmobile/ui/components/dropdown.dart';
 import 'package:CEPmobile/ui/css/style.css.dart';
@@ -19,6 +20,7 @@ import 'package:CEPmobile/ui/screens/survey/style.dart';
 import 'package:flutter/material.dart';
 import 'package:CEPmobile/models/community_development/comunity_development.dart';
 import 'package:CEPmobile/config/formatdate.dart';
+import 'package:flutter/services.dart';
 
 import 'dart:math' as math;
 
@@ -289,7 +291,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
 
     // trao hoc bong & qua tang
     selectedIndexScholarshipAndGift =
-        widget.khachHang.hocBong.hocbongQuatang.toInt();
+        widget.khachHang.hocBong.hocbong_Quatang.toInt();
 
     // muc dich su dung hoc bong
     listUsePurpose = widget.listCombobox
@@ -509,7 +511,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
     _birthOfYearInsuranceModelDropdownList = Helper.buildDropdownNonMetaData(
         List<String>.generate(42, (int index) => (1980 + index).toString()));
     _birthOfYearInsuranceValue =
-        widget.khachHang.hocBong.namsinh.toInt().toString();
+        widget.khachHang.bhyt.namsinh.toInt().toString();
   }
 
   void fillCheckboxTypeCommunityDevelopment() {
@@ -641,6 +643,16 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
   }
 
   _onSaveToSqlite() {
+    communityDevelopmentBloc
+        .emitEvent(UpdateCommunityDevelopmentEvent(context, getVM()));
+  }
+
+  _onSaveToServer() {
+    communityDevelopmentBloc
+        .emitEvent(UpdateCommunityDevelopmentToServerEvent(context, getVM()));
+  }
+
+  KhachHang getVM() {
     KhachHang model = new KhachHang();
     model.id = widget.khachHang.id;
     model.coVoChongConLaCnv =
@@ -662,7 +674,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
     model.hocBong.hocluc = double.parse(_capacityValue);
     model.hocBong.hoancanhgiadinh = _controllerFamilyCircumstances.text;
     model.hocBong.hoancanhgiadinh = _controllerFamilyCircumstances.text;
-    model.hocBong.hocbongQuatang = selectedIndexScholarshipAndGift.toDouble();
+    model.hocBong.hocbong_Quatang = selectedIndexScholarshipAndGift.toDouble();
     model.hocBong.mucdich =
         Helper.sumValueCheckedForListCheckbox(listUsePurpose);
     model.hocBong.ghiChu = _controllerSpecificPurpose.text;
@@ -694,14 +706,20 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
     model.maiNha.deXuatHoTro = MoneyFormat.convertCurrencyToInt(
             _controllerAmountProposeCEPSupport.text)
         .toDouble();
-    model.maiNha.giaDinhHoTro = MoneyFormat.convertCurrencyToInt(_controllerAmountFamilySupport.text).toDouble();
-    model.maiNha.tietKiem = MoneyFormat.convertCurrencyToInt(_controllerAmountSaving.text).toDouble();
-    model.maiNha.tienVay = MoneyFormat.convertCurrencyToInt(_controllerAmountLoan.text).toDouble();
+    model.maiNha.giaDinhHoTro =
+        MoneyFormat.convertCurrencyToInt(_controllerAmountFamilySupport.text)
+            .toDouble();
+    model.maiNha.tietKiem =
+        MoneyFormat.convertCurrencyToInt(_controllerAmountSaving.text)
+            .toDouble();
+    model.maiNha.tienVay =
+        MoneyFormat.convertCurrencyToInt(_controllerAmountLoan.text).toDouble();
     model.maiNha.hosodinhkem =
         Helper.sumValueCheckedForListCheckbox(listAttachmentForHomeCEP);
     model.maiNha.ghichuhoancanh = _controllerFamilyCircumstancesNote.text;
     model.maiNha.giaDinhDongY =
         selectedIndexGetConfirmBuild == 1 ? true : false;
+    model.maiNha.duTruKinhPhi = totalAmount.toDouble();
     //
     // Phat Trien Nghe//
     model.phatTrienNghe = new PhatTrienNghe();
@@ -725,7 +743,9 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
     //
     // Bao Hiem//
     model.bhyt = new BHYT();
-    model.bhyt.mucphibaohiem = MoneyFormat.convertCurrencyToInt(_controllerInsuranceFees.text).toDouble();
+    model.bhyt.mucphibaohiem =
+        MoneyFormat.convertCurrencyToInt(_controllerInsuranceFees.text)
+            .toDouble();
     model.bhyt.dieukienbhyt =
         double.parse(_conditionToHaveInsuranceServiceValue);
     model.bhyt.tinhtrangsuckhoe = double.parse(_customerStatusHealthValue);
@@ -735,8 +755,12 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
         double.parse(_relationsWithCustomersForInsuranceValue);
     model.bhyt.namsinh = double.parse(_birthOfYearInsuranceValue);
     //
-    communityDevelopmentBloc
-        .emitEvent(UpdateCommunityDevelopmentEvent(context, model));
+    model.isCheckBHYT = isInsurance;
+    model.isCheckHocBong = isScholarship;
+    model.isCheckQuaTet = isGiftTET;
+    model.isCheckMaiNha = isHomeCEP;
+    model.isCheckPhatTrienNghe = isCareerDevelopment;
+    return model;
   }
 
   @override
@@ -766,7 +790,9 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                   size: 25,
                 ),
                 onPressed: () {
-                  Navigator.pop(context, false);
+                  dialogCustomForCEP(context,
+                      "Bạn có muốn lưu dữ liệu đến server ?", _onSaveToServer,
+                      children: [], width: screenWidth * 0.7);
                 })
           ],
           backgroundColor: ColorConstants.cepColorBackground,
@@ -1335,7 +1361,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                             height: 40,
                                             child: TextField(
                                               controller:
-                                                  _controllerCareerSpecific,
+                                                  _controllerFullNameForScholarship,
                                               style: textStyleTextFieldCEP,
                                               decoration:
                                                   inputDecorationTextFieldCEP(
@@ -1487,6 +1513,11 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                                         "Nhập..."),
                                                 keyboardType:
                                                     TextInputType.number,
+                                                inputFormatters: <
+                                                    TextInputFormatter>[
+                                                  WhitelistingTextInputFormatter
+                                                      .digitsOnly
+                                                ],
                                                 // Only numbers can be entered
                                               ),
                                             ),
@@ -3582,24 +3613,12 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
   }
 
   Future<bool> _onWillPop() {
-    return showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Are you sure?'),
-            content: Text('Do you want to save the data ?'),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: Text('No'),
-              ),
-              FlatButton(
-                onPressed: () => null,
-                /*Navigator.of(context).pop(true)*/
-                child: Text('Yes'),
-              ),
-            ],
-          ),
-        ) ??
-        false;
+    return dialogCustomForCEP(
+        context, "Bạn muốn thoát khỏi màn hình này ?", navigationTrue,
+        children: [], width: screenWidth * 0.7);
+  }
+
+  navigationTrue() {
+    Navigator.of(context).pop(true);
   }
 }

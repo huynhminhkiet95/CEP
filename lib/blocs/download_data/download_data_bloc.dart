@@ -137,8 +137,8 @@ class DownloadDataBloc
             List<KhachHang> listCustomer = new List<KhachHang>();
 
             for (var item in jsonBody["data"]) {
-              KhachHang khachang = KhachHang.fromJson(item);
-              listCustomer.add(khachang);
+              KhachHang khachhang = KhachHang.fromJson(item);
+              listCustomer.add(khachhang);
             }
             await DBProvider.db.newCommunityDevelopment(listCustomer);
             this

@@ -138,7 +138,6 @@ class KhachHang {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data["id"] = this.id;
     data["maKhachHang"] = this.maKhachHang;
     data["chinhanhID"] = this.chinhanhId;
     data["duanID"] = this.duanId;
@@ -227,7 +226,6 @@ class QuaTet {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data["idKhachhang"] = this.idKhachhang;
     data["serverID"] = this.serverId;
     data["nam"] = this.nam;
     data["maKhachHang"] = this.maKhachHang;
@@ -290,7 +288,6 @@ class PhatTrienNghe {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data["idKhachhang"] = this.idKhachhang;
     data["serverID"] = this.serverId;
     data["nam"] = this.nam;
     data["maKhachHang"] = this.maKhachHang;
@@ -395,7 +392,6 @@ class MaiNha {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data["idKhachhang"] = this.idKhachhang;
     data["serverID"] = this.serverId;
     data["nam"] = this.nam;
     data["maKhachHang"] = this.maKhachHang;
@@ -412,9 +408,9 @@ class MaiNha {
     data["tietKiem"] = this.tietKiem;
     data["tienVay"] = this.tienVay;
     data["giaDinhDongY"] = this.giaDinhDongY;
-    data["cnDexuat"] = this.cnDexuat;
+    data["cnDexuat"] = this.cnDexuat ?? 0;
     data["cnDexuatThoigian"] = this.cnDexuatThoigian;
-    data["cnDexuatSotien"] = this.cnDexuatSotien;
+    data["cnDexuatSotien"] = this.cnDexuatSotien ?? 0;
     data["hosodinhkem"] = this.hosodinhkem;
     return data;
   }
@@ -463,7 +459,6 @@ class BHYT {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data["idKhachhang"] = this.idKhachhang;
     data["serverID"] = this.serverId;
     data["nam"] = this.nam;
     data["maKhachHang"] = this.maKhachHang;
@@ -488,7 +483,7 @@ class HocBong {
   double lop;
   String truonghoc;
   double quanhekhachhang;
-  double hocbongQuatang;
+  double hocbong_Quatang;
   double hocluc;
   bool danhanhocbong; // bool
   double dinhKemHoSo;
@@ -508,7 +503,7 @@ class HocBong {
       this.lop,
       this.truonghoc,
       this.quanhekhachhang,
-      this.hocbongQuatang,
+      this.hocbong_Quatang,
       this.hocluc,
       this.danhanhocbong,
       this.dinhKemHoSo,
@@ -528,7 +523,7 @@ class HocBong {
     lop = (json['lop'] ?? 0).toDouble();
     truonghoc = json['truonghoc'];
     quanhekhachhang = (json['quanhekhachhang'] ?? 0).toDouble();
-    hocbongQuatang = (json['hocbong_Quatang'] ?? 0).toDouble();
+    hocbong_Quatang = (json['hocbong_Quatang'] ?? 0).toDouble();
     hocluc = (json['hocluc'] ?? 0).toDouble();
     danhanhocbong = json['danhanhocbong'] == 0 ? false : true;
     dinhKemHoSo = (json['dinhKemHoSo'] ?? 0).toDouble();
@@ -541,7 +536,6 @@ class HocBong {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['idKhachhang'] = this.idKhachhang;
     data['serverID'] = this.serverID;
     data['nam'] = this.nam;
     data['maKhachHang'] = this.maKhachHang;
@@ -550,7 +544,7 @@ class HocBong {
     data['lop'] = this.lop;
     data['truonghoc'] = this.truonghoc;
     data['quanhekhachhang'] = this.quanhekhachhang;
-    data['hocbong_Quatang'] = this.hocbongQuatang;
+    data['hocbong_Quatang'] = this.hocbong_Quatang;
     data['hocluc'] = this.hocluc;
     data['danhanhocbong'] = this.danhanhocbong;
     data['dinhKemHoSo'] = this.dinhKemHoSo;
@@ -560,5 +554,26 @@ class HocBong {
     data['ghiChu'] = this.ghiChu;
     data['giatri'] = this.giatri;
     return data;
+  }
+
+  HocBong.fromMap(Map<String, dynamic> json) {
+    idKhachhang = json['idKhachhang'];
+    serverID = json['serverID'];
+    nam = (json["nam"] ?? 0).toDouble();
+    maKhachHang = json['maKhachHang'];
+    hotenhocsinh = json['hotenhocsinh'];
+    namsinh = (json['namsinh'] ?? 0).toDouble();
+    lop = (json['lop'] ?? 0).toDouble();
+    truonghoc = json['truonghoc'];
+    quanhekhachhang = (json['quanhekhachhang'] ?? 0).toDouble();
+    hocbong_Quatang = (json['hocbongQuatang'] ?? 0).toDouble();
+    hocluc = (json['hocluc'] ?? 0).toDouble();
+    danhanhocbong = json['danhanhocbong'] == 0 ? false : true;
+    dinhKemHoSo = (json['dinhKemHoSo'] ?? 0).toDouble();
+    hoancanhhocsinh = (json['hoancanhhocsinh'] ?? 0).toDouble();
+    hoancanhgiadinh = json['hoancanhgiadinh'];
+    mucdich = (json['mucdich'] ?? 0).toDouble();
+    ghiChu = json['ghiChu'];
+    giatri = (json['giatri'] ?? 0).toDouble();
   }
 }

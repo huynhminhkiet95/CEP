@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:CEPmobile/config/colors.dart';
+import 'package:CEPmobile/database/DBProvider.dart';
+import 'package:CEPmobile/global_variables/global_teamID.dart';
 import 'package:CEPmobile/models/community_development/comunity_development.dart';
 import 'package:CEPmobile/models/download_data/comboboxmodel.dart';
 import 'package:CEPmobile/ui/screens/Home/styles.dart';
@@ -12,6 +16,7 @@ import 'package:CEPmobile/blocs/community_development/community_development_bloc
 import 'package:CEPmobile/blocs/community_development/community_development_event.dart';
 import 'package:CEPmobile/blocs/community_development/community_development_state.dart';
 import 'package:CEPmobile/ui/components/ModalProgressHUDCustomize.dart';
+import 'package:flutter/rendering.dart';
 import '../../../GlobalTranslations.dart';
 
 class CommunityDevelopmentScreen extends StatefulWidget {
@@ -37,10 +42,17 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
   CommunityDevelopmentBloc communityDevelopmentBloc;
   Services services;
   bool isInitLoad;
-
+  TextEditingController _controllerTeamID = new TextEditingController(text: "");
+  List<String> listTeamID;
+  bool isValidator = false;
+  final isValidatorStream = StreamController<bool>();
   @override
   void initState() {
     isInitLoad = true;
+    loadItemTeamID();
+    _controllerTeamID.text = globalUser.getCumIdOfCommunityDevelopment == null
+        ? ""
+        : globalUser.getCumIdOfCommunityDevelopment.toUpperCase();
     arrActive[0] = new List<bool>();
     arrActive[1] = new List<bool>();
     arrActive[2] = new List<bool>();
@@ -49,18 +61,23 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
     arrActive[5] = new List<bool>();
     _tabController = new TabController(length: 6, vsync: this);
     animationController = AnimationController(
-        duration: const Duration(milliseconds: 2000), vsync: this);
-
+        duration: Duration(milliseconds: 1000), vsync: this);
     services = Services.of(context);
     communityDevelopmentBloc = new CommunityDevelopmentBloc(
         services.sharePreferenceService, services.commonService);
     communityDevelopmentBloc.emitEvent(LoadCommunityDevelopmentEvent());
+
     super.initState();
+  }
+
+  loadItemTeamID() async {
+    listTeamID = await DBProvider.db.getListTeamIDCommunityDevelopment();
   }
 
   @override
   void dispose() {
     animationController?.dispose();
+    isValidatorStream.close();
     super.dispose();
   }
 
@@ -133,7 +150,9 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                                   .where((e) => e.bhyt.serverId != 0)
                                   .toList();
 
-                          if (isInitLoad == true) {
+                          if (isInitLoad == true ||
+                              arrActive[0].length !=
+                                  listCommunityDevelopmentAll.length) {
                             arrActive[0] = List<bool>.generate(
                                 listCommunityDevelopmentAll.length,
                                 (int index) => false);
@@ -161,30 +180,29 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Container(
-                                height: MediaQuery.of(context).size.height / 5,
-                                decoration: BoxDecoration(
-                                  borderRadius: new BorderRadius.only(
-                                    bottomLeft: Radius.elliptical(260, 100),
-                                    // topRight: Radius.elliptical(260, 100),
+                                  height:
+                                      MediaQuery.of(context).size.height / 5,
+                                  decoration: BoxDecoration(
+                                    borderRadius: new BorderRadius.only(
+                                      bottomLeft: Radius.elliptical(260, 100),
+                                      // topRight: Radius.elliptical(260, 100),
+                                    ),
+                                    color: Colors.white,
                                   ),
-                                  color: Colors.white,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 40, right: 40, top: 30),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Card(
-                                          elevation: 4.0,
-                                          child: Container(
-                                            height: 30,
+                                  child: Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 20, right: 20, top: 30),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Container(
+                                            height: 40,
                                             width: size.width * 0.2,
                                             child: Center(
-                                              child: Text(
+                                              child: const Text(
                                                 "Cụm ID",
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
@@ -192,36 +210,102 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                                                     color: Color(0xff9596ab)),
                                               ),
                                             ),
-                                          )),
-                                      Container(
-                                        height: 30,
-                                        width: size.width * 0.55,
-                                        child: Center(
-                                          child: SimpleAutoCompleteTextField(
-                                              style: TextStyle(
-                                                  fontSize: 14,
-                                                  color: Colors.blue),
-                                              key: key,
-                                              suggestions: [
-                                                "B147",
-                                                "B148",
-                                                "B175",
-                                                "B067"
-                                              ],
-                                              decoration:
-                                                  decorationTextFieldCEP,
-                                              // controller: _textCumIDAutoComplete,
-                                              // textSubmitted: (text) {
-                                              //   txtCum = text;
-                                              // },
-                                              clearOnSubmit: false),
-                                        ),
-                                      ),
-                                    ],
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                height: 30,
+                                                width: size.width * 0.45,
+                                                child: Center(
+                                                  child:
+                                                      SimpleAutoCompleteTextField(
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.blue),
+                                                    key: key,
+                                                    controller:
+                                                        _controllerTeamID,
+                                                    suggestions: listTeamID,
+                                                    decoration: InputDecoration(
+                                                      contentPadding:
+                                                          EdgeInsets.fromLTRB(
+                                                              0.0,
+                                                              15.0,
+                                                              20.0,
+                                                              15.0),
+                                                      labelStyle: new TextStyle(
+                                                          color: Colors.red),
+                                                      enabledBorder:
+                                                          UnderlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                            color: Colors.blue),
+                                                      ),
+                                                      focusedBorder:
+                                                          UnderlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                            color: Colors.red),
+                                                      ),
+                                                    ),
+                                                    textSubmitted: null,
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              StreamBuilder<bool>(
+                                                  stream:
+                                                      isValidatorStream.stream,
+                                                  builder: (context, snapshot) {
+                                                    if (snapshot.data == null ||
+                                                        snapshot.data ==
+                                                            false) {
+                                                      return Container();
+                                                    } else {
+                                                      return Text(
+                                                          "*Cụm này hiện không có dữ liệu !",
+                                                          style: TextStyle(
+                                                              color: Colors.red,
+                                                              fontSize: 12));
+                                                    }
+                                                  }),
+                                            ],
+                                          ),
+                                          IconButton(
+                                              icon: Icon(
+                                                Icons.search,
+                                                size: 25,
+                                                color: Colors.blue,
+                                              ),
+                                              onPressed: () {
+                                                int index = listTeamID.indexOf(
+                                                    _controllerTeamID.text);
+
+                                                if (index != -1) {
+                                                  if (_controllerTeamID.text !=
+                                                      globalUser
+                                                          .getCumIdOfCommunityDevelopment) {
+                                                    isInitLoad = true;
+                                                    communityDevelopmentBloc
+                                                        .emitEvent(
+                                                            SearchCommunityDevelopmentEvent(
+                                                                _controllerTeamID
+                                                                    .text));
+                                                    isValidatorStream.sink
+                                                        .add(false);
+                                                  }
+                                                } else {
+                                                  isValidatorStream.sink
+                                                      .add(true);
+                                                }
+                                              })
+                                        ],
+                                      ))
+
+                                  //  color: Colors.blue,
                                   ),
-                                ),
-                                //  color: Colors.blue,
-                              ),
                               Material(
                                 color: ColorConstants.cepColorBackground,
                                 child: TabBar(
@@ -400,14 +484,7 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                                       ),
                                       RaisedButton(
                                         onPressed: () {
-                                          Navigator.pushNamed(context, 'download',
-                                              arguments: {
-                                                'selectedIndex': 3,
-                                              }).then((value) => setState(() {
-                                                if (true == value) {
-                                                  communityDevelopmentBloc.emitEvent(LoadCommunityDevelopmentEvent());
-                                                }
-                                              }));
+                                          _navigateAndDisplaySelection(context);
                                         },
                                         child: Text(
                                           allTranslations.text("DownLoad"),
@@ -430,16 +507,22 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
   }
 
   Widget getItemListView(List<KhachHang> listItem, int index) {
-    return Container(
+    // int indexOf = listTeamID.indexOf(_controllerTeamID.text);
+    // if (_controllerTeamID.text !=
+    //     globalUser.getCumIdOfCommunityDevelopment.toUpperCase() && indexOf < 0) {
+    //   animationController.reset();
+    // }
+
+    return new Container(
         color: Colors.grey[300],
-        child: ListView.builder(
+        child: new ListView.builder(
             physics:
                 AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
             itemCount: listItem.length,
             itemBuilder: (context, i) {
-              final int count = listItem.length;
-              final Animation<double> animation =
-                  Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+              int count = listItem.length;
+              Animation<double> animation = Tween<double>(begin: 0.0, end: 1.0)
+                  .animate(CurvedAnimation(
                       parent: animationController,
                       curve: Interval((1 / count) * i, 1.0,
                           curve: Curves.fastOutSlowIn)));
@@ -511,9 +594,7 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                                                       'selectedIndex': 4,
                                                     }).then(
                                                     (value) => setState(() {
-                                                          if (true == value) {
-                                                            
-                                                          }
+                                                          if (true == value) {}
                                                         }));
                                               } else {
                                                 Navigator.pushNamed(context,
@@ -521,7 +602,13 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                                                     arguments: {
                                                       'khachhang': listItem[i],
                                                       'metadata': listCombobox,
-                                                    }).then((value) {});
+                                                    }).then((value) {
+                                                  if (true == value) {
+                                                    communityDevelopmentBloc
+                                                        .emitEvent(
+                                                            LoadCommunityDevelopmentEvent());
+                                                  }
+                                                });
                                               }
                                             }),
                                       ),
@@ -709,5 +796,17 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                     );
                   });
             }));
+  }
+
+  void _navigateAndDisplaySelection(BuildContext context) async {
+    final result = await Navigator.pushNamed(context, 'download', arguments: {
+      'selectedIndex': 3,
+    });
+    if (result == true) {
+      communityDevelopmentBloc.emitEvent(LoadCommunityDevelopmentEvent());
+      _controllerTeamID.text = globalUser.getCumIdOfCommunityDevelopment == null
+          ? ""
+          : globalUser.getCumIdOfCommunityDevelopment.toUpperCase();
+    }
   }
 }

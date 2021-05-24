@@ -19,7 +19,8 @@ class DeleteDataScreen extends StatefulWidget {
   _DeleteDataScreenState createState() => _DeleteDataScreenState();
 }
 
-class _DeleteDataScreenState extends State<DeleteDataScreen> with TickerProviderStateMixin{
+class _DeleteDataScreenState extends State<DeleteDataScreen>
+    with TickerProviderStateMixin {
   AnimationController animationController;
   List<String> listItemCumIdForSurvey;
   List<String> listItemNgayXuatDSForSurvey;
@@ -34,7 +35,7 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> with TickerProvider
   Services services;
   List<CheckBoxSurvey> checkBoxSurvey = new List<CheckBoxSurvey>();
   bool isCheckAll = false;
- 
+
   SurveyStream surveyStream;
   Widget getItemListView(List<SurveyInfo> listSurvey) {
     int count = listSurvey != null ? listSurvey.length : 0;
@@ -54,185 +55,193 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> with TickerProvider
           return AnimatedBuilder(
               animation: animationController,
               builder: (BuildContext context, Widget child) {
-              return FadeTransition(
-                      opacity: animation,
-                child: Transform(
-                          transform: Matrix4.translationValues(
-                               50 * (1.0 - animation.value),0.0, 0.0),
-                  child: InkWell(
-                    onTap: () {
-                      setState(() {
-                        this.checkBoxSurvey[i].status = !this.checkBoxSurvey[i].status;
-                        int totalCheck =
-                            this.checkBoxSurvey.where((e) => e.status == true).length;
-                        if (totalCheck == this.checkBoxSurvey.length) {
-                          this.isCheckAll = true;
-                        } else {
-                          this.isCheckAll = false;
-                        }
-                      });
-                    },
-                    child: Card(
-                      elevation: 10,
-                      shadowColor: Colors.grey,
-                      color: Colors.white,
-                      borderOnForeground: true,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 8, bottom: 8),
-                        child: Row(
-                          children: [
-                            Checkbox(
-                              checkColor: Colors.white,
-                              activeColor: Colors.blue,
-                              value: checkBoxSurvey[i].status,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  this.checkBoxSurvey[i].status = value;
-                                  int totalCheck = this
-                                      .checkBoxSurvey
-                                      .where((e) => e.status == true)
-                                      .length;
-                                  if (totalCheck == this.checkBoxSurvey.length) {
-                                    this.isCheckAll = true;
-                                  } else {
-                                    this.isCheckAll = false;
-                                  }
-                                });
-                              },
-                            ),
-                            Container(
-                              width: 290,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    padding: EdgeInsets.only(left: 4),
-                                    child: Text(
-                                      "${listSurvey[i].thanhvienId} - ${listSurvey[i].hoVaTen}",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold, fontSize: 13),
+                return FadeTransition(
+                  opacity: animation,
+                  child: Transform(
+                    transform: Matrix4.translationValues(
+                        50 * (1.0 - animation.value), 0.0, 0.0),
+                    child: InkWell(
+                      onTap: () {
+                        setState(() {
+                          this.checkBoxSurvey[i].status =
+                              !this.checkBoxSurvey[i].status;
+                          int totalCheck = this
+                              .checkBoxSurvey
+                              .where((e) => e.status == true)
+                              .length;
+                          if (totalCheck == this.checkBoxSurvey.length) {
+                            this.isCheckAll = true;
+                          } else {
+                            this.isCheckAll = false;
+                          }
+                        });
+                      },
+                      child: Card(
+                        elevation: 10,
+                        shadowColor: Colors.grey,
+                        color: Colors.white,
+                        borderOnForeground: true,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 8, bottom: 8),
+                          child: Row(
+                            children: [
+                              Checkbox(
+                                checkColor: Colors.white,
+                                activeColor: Colors.blue,
+                                value: checkBoxSurvey[i].status,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    this.checkBoxSurvey[i].status = value;
+                                    int totalCheck = this
+                                        .checkBoxSurvey
+                                        .where((e) => e.status == true)
+                                        .length;
+                                    if (totalCheck ==
+                                        this.checkBoxSurvey.length) {
+                                      this.isCheckAll = true;
+                                    } else {
+                                      this.isCheckAll = false;
+                                    }
+                                  });
+                                },
+                              ),
+                              Container(
+                                width: 290,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.only(left: 4),
+                                      child: Text(
+                                        "${listSurvey[i].thanhvienId} - ${listSurvey[i].hoVaTen}",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 13),
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Row(
-                                    // crossAxisAlignment: CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.only(left: 4),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              IconsCustomize.gender,
-                                              size: 20,
-                                              color: Colors.blue,
-                                            ),
-                                            VerticalDivider(
-                                              width: 10,
-                                            ),
-                                            Container(
-                                              width: 30,
-                                              child: Text(
-                                                listSurvey[i].gioiTinh == 0
-                                                    ? "Nữ"
-                                                    : "Nam",
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Row(
+                                      // crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.only(left: 4),
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                IconsCustomize.gender,
+                                                size: 20,
+                                                color: Colors.blue,
+                                              ),
+                                              VerticalDivider(
+                                                width: 10,
+                                              ),
+                                              Container(
+                                                width: 30,
+                                                child: Text(
+                                                  listSurvey[i].gioiTinh == 0
+                                                      ? "Nữ"
+                                                      : "Nam",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 13),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: EdgeInsets.only(left: 4),
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                IconsCustomize.birth_date,
+                                                size: 20,
+                                                color: Colors.red,
+                                              ),
+                                              VerticalDivider(
+                                                width: 10,
+                                              ),
+                                              VerticalDivider(
+                                                width: 1,
+                                              ),
+                                              Text(
+                                                listSurvey[i]
+                                                    .ngaySinh
+                                                    .substring(0, 4),
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 13),
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.only(left: 4),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              IconsCustomize.birth_date,
-                                              size: 20,
-                                              color: Colors.red,
-                                            ),
-                                            VerticalDivider(
-                                              width: 10,
-                                            ),
-                                            VerticalDivider(
-                                              width: 1,
-                                            ),
-                                            Text(
-                                              listSurvey[i].ngaySinh.substring(0, 4),
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 13),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.only(left: 4),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              IconsCustomize.id_card,
-                                              color: Colors.orange,
-                                              size: 20,
-                                            ),
-                                            VerticalDivider(
-                                              width: 15,
-                                            ),
-                                            Text(
-                                              listSurvey[i].cmnd,
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 13),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(top: 5),
-                                    padding: EdgeInsets.only(left: 6),
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.location_on,
-                                          color: Colors.blue,
-                                        ),
-                                        VerticalDivider(
-                                          width: 1,
+                                            ],
+                                          ),
                                         ),
                                         Container(
-                                          width: 230,
-                                          child: Text(
-                                            listSurvey[i].diaChi,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 13),
+                                          padding: EdgeInsets.only(left: 4),
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                IconsCustomize.id_card,
+                                                color: Colors.orange,
+                                                size: 20,
+                                              ),
+                                              VerticalDivider(
+                                                width: 15,
+                                              ),
+                                              Text(
+                                                listSurvey[i].cmnd,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 13),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ],
                                     ),
-                                  )
-                                ],
-                              ),
-                            )
-                          ],
+                                    Container(
+                                      margin: EdgeInsets.only(top: 5),
+                                      padding: EdgeInsets.only(left: 6),
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.location_on,
+                                            color: Colors.blue,
+                                          ),
+                                          VerticalDivider(
+                                            width: 1,
+                                          ),
+                                          Container(
+                                            width: 230,
+                                            child: Text(
+                                              listSurvey[i].diaChi,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 13),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              );
-            }
-          );
+                );
+              });
         },
       ),
     );
@@ -248,6 +257,7 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> with TickerProvider
     deleteDataBloc.emitEvent(LoadSurveyEvent());
     super.initState();
   }
+
   @override
   void dispose() {
     animationController?.dispose();
@@ -333,14 +343,14 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> with TickerProvider
                                 decoration: BoxDecoration(
                                   borderRadius: new BorderRadius.only(
                                       bottomLeft: Radius.elliptical(260, 100)),
-                               
                                   color: Colors.white,
                                 ),
                                 child: Column(
                                   children: [
                                     Padding(
-                                      padding:  EdgeInsets.only(
-                                          left: screenWidth * 0.1, right: screenWidth * 0.1),
+                                      padding: EdgeInsets.only(
+                                          left: screenWidth * 0.1,
+                                          right: screenWidth * 0.1),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -406,8 +416,9 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> with TickerProvider
                                       height: 10,
                                     ),
                                     Padding(
-                                      padding:  EdgeInsets.only(
-                                          left: screenWidth * 0.1, right: screenWidth * 0.1),
+                                      padding: EdgeInsets.only(
+                                          left: screenWidth * 0.1,
+                                          right: screenWidth * 0.1),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -620,13 +631,11 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> with TickerProvider
                                         //     ),
                                         //     color: Colors.white),
                                         child: getItemListView(
-                                            surveyStream.listSurvey)
-                                            ),
+                                            surveyStream.listSurvey)),
                                   )
                                 ],
                               ),
                             ),
-                         
                           ],
                           context),
                     );
@@ -1008,6 +1017,71 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> with TickerProvider
                                 //color: Colors.white,
                                 child: Column(
                                   children: [
+                                     Padding(
+                                      padding: EdgeInsets.only(
+                                          left: screenWidth * 0.1,
+                                          right: screenWidth * 0.1),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Card(
+                                              elevation: 4.0,
+                                              child: Container(
+                                                height: 30,
+                                                width: 90,
+                                                child: Center(
+                                                  child: Text(
+                                                    "Cụm ID (${listItemCumIdForSurvey.length})",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 14,
+                                                        color:
+                                                            Color(0xff9596ab)),
+                                                  ),
+                                                ),
+                                              )),
+                                          Card(
+                                              elevation: 4.0,
+                                              child: Container(
+                                                height: 30,
+                                                width: 90,
+                                                child: Center(
+                                                  child: DropdownButton<String>(
+                                                    value: dropdownCumIdValue,
+                                                    elevation: 16,
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize: 14,
+                                                        color: Colors.black),
+                                                    underline: Container(
+                                                      height: 0,
+                                                      color: Colors.blue,
+                                                    ),
+                                                    onChanged:
+                                                        (String newValue) {
+                                                      _onSearchSurvey(
+                                                          newValue, null);
+                                                    },
+                                                    items: listItemCumIdForSurvey
+                                                        .map<
+                                                            DropdownMenuItem<
+                                                                String>>((String
+                                                            value) {
+                                                      return DropdownMenuItem<
+                                                          String>(
+                                                        value: value,
+                                                        child: Text(value),
+                                                      );
+                                                    }).toList(),
+                                                  ),
+                                                ),
+                                              )),
+                                        ],
+                                      ),
+                                    ),
                                     SizedBox(
                                       height: 10,
                                     ),
@@ -1070,7 +1144,7 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> with TickerProvider
                                         ),
                                       ),
                                       AnimatedContainer(
-                                        height:40,
+                                        height: 40,
 
                                         width: this.isCheckAll == false
                                             ? 150
@@ -1149,8 +1223,11 @@ class _DeleteDataScreenState extends State<DeleteDataScreen> with TickerProvider
               }),
           backgroundColor: ColorConstants.cepColorBackground,
           elevation: 20,
-          title: const Text('Xóa Dữ Liệu',textAlign: TextAlign.center,
-          style: TextStyle(fontWeight: FontWeight.w600),),
+          title: const Text(
+            'Xóa Dữ Liệu',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
           bottom: PreferredSize(
               child: TabBar(
                   isScrollable: true,

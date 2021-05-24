@@ -22,6 +22,7 @@ class UpdateCommunityDevelopmentEvent extends CommunityDevelopmentEvent {
 }
 
 class UpdateCommunityDevelopmentToServerEvent extends CommunityDevelopmentEvent {
+  final KhachHang khachHang;
   final BuildContext context;
-  UpdateCommunityDevelopmentToServerEvent(this.context) : super();
+  UpdateCommunityDevelopmentToServerEvent(this.context, this.khachHang) : super();
 }

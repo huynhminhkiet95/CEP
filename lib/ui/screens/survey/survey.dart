@@ -44,7 +44,7 @@ class _SurveyScreenState extends State<SurveyScreen>
   @override
   void initState() {
     animationController = AnimationController(
-        duration: const Duration(milliseconds: 2000), vsync: this);
+        duration: const Duration(milliseconds: 1000), vsync: this);
     services = Services.of(context);
     surVeyBloc =
         new SurveyBloc(services.sharePreferenceService, services.commonService);

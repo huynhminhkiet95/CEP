@@ -1309,7 +1309,7 @@ class DBProvider {
                         ${item.hocBong == null ? 0 : item.hocBong.lop},
                         "${item.hocBong == null ? '' : item.hocBong.truonghoc}",
                         ${item.hocBong == null ? 0 : item.hocBong.quanhekhachhang},
-                        ${item.hocBong == null ? 0 : item.hocBong.hocbongQuatang},
+                        ${item.hocBong == null ? 0 : item.hocBong.hocbong_Quatang},
                         ${item.hocBong == null ? 0 : item.hocBong.hocluc},
                         ${item.hocBong == null ? 0 : item.hocBong.danhanhocbong},
                         ${item.hocBong == null ? 0 : item.hocBong.dinhKemHoSo},
@@ -1434,151 +1434,150 @@ class DBProvider {
 
   updateCommunityDevelopment(KhachHang customer) async {
     final db = await database;
+
     try {
-      int count = await db.rawUpdate('''UPDATE customer_cummunity_development
+      int rs = 0;
+
+      List responses = await Future.wait([
+        db.rawUpdate('''UPDATE customer_cummunity_development
                              SET  coVoChongConLaCNV = ?,
                                   moHinhNghe = ?,
                                   ngheNghiep = ?,
                                   ghiChu = ?,
-                                  thunhapHangthangCuaho = ?
+                                  thunhapHangthangCuaho = ?,
+                                  isCheckBHYT = ?,
+                                  isCheckHocBong = ?,
+                                  isCheckMaiNha = ?,
+                                  isCheckPhatTrienNghe = ?,
+                                  isCheckQuaTet = ?
                              WHERE id = ?''', [
-        customer.coVoChongConLaCnv ? 1 : 0,
-        customer.moHinhNghe ? 1 : 0,
-        customer.ngheNghiep.toInt(),
-        customer.ghiChu,
-        customer.thunhapHangthangCuaho.toInt(),
-        customer.id
+          customer.coVoChongConLaCnv ? 1 : 0,
+          customer.moHinhNghe ? 1 : 0,
+          customer.ngheNghiep.toInt(),
+          customer.ghiChu,
+          customer.thunhapHangthangCuaho.toInt(),
+          customer.isCheckBHYT,
+          customer.isCheckHocBong,
+          customer.isCheckMaiNha,
+          customer.isCheckPhatTrienNghe,
+          customer.isCheckQuaTet,
+          customer.id
+        ]),
+        db.rawUpdate('''UPDATE bhyt_cummunity_development 
+                             SET  mucphibaohiem = ?, 
+                                  dieukienbhyt = ? , 
+                                  tinhtrangsuckhoe = ?, 
+                                  nguoithan = ?,
+                                  namsinh = ?,
+                                  quanHeKhachHang = ?
+                             WHERE idKhachhang = ?''', [
+          customer.bhyt.mucphibaohiem,
+          customer.bhyt.dieukienbhyt,
+          customer.bhyt.tinhtrangsuckhoe,
+          customer.bhyt.nguoithan,
+          customer.bhyt.namsinh,
+          customer.bhyt.quanHeKhachHang,
+          customer.id
+        ]),
+        db.rawUpdate('''UPDATE hocbong_cummunity_development
+                             SET  hotenhocsinh = ?,
+                                  namsinh = ? ,
+                                  lop = ?,
+                                  truonghoc = ?,
+                                  quanhekhachhang = ?,
+                                  hocbongQuatang = ?,
+                                  hocluc = ?,
+                                  danhanhocbong = ?,
+                                  dinhKemHoSo = ?,
+                                  hoancanhhocsinh = ?,
+                                  hoancanhgiadinh = ?,
+                                  mucdich = ?,
+                                  ghiChu = ?,
+                                  giatri = ?
+                             WHERE idKhachhang = ?''', [
+          customer.hocBong.hotenhocsinh,
+          customer.hocBong.namsinh,
+          customer.hocBong.lop,
+          customer.hocBong.truonghoc,
+          customer.hocBong.quanhekhachhang,
+          customer.hocBong.hocbong_Quatang,
+          customer.hocBong.hocluc,
+          customer.hocBong.danhanhocbong,
+          customer.hocBong.dinhKemHoSo,
+          customer.hocBong.hoancanhhocsinh,
+          customer.hocBong.hoancanhgiadinh,
+          customer.hocBong.mucdich,
+          customer.hocBong.ghiChu,
+          customer.hocBong.giatri,
+          customer.id
+        ]),
+        db.rawUpdate('''UPDATE mainha_cummunity_development
+                             SET  tilephuthuoc = ?,
+                                  thunhap = ?,
+                                  taisan = ?,
+                                  dieukiennhao = ?,
+                                  quyenSoHuuNha = ?,
+                                  ghichuhoancanh = ?,
+                                  cbDexuat = ?,
+                                  duTruKinhPhi = ?,
+                                  deXuatHoTro = ?,
+                                  giaDinhHoTro = ?,
+                                  tietKiem = ?,
+                                  tienVay = ?,
+                                  giaDinhDongY = ?,
+                                  cnDexuat = ?,
+                                  cnDexuatThoigian = ?,
+                                  cnDexuatSotien = ?,
+                                  hosodinhkem = ?
+                             WHERE idKhachhang = ?''', [
+          customer.maiNha.tilephuthuoc,
+          customer.maiNha.thunhap,
+          customer.maiNha.taisan,
+          customer.maiNha.dieukiennhao,
+          customer.maiNha.quyenSoHuuNha,
+          customer.maiNha.ghichuhoancanh,
+          customer.maiNha.cbDexuat,
+          customer.maiNha.duTruKinhPhi,
+          customer.maiNha.deXuatHoTro,
+          customer.maiNha.giaDinhHoTro,
+          customer.maiNha.tietKiem,
+          customer.maiNha.tienVay,
+          customer.maiNha.giaDinhDongY,
+          customer.maiNha.cnDexuat,
+          customer.maiNha.cnDexuatThoigian,
+          customer.maiNha.cnDexuatSotien,
+          customer.maiNha.hosodinhkem,
+          customer.id
+        ]),
+        db.rawUpdate('''UPDATE phattriennghe_cummunity_development
+                             SET  nguoithan = ?,
+                                  quanHeKhacHang = ?,
+                                  lyDo = ?,
+                                  hoancanh = ?,
+                                  nguyenvongthamgia = ?,
+                                  nguyenvonghoithao = ?,
+                                  scCnguyenvong = ?,
+                                  iecDnguyenvong = ?,
+                                  reacHnguyenvong = ?
+                             WHERE idKhachhang = ?''', [
+          customer.phatTrienNghe.nguoithan,
+          customer.phatTrienNghe.quanHeKhacHang,
+          customer.phatTrienNghe.lyDo,
+          customer.phatTrienNghe.hoancanh,
+          customer.phatTrienNghe.nguyenvongthamgia,
+          customer.phatTrienNghe.nguyenvonghoithao,
+          customer.phatTrienNghe.scCnguyenvong,
+          customer.phatTrienNghe.iecDnguyenvong,
+          customer.phatTrienNghe.reacHnguyenvong,
+          customer.id
+        ]),
+        db.rawUpdate('''UPDATE quatet_cummunity_development
+                             SET  loaiHoNgheo = ?
+                             WHERE idKhachhang = ?''',
+            [customer.quaTet.loaiHoNgheo, customer.id])
       ]);
-  
-      // List responses = await Future.wait([
-      //   db.rawUpdate('''UPDATE customer_cummunity_development
-      //                        SET  coVoChongConLaCNV = ?,
-      //                             moHinhNghe = ?,
-      //                             ngheNghiep = ?,
-      //                             ghiChu = ?,
-      //                             thunhapHangthangCuaho = ?
-      //                        WHERE idKhachhang = ?''', [
-      //     customer.coVoChongConLaCnv,
-      //     customer.moHinhNghe,
-      //     customer.ngheNghiep,
-      //     customer.ghiChu,
-      //     customer.thunhapHangthangCuaho,
-      //     customer.id
-      //   ]),
-      //   db.rawUpdate('''UPDATE bhyt_cummunity_development 
-      //                        SET  mucphibaohiem = ?, 
-      //                             dieukienbhyt = ? , 
-      //                             tinhtrangsuckhoe = ?, 
-      //                             nguoithan = ?,
-      //                             namsinh = ?,
-      //                             quanHeKhachHang = ?
-      //                        WHERE idKhachhang = ?''', [
-      //     customer.bhyt.mucphibaohiem,
-      //     customer.bhyt.dieukienbhyt,
-      //     customer.bhyt.tinhtrangsuckhoe,
-      //     customer.bhyt.nguoithan,
-      //     customer.bhyt.namsinh,
-      //     customer.bhyt.quanHeKhachHang,
-      //     customer.id
-      //   ]),
-      //   db.rawUpdate('''UPDATE hocbong_cummunity_development 
-      //                        SET  hotenhocsinh = ?, 
-      //                             namsinh = ? , 
-      //                             lop = ?, 
-      //                             truonghoc = ?,
-      //                             quanhekhachhang = ?,
-      //                             hocbongQuatang = ?,
-      //                             hocluc = ?,
-      //                             danhanhocbong = ?,
-      //                             dinhKemHoSo = ?,
-      //                             hoancanhhocsinh = ?,
-      //                             hoancanhgiadinh = ?,
-      //                             mucdich = ?,
-      //                             ghiChu = ?,
-      //                             giatri = ?
-      //                        WHERE idKhachhang = ?''', [
-      //     customer.hocBong.hotenhocsinh,
-      //     customer.hocBong.namsinh,
-      //     customer.hocBong.lop,
-      //     customer.hocBong.truonghoc,
-      //     customer.hocBong.quanhekhachhang,
-      //     customer.hocBong.hocbongQuatang,
-      //     customer.hocBong.hocluc,
-      //     customer.hocBong.danhanhocbong,
-      //     customer.hocBong.dinhKemHoSo,
-      //     customer.hocBong.hoancanhhocsinh,
-      //     customer.hocBong.hoancanhgiadinh,
-      //     customer.hocBong.mucdich,
-      //     customer.hocBong.ghiChu,
-      //     customer.hocBong.giatri,
-      //     customer.id
-      //   ]),
-      //   db.rawUpdate('''UPDATE mainha_cummunity_development 
-      //                        SET  tilephuthuoc = ?, 
-      //                             thunhap = ?,
-      //                             taisan = ?,
-      //                             dieukiennhao = ?,
-      //                             quyenSoHuuNha = ?,
-      //                             ghichuhoancanh = ?,
-      //                             cbDexuat = ?,
-      //                             duTruKinhPhi = ?,
-      //                             deXuatHoTro = ?,
-      //                             giaDinhHoTro = ?,
-      //                             tietKiem = ?,
-      //                             tienVay = ?,
-      //                             giaDinhDongY = ?,
-      //                             cnDexuat = ?,
-      //                             cnDexuatThoigian = ?,
-      //                             cnDexuatSotien = ?,
-      //                             hosodinhkem = ?
-      //                        WHERE idKhachhang = ?''', [
-      //     customer.maiNha.tilephuthuoc,
-      //     customer.maiNha.thunhap,
-      //     customer.maiNha.taisan,
-      //     customer.maiNha.dieukiennhao,
-      //     customer.maiNha.quyenSoHuuNha,
-      //     customer.maiNha.ghichuhoancanh,
-      //     customer.maiNha.cbDexuat,
-      //     customer.maiNha.duTruKinhPhi,
-      //     customer.maiNha.deXuatHoTro,
-      //     customer.maiNha.giaDinhHoTro,
-      //     customer.maiNha.tietKiem,
-      //     customer.maiNha.tienVay,
-      //     customer.maiNha.giaDinhDongY,
-      //     customer.maiNha.cnDexuat,
-      //     customer.maiNha.cnDexuatThoigian,
-      //     customer.maiNha.cnDexuatSotien,
-      //     customer.maiNha.hosodinhkem,
-      //     customer.id
-      //   ]),
-      //   db.rawUpdate('''UPDATE phattriennghe_cummunity_development 
-      //                        SET  nguoithan = ?, 
-      //                             quanHeKhacHang = ?,
-      //                             lyDo = ?,
-      //                             hoancanh = ?,
-      //                             nguyenvongthamgia = ?,
-      //                             nguyenvonghoithao = ?,
-      //                             scCnguyenvong = ?,
-      //                             iecDnguyenvong = ?,
-      //                             reacHnguyenvong = ?
-      //                        WHERE idKhachhang = ?''', [
-      //     customer.phatTrienNghe.nguoithan,
-      //     customer.phatTrienNghe.quanHeKhacHang,
-      //     customer.phatTrienNghe.lyDo,
-      //     customer.phatTrienNghe.hoancanh,
-      //     customer.phatTrienNghe.nguyenvongthamgia,
-      //     customer.phatTrienNghe.nguyenvonghoithao,
-      //     customer.phatTrienNghe.scCnguyenvong,
-      //     customer.phatTrienNghe.iecDnguyenvong,
-      //     customer.phatTrienNghe.reacHnguyenvong,
-      //     customer.id
-      //   ]),
-      //   db.rawUpdate('''UPDATE quatet_cummunity_development 
-      //                        SET  loaiHoNgheo = ?
-      //                        WHERE idKhachhang = ?''',
-      //       [customer.quaTet.loaiHoNgheo, customer.id])
-      // ]);
-      String a = "";
+
+      return rs = responses.reduce((value, element) => value + element);
     } on Exception catch (ex) {
       print(ex);
       // only executed if error is of type Exception
@@ -1593,7 +1592,12 @@ class DBProvider {
 
     var resCustomer = await db.query("customer_cummunity_development",
         where: "chinhanhID = ? and masoql = ? and cumID = ? and adminName = ?",
-        whereArgs: [chiNhanhID, masoql, cumId, globalUser.getUserName]);
+        whereArgs: [
+          chiNhanhID,
+          masoql,
+          cumId.toUpperCase(),
+          globalUser.getUserName
+        ]);
 
     var resBHYT = await db.query(
       "bhyt_cummunity_development",
@@ -1618,7 +1622,7 @@ class DBProvider {
     List<BHYT> listBHYT =
         resBHYT.isNotEmpty ? resBHYT.map((c) => BHYT.fromJson(c)).toList() : [];
     List<HocBong> listHocBong = resHocBong.isNotEmpty
-        ? resHocBong.map((c) => HocBong.fromJson(c)).toList()
+        ? resHocBong.map((c) => HocBong.fromMap(c)).toList()
         : [];
     List<MaiNha> listMaiNha = resMaiNha.isNotEmpty
         ? resMaiNha.map((c) => MaiNha.fromJson(c)).toList()
@@ -1669,6 +1673,18 @@ class DBProvider {
     }
 
     return listCustomer;
+  }
+
+  getListTeamIDCommunityDevelopment() async {
+    List<String> listTeamID;
+    final db = await database;
+    var resCustomer = await db.query("customer_cummunity_development",
+        where: " adminName = ?", whereArgs: [globalUser.getUserName]);
+    List<KhachHang> listCustomer = resCustomer.isNotEmpty
+        ? resCustomer.map((c) => KhachHang.fromMap(c)).toList()
+        : [];
+    listTeamID = listCustomer.map((e) => e.cumId).toSet().toList();
+    return listTeamID;
   }
 
   dropDataBase() async {

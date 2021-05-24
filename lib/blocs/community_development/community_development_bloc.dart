@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:core';
 import 'package:CEPmobile/GlobalTranslations.dart';
 import 'package:CEPmobile/GlobalUser.dart';
 import 'package:CEPmobile/bloc_helpers/bloc_event_state.dart';
 import 'package:CEPmobile/blocs/community_development/community_development_state.dart';
+import 'package:CEPmobile/config/status_code.dart';
 import 'package:CEPmobile/database/DBProvider.dart';
+import 'package:CEPmobile/global_variables/global_teamID.dart';
 import 'package:CEPmobile/models/community_development/comunity_development.dart';
 import 'package:CEPmobile/services/commonService.dart';
 import 'package:CEPmobile/services/sharePreference.dart';
@@ -26,6 +29,8 @@ class CommunityDevelopmentBloc extends BlocEventStateBase<
   Stream<List<KhachHang>> get getCommunityDevelopmentStream =>
       _getCommunityDevelopmentController;
 
+
+
   @override
   void dispose() {
     _getCommunityDevelopmentController?.close();
@@ -37,6 +42,7 @@ class CommunityDevelopmentBloc extends BlocEventStateBase<
       CommunityDevelopmentEvent event, CommunityDevelopmentState state) async* {
     if (event is LoadCommunityDevelopmentEvent) {
       yield CommunityDevelopmentState.updateLoading(true);
+      
       List<KhachHang> listKhachHang;
       if (globalUser.getCumIdOfCommunityDevelopment != null) {
         listKhachHang = await DBProvider.db.getCommunityDevelopmentByCum(
@@ -47,23 +53,34 @@ class CommunityDevelopmentBloc extends BlocEventStateBase<
       _getCommunityDevelopmentController.sink.add(listKhachHang);
       yield CommunityDevelopmentState.updateLoading(false);
     }
+    if (event is SearchCommunityDevelopmentEvent) {
+      yield CommunityDevelopmentState.updateLoading(true);
+      List<KhachHang> listKhachHang;
+      if (event.cumID != null) {
+        listKhachHang = await DBProvider.db.getCommunityDevelopmentByCum(
+            globalUser.getUserInfo.chiNhanhID,
+            globalUser.getUserInfo.masoql,
+            event.cumID);
+        if (listKhachHang.length > 0) {
+          this.sharePreferenceService.saveCumIdOfCommunityDevelopment(event.cumID);
+        }
+         
+      }
+      _getCommunityDevelopmentController.sink.add(listKhachHang);
+     
+      yield CommunityDevelopmentState.updateLoading(false);
+    }
+
     if (event is UpdateCommunityDevelopmentEvent) {
       yield CommunityDevelopmentState.updateLoading(true);
       int rs = await DBProvider.db.updateCommunityDevelopment(event.khachHang);
 
-      List<KhachHang> listKhachHang;
-      if (globalUser.getCumIdOfCommunityDevelopment != null) {
-        listKhachHang = await DBProvider.db.getCommunityDevelopmentByCum(
-            globalUser.getUserInfo.chiNhanhID,
-            globalUser.getUserInfo.masoql,
-            globalUser.getCumIdOfCommunityDevelopment);
-      }
       Timer(Duration(milliseconds: 1000), () {
-        
-        if (1 > 0) {
-          Navigator.pop(event.context, listKhachHang);
+        if (rs > 0) {
+          Navigator.pop(event.context, true);
           Fluttertoast.showToast(
-            msg: allTranslations.text("UpdateCommunityDevelopmentInfoSuccessfully"),
+            msg: allTranslations
+                .text("UpdateCommunityDevelopmentInfoSuccessfully"),
             timeInSecForIos: 10,
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM, // also possible "TOP" and "CENTER"
@@ -82,6 +99,48 @@ class CommunityDevelopmentBloc extends BlocEventStateBase<
       });
       yield CommunityDevelopmentState.updateLoading(false);
     }
-    
+    if (event is UpdateCommunityDevelopmentToServerEvent) {
+      yield CommunityDevelopmentState.updateLoading(true);
+      await DBProvider.db.updateCommunityDevelopment(event.khachHang);
+
+      List<KhachHang> listKhachHang;
+      List<KhachHang> listBody = new List<KhachHang>();
+      listKhachHang = await DBProvider.db.getCommunityDevelopmentByCum(
+          globalUser.getUserInfo.chiNhanhID,
+          globalUser.getUserInfo.masoql,
+          globalUser.getCumIdOfCommunityDevelopment);
+      listBody =
+          listKhachHang.where((e) => e.id == event.khachHang.id).toList();
+
+      var response = await commonService.updateCommunityDevelopment(listBody);
+      if (response.statusCode == StatusCodeConstants.OK) {
+        var jsonBody = json.decode(response.body);
+        if (jsonBody["isSuccessed"]) {
+          if (jsonBody["data"] != null || !jsonBody["data"].isEmpty) {
+            Fluttertoast.showToast(
+              msg: jsonBody["message"],
+              timeInSecForIos: 10,
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM, // also possible "TOP" and "CENTER"
+              backgroundColor: Colors.green[600].withOpacity(0.9),
+              textColor: Colors.white,
+            );
+            Navigator.pop(event.context, true);
+          }
+          yield CommunityDevelopmentState.updateLoadingSaveData(false);
+        }
+      } else {
+        yield CommunityDevelopmentState.updateLoadingSaveData(false);
+        Fluttertoast.showToast(
+          msg: allTranslations.text("ServerNotFound"),
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM, // also possible "TOP" and "CENTER"
+          backgroundColor: Colors.red[300].withOpacity(0.7),
+          textColor: Colors.white,
+        );
+      }
+
+      yield CommunityDevelopmentState.updateLoading(false);
+    }
   }
 }

@@ -6,6 +6,8 @@ import 'package:CEPmobile/GlobalUser.dart';
 import 'package:CEPmobile/bloc_helpers/bloc_event_state.dart';
 import 'package:CEPmobile/config/status_code.dart';
 import 'package:CEPmobile/database/DBProvider.dart';
+import 'package:CEPmobile/models/community_development/comunity_development.dart';
+import 'package:CEPmobile/models/download_data/comboboxmodel.dart';
 import 'package:CEPmobile/models/download_data/historysearchsurvey.dart';
 import 'package:CEPmobile/models/download_data/survey_info.dart';
 import 'package:CEPmobile/models/download_data/survey_info_history.dart';
@@ -14,6 +16,7 @@ import 'package:CEPmobile/services/commonService.dart';
 import 'package:CEPmobile/services/sharePreference.dart';
 import 'package:CEPmobile/blocs/survey/survey_state.dart';
 import 'package:CEPmobile/blocs/survey/survey_event.dart';
+import 'package:CEPmobile/ui/screens/community_development/community_development_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rxdart/rxdart.dart';
@@ -79,10 +82,10 @@ class SurveyBloc extends BlocEventStateBase<SurveyEvent, SurveyState> {
           await DBProvider.db.getAllLichSuKhaoSat();
       surveyStream.listHistorySearch = listHistorySearch;
       if (surveyStream.listHistorySearch.length > 0) {
-         surveyStream.listSurvey = listSurvey
-          .where((e) => e.idHistoryKhaoSat == historySearch.id ?? 0)
-          .toList();
-          globalUser.setListSurveyGlobal = listSurvey;
+        surveyStream.listSurvey = listSurvey
+            .where((e) => e.idHistoryKhaoSat == historySearch.id ?? 0)
+            .toList();
+        globalUser.setListSurveyGlobal = listSurvey;
       }
 
       surveyStream.listSurveyInfoHistory = listSurveyInfoHistory;
@@ -129,7 +132,6 @@ class SurveyBloc extends BlocEventStateBase<SurveyEvent, SurveyState> {
       globalUser.setListSurveyGlobal = listSurvey;
 
       Timer(Duration(milliseconds: 1000), () {
-        
         if (rs > 0) {
           Navigator.pop(event.context, listSurvey);
           Fluttertoast.showToast(
@@ -191,6 +193,39 @@ class SurveyBloc extends BlocEventStateBase<SurveyEvent, SurveyState> {
       }
       print(listSurvey);
       yield SurveyState.updateLoadingSaveData(false); //
+    }
+    if (event is InsertNewCommunityDevelopment) {
+      yield SurveyState.updateLoading(true);
+      await DBProvider.db.newCommunityDevelopment(event.listKhachHang);
+
+      List<KhachHang> listKhachHang;
+      listKhachHang = await DBProvider.db.getCommunityDevelopmentByCum(
+          event.listKhachHang.first.chinhanhId.toInt(),
+          event.listKhachHang.first.masoql,
+          event.listKhachHang.first.cumId);
+      listKhachHang = listKhachHang
+          .where((e) => e.maKhachHang == event.listKhachHang.first.maKhachHang)
+          .toList();
+      List<ComboboxModel> listCombobox = globalUser.getListComboboxModel;
+      globalUser.setCumIdOfCommunityDevelopment = event.listKhachHang.first.cumId;
+
+      Timer(Duration(milliseconds: 1000), () {
+        Fluttertoast.showToast(
+          msg: allTranslations.text("InsertCommunityDevelopmentSuccessfully"),
+          timeInSecForIos: 10,
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM, // also possible "TOP" and "CENTER"
+          backgroundColor: Colors.green[600].withOpacity(0.9),
+          textColor: Colors.white,
+        );
+
+        Navigator.pushNamed(event.context, 'comunitydevelopmentdetail',
+            arguments: {
+              'khachhang': listKhachHang[0],
+              'metadata': listCombobox,
+            });
+      });
+      yield SurveyState.updateLoading(false);
     }
   }
 }

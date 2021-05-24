@@ -5,6 +5,7 @@ import 'package:CEPmobile/blocs/survey/survey_state.dart';
 import 'package:CEPmobile/config/colors.dart';
 import 'package:CEPmobile/config/formatdate.dart';
 import 'package:CEPmobile/config/moneyformat.dart';
+import 'package:CEPmobile/models/community_development/comunity_development.dart';
 import 'package:CEPmobile/models/download_data/comboboxmodel.dart';
 import 'package:CEPmobile/services/helper.dart';
 import 'package:CEPmobile/ui/components/CardCustomWidget.dart';
@@ -1396,7 +1397,8 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                   return Text(
                                                       "* Trường này bắt buộc nhập !",
                                                       style: TextStyle(
-                                                          color: Colors.red, fontSize: 12));
+                                                          color: Colors.red,
+                                                          fontSize: 12));
                                                 }),
                                               ],
                                             )
@@ -4632,7 +4634,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                         ),
                                                       ),
                                                       onPressed: () {
-                                                        //  _onSubmit();
+                                                        onSaveDataToCommunityDevelopment();
                                                       },
                                                       shape:
                                                           const StadiumBorder(),
@@ -4874,8 +4876,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
     formkeySurveyDetail.currentState.validate();
     if (selectedSurveyDate == null) {
       tabController.animateTo(0);
-    }
-    else if (_controllerNumberPeopleWorked.text.isEmpty ||
+    } else if (_controllerNumberPeopleWorked.text.isEmpty ||
         _controllerNumberPeopleInFamily.text.isEmpty) {
       tabController.animateTo(1);
       new Timer(Duration(milliseconds: 200), () {
@@ -4899,4 +4900,35 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
 
   @override
   bool get wantKeepAlive => true;
+
+  onSaveDataToCommunityDevelopment() {
+    List<KhachHang> listKhachang = new List<KhachHang>();
+    KhachHang model = new KhachHang();
+    model.maKhachHang = widget.surveyInfo.chinhanhId.toString() +
+        '_' +
+        widget.surveyInfo.thanhvienId;
+    model.chinhanhId = widget.surveyInfo.chinhanhId.toDouble();
+    model.duanId = widget.surveyInfo.duanId.toDouble();
+    model.masoql = widget.surveyInfo.masoCanBoKhaoSat;
+    model.cumId = widget.surveyInfo.cumId;
+    model.hoTen = widget.surveyInfo.hoVaTen;
+    model.thanhVienId = widget.surveyInfo.thanhvienId;
+    model.cmnd = widget.surveyInfo.cmnd;
+    model.gioitinh = widget.surveyInfo.gioiTinh.toDouble();
+    model.ngaysinh = widget.surveyInfo.ngaySinh;
+    model.diachi = widget.surveyInfo.diaChi;
+    model.dienthoai = "";
+    model.lanvay = widget.surveyInfo.lanvay.toDouble();
+    model.thoigianthamgia = widget.surveyInfo.thoigianthamgia;
+    model.thanhVienThuocDien =
+        double.parse(widget.surveyInfo.thanhVienThuocDien);
+    model.maHongheoCanngheo = widget.surveyInfo.maSoHoNgheo;
+    model.ngheNghiep = 0;
+    model.ghiChu = "";
+    model.moHinhNghe = false;
+    model.thunhapHangthangCuaho = 0;
+    model.coVoChongConLaCnv = false;
+    listKhachang.add(model);
+    surVeyBloc.emitEvent(InsertNewCommunityDevelopment(context,listKhachang));
+  }
 }
