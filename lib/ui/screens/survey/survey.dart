@@ -643,7 +643,7 @@ class _SurveyScreenState extends State<SurveyScreen>
                         List<ComboboxModel> listCombobox =
                             globalUser.getListComboboxModel;
                         List<SurveyInfo> listSurveyDetail =
-                            globalUser.getListSurveyGlobal;
+                            listSurvey;
                         if (listCombobox == null || listCombobox.length == 0) {
                           Navigator.pushNamed(context, 'download', arguments: {
                             'selectedIndex': 4,

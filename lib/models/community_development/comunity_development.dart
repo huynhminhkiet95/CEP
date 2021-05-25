@@ -577,3 +577,8 @@ class HocBong {
     giatri = (json['giatri'] ?? 0).toDouble();
   }
 }
+
+class CheckBoxCommunityDevelopment {
+  int id;
+  bool status;
+}

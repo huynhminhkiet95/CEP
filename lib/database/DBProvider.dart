@@ -1687,6 +1687,23 @@ class DBProvider {
     return listTeamID;
   }
 
+  deleteCommunityDevelopmentById(int id) async {
+    final db = await database;
+    try {
+      await db.rawDelete('DELETE FROM customer_cummunity_development WHERE id = $id');
+      await db.rawDelete('DELETE FROM mainha_cummunity_development WHERE idKhachhang = $id');
+      await db.rawDelete('DELETE FROM phattriennghe_cummunity_development WHERE idKhachhang = $id');
+      await db.rawDelete('DELETE FROM quatet_cummunity_development WHERE idKhachhang = $id');
+      await db.rawDelete('DELETE FROM bhyt_cummunity_development WHERE idKhachhang = $id');
+      await db.rawDelete('DELETE FROM hocbong_cummunity_development WHERE idKhachhang = $id');
+    } on Exception catch (ex) {
+      print(ex);
+      // only executed if error is of type Exception
+    } catch (error) {
+      // executed for errors of all types other than Exception
+    }
+  }
+
   dropDataBase() async {
     final db = await database;
     await db.execute("DROP DATABASE TestDB.db");

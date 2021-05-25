@@ -4920,7 +4920,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
     model.dienthoai = "";
     model.lanvay = widget.surveyInfo.lanvay.toDouble();
     model.thoigianthamgia = widget.surveyInfo.thoigianthamgia;
-    model.thanhVienThuocDien =
+    model.thanhVienThuocDien = widget.surveyInfo.thanhVienThuocDien.isEmpty ? 0 :
         double.parse(widget.surveyInfo.thanhVienThuocDien);
     model.maHongheoCanngheo = widget.surveyInfo.maSoHoNgheo;
     model.ngheNghiep = 0;
