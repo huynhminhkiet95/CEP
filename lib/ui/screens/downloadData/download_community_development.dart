@@ -1,3 +1,6 @@
+import 'package:CEPmobile/bloc_widgets/bloc_state_builder.dart';
+import 'package:CEPmobile/blocs/download_data/download_data_state.dart';
+import 'package:CEPmobile/ui/components/ModalProgressHUDCustomize.dart';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:CEPmobile/ui/screens/Home/styles.dart';
@@ -53,7 +56,7 @@ class _DownloadCommunityDevelopmentState
   void _onSubmit() {
     if (textAutoCompleteCumId.text.length > 0) {
       downloadDataBloc.emitEvent(
-        DownloadDataCommunityDevelopmentEvent(textAutoCompleteCumId.text));
+          DownloadDataCommunityDevelopmentEvent(textAutoCompleteCumId.text));
       GlobalDownload.isSubmitDownload = true;
     }
   }
@@ -64,113 +67,122 @@ class _DownloadCommunityDevelopmentState
     Size size = MediaQuery.of(context).size;
     screenHeight = size.height;
     screenWidth = size.width;
-    return Container(
-      color: Colors.blue,
-      child: customScrollViewSliverAppBarForDownload(
-           allTranslations.text("DownloadCummunityDevelopment"),
-          <Widget>[
-            Container(
-              height: orientation == Orientation.portrait
-                  ? size.height * 0.17
-                  : size.height * 0.3,
-              decoration: BoxDecoration(
-                borderRadius: new BorderRadius.only(
-                    bottomLeft: Radius.elliptical(260, 100)),
-                color: Colors.white,
-              ),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(
-                        left: screenWidth * 0.1, right: screenWidth * 0.1),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Card(
-                            elevation: 4.0,
-                            child: Container(
-                              height: 30,
-                              width: 90,
-                              child: Center(
-                                child: Text(
-                                 allTranslations.text("ClusterID"),
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                      color: Color(0xff9596ab)),
+    return BlocEventStateBuilder<DownloadDataState>(
+        bloc: downloadDataBloc,
+        builder: (BuildContext context, DownloadDataState state) {
+          return ModalProgressHUDCustomize(
+            inAsyncCall: state?.isLoading ?? false,
+            child: Container(
+              color: Colors.blue,
+              child: customScrollViewSliverAppBarForDownload(
+                  allTranslations.text("DownloadCummunityDevelopment"),
+                  <Widget>[
+                    Container(
+                      height: orientation == Orientation.portrait
+                          ? size.height * 0.17
+                          : size.height * 0.3,
+                      decoration: BoxDecoration(
+                        borderRadius: new BorderRadius.only(
+                            bottomLeft: Radius.elliptical(260, 100)),
+                        color: Colors.white,
+                      ),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: screenWidth * 0.1,
+                                right: screenWidth * 0.1),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Card(
+                                    elevation: 4.0,
+                                    child: Container(
+                                      height: 30,
+                                      width: 90,
+                                      child: Center(
+                                        child: Text(
+                                          allTranslations.text("ClusterID"),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14,
+                                              color: Color(0xff9596ab)),
+                                        ),
+                                      ),
+                                    )),
+                                Container(
+                                  height: 30,
+                                  width: 150,
+                                  child: Center(
+                                    child: SimpleAutoCompleteTextField(
+                                        style: TextStyle(
+                                            fontSize: 14, color: Colors.blue),
+                                        key: key,
+                                        suggestions: [
+                                          "B147",
+                                          "B148",
+                                          "B175",
+                                          "B067",
+                                        ],
+                                        decoration: decorationTextFieldCEP,
+                                        controller: textAutoCompleteCumId,
+                                        textSubmitted: (text) {
+                                          txtCum = text;
+                                        },
+                                        clearOnSubmit: false),
+                                  ),
                                 ),
-                              ),
-                            )),
-                        Container(
-                          height: 30,
-                          width: 150,
-                          child: Center(
-                            child: SimpleAutoCompleteTextField(
-                                style:
-                                    TextStyle(fontSize: 14, color: Colors.blue),
-                                key: key,
-                                suggestions: [
-                                  "B147",
-                                  "B148",
-                                  "B175",
-                                  "B067",
-                                ],
-                                decoration: decorationTextFieldCEP,
-                                controller: textAutoCompleteCumId,
-                                textSubmitted: (text) {
-                                  txtCum = text;
-                                },
-                                clearOnSubmit: false),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              height: orientation == Orientation.portrait
-                  ? screenHeight * 0.4
-                  : screenHeight * 0.154,
-              child: Container(
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: RawMaterialButton(
-                    fillColor: Colors.green,
-                    splashColor: Colors.blue,
-                    child: Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children:  <Widget>[
-                          Icon(
-                            Icons.system_update,
-                            color: Colors.white,
+                              ],
+                            ),
                           ),
                           SizedBox(
-                            width: 10.0,
-                          ),
-                          Text(
-                          allTranslations.text("DownloadCummunityDevelopment"),
-                            maxLines: 1,
-                            style: TextStyle(color: Colors.white),
+                            height: 10,
                           ),
                         ],
                       ),
                     ),
-                    onPressed: _onSubmit,
-                    shape: const StadiumBorder(),
-                  ),
-                ),
-              ),
-            )
-          ],
-          context),
-    );
+                    Container(
+                      height: orientation == Orientation.portrait
+                          ? screenHeight * 0.4
+                          : screenHeight * 0.154,
+                      child: Container(
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: RawMaterialButton(
+                            fillColor: Colors.green,
+                            splashColor: Colors.blue,
+                            child: Padding(
+                              padding: EdgeInsets.all(10.0),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.system_update,
+                                    color: Colors.white,
+                                  ),
+                                  SizedBox(
+                                    width: 10.0,
+                                  ),
+                                  Text(
+                                    allTranslations
+                                        .text("DownloadCummunityDevelopment"),
+                                    maxLines: 1,
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            onPressed: _onSubmit,
+                            shape: const StadiumBorder(),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                  context),
+            ),
+          );
+        });
   }
 }
 

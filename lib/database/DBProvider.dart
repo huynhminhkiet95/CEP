@@ -1238,7 +1238,7 @@ class DBProvider {
                         ${item.bhyt == null ? 0 : 1}
                         );
                        ''';
-          await db.rawInsert(queryStringCustomer);
+          rs = await db.rawInsert(queryStringCustomer);
           List<Map> listCustomer = await db.query(
               "customer_cummunity_development",
               columns: ["id"],

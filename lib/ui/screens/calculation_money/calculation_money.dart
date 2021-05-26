@@ -64,541 +64,519 @@ class _CalculationMoneyState extends State<CalculationMoney> {
         ),
         actions: [],
       ),
-      body: Stack(
-        children: [
-          new SingleChildScrollView(
-            controller: scrollController,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  height: (screenHeight * 0.850000) - 100,
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.only(left: 40, right: 40, top: 20),
-                    child: ListView(
-                      physics: AlwaysScrollableScrollPhysics(
-                          parent: BouncingScrollPhysics()),
-                      // crossAxisAlignment: CrossAxisAlignment.end,
-                      // mainAxisAlignment: MainAxisAlignment.start,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Expanded(
+            child: Container(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 40, right: 40, top: 20),
+                child: ListView(
+                  physics: AlwaysScrollableScrollPhysics(
+                      parent: BouncingScrollPhysics()),
+                  // crossAxisAlignment: CrossAxisAlignment.end,
+                  // mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Container(
-                              height: 33,
-                              width: size.width * 0.2,
-                              // color: Colors.white,
-                              decoration: new BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.white,
-                                    blurRadius: 4,
-                                    spreadRadius: 5,
-                                    offset: Offset(
-                                        10, 10), // changes position of shadow
-                                  ),
-                                ],
-                                color: ColorConstants.cepColorBackground,
-                                border:
-                                    Border.all(color: Colors.white, width: 1.0),
-                                // backgroundBlendMode: BlendMode.lighten,
-                                borderRadius: new BorderRadius.all(
-                                    Radius.elliptical(60, 40)),
+                        Container(
+                          height: 33,
+                          width: size.width * 0.2,
+                          // color: Colors.white,
+                          decoration: new BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.white,
+                                blurRadius: 4,
+                                spreadRadius: 5,
+                                offset: Offset(
+                                    10, 10), // changes position of shadow
                               ),
-                              child: Center(
-                                child: Text(
-                                  "500k",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                      color: Colors.white),
-                                ),
-                              ),
+                            ],
+                            color: ColorConstants.cepColorBackground,
+                            border: Border.all(color: Colors.white, width: 1.0),
+                            // backgroundBlendMode: BlendMode.lighten,
+                            borderRadius:
+                                new BorderRadius.all(Radius.elliptical(60, 40)),
+                          ),
+                          child: Center(
+                            child: Text(
+                              "500k",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: Colors.white),
                             ),
-                            SpinTextFieldNumber(
-                              textController: _500kController,
-                              onChangeValue: (value) {
-                                totalSubmit();
-                              },
-                            )
-                          ],
+                          ),
                         ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Container(
-                              height: 33,
-                              width: size.width * 0.2,
-                              // color: Colors.white,
-                              decoration: new BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.white,
-                                    blurRadius: 4,
-                                    spreadRadius: 5,
-                                    offset: Offset(
-                                        10, 10), // changes position of shadow
-                                  ),
-                                ],
-                                color: ColorConstants.cepColorBackground,
-                                border:
-                                    Border.all(color: Colors.white, width: 1.0),
-                                // backgroundBlendMode: BlendMode.lighten,
-                                borderRadius: new BorderRadius.all(
-                                    Radius.elliptical(60, 40)),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "200k",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                      color: Colors.white),
-                                ),
-                              ),
-                            ),
-                            SpinTextFieldNumber(
-                              textController: _200kController,
-                              onChangeValue: (value) {
-                                totalSubmit();
-                              },
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Container(
-                              height: 33,
-                              width: size.width * 0.2,
-                              // color: Colors.white,
-                              decoration: new BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.white,
-                                    blurRadius: 4,
-                                    spreadRadius: 5,
-                                    offset: Offset(
-                                        10, 10), // changes position of shadow
-                                  ),
-                                ],
-                                color: ColorConstants.cepColorBackground,
-                                border:
-                                    Border.all(color: Colors.white, width: 1.0),
-                                // backgroundBlendMode: BlendMode.lighten,
-                                borderRadius: new BorderRadius.all(
-                                    Radius.elliptical(60, 40)),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "100k",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                      color: Colors.white),
-                                ),
-                              ),
-                            ),
-                            SpinTextFieldNumber(
-                              textController: _100kController,
-                              onChangeValue: (value) {
-                                totalSubmit();
-                              },
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Container(
-                              height: 33,
-                              width: size.width * 0.2,
-                              // color: Colors.white,
-                              decoration: new BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.white,
-                                    blurRadius: 4,
-                                    spreadRadius: 5,
-                                    offset: Offset(
-                                        10, 10), // changes position of shadow
-                                  ),
-                                ],
-                                color: ColorConstants.cepColorBackground,
-                                border:
-                                    Border.all(color: Colors.white, width: 1.0),
-                                // backgroundBlendMode: BlendMode.lighten,
-                                borderRadius: new BorderRadius.all(
-                                    Radius.elliptical(60, 40)),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "50k",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                      color: Colors.white),
-                                ),
-                              ),
-                            ),
-                            SpinTextFieldNumber(
-                              textController: _50kController,
-                              onChangeValue: (value) {
-                                totalSubmit();
-                              },
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Container(
-                              height: 33,
-                              width: size.width * 0.2,
-                              // color: Colors.white,
-                              decoration: new BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.white,
-                                    blurRadius: 4,
-                                    spreadRadius: 5,
-                                    offset: Offset(
-                                        10, 10), // changes position of shadow
-                                  ),
-                                ],
-                                color: ColorConstants.cepColorBackground,
-                                border:
-                                    Border.all(color: Colors.white, width: 1.0),
-                                // backgroundBlendMode: BlendMode.lighten,
-                                borderRadius: new BorderRadius.all(
-                                    Radius.elliptical(60, 40)),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "20k",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                      color: Colors.white),
-                                ),
-                              ),
-                            ),
-                            SpinTextFieldNumber(
-                              textController: _20kController,
-                              onChangeValue: (value) {
-                                totalSubmit();
-                              },
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Container(
-                              height: 33,
-                              width: size.width * 0.2,
-                              // color: Colors.white,
-                              decoration: new BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.white,
-                                    blurRadius: 4,
-                                    spreadRadius: 5,
-                                    offset: Offset(
-                                        10, 10), // changes position of shadow
-                                  ),
-                                ],
-                                color: ColorConstants.cepColorBackground,
-                                border:
-                                    Border.all(color: Colors.white, width: 1.0),
-                                // backgroundBlendMode: BlendMode.lighten,
-                                borderRadius: new BorderRadius.all(
-                                    Radius.elliptical(60, 40)),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "10k",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                      color: Colors.white),
-                                ),
-                              ),
-                            ),
-                            SpinTextFieldNumber(
-                              textController: _10kController,
-                              onChangeValue: (value) {
-                                totalSubmit();
-                              },
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Container(
-                              height: 33,
-                              width: size.width * 0.2,
-                              // color: Colors.white,
-                              decoration: new BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.white,
-                                    blurRadius: 4,
-                                    spreadRadius: 5,
-                                    offset: Offset(
-                                        10, 10), // changes position of shadow
-                                  ),
-                                ],
-                                color: ColorConstants.cepColorBackground,
-                                border:
-                                    Border.all(color: Colors.white, width: 1.0),
-                                // backgroundBlendMode: BlendMode.lighten,
-                                borderRadius: new BorderRadius.all(
-                                    Radius.elliptical(60, 40)),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "5k",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                      color: Colors.white),
-                                ),
-                              ),
-                            ),
-                            SpinTextFieldNumber(
-                              textController: _5kController,
-                              onChangeValue: (value) {
-                                totalSubmit();
-                              },
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Container(
-                              height: 33,
-                              width: size.width * 0.2,
-                              // color: Colors.white,
-                              decoration: new BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.white,
-                                    blurRadius: 4,
-                                    spreadRadius: 5,
-                                    offset: Offset(
-                                        10, 10), // changes position of shadow
-                                  ),
-                                ],
-                                color: ColorConstants.cepColorBackground,
-                                border:
-                                    Border.all(color: Colors.white, width: 1.0),
-                                // backgroundBlendMode: BlendMode.lighten,
-                                borderRadius: new BorderRadius.all(
-                                    Radius.elliptical(60, 40)),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "2k",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                      color: Colors.white),
-                                ),
-                              ),
-                            ),
-                            SpinTextFieldNumber(
-                              textController: _2kController,
-                              onChangeValue: (value) {
-                                totalSubmit();
-                              },
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Container(
-                              height: 33,
-                              width: size.width * 0.2,
-                              // color: Colors.white,
-                              decoration: new BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.white,
-                                    blurRadius: 4,
-                                    spreadRadius: 5,
-                                    offset: Offset(
-                                        10, 10), // changes position of shadow
-                                  ),
-                                ],
-                                color: ColorConstants.cepColorBackground,
-                                border:
-                                    Border.all(color: Colors.white, width: 1.0),
-                                // backgroundBlendMode: BlendMode.lighten,
-                                borderRadius: new BorderRadius.all(
-                                    Radius.elliptical(60, 40)),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "1k",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                      color: Colors.white),
-                                ),
-                              ),
-                            ),
-                            SpinTextFieldNumber(
-                              textController: _1kController,
-                              onChangeValue: (value) {
-                                totalSubmit();
-                              },
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Container(
-                              height: 33,
-                              width: size.width * 0.2,
-                              // color: Colors.white,
-                              decoration: new BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.white,
-                                    blurRadius: 4,
-                                    spreadRadius: 5,
-                                    offset: Offset(
-                                        10, 10), // changes position of shadow
-                                  ),
-                                ],
-                                color: ColorConstants.cepColorBackground,
-                                border:
-                                    Border.all(color: Colors.white, width: 1.0),
-                                // backgroundBlendMode: BlendMode.lighten,
-                                borderRadius: new BorderRadius.all(
-                                    Radius.elliptical(60, 40)),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "500",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                      color: Colors.white),
-                                ),
-                              ),
-                            ),
-                            SpinTextFieldNumber(
-                              textController: _500Controller,
-                              onChangeValue: (value) {
-                                totalSubmit();
-                              },
-                            )
-                          ],
-                        ),
+                        SpinTextFieldNumber(
+                          textController: _500kController,
+                          onChangeValue: (value) {
+                            totalSubmit();
+                          },
+                        )
                       ],
                     ),
-                  ),
-                ),
-
-              
-                Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Container(
-                      height: 100,
-                      decoration: new BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.white,
-                              blurRadius: 4,
-                              spreadRadius: 4,
-                              offset:
-                                  Offset(1, 1), // changes position of shadow
-                            ),
-                          ],
-                          color: Colors.grey,
-                          borderRadius: new BorderRadius.only(
-                              topLeft: Radius.elliptical(40, 40),
-                              topRight: Radius.elliptical(40, 40))),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              child: Text(
-                                "Tổng Tiền:",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Container(
+                          height: 33,
+                          width: size.width * 0.2,
+                          // color: Colors.white,
+                          decoration: new BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.white,
+                                blurRadius: 4,
+                                spreadRadius: 5,
+                                offset: Offset(
+                                    10, 10), // changes position of shadow
                               ),
+                            ],
+                            color: ColorConstants.cepColorBackground,
+                            border: Border.all(color: Colors.white, width: 1.0),
+                            // backgroundBlendMode: BlendMode.lighten,
+                            borderRadius:
+                                new BorderRadius.all(Radius.elliptical(60, 40)),
+                          ),
+                          child: Center(
+                            child: Text(
+                              "200k",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: Colors.white),
                             ),
-                            Container(
-                                child: AnimatedFlipCounter(
-                              duration: Duration(milliseconds: 500),
-                              value: total,
-                              /* pass in a number like 2014 */
-                              color: Colors.black,
-                              size: 20,
-                            )
-                                //  Text(
-                                //   "20,000,000 VNĐ",
-                                //   style: TextStyle(
-                                //       color: Colors.white,
-                                //       fontWeight: FontWeight.bold,
-                                //       fontSize: 18),
-                                // ),
-                                ),
-                          ],
+                          ),
                         ),
+                        SpinTextFieldNumber(
+                          textController: _200kController,
+                          onChangeValue: (value) {
+                            totalSubmit();
+                          },
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Container(
+                          height: 33,
+                          width: size.width * 0.2,
+                          // color: Colors.white,
+                          decoration: new BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.white,
+                                blurRadius: 4,
+                                spreadRadius: 5,
+                                offset: Offset(
+                                    10, 10), // changes position of shadow
+                              ),
+                            ],
+                            color: ColorConstants.cepColorBackground,
+                            border: Border.all(color: Colors.white, width: 1.0),
+                            // backgroundBlendMode: BlendMode.lighten,
+                            borderRadius:
+                                new BorderRadius.all(Radius.elliptical(60, 40)),
+                          ),
+                          child: Center(
+                            child: Text(
+                              "100k",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        SpinTextFieldNumber(
+                          textController: _100kController,
+                          onChangeValue: (value) {
+                            totalSubmit();
+                          },
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Container(
+                          height: 33,
+                          width: size.width * 0.2,
+                          // color: Colors.white,
+                          decoration: new BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.white,
+                                blurRadius: 4,
+                                spreadRadius: 5,
+                                offset: Offset(
+                                    10, 10), // changes position of shadow
+                              ),
+                            ],
+                            color: ColorConstants.cepColorBackground,
+                            border: Border.all(color: Colors.white, width: 1.0),
+                            // backgroundBlendMode: BlendMode.lighten,
+                            borderRadius:
+                                new BorderRadius.all(Radius.elliptical(60, 40)),
+                          ),
+                          child: Center(
+                            child: Text(
+                              "50k",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        SpinTextFieldNumber(
+                          textController: _50kController,
+                          onChangeValue: (value) {
+                            totalSubmit();
+                          },
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Container(
+                          height: 33,
+                          width: size.width * 0.2,
+                          // color: Colors.white,
+                          decoration: new BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.white,
+                                blurRadius: 4,
+                                spreadRadius: 5,
+                                offset: Offset(
+                                    10, 10), // changes position of shadow
+                              ),
+                            ],
+                            color: ColorConstants.cepColorBackground,
+                            border: Border.all(color: Colors.white, width: 1.0),
+                            // backgroundBlendMode: BlendMode.lighten,
+                            borderRadius:
+                                new BorderRadius.all(Radius.elliptical(60, 40)),
+                          ),
+                          child: Center(
+                            child: Text(
+                              "20k",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        SpinTextFieldNumber(
+                          textController: _20kController,
+                          onChangeValue: (value) {
+                            totalSubmit();
+                          },
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Container(
+                          height: 33,
+                          width: size.width * 0.2,
+                          // color: Colors.white,
+                          decoration: new BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.white,
+                                blurRadius: 4,
+                                spreadRadius: 5,
+                                offset: Offset(
+                                    10, 10), // changes position of shadow
+                              ),
+                            ],
+                            color: ColorConstants.cepColorBackground,
+                            border: Border.all(color: Colors.white, width: 1.0),
+                            // backgroundBlendMode: BlendMode.lighten,
+                            borderRadius:
+                                new BorderRadius.all(Radius.elliptical(60, 40)),
+                          ),
+                          child: Center(
+                            child: Text(
+                              "10k",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        SpinTextFieldNumber(
+                          textController: _10kController,
+                          onChangeValue: (value) {
+                            totalSubmit();
+                          },
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Container(
+                          height: 33,
+                          width: size.width * 0.2,
+                          // color: Colors.white,
+                          decoration: new BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.white,
+                                blurRadius: 4,
+                                spreadRadius: 5,
+                                offset: Offset(
+                                    10, 10), // changes position of shadow
+                              ),
+                            ],
+                            color: ColorConstants.cepColorBackground,
+                            border: Border.all(color: Colors.white, width: 1.0),
+                            // backgroundBlendMode: BlendMode.lighten,
+                            borderRadius:
+                                new BorderRadius.all(Radius.elliptical(60, 40)),
+                          ),
+                          child: Center(
+                            child: Text(
+                              "5k",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        SpinTextFieldNumber(
+                          textController: _5kController,
+                          onChangeValue: (value) {
+                            totalSubmit();
+                          },
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Container(
+                          height: 33,
+                          width: size.width * 0.2,
+                          // color: Colors.white,
+                          decoration: new BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.white,
+                                blurRadius: 4,
+                                spreadRadius: 5,
+                                offset: Offset(
+                                    10, 10), // changes position of shadow
+                              ),
+                            ],
+                            color: ColorConstants.cepColorBackground,
+                            border: Border.all(color: Colors.white, width: 1.0),
+                            // backgroundBlendMode: BlendMode.lighten,
+                            borderRadius:
+                                new BorderRadius.all(Radius.elliptical(60, 40)),
+                          ),
+                          child: Center(
+                            child: Text(
+                              "2k",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        SpinTextFieldNumber(
+                          textController: _2kController,
+                          onChangeValue: (value) {
+                            totalSubmit();
+                          },
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Container(
+                          height: 33,
+                          width: size.width * 0.2,
+                          // color: Colors.white,
+                          decoration: new BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.white,
+                                blurRadius: 4,
+                                spreadRadius: 5,
+                                offset: Offset(
+                                    10, 10), // changes position of shadow
+                              ),
+                            ],
+                            color: ColorConstants.cepColorBackground,
+                            border: Border.all(color: Colors.white, width: 1.0),
+                            // backgroundBlendMode: BlendMode.lighten,
+                            borderRadius:
+                                new BorderRadius.all(Radius.elliptical(60, 40)),
+                          ),
+                          child: Center(
+                            child: Text(
+                              "1k",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        SpinTextFieldNumber(
+                          textController: _1kController,
+                          onChangeValue: (value) {
+                            totalSubmit();
+                          },
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Container(
+                          height: 33,
+                          width: size.width * 0.2,
+                          // color: Colors.white,
+                          decoration: new BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.white,
+                                blurRadius: 4,
+                                spreadRadius: 5,
+                                offset: Offset(
+                                    10, 10), // changes position of shadow
+                              ),
+                            ],
+                            color: ColorConstants.cepColorBackground,
+                            border: Border.all(color: Colors.white, width: 1.0),
+                            // backgroundBlendMode: BlendMode.lighten,
+                            borderRadius:
+                                new BorderRadius.all(Radius.elliptical(60, 40)),
+                          ),
+                          child: Center(
+                            child: Text(
+                              "500",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        SpinTextFieldNumber(
+                          textController: _500Controller,
+                          onChangeValue: (value) {
+                            totalSubmit();
+                          },
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Container(
+            height: 100,
+            decoration: new BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.white,
+                    blurRadius: 4,
+                    spreadRadius: 4,
+                    offset: Offset(1, 1), // changes position of shadow
+                  ),
+                ],
+                color: Colors.grey,
+                borderRadius: new BorderRadius.only(
+                    topLeft: Radius.elliptical(40, 40),
+                    topRight: Radius.elliptical(40, 40))),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    child: Text(
+                      "Tổng Tiền:",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18),
+                    ),
+                  ),
+                  Container(
+                      child: AnimatedFlipCounter(
+                    duration: Duration(milliseconds: 500),
+                    value: total,
+                    /* pass in a number like 2014 */
+                    color: Colors.black,
+                    size: 20,
+                  )
+                      //  Text(
+                      //   "20,000,000 VNĐ",
+                      //   style: TextStyle(
+                      //       color: Colors.white,
+                      //       fontWeight: FontWeight.bold,
+                      //       fontSize: 18),
+                      // ),
                       ),
-                    )),
-              ],
+                ],
+              ),
             ),
           )
         ],

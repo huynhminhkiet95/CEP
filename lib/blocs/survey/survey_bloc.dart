@@ -196,7 +196,7 @@ class SurveyBloc extends BlocEventStateBase<SurveyEvent, SurveyState> {
     }
     if (event is InsertNewCommunityDevelopment) {
       yield SurveyState.updateLoading(true);
-      await DBProvider.db.newCommunityDevelopment(event.listKhachHang);
+      int rs = await DBProvider.db.newCommunityDevelopment(event.listKhachHang);
 
       List<KhachHang> listKhachHang;
       listKhachHang = await DBProvider.db.getCommunityDevelopmentByCum(
@@ -207,17 +207,19 @@ class SurveyBloc extends BlocEventStateBase<SurveyEvent, SurveyState> {
           .where((e) => e.maKhachHang == event.listKhachHang.first.maKhachHang)
           .toList();
       List<ComboboxModel> listCombobox = globalUser.getListComboboxModel;
-      globalUser.setCumIdOfCommunityDevelopment = event.listKhachHang.first.cumId;
-
+    
+      this.sharePreferenceService.saveCumIdOfCommunityDevelopment(event.listKhachHang.first.cumId);
       Timer(Duration(milliseconds: 1000), () {
-        Fluttertoast.showToast(
-          msg: allTranslations.text("InsertCommunityDevelopmentSuccessfully"),
-          timeInSecForIos: 10,
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM, // also possible "TOP" and "CENTER"
-          backgroundColor: Colors.green[600].withOpacity(0.9),
-          textColor: Colors.white,
-        );
+        if (rs > 0) {
+          Fluttertoast.showToast(
+            msg: allTranslations.text("InsertCommunityDevelopmentSuccessfully"),
+            timeInSecForIos: 10,
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM, // also possible "TOP" and "CENTER"
+            backgroundColor: Colors.green[600].withOpacity(0.9),
+            textColor: Colors.white,
+          );
+        }
 
         Navigator.pushNamed(event.context, 'comunitydevelopmentdetail',
             arguments: {
@@ -225,7 +227,16 @@ class SurveyBloc extends BlocEventStateBase<SurveyEvent, SurveyState> {
               'metadata': listCombobox,
             });
       });
+      await showResultMessage().timeout(Duration(seconds: 1), onTimeout: () {
+        print('0 timed out');
+        return false;
+      });
       yield SurveyState.updateLoading(false);
     }
+  }
+
+  Future<bool> showResultMessage() async {
+    await Future.delayed(Duration(milliseconds: 1000), () {});
+    return true;
   }
 }

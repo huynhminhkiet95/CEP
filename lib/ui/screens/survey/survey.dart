@@ -16,6 +16,7 @@ import 'package:CEPmobile/blocs/survey/survey_state.dart';
 import 'package:CEPmobile/bloc_widgets/bloc_state_builder.dart';
 import 'package:CEPmobile/models/download_data/survey_info.dart';
 import 'package:CEPmobile/ui/components/ModalProgressHUDCustomize.dart';
+import 'package:CEPmobile/config/map_utils.dart';
 
 class SurveyScreen extends StatefulWidget {
   @override
@@ -32,12 +33,11 @@ class _SurveyScreenState extends State<SurveyScreen>
   String dropdownNgayXuatDanhSachValue;
 
   double screenWidth, screenHeight;
- 
+
   SurveyBloc surVeyBloc;
   Services services;
   List<CheckBoxSurvey> checkBoxSurvey = new List<CheckBoxSurvey>();
   bool isCheckAll = false;
-  
 
   SurveyStream surveyStream;
 
@@ -139,194 +139,200 @@ class _SurveyScreenState extends State<SurveyScreen>
                       : Colors.white,
                   child: ModalProgressHUDCustomize(
                     inAsyncCall: state?.isLoadingSaveData ?? false,
-                    child: customScrollViewSliverAppBarForDownload(
-                        surveyStream.listSurvey != null
-                            ?allTranslations.text("ListSurveyMember")
-                            : "",
-                        <Widget>[
-                          Container(
-                              height: orientation == Orientation.portrait
-                                  ? screenHeight * 0.17
-                                  : screenHeight * 0.3,
-                              decoration: BoxDecoration(
-                                borderRadius: new BorderRadius.only(
-                                    bottomLeft: Radius.elliptical(260, 100)),
-                                color: Colors.white,
-                              ),
-                              child: surveyStream.listSurvey != null
-                                  ? Column(
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              left: screenWidth * 0.1,
-                                              right: screenWidth * 0.1),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              AnimatedOpacity(
-                                                duration: const Duration(
-                                                    milliseconds: 1000),
-                                                opacity: opacity,
-                                                child: Card(
-                                                    elevation: 4.0,
-                                                    child: Container(
-                                                      height: 30,
-                                                      width: 90,
-                                                      child: Center(
-                                                        child: Text(
-                                                         "${allTranslations.text("ClusterID") } (${listItemCumId.length})",
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontSize: 14,
-                                                              color: Color(
-                                                                  0xff9596ab)),
-                                                        ),
+                    child: Column(
+                      children: [
+                        Container(
+                          height: size.height * 0.07,
+                          color: Colors.white,
+                          child: Center(
+                            child: Text(
+                              surveyStream.listSurvey != null
+                                  ? allTranslations.text("ListSurveyMember")
+                                  : "",
+                              //  textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Color(0xff003399),
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w900,
+                                  wordSpacing: 5),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          height: orientation == Orientation.portrait
+                              ? screenHeight * 0.17
+                              : screenHeight * 0.3,
+                          decoration: BoxDecoration(
+                            borderRadius: new BorderRadius.only(
+                                bottomLeft: Radius.elliptical(260, 100)),
+                            color: Colors.white,
+                          ),
+                          child: surveyStream.listSurvey != null
+                              ? Column(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          left: screenWidth * 0.1,
+                                          right: screenWidth * 0.1),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          AnimatedOpacity(
+                                            duration: const Duration(
+                                                milliseconds: 1000),
+                                            opacity: opacity,
+                                            child: Card(
+                                                elevation: 4.0,
+                                                child: Container(
+                                                  height: 30,
+                                                  width: 90,
+                                                  child: Center(
+                                                    child: Text(
+                                                      "${allTranslations.text("ClusterID")} (${listItemCumId.length})",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14,
+                                                          color: Color(
+                                                              0xff9596ab)),
+                                                    ),
+                                                  ),
+                                                )),
+                                          ),
+                                          AnimatedOpacity(
+                                            duration: const Duration(
+                                                milliseconds: 1000),
+                                            opacity: opacity,
+                                            child: Card(
+                                                elevation: 4.0,
+                                                child: Container(
+                                                  height: 30,
+                                                  width: 90,
+                                                  child: Center(
+                                                    child:
+                                                        DropdownButton<String>(
+                                                      value: dropdownCumIdValue,
+                                                      elevation: 16,
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontSize: 14,
+                                                          color: Colors.black),
+                                                      underline: Container(
+                                                        height: 0,
+                                                        color: Colors.blue,
                                                       ),
-                                                    )),
-                                              ),
-                                              AnimatedOpacity(
-                                                duration: const Duration(
-                                                    milliseconds: 1000),
-                                                opacity: opacity,
-                                                child: Card(
-                                                    elevation: 4.0,
-                                                    child: Container(
-                                                      height: 30,
-                                                      width: 90,
-                                                      child: Center(
-                                                        child: DropdownButton<
+                                                      onChanged:
+                                                          (String newValue) {
+                                                        _onSearchSurvey(
+                                                            newValue, null);
+                                                      },
+                                                      items: listItemCumId.map<
+                                                              DropdownMenuItem<
+                                                                  String>>(
+                                                          (String value) {
+                                                        return DropdownMenuItem<
                                                             String>(
-                                                          value:
-                                                              dropdownCumIdValue,
-                                                          elevation: 16,
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontSize: 14,
-                                                              color:
-                                                                  Colors.black),
-                                                          underline: Container(
-                                                            height: 0,
-                                                            color: Colors.blue,
-                                                          ),
-                                                          onChanged: (String
-                                                              newValue) {
-                                                            _onSearchSurvey(
-                                                                newValue, null);
-                                                          },
-                                                          items: listItemCumId.map<
+                                                          value: value,
+                                                          child: Text(value),
+                                                        );
+                                                      }).toList(),
+                                                    ),
+                                                  ),
+                                                )),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          left: screenWidth * 0.1,
+                                          right: screenWidth * 0.1),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          AnimatedOpacity(
+                                            duration: const Duration(
+                                                milliseconds: 1000),
+                                            opacity: opacity,
+                                            child: Card(
+                                                elevation: 4.0,
+                                                child: Container(
+                                                  height: 30,
+                                                  width: 150,
+                                                  child: Center(
+                                                    child: Text(
+                                                      allTranslations
+                                                          .text("ExportDate"),
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14,
+                                                          color: Color(
+                                                              0xff9596ab)),
+                                                    ),
+                                                  ),
+                                                )),
+                                          ),
+                                          AnimatedOpacity(
+                                            duration: const Duration(
+                                                milliseconds: 1000),
+                                            opacity: opacity,
+                                            child: Card(
+                                                elevation: 4.0,
+                                                child: Container(
+                                                  height: 30,
+                                                  width: 100,
+                                                  child: Center(
+                                                    child:
+                                                        DropdownButton<String>(
+                                                      value:
+                                                          dropdownNgayXuatDanhSachValue,
+                                                      elevation: 16,
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontSize: 14,
+                                                          color: Colors.black),
+                                                      underline: Container(
+                                                        height: 0,
+                                                        color: Colors.blue,
+                                                      ),
+                                                      onChanged:
+                                                          (String newValue) {
+                                                        _onSearchSurvey(
+                                                            dropdownCumIdValue,
+                                                            newValue);
+                                                      },
+                                                      items: listItemNgayXuatDS
+                                                          .map<
                                                               DropdownMenuItem<
                                                                   String>>((String
                                                               value) {
-                                                            return DropdownMenuItem<
-                                                                String>(
-                                                              value: value,
-                                                              child:
-                                                                  Text(value),
-                                                            );
-                                                          }).toList(),
-                                                        ),
-                                                      ),
-                                                    )),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              left: screenWidth * 0.1,
-                                              right: screenWidth * 0.1),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              AnimatedOpacity(
-                                                duration: const Duration(
-                                                    milliseconds: 1000),
-                                                opacity: opacity,
-                                                child: Card(
-                                                    elevation: 4.0,
-                                                    child: Container(
-                                                      height: 30,
-                                                      width: 150,
-                                                      child: Center(
-                                                        child: Text(
-                                                          allTranslations.text("ExportDate"),
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontSize: 14,
-                                                              color: Color(
-                                                                  0xff9596ab)),
-                                                        ),
-                                                      ),
-                                                    )),
-                                              ),
-                                              AnimatedOpacity(
-                                                duration: const Duration(
-                                                    milliseconds: 1000),
-                                                opacity: opacity,
-                                                child: Card(
-                                                    elevation: 4.0,
-                                                    child: Container(
-                                                      height: 30,
-                                                      width: 100,
-                                                      child: Center(
-                                                        child: DropdownButton<
+                                                        return DropdownMenuItem<
                                                             String>(
-                                                          value:
-                                                              dropdownNgayXuatDanhSachValue,
-                                                          elevation: 16,
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontSize: 14,
-                                                              color:
-                                                                  Colors.black),
-                                                          underline: Container(
-                                                            height: 0,
-                                                            color: Colors.blue,
-                                                          ),
-                                                          onChanged: (String
-                                                              newValue) {
-                                                            _onSearchSurvey(
-                                                                dropdownCumIdValue,
-                                                                newValue);
-                                                          },
-                                                          items: listItemNgayXuatDS.map<
-                                                              DropdownMenuItem<
-                                                                  String>>((String
-                                                              value) {
-                                                            return DropdownMenuItem<
-                                                                String>(
-                                                              value: value,
-                                                              child:
-                                                                  Text(value),
-                                                            );
-                                                          }).toList(),
-                                                        ),
-                                                      ),
-                                                    )),
-                                              ),
-                                            ],
+                                                          value: value,
+                                                          child: Text(value),
+                                                        );
+                                                      }).toList(),
+                                                    ),
+                                                  ),
+                                                )),
                                           ),
-                                        ),
-                                      ],
-                                    )
-                                  : Container()),
-                          Container(
-                            height: orientation == Orientation.portrait
-                                ? screenHeight * 0.6
-                                : screenHeight * 0.654,
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : Container(),
+                        ),
+                        Expanded(
+                          child: Container(
                             color: surveyStream.listSurvey != null
                                 ? Colors.blue
                                 : Colors.white,
@@ -379,7 +385,8 @@ class _SurveyScreenState extends State<SurveyScreen>
                                                         width: 10.0,
                                                       ),
                                                       Text(
-                                                      allTranslations.text("UpdateToServer"),
+                                                        allTranslations.text(
+                                                            "UpdateToServer"),
                                                         maxLines: 1,
                                                         style: TextStyle(
                                                             color: Colors.white,
@@ -399,7 +406,8 @@ class _SurveyScreenState extends State<SurveyScreen>
                                                       0) {
                                                     dialogCustomForCEP(
                                                         context,
-                                                        allTranslations.text("ConfirmSaveDataToServer"),
+                                                        allTranslations.text(
+                                                            "ConfirmSaveDataToServer"),
                                                         _onSubmit,
                                                         children: [],
                                                         width:
@@ -451,8 +459,11 @@ class _SurveyScreenState extends State<SurveyScreen>
                                                       ),
                                                       Text(
                                                         this.isCheckAll == false
-                                                            ?allTranslations.text("SelectAll")
-                                                            :allTranslations.text("UnSelectAll"),
+                                                            ? allTranslations
+                                                                .text(
+                                                                    "SelectAll")
+                                                            : allTranslations.text(
+                                                                "UnSelectAll"),
                                                         maxLines: 1,
                                                         style: TextStyle(
                                                             color: Colors.white,
@@ -489,12 +500,6 @@ class _SurveyScreenState extends State<SurveyScreen>
                                 Expanded(
                                   child: Container(
                                       margin: EdgeInsets.only(top: 10),
-                                      //  width: screenWidth * 0.95,
-                                      // decoration: BoxDecoration(
-                                      //     borderRadius: BorderRadius.all(
-                                      //       Radius.circular(15),
-                                      //     ),
-                                      //    ),
                                       child: ModalProgressHUDCustomize(
                                         inAsyncCall: state?.isLoading ?? false,
                                         child: Padding(
@@ -573,8 +578,9 @@ class _SurveyScreenState extends State<SurveyScreen>
                               ],
                             ),
                           ),
-                        ],
-                        context),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               } else {
@@ -585,34 +591,34 @@ class _SurveyScreenState extends State<SurveyScreen>
       },
     );
     return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back_ios,
-                color: Colors.white,
-                size: 20,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              }),
-          backgroundColor: ColorConstants.cepColorBackground,
-          elevation: 20,
-          title: Text(
-            allTranslations.text("BorrowingCapitalSurvey"),
-            textAlign: TextAlign.center,
-            style: TextStyle(fontWeight: FontWeight.w600),
-          ),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+              size: 20,
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            }),
+        backgroundColor: ColorConstants.cepColorBackground,
+        elevation: 20,
+        title: Text(
+          allTranslations.text("BorrowingCapitalSurvey"),
+          textAlign: TextAlign.center,
+          style: TextStyle(fontWeight: FontWeight.w600),
         ),
-        body: GestureDetector(
-            onHorizontalDragUpdate: (details) {
-              int sensitivity = 8;
-              if (details.delta.dx > sensitivity) {
-                Navigator.of(context).pop();
-              }
-            },
-            child: Container(child: body)),
-      );
+      ),
+      body: GestureDetector(
+          onHorizontalDragUpdate: (details) {
+            int sensitivity = 8;
+            if (details.delta.dx > sensitivity) {
+              Navigator.of(context).pop();
+            }
+          },
+          child: Container(child: body)),
+    );
   }
 
   Widget getItemListView(List<SurveyInfo> listSurvey) {
@@ -642,8 +648,7 @@ class _SurveyScreenState extends State<SurveyScreen>
                       onTap: () {
                         List<ComboboxModel> listCombobox =
                             globalUser.getListComboboxModel;
-                        List<SurveyInfo> listSurveyDetail =
-                            listSurvey;
+                        List<SurveyInfo> listSurveyDetail = listSurvey;
                         if (listCombobox == null || listCombobox.length == 0) {
                           Navigator.pushNamed(context, 'download', arguments: {
                             'selectedIndex': 4,
@@ -664,7 +669,9 @@ class _SurveyScreenState extends State<SurveyScreen>
                             //String a = value;
                             if (value is List<SurveyInfo>) {
                               setState(() {
-                                listSurvey = value;
+                                // listSurvey = value;
+                                surVeyBloc.emitEvent(SearchSurveyEvent(
+                                    dropdownCumIdValue, null));
                               });
                             }
                           });
@@ -715,7 +722,7 @@ class _SurveyScreenState extends State<SurveyScreen>
                                   },
                                 ),
                                 Container(
-                                  width: 290,
+                                  width: screenWidth * 0.82,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
@@ -734,7 +741,8 @@ class _SurveyScreenState extends State<SurveyScreen>
                                                 width: 140,
                                                 child: Center(
                                                   child: Text(
-                                                 allTranslations.text("Mandatory"),
+                                                    allTranslations
+                                                        .text("Mandatory"),
                                                     style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.bold,
@@ -758,7 +766,8 @@ class _SurveyScreenState extends State<SurveyScreen>
                                                 width: 100,
                                                 child: Center(
                                                   child: Text(
-                                                   allTranslations.text("Surveyed"),
+                                                    allTranslations
+                                                        .text("Surveyed"),
                                                     style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.bold,
@@ -777,7 +786,8 @@ class _SurveyScreenState extends State<SurveyScreen>
                                                 height: 20,
                                                 width: 103,
                                                 child: Text(
-                                                  allTranslations.text("NotYetSurveyed"),
+                                                  allTranslations
+                                                      .text("NotYetSurveyed"),
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
@@ -811,7 +821,7 @@ class _SurveyScreenState extends State<SurveyScreen>
                                       Row(
                                         // crossAxisAlignment: CrossAxisAlignment.center,
                                         mainAxisAlignment:
-                                            MainAxisAlignment.start,
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Container(
                                             padding: EdgeInsets.only(left: 4),
@@ -829,8 +839,10 @@ class _SurveyScreenState extends State<SurveyScreen>
                                                   width: 30,
                                                   child: Text(
                                                     listSurvey[i].gioiTinh == 0
-                                                        ? allTranslations.text("FeMale")
-                                                        : allTranslations.text("Male"),
+                                                        ? allTranslations
+                                                            .text("FeMale")
+                                                        : allTranslations
+                                                            .text("Male"),
                                                     style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.bold,
@@ -870,6 +882,8 @@ class _SurveyScreenState extends State<SurveyScreen>
                                           Container(
                                             padding: EdgeInsets.only(left: 4),
                                             child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
                                               children: [
                                                 Icon(
                                                   IconsCustomize.id_card,
@@ -903,13 +917,19 @@ class _SurveyScreenState extends State<SurveyScreen>
                                             VerticalDivider(
                                               width: 1,
                                             ),
-                                            Container(
-                                              width: 230,
-                                              child: Text(
-                                                listSurvey[i].diaChi,
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 13),
+                                            InkWell(
+                                              onTap: () {
+                                                MapUtils.openMap(listSurvey[i].diaChi);
+                                              },
+                                              child: Container(
+                                                width: 230,
+                                                child: Text(
+                                                  listSurvey[i].diaChi,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 13),
+                                                ),
                                               ),
                                             ),
                                           ],

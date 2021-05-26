@@ -50,8 +50,6 @@ class _DeleteDataScreenState extends State<DeleteDataScreen>
 
   @override
   void initState() {
-    dropdownCumIdValueForCommunityDevelopment =
-        globalUser.getCumIdOfCommunityDevelopment;
     animationController = AnimationController(
         duration: const Duration(milliseconds: 1000), vsync: this);
     services = Services.of(context);
@@ -75,8 +73,8 @@ class _DeleteDataScreenState extends State<DeleteDataScreen>
   }
 
   void _onSubmitDeleteCommunityDevelopment() {
-    deleteDataBloc.emitEvent(DeleteCommunityDevelopmentEvent(checkBoxCommunityDevelopment, context,
-        dropdownCumIdValue));
+    deleteDataBloc.emitEvent(DeleteCommunityDevelopmentEvent(
+        checkBoxCommunityDevelopment, context, dropdownCumIdValue));
     checkBoxCommunityDevelopment = new List<CheckBoxCommunityDevelopment>();
   }
 
@@ -805,8 +803,8 @@ class _DeleteDataScreenState extends State<DeleteDataScreen>
                 builder: (BuildContext context,
                     AsyncSnapshot<List<KhachHang>> snapshot) {
                   if (snapshot.data != null) {
-                    
-                    if (dropdownCumIdValueForCommunityDevelopment != globalUser.getCumIdOfCommunityDevelopment) {
+                    if (dropdownCumIdValueForCommunityDevelopment !=
+                        globalUser.getCumIdOfCommunityDevelopment) {
                       listCommunityDevelopment = snapshot.data;
                       animationController.reset();
                       this.isCheckAllCommunityDevelopment = false;
@@ -835,7 +833,8 @@ class _DeleteDataScreenState extends State<DeleteDataScreen>
                         }
                       }
                     }
-                    dropdownCumIdValueForCommunityDevelopment = globalUser.getCumIdOfCommunityDevelopment;
+                    dropdownCumIdValueForCommunityDevelopment =
+                        globalUser.getCumIdOfCommunityDevelopment;
                     return ModalProgressHUDCustomize(
                       inAsyncCall: state?.isLoading ?? false,
                       child: customScrollViewSliverAppBarForDownload(
@@ -858,6 +857,23 @@ class _DeleteDataScreenState extends State<DeleteDataScreen>
                                       if (snapshot.data != null) {
                                         listItemCumIdForCommunityDevelopment =
                                             snapshot.data;
+                                        int indexOfItem =
+                                            listItemCumIdForCommunityDevelopment
+                                                .indexOf(globalUser
+                                                    .getCumIdOfCommunityDevelopment);
+                                        if (indexOfItem == -1) {
+                                          dropdownCumIdValueForCommunityDevelopment =
+                                              listItemCumIdForCommunityDevelopment
+                                                          .length >
+                                                      0
+                                                  ? listItemCumIdForCommunityDevelopment
+                                                      .first
+                                                  : "";
+                                          globalUser
+                                                  .setCumIdOfCommunityDevelopment =
+                                              dropdownCumIdValueForCommunityDevelopment;
+                                        }
+
                                         return Column(
                                           children: [
                                             Padding(
@@ -1060,7 +1076,8 @@ class _DeleteDataScreenState extends State<DeleteDataScreen>
                                             ),
                                           ),
                                           onPressed: () {
-                                             isCheckAllCommunityDevelopment = !isCheckAllCommunityDevelopment;
+                                            isCheckAllCommunityDevelopment =
+                                                !isCheckAllCommunityDevelopment;
                                             setState(() {
                                               if (isCheckAllCommunityDevelopment) {
                                                 for (var item

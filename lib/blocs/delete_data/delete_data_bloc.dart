@@ -231,7 +231,7 @@ class DeleteDataBloc
           globalUser.getUserInfo.chiNhanhID,
           globalUser.getUserInfo.masoql,
           event.cumID);
-      globalUser.setCumIdOfCommunityDevelopment = event.cumID;
+      this.sharePreferenceService.saveCumIdOfCommunityDevelopment( event.cumID);
       _getCommunityDevelopmentController.sink.add(listKhachHang);
 
       yield DeleteDataState.updateLoading(false);
@@ -269,8 +269,8 @@ class DeleteDataBloc
   reloadDataCommunityDevelopment() async {
     List<String> listTeamID =
         await DBProvider.db.getListTeamIDCommunityDevelopment();
-    globalUser.setCumIdOfCommunityDevelopment =
-        listTeamID == null || listTeamID.length == 0 ? "" : listTeamID.first;
+    
+    this.sharePreferenceService.saveCumIdOfCommunityDevelopment(listTeamID == null || listTeamID.length == 0 ? "" : listTeamID.first);
     List<KhachHang> listKhachHang;
     if (globalUser.getCumIdOfCommunityDevelopment != null) {
       listKhachHang = await DBProvider.db.getCommunityDevelopmentByCum(

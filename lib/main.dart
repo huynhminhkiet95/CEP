@@ -129,6 +129,10 @@ class AppState extends State<Application> {
             case 'userprofile':
               return SlideLeftRoute(page: ProfilePageDesign());
               break;
+              //  case 'userprofile':
+              // return SlideLeftRoute(page: MapLauncherDemo());
+              // break;
+              
 
             case 'surveydetail':
               final Map<String, Object> arguments = settings.arguments;

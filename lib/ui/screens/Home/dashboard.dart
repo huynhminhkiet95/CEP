@@ -40,7 +40,7 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
     services = Services.of(context);
     // authenticationBloc = new AuthenticationBloc(
     //     services.commonService, services.sharePreferenceService);
-    
+
     authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
 
     _animationControllerItemMenu = AnimationController(
@@ -211,9 +211,6 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
       if (globalUser.getUserName == "kiet.hm") {
       } else {
         switch (item.router) {
-          case "comunitydevelopment":
-            isDisable = true;
-            break;
           case "error":
             isDisable = true;
             break;
@@ -451,9 +448,6 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
                                   if (globalUser.getUserName == "kiet.hm") {
                                   } else {
                                     switch (listDashboard[index].router) {
-                                      case "comunitydevelopment":
-                                        isDisable = true;
-                                        break;
                                       case "error":
                                         isDisable = true;
                                         break;

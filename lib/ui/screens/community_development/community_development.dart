@@ -127,6 +127,8 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                         if (snapshot.data != null && snapshot.data.length > 0) {
                           List<KhachHang> listCommunityDevelopmentAll =
                               snapshot.data;
+                          var a = listCommunityDevelopmentAll
+                              .where((e) => e.hocBong.serverID != 0).toList();
                           List<KhachHang>
                               listCommunityDevelopmentForScholarship =
                               listCommunityDevelopmentAll
@@ -292,7 +294,7 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                                                         .emitEvent(
                                                             SearchCommunityDevelopmentEvent(
                                                                 _controllerTeamID
-                                                                    .text));
+                                                                    .text.toUpperCase()));
                                                     isValidatorStream.sink
                                                         .add(false);
                                                   }

@@ -7,7 +7,7 @@ description: CEP Application
 # Both the version and the builder number may be overridden in flutter
 # build by specifying --build-name and --build-number, respectively.
 # Read more about versioning at semver.org.
-version: 1.0.2+4
+version: 1.0.2+5
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -35,7 +35,7 @@ dependencies:
   flutter_launcher_icons: ^0.7.4
   modal_progress_hud: ^0.1.3
   date_format: ^1.0.6
-  url_launcher: ^5.0.2
+  url_launcher: ^5.7.10
   location: ^2.3.4
   android_intent: ^0.3.0+2
   #barcode_scan: ^1.0.0
@@ -73,6 +73,7 @@ dependencies:
   number_slide_animation: ^0.1.1
   #google_fonts: ^1.1.0 
   package_info: ^0.4.3+4
+  map_launcher: ^1.1.3+1
 
 dev_dependencies:
   flutter_test:
@@ -81,7 +82,7 @@ dev_dependencies:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/logo/CEP-logo_lauch.png"
+  image_path: "assets/logo/CEP-logo_lauch_1.png"
   # image_path_ios: "assets/logo/CEP-logo_lauch.png"
   # image_path_android: "assets/logo/CEP-logo_lauch.png"
   # adaptive_icon_background: "assets/launcher/background.png"
@@ -108,6 +109,7 @@ flutter:
   - locale/i18n_kr.json
   - assets/logo/icon_logo.png
   - assets/logo/CEP-logo_lauch.png
+  - assets/logo/CEP-logo_lauch_1.png
   - assets/logo/cep-large-icon-logo-intro.png
   - assets/logo/icon_main_logo.png
   - assets/logo/logo.png
@@ -122,24 +124,10 @@ flutter:
   - assets/logo/background.png
     #menu Icon
      #warehousing menu
-  - assets/menus/icon_inventory.png
-  - assets/menus/icon_put_away.png
-  - assets/menus/icon_gr.png
-  - assets/menus/icon_relocation.png
-  - assets/menus/icon_pick.png
-
-  #package menu
-  - assets/menus/icon_receipt_package.png
-  - assets/menus/icon_release_package.png
-  - assets/menus/icon_transfer_package.png
-
+  
+ 
   #Local Distribution Menu
-  - assets/menus/todolist.png
-  - assets/menus/icon_update_status.png
-  - assets/menus/icon_haulage.png
   - assets/menus/icon_loading_status.png
-  - assets/menus/userprofile.png
-  - assets/menus/triprecords.png
   - assets/menus/icon_history_todo.png
   - assets/menus/icon_logout.png
   - assets/menus/checklist.png
@@ -148,20 +136,13 @@ flutter:
 
   - assets/menus/icon_setting.png
   - assets/images/icon_dc.png
-  - assets/images/icon_contact.png
   - assets/images/icon_username.png
-  - assets/images/icon_company.png
   - assets/images/icon_phonenumber.png
   - assets/images/icon_equipmentNo.png
-  - assets/images/icon_driver.png
   - assets/images/icon_time.png
   - assets/images/icon_address.png
-  - assets/images/icon_contact_name.png
-  - assets/images/icon_confirm_status.png
-  - assets/images/icon_start_delivery_status.png
   - assets/images/icon_completed_status.png
   - assets/images/icon_call.png
-  - assets/images/icon_drive_profile.png
   - assets/images/iconsearchmap.jpg
   - assets/images/iconsearchmap1.jpg
   - assets/images/search.png
@@ -170,14 +151,11 @@ flutter:
   - assets/images/returnplace.png
   - assets/images/returnplaceicon.png
   - assets/images/icontimereturn.png
-  - assets/images/fightpic.png
   - assets/images/store_locator.png
-  - assets/images/carpick.jpg
   - assets/images/truckpickup.png
   - assets/images/no_data.gif
   
   - assets/images/icon_maps.png
-  - assets/images/contrainer_truck.png
   - assets/images/barcode.png
   - assets/images/initialization.png
   - assets/images/clock.png
@@ -185,16 +163,11 @@ flutter:
   - assets/images/icon_todo.png
   - assets/images/vietnam.png
   - assets/images/united-kingdom.png
-  - assets/images/enterprise-Rental.jpg
-  - assets/images/new-logo-large.png
-  - assets/images/img-logo.jpg
-  - assets/images/checklist.jpg
-  - assets/images/checklist-icon.jpg
+  
   - assets/images/profile.png
   - assets/images/triprecord.png
   - assets/images/new-icon.png
   - assets/images/list-icon.png
-  - assets/images/checklist-icon1.png
   - assets/images/touch-id.jpg
   - assets/images/touch-id1.png
   - assets/images/person.png
@@ -210,10 +183,6 @@ flutter:
   - assets/images/P.png
   - assets/images/new_button.gif
 
-  #ShipmentStatus
-  - assets/images/container_shipmentstatus.png
-  - assets/images/logoshipmentstatus2.png
-  - assets/images/logoshipmentstatus3.png
   #avatars
   - assets/dashboard/notification.png
   - assets/avatars/avatar.png
