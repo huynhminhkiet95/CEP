@@ -36,6 +36,10 @@ class ItemDashBoard {
         title: allTranslations.text("DownLoad"),
         img: "assets/dashboard/document-download-outline.png",
         icon: Icons.download_rounded,router:"download"));
+    list.add(new ItemDashBoard(
+        title: allTranslations.text("UpdatePersonalInfoUser"),
+        img: "assets/dashboard/document-download-outline.png",
+        icon: Icons.download_rounded,router:"personalinforuser"));
     return list;
   }
 

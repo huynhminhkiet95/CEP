@@ -109,6 +109,7 @@
     "CommunityDevelopment":"Phát Triển Cộng Đồng",
     "Statistical":"Thống Kê",
     "DownLoad":"Tải Xuống",
+    "UpdatePersonalInfoUser":"Cập Nhật Thông Tin Cá Nhân",
     "DeleteData":"Xóa Dữ Liệu",
     "Settings":"Cài Đặt",
     "CodeNumber":"Mã số",
@@ -145,7 +146,13 @@
     "ConfirmSaveDataToServer":"Bạn có muốn lưu dữ liệu lên server ?",
     "UpdateToServer":"Cập Nhật Lên Server",
     "ListSurveyMember":"Danh Sách Thành Viên Khảo Sát",
-    "UpdateVersion":"Đã có phiên bản mới, vui lòng cập nhật phiên bản !"
+    "UpdateVersion":"Đã có phiên bản mới, vui lòng cập nhật phiên bản !",
+    "BOD":"Ngày sinh",
+    "Gender":"Giới tính",
+    "Nationality":"Quốc tịch",
+    "IDNo":"Số CCCD",
+    "NativePlace":"Quê quán",
+    "PlaceOfPermanent":"Địa chỉ thường trú"
 
 
 }

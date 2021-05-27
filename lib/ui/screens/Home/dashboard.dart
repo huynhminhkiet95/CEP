@@ -471,7 +471,7 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
                                           }
                                         },
                                         child: Container(
-                                          height: 20,
+                                         
                                           decoration: BoxDecoration(
                                               border: Border.all(
                                                   width: 3.0,

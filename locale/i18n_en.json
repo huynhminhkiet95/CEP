@@ -109,6 +109,7 @@
     "CommunityDevelopment":"Community Development",
     "Statistical":"Statistical",
     "DownLoad":"DownLoad",
+    "UpdatePersonalInfoUser":"Update Personal Info User",
     "DeleteData":"Delete Data",
     "Settings":"Settings",
     "CodeNumber":"Code number",
@@ -145,6 +146,12 @@
     "ConfirmSaveDataToServer":"Would you like to save the data to server ?",
     "UpdateToServer":"Update to Server",
     "ListSurveyMember":"List Survey Member",
-    "UpdateVersion":"The new version has been release in Store GoolePlay, Please click OK button to update !"
+    "UpdateVersion":"The new version has been release in Store GoolePlay, Please click OK button to update !",
+    "BOD":"Birth of day",
+    "Gender":"Gender",
+    "Nationality":"Nationality",
+    "IDNo":"ID No",
+    "NativePlace":"Native place",
+    "PlaceOfPermanent":"Place of permanent"
 
 }

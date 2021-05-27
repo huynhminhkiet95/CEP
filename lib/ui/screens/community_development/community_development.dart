@@ -283,7 +283,7 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                                               ),
                                               onPressed: () {
                                                 int index = listTeamID.indexOf(
-                                                    _controllerTeamID.text);
+                                                    _controllerTeamID.text.toUpperCase());
 
                                                 if (index != -1) {
                                                   if (_controllerTeamID.text !=

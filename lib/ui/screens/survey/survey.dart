@@ -188,14 +188,17 @@ class _SurveyScreenState extends State<SurveyScreen>
                                                   height: 30,
                                                   width: 90,
                                                   child: Center(
-                                                    child: Text(
-                                                      "${allTranslations.text("ClusterID")} (${listItemCumId.length})",
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14,
-                                                          color: Color(
-                                                              0xff9596ab)),
+                                                    child: FittedBox(
+                                                      fit: BoxFit.scaleDown,
+                                                      child: Text(
+                                                        "${allTranslations.text("ClusterID")} (${listItemCumId.length})",
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 14,
+                                                            color: Color(
+                                                                0xff9596ab)),
+                                                      ),
                                                     ),
                                                   ),
                                                 )),
@@ -207,8 +210,10 @@ class _SurveyScreenState extends State<SurveyScreen>
                                             child: Card(
                                                 elevation: 4.0,
                                                 child: Container(
-                                                  height: 30,
-                                                  width: 90,
+                                                  constraints: BoxConstraints(
+                                                    maxHeight: 30,
+                                                    maxWidth: double.infinity,
+                                                  ),
                                                   child: Center(
                                                     child:
                                                         DropdownButton<String>(
@@ -266,15 +271,18 @@ class _SurveyScreenState extends State<SurveyScreen>
                                                   height: 30,
                                                   width: 150,
                                                   child: Center(
-                                                    child: Text(
-                                                      allTranslations
-                                                          .text("ExportDate"),
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14,
-                                                          color: Color(
-                                                              0xff9596ab)),
+                                                    child: FittedBox(
+                                                      fit: BoxFit.scaleDown,
+                                                      child: Text(
+                                                        allTranslations
+                                                            .text("ExportDate"),
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 14,
+                                                            color: Color(
+                                                                0xff9596ab)),
+                                                      ),
                                                     ),
                                                   ),
                                                 )),
@@ -286,8 +294,10 @@ class _SurveyScreenState extends State<SurveyScreen>
                                             child: Card(
                                                 elevation: 4.0,
                                                 child: Container(
-                                                  height: 30,
-                                                  width: 100,
+                                                  constraints: BoxConstraints(
+                                                    maxHeight: 30,
+                                                    maxWidth: double.infinity,
+                                                  ),
                                                   child: Center(
                                                     child:
                                                         DropdownButton<String>(
@@ -721,221 +731,252 @@ class _SurveyScreenState extends State<SurveyScreen>
                                     });
                                   },
                                 ),
-                                Container(
-                                  width: screenWidth * 0.82,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                          child: Builder(builder: (context) {
-                                        Widget cardBatBuoc = Container();
-                                        Widget cardkhaosat = Container();
-                                        if (listSurvey[i].batBuocKhaosat == 1) {
-                                          cardBatBuoc = Card(
-                                              elevation: 3,
-                                              color: Colors.red[900],
-                                              child: Container(
-                                                height: 20,
-                                                width: 140,
-                                                child: Center(
-                                                  child: Text(
-                                                    allTranslations
-                                                        .text("Mandatory"),
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 14,
-                                                        color: Colors.white),
+                                Expanded(
+                             //     width: screenWidth * 0.82,
+                                  child: Padding(
+                                  padding: EdgeInsets.only(right: 10),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                            child: Builder(builder: (context) {
+                                          Widget cardBatBuoc = Container();
+                                          Widget cardkhaosat = Container();
+                                          if (listSurvey[i].batBuocKhaosat == 1) {
+                                            cardBatBuoc = Card(
+                                                elevation: 3,
+                                                color: Colors.red[900],
+                                                child: Container(
+                                                  height: 20,
+                                                  width: 140,
+                                                  child: FittedBox(
+                                                    fit: BoxFit.scaleDown,
+                                                    child: Text(
+                                                      allTranslations
+                                                          .text("Mandatory"),
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14,
+                                                          color: Colors.white),
+                                                    ),
                                                   ),
-                                                ),
-                                              ));
-                                        }
+                                                ));
+                                          }
 
-                                        if (listSurvey[i].ghiChu.length > 0 &&
-                                            listSurvey[i].soTienDuyetChovay >
-                                                0) {
-                                          cardkhaosat = Card(
-                                              elevation: 3,
-                                              color: Colors.red,
-                                              child: Container(
-                                                padding: EdgeInsets.only(
-                                                    right: 5, left: 5),
-                                                height: 20,
-                                                width: 100,
-                                                child: Center(
-                                                  child: Text(
-                                                    allTranslations
-                                                        .text("Surveyed"),
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 14,
-                                                        color: Colors.white),
+                                          if (listSurvey[i].ghiChu.length > 0 &&
+                                              listSurvey[i].soTienDuyetChovay >
+                                                  0) {
+                                            cardkhaosat = Card(
+                                                elevation: 3,
+                                                color: Colors.red,
+                                                child: Container(
+                                                  padding: EdgeInsets.only(
+                                                      right: 5, left: 5),
+                                                  height: 20,
+                                                  width: 100,
+                                                  child: FittedBox(
+                                                    fit: BoxFit.scaleDown,
+                                                    child: Text(
+                                                      allTranslations
+                                                          .text("Surveyed"),
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14,
+                                                          color: Colors.white),
+                                                    ),
                                                   ),
-                                                ),
-                                              ));
-                                        } else {
-                                          cardkhaosat = Card(
-                                              elevation: 3,
-                                              color: Colors.grey,
-                                              child: Container(
-                                                padding: EdgeInsets.only(
-                                                    right: 5, left: 5, top: 2),
-                                                height: 20,
-                                                width: 103,
-                                                child: Text(
-                                                  allTranslations
-                                                      .text("NotYetSurveyed"),
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 14,
-                                                      color: Colors.white),
-                                                ),
-                                              ));
-                                        }
+                                                ));
+                                          } else {
+                                            cardkhaosat = Card(
+                                                elevation: 3,
+                                                color: Colors.grey,
+                                                child: Container(
+                                                  padding: EdgeInsets.only(
+                                                      right: 5, left: 5, top: 2),
+                                                  height: 20,
+                                                  width: 103,
+                                                  child: FittedBox(
+                                                    fit: BoxFit.scaleDown,
+                                                    child: Text(
+                                                      allTranslations
+                                                          .text("NotYetSurveyed"),
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14,
+                                                          color: Colors.white),
+                                                    ),
+                                                  ),
+                                                ));
+                                          }
 
-                                        return Row(
+                                          return Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              cardkhaosat,
+                                              cardBatBuoc,
+                                            ],
+                                          );
+                                        })),
+                                        Container(
+                                          padding: EdgeInsets.only(left: 4),
+                                          child: FittedBox(
+                                            fit: BoxFit.scaleDown,
+                                            child: Text(
+                                              "${listSurvey[i].thanhvienId} - ${listSurvey[i].hoVaTen}",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 13),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Row(
+                                          // crossAxisAlignment: CrossAxisAlignment.center,
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            cardkhaosat,
-                                            cardBatBuoc,
-                                          ],
-                                        );
-                                      })),
-                                      Container(
-                                        padding: EdgeInsets.only(left: 4),
-                                        child: Text(
-                                          "${listSurvey[i].thanhvienId} - ${listSurvey[i].hoVaTen}",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 13),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Row(
-                                        // crossAxisAlignment: CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            padding: EdgeInsets.only(left: 4),
-                                            child: Row(
-                                              children: [
-                                                Icon(
-                                                  IconsCustomize.gender,
-                                                  size: 20,
-                                                  color: Colors.blue,
-                                                ),
-                                                VerticalDivider(
-                                                  width: 10,
-                                                ),
-                                                Container(
-                                                  width: 30,
-                                                  child: Text(
-                                                    listSurvey[i].gioiTinh == 0
-                                                        ? allTranslations
-                                                            .text("FeMale")
-                                                        : allTranslations
-                                                            .text("Male"),
+                                            Container(
+                                              padding: EdgeInsets.only(left: 4),
+                                              child: Row(
+                                                children: [
+                                                  Icon(
+                                                    IconsCustomize.gender,
+                                                    size: 20,
+                                                    color: Colors.blue,
+                                                  ),
+                                                  VerticalDivider(
+                                                    width: 10,
+                                                  ),
+                                                  Container(
+                                                    width: 30,
+                                                    child: Text(
+                                                      listSurvey[i].gioiTinh == 0
+                                                          ? allTranslations
+                                                              .text("FeMale")
+                                                          : allTranslations
+                                                              .text("Male"),
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 13),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Container(
+                                              padding: EdgeInsets.only(left: 4),
+                                              child: Row(
+                                                children: [
+                                                  Icon(
+                                                    IconsCustomize.birth_date,
+                                                    size: 20,
+                                                    color: Colors.red,
+                                                  ),
+                                                  VerticalDivider(
+                                                    width: 10,
+                                                  ),
+                                                  VerticalDivider(
+                                                    width: 1,
+                                                  ),
+                                                  Text(
+                                                    listSurvey[i]
+                                                        .ngaySinh
+                                                        .substring(0, 4),
                                                     style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.bold,
                                                         fontSize: 13),
                                                   ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                          Container(
-                                            padding: EdgeInsets.only(left: 4),
-                                            child: Row(
-                                              children: [
-                                                Icon(
-                                                  IconsCustomize.birth_date,
-                                                  size: 20,
-                                                  color: Colors.red,
-                                                ),
-                                                VerticalDivider(
-                                                  width: 10,
-                                                ),
-                                                VerticalDivider(
-                                                  width: 1,
-                                                ),
-                                                Text(
-                                                  listSurvey[i]
-                                                      .ngaySinh
-                                                      .substring(0, 4),
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 13),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Container(
-                                            padding: EdgeInsets.only(left: 4),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceAround,
-                                              children: [
-                                                Icon(
-                                                  IconsCustomize.id_card,
-                                                  color: Colors.orange,
-                                                  size: 20,
-                                                ),
-                                                VerticalDivider(
-                                                  width: 15,
-                                                ),
-                                                Text(
-                                                  listSurvey[i].cmnd,
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 13),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Container(
-                                        margin: EdgeInsets.only(top: 5),
-                                        padding: EdgeInsets.only(left: 6),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.location_on,
-                                              color: Colors.blue,
-                                            ),
-                                            VerticalDivider(
-                                              width: 1,
-                                            ),
-                                            InkWell(
-                                              onTap: () {
-                                                MapUtils.openMap(listSurvey[i].diaChi);
-                                              },
-                                              child: Container(
-                                                width: 230,
-                                                child: Text(
-                                                  listSurvey[i].diaChi,
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 13),
-                                                ),
+                                            Container(
+                                              padding: EdgeInsets.only(left: 4),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.spaceAround,
+                                                children: [
+                                                  Icon(
+                                                    IconsCustomize.id_card,
+                                                    color: Colors.orange,
+                                                    size: 20,
+                                                  ),
+                                                  VerticalDivider(
+                                                    width: 15,
+                                                  ),
+                                                  Text(
+                                                    listSurvey[i].cmnd,
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 13),
+                                                  ),
+                                                ],
                                               ),
                                             ),
                                           ],
                                         ),
-                                      )
-                                    ],
+                                        Container(
+                                          margin: EdgeInsets.only(top: 5),
+                                          padding: EdgeInsets.only(left: 6),
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                width: screenWidth * 0.72,
+                                                child: Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.location_on,
+                                                      color: Colors.blue,
+                                                    ),
+                                                    VerticalDivider(
+                                                      width: 1,
+                                                    ),
+                                                    Container(
+                                                      
+                                                      child: FittedBox(
+                                                        fit: BoxFit.scaleDown,
+                                                        child: Text(
+                                                          listSurvey[i].diaChi,
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight.bold,
+                                                              fontSize: 13),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Align(
+                                                  alignment: Alignment.centerRight,
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      MapUtils.openMap(
+                                                          listSurvey[i].diaChi);
+                                                    },
+                                                    child: Icon(
+                                                      Icons.assistant_direction,
+                                                      color: Colors.blue,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 )
                               ],

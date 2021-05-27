@@ -9,6 +9,7 @@ import 'package:CEPmobile/ui/screens/community_development/community_development
 import 'package:CEPmobile/ui/screens/delete_data/delete_data.dart';
 import 'package:CEPmobile/ui/screens/downloadData/download_main.dart';
 import 'package:CEPmobile/ui/screens/error/error.dart';
+import 'package:CEPmobile/ui/screens/personal_information_user/personal_information_user.dart';
 import 'package:CEPmobile/ui/screens/profile/language.dart';
 import 'package:CEPmobile/ui/screens/profile/setting.dart';
 import 'package:CEPmobile/ui/screens/profile/user_profile.dart';
@@ -118,6 +119,7 @@ class AppState extends State<Application> {
             case 'error':
               return SlideLeftRoute(page: ErrorScreen());
               break;
+
             case 'survey':
               return SlideLeftRoute(page: SurveyScreen());
               break;
@@ -126,14 +128,14 @@ class AppState extends State<Application> {
               return SlideLeftRoute(page: DeleteDataScreen());
               break;
 
+            case 'personalinforuser':
+              return SlideLeftRoute(page: PersonalInformationUser());
+              break;
+
             case 'userprofile':
               return SlideLeftRoute(page: ProfilePageDesign());
               break;
-              //  case 'userprofile':
-              // return SlideLeftRoute(page: MapLauncherDemo());
-              // break;
               
-
             case 'surveydetail':
               final Map<String, Object> arguments = settings.arguments;
               return SlideTopRoute(
